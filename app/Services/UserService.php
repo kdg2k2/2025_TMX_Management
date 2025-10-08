@@ -7,37 +7,38 @@ use App\Repositories\UserRepository;
 class UserService extends BaseService
 {
     public function __construct(
-        private UserRepository $userRepository,
         private HandlerUploadFileService $handlerUploadFileService
-    ) {}
+    ) {
+        $this->repository = app(UserRepository::class);
+    }
 
     public function findByEmail(string $email)
     {
-        return $this->userRepository->findByEmail($email);
+        return $this->repository->findByEmail($email);
     }
 
     public function findByGoogleId(string $googleId)
     {
-        return $this->userRepository->findByGoogleId($googleId);
+        return $this->repository->findByGoogleId($googleId);
     }
 
     public function delete(int $id)
     {
         return $this->tryThrow(function () use ($id) {
-            $user = $this->userRepository->findById($id);
+            $user = $this->repository->findById($id);
             if ($user && !empty($user['path']))
                 $this->handlerUploadFileService->removeFile($user['path']);
             if ($user && !empty($user['path_signature']))
                 $this->handlerUploadFileService->removeFile($user['path_signature']);
 
-            $this->userRepository->delete($id);
+            $this->repository->delete($id);
         }, true);
     }
 
     public function changePassword($password)
     {
         return $this->tryThrow(function () use ($password) {
-            $user = $this->userRepository->findById($this->getGuard()->user()->id);
+            $user = $this->repository->findById($this->getGuard()->user()->id);
             $user->password = bcrypt($password);
             $user->save();
             return true;
