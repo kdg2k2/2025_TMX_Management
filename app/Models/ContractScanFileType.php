@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class ContractScanFileType extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
+    public function extensions()
+    {
+        return $this->hasMany(ContractScanFileTypeExtension::class, 'typeid');
+    }
 }
