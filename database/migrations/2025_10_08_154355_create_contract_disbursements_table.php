@@ -4,21 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        // lưu log truy cập hệ thống
-        Schema::create('log_access_histories', function (Blueprint $table) {
+        // phụ trách giải ngân
+        Schema::create('contract_disbursements', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('permission_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->text('url');
-            $table->string('method');
-            $table->json('body')->nullable();
         });
     }
 
@@ -27,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('log_access_histories');
+        Schema::dropIfExists('contract_disbursements');
     }
 };
