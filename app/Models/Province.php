@@ -16,6 +16,6 @@ class Province extends Model
 
     public function communes()
     {
-        return $this->hasMany(Commune::class, 'province_c', 'code');
+        return $this->hasMany(Commune::class, 'province_code', 'code');
     }
 }

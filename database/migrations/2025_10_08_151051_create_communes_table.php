@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('communes', function (Blueprint $table) {
             $table->string('code')->primary();
             $table->string('name');
-            $table->string('province_c');
-            $table->foreign('province_c')->references('code')->on('provinces')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('province_code');
+            $table->foreign('province_code')->references('code')->on('provinces')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

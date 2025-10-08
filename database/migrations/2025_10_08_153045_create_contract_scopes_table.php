@@ -15,12 +15,12 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('province_c');
-            $table->foreign('province_c')->references('code')->on('provinces')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('province_code');
+            $table->foreign('province_code')->references('code')->on('provinces')->cascadeOnDelete()->cascadeOnUpdate();
 
             $table->unique([
                 'contract_id',
-                'province_c',
+                'province_code',
             ]);
         });
     }

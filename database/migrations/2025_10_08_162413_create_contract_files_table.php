@@ -14,6 +14,7 @@ return new class extends Migration {
         Schema::create('contract_files', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('type_id')->constrained('contract_file_types')->cascadeOnDelete()->cascadeOnUpdate();
             $table->text('path');
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();

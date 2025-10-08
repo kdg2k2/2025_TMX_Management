@@ -13,6 +13,6 @@ class ContractScanFileType extends Model
 
     public function extensions()
     {
-        return $this->hasMany(ContractScanFileTypeExtension::class, 'typeid');
+        return $this->hasMany(ContractScanFileTypeExtension::class, 'type_id');
     }
 }

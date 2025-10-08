@@ -16,6 +16,6 @@ class Commune extends Model
 
     public function province()
     {
-        return $this->belongsTo(Province::class, 'province_c', 'code');
+        return $this->belongsTo(Province::class, 'province_code', 'code');
     }
 }

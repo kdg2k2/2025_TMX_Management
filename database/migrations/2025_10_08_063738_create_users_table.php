@@ -26,6 +26,7 @@ return new class extends Migration {
             $table->foreignId('position_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate()->comment('chức danh');
             $table->boolean('is_banned')->default(false)->comment('khóa tài khoản');
             $table->boolean('retired')->default(false)->comment('nghỉ việc');
+            $table->integer('jwt_version')->default(1);
         });
     }
 
