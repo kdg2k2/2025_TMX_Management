@@ -37,12 +37,12 @@ class AuthService extends BaseService
                     session()->forget('url.previous');
                     if ($previousUrl)
                         $token = $previousUrl;
-                    return $token;
+                    return $token = route('dashboard');
                 })()
                 : $this->createNewToken($token, $this->createRefreshToken());
 
-            if ($this->checkVerifyAccountYet())
-                throw new Exception('Tài khoản chưa xác thực', 403);
+            // if ($this->checkVerifyAccountYet())
+            //     throw new Exception('Tài khoản chưa xác thực', 403);
 
             return $token;
         });
@@ -147,9 +147,7 @@ class AuthService extends BaseService
 
     protected function createNewToken($token, $refreshToken)
     {
-        $user = auth('api')->user()->load(['passportVerification.nationparkStamps' => function ($query) {
-            $query->with('nationpark');
-        }]);
+        $user = auth('api')->user();
 
         // Tạo lại access token với jwt_version
         $customClaims = ['jwt_version' => $user->jwt_version];

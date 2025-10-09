@@ -4,18 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        // chức vụ
-        Schema::create('positions', function (Blueprint $table) {
+        // chức danh
+        Schema::create('job_titles', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('name')->unique();
-            $table->integer('level')->nullable()->comment('dùng để sort cấp vụ nào cao hơn');
+            $table->integer('level')->nullable()->comment('dùng để sort cấp danh nào cao hơn');
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('positions');
+        Schema::dropIfExists('job_titles');
     }
 };

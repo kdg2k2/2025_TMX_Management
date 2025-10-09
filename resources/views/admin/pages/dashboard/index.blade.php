@@ -1,8 +1,5 @@
 @extends('admin.layout.master')
 
-@section('styles')
-@endsection
-
 @section('content')
     <!-- Start::page-header -->
     <div class="page-header-breadcrumb mb-3">
@@ -27,7 +24,4 @@
         </div>
     </div>
     <!--End::row-1 -->
-@endsection
-
-@section('scripts')
 @endsection

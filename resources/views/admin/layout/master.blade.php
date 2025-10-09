@@ -4,9 +4,11 @@
     @yield('styles')
 @endsection
 @section('body')
+    @php
+        $bodyClass = '';
+    @endphp
+    
     @include('admin.partials.switcher')
-
-    @include('admin.partials.loader')
 
     <div class="page">
         @include('admin.partials.header')
@@ -27,9 +29,7 @@
 
     </div>
 
-    <div class="scrollToTop">
-        <span class="arrow lh-1"><i class="ri ri-arrow-up-fill"></i></span>
-    </div>
+    @include('admin.partials.scroll-to-top')
     <div id="responsive-overlay"></div>
 @endsection
 @section('js')

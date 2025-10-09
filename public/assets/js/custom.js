@@ -1,13 +1,5 @@
 (function () {
   "use strict";
-
-  /* page loader */
-  function hideLoader() {
-    const loader = document.getElementById("loader");
-    loader.classList.add("d-none")
-  }
-
-  window.addEventListener("load", hideLoader);
   /* page loader */
 
   /* tooltip */
@@ -290,7 +282,7 @@
         html.setAttribute("style", "");
       }
       html.removeAttribute("data-bg-theme");
-      
+
       if (document.querySelector("#switcher-canvas")) {
         document.querySelector("#switcher-light-theme").checked = true;
         document.querySelector("#switcher-menu-transparent").checked = true;
@@ -326,7 +318,7 @@
         html.setAttribute("style", "");
       }
       html.setAttribute("data-menu-styles", "transparent");
-      
+
       if (document.querySelector("#switcher-canvas")) {
         document.querySelector("#switcher-dark-theme").checked = true;
         document.querySelector("#switcher-menu-transparent").checked = true;
@@ -441,10 +433,6 @@
   });
   /* Choices JS */
 
-  /* footer year */
-  document.getElementById("year").innerHTML = new Date().getFullYear();
-  /* footer year */
-
   /* node waves */
   Waves.attach(".btn-wave", ["waves-light"]);
   Waves.init();
@@ -520,44 +508,6 @@
     window.scrollTo(0, 0);
   };
   /* back to top */
-
-  /* header dropdowns scroll */
-  var myHeadernotification = document.getElementById("header-notification-scroll");
-  new SimpleBar(myHeadernotification, { autoHide: true });
-
-  var myHeaderCart = document.getElementById("header-cart-items-scroll");
-  new SimpleBar(myHeaderCart, { autoHide: true });
-  /* header dropdowns scroll */
-
-  const autoCompleteJS = new autoComplete({
-    selector: "#header-search",
-    data: {
-      src: [
-        "How do plants adapt to different environments?",
-        "What makes the ocean's tides rise and fall?",
-        "How do our brains process emotions?",
-        "What factors contribute to the creation of a rainbow?",
-        "Who invented the telephone?",
-        "What role does the moon play in Earth's ecosystem?",
-        "How do animals communicate with each other?",
-        "What causes earthquakes to happen?",
-        "What is the significance of the Great Barrier Reef?",
-        "How do human bones regenerate after an injury?"
-      ],
-      cache: true,
-    },
-    resultItem: {
-      highlight: true
-    },
-    events: {
-      input: {
-        selection: (event) => {
-          const selection = event.detail.selection.value;
-          autoCompleteJS.input.value = selection;
-        }
-      }
-    }
-  });
 })();
 
 /* full screen */
