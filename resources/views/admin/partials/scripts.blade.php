@@ -1,7 +1,4 @@
-<script src="assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
-<script src="assets/js/main.js"></script>
 <script src="assets/libs/@popperjs/core/umd/popper.min.js"></script>
-<script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/defaultmenu.min.js"></script>
 <script src="assets/libs/node-waves/waves.min.js"></script>
 <script src="assets/js/sticky.js"></script>

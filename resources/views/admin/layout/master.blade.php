@@ -4,15 +4,11 @@
     @yield('styles')
 @endsection
 @section('body')
-    @php
-        $bodyClass = '';
-    @endphp
-    
+    @include('admin.partials.process-top-bar')
     @include('admin.partials.switcher')
 
     <div class="page">
         @include('admin.partials.header')
-
         @include('admin.partials.sidebar')
 
         <div class="main-content app-content">
@@ -22,11 +18,7 @@
         </div>
 
         @include('admin.partials.footer')
-
         @include('admin.partials.modal')
-
-        @yield('modals')
-
     </div>
 
     @include('admin.partials.scroll-to-top')
@@ -34,6 +26,5 @@
 @endsection
 @section('js')
     @include('admin.partials.scripts')
-
     @yield('scripts')
 @endsection

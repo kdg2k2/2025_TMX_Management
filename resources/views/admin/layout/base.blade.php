@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-nav-layout="vertical" data-vertical-style="overlay" data-theme-mode="light"
-    data-header-styles="light" data-menu-styles="light" data-toggled="close">
+<html lang="vi" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="transparent"
+    data-width="fullwidth" data-menu-styles="transparent" data-page-style="flat" data-vertical-style="default">
 
 <head>
     <base href="{{ asset('') }}">
@@ -11,20 +11,19 @@
     <link rel="icon" type="image/*" href="\assets\images\brand-logos\favicon.ico">
     <title>{{ config('app.name') }}</title>
 
-    <link href="assets/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="style">
-    <link href="assets/css/styles.css" rel="stylesheet">
-    <link href="assets/css/icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/libs/nostfly-main/nostfly.css">
-
+    <link id="style" href="assets/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/styles.css" rel="stylesheet" />
+    <link href="assets/css/icons.css" rel="stylesheet" />
     @yield('css')
 </head>
 
-<body class="{{ $bodyClass }}">
-    @include('admin.partials.process-top-bar')
+<body class="{{ $bodyClass ?? '' }}">
     @include('admin.partials.loader')
 
     @yield('body')
 
+    <script src="assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="assets/js/main.js"></script>
     <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/loading-animation/loading.js"></script>
     <script src="assets/libs/nostfly-main/nostfly.js"></script>
