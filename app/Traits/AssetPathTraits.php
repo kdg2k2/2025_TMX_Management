@@ -6,7 +6,7 @@ trait AssetPathTraits
 {
     public function getAssetImage($url)
     {
-        $path = config('custom.default_avatar');
+        $path = config('custom.DEFAULT_AVATAR');
         if (!empty($url))
             $path = $url;
         return $this->getAssetUrl($path);
