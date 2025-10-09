@@ -413,9 +413,6 @@
         localStorage.removeItem("bodyBgRGB");
       }
     }
-    let layoutSetting1 = document.querySelector(".layout-setting-doublemenu");
-    layoutSetting1.addEventListener("click", toggleTheme1);
-
   }
   /* header theme toggle */
 

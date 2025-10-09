@@ -10211,9 +10211,6 @@ button {
   font-size: 1.05rem;
   color: var(--default-text-color);
 }
-.fe {
-  font-size: inherit !important;
-}
 /* End::Icons Page */
 .bd-placeholder-img {
   margin: 0.125rem;
@@ -20219,7 +20216,7 @@ ul.widgets-transactions-list li:last-child {
   transition: all 0.05s ease;
 }
 .app-sidebar .main-sidebar-header .header-logo img {
-  height: 1.75rem;
+  height: 3.75rem;
   line-height: 1.75rem;
 }
 .app-sidebar .main-sidebar-header .header-logo .desktop-logo {
@@ -20353,7 +20350,7 @@ ul.widgets-transactions-list li:last-child {
 }
 .app-sidebar .side-menu__icon {
   margin-inline-end: 0.75rem;
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   line-height: 1;
   text-align: center;
   color: var(--menu-icon-color);

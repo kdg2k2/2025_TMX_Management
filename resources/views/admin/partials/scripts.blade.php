@@ -10,3 +10,4 @@
 <script src="assets/js/custom.js"></script>
 <script src="assets/js/custom-switcher.min.js"></script>
 <script src="assets/js/auth/logout.js"></script>
+<script src="assets/js/active-sidebar/script.js"></script>
