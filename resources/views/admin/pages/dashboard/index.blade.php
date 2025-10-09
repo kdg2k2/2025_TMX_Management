@@ -1,20 +1,6 @@
 @extends('admin.layout.master')
 @section('content')
-    <div class="page-header-breadcrumb mb-3">
-        <div class="d-flex align-center justify-content-between flex-wrap">
-            <h1 class="page-title fw-medium fs-18 mb-0">
-                Empty
-            </h1>
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item">
-                    <a href="javascript:void(0);">Pages</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    Empty
-                </li>
-            </ol>
-        </div>
-    </div>
+    <x-breadcrumb :items="[['label' => 'Dashboard', 'url' => route('dashboard')]]" />
 
     <div class="row">
         <div class="col-xl-12">

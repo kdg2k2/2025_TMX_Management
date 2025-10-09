@@ -14,6 +14,7 @@
     <link id="style" href="assets/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="assets/css/styles.css" rel="stylesheet" />
     <link href="assets/css/icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/libs/nostfly-main/nostfly.css">
     @yield('css')
 </head>
 

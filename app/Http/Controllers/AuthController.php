@@ -26,4 +26,14 @@ class AuthController extends Controller
             ], 200);
         });
     }
+
+    public function logout()
+    {
+        return $this->catchAPI(function () {
+            return response()->json([
+                'data' => $this->service->logout(auth()),
+                'message' => 'Đăng xuất thành công',
+            ], 200);
+        });
+    }
 }

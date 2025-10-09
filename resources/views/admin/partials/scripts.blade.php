@@ -9,3 +9,4 @@
 <script src="assets/libs/flatpickr/flatpickr.min.js"></script>
 <script src="assets/js/custom.js"></script>
 <script src="assets/js/custom-switcher.min.js"></script>
+<script src="assets/js/auth/logout.js"></script>
