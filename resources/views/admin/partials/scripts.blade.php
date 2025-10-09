@@ -11,3 +11,10 @@
 <script src="assets/js/custom-switcher.min.js"></script>
 <script src="assets/js/auth/logout.js"></script>
 <script src="assets/js/active-sidebar/script.js"></script>
+<script src="assets/libs/datatable/jquery-3.5.1.js"></script>
+<script src="assets/libs/datatable/jquery.dataTables.min.js"></script>
+<script src="assets/libs/datatable/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="assets/libs/datatable/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="assets/js/datatable/script.js"></script>
+<script src="assets/js/bootstrap-tooltip/script.js"></script>
+<script src="assets/js/http-request/delete.js"></script>

@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
     const currentPath = window.location.pathname.replace(/\/+$/, ""); // bỏ dấu / cuối
-    console.log({ currentPath });
-
     const links = document.querySelectorAll(".main-menu li a");
 
     links.forEach(link => {
