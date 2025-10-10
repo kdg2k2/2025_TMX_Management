@@ -9,7 +9,7 @@ class {{ class }} extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            '//
+            //
         ]);
     }
 

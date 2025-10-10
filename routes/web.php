@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ContractInvestorController;
 use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\AuthController;
@@ -20,6 +21,13 @@ Route::middleware(['isLogin'])->group(function () {
             Route::get('create', 'create')->name('contract.type.create');
             Route::get('edit', 'edit')->name('contract.type.edit');
             Route::delete('delete', 'delete')->name('contract.type.delete');
+        });
+
+        Route::prefix('investor')->controller(ContractInvestorController::class)->group(function () {
+            Route::get('index', 'index')->name('contract.investor.index');
+            Route::get('create', 'create')->name('contract.investor.create');
+            Route::get('edit', 'edit')->name('contract.investor.edit');
+            Route::delete('delete', 'delete')->name('contract.investor.delete');
         });
     });
 });

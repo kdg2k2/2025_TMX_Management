@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="transparent"
-    data-width="fullwidth" data-menu-styles="transparent" data-page-style="flat" data-vertical-style="default">
+    data-width="fullwidth" data-menu-styles="transparent" data-page-style="flat" data-vertical-style="default" loader="true">
 
 <head>
     <base href="{{ asset('') }}">

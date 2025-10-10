@@ -106,7 +106,7 @@ const apiRequest = async (
     return await makeHttpRequest(method, url, params, csrfToken, showLoading);
 };
 class HttpIntant {
-    async get(url, data, csrfToken = getCsrfToken(), showLoading = false) {
+    async get(url, data, csrfToken = getCsrfToken(), showLoading = true) {
         return apiRequest("GET", url, data, csrfToken, showLoading);
     }
     async post(url, data, csrfToken = getCsrfToken(), showLoading = true) {
