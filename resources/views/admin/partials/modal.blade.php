@@ -1,37 +1,23 @@
-<div class="modal fade" id="modalLogout" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="modalLogoutLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <form class="modal-content" action="{{ route('logout') }}">
-            <div class="modal-header">
-                <h6 class="modal-title" id="modalLogoutLabel">Xác nhận</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Chắc chắn đăng xuất?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
-                <button type="submit" class="btn btn-primary">Thực hiện</button>
-            </div>
-        </form>
-    </div>
-</div>
+<x-modal id="modalLogout" title="Xác nhận" :action="route('logout')" method="POST" size="md">
 
-<div class="modal fade" id="modalDelete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="modalDeleteLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <form class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title" id="modalDeleteLabel">Xác nhận</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Chắc chắn xóa?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
-                <button type="submit" class="btn btn-danger">Thực hiện</button>
-            </div>
-        </form>
-    </div>
-</div>
+    <x-slot:body>
+        <p>Bạn có chắc chắn muốn đăng xuất?</p>
+    </x-slot:body>
+
+    <x-slot:footer>
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+        <button type="submit" class="btn btn-primary">Thực hiện</button>
+    </x-slot:footer>
+</x-modal>
+
+<x-modal id="modalDelete" title="Xóa dữ liệu" size="md">
+
+    <x-slot:body>
+        <p>Bạn có chắc chắn muốn xóa bản ghi này?</p>
+    </x-slot:body>
+
+    <x-slot:footer>
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+        <button type="submit" class="btn btn-danger">Xóa</button>
+    </x-slot:footer>
+</x-modal>
