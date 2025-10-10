@@ -2,11 +2,10 @@
 @section('content')
     <x-breadcrumb :items="[
         ['label' => 'Trang chủ', 'url' => route('dashboard')],
-        ['label' => 'Hợp đồng', 'url' => null],
-        ['label' => 'Loại hợp đồng', 'url' => route('contract.type.index')],
-        ['label' => 'Cập nhật', 'url' => null],
+        ['label' => 'Hợp đồng', 'url' => route('contract.index')],
+        ['label' => 'Thêm mới', 'url' => null],
     ]">
-        <button class="btn btn-sm btn-success" onclick="window.location='{{ route('contract.type.index') }}'" type="button"
+        <button class="btn btn-sm btn-success" onclick="window.location='{{ route('contract.index') }}'" type="button"
             data-bs-placement="top" data-bs-original-title="Danh sách">
             <i class="ti ti-list"></i>
         </button>
@@ -16,10 +15,9 @@
         <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="card-body">
-                    <form id="submit-form" class="row"
-                        action="{{ route('api.contract.type.update', ['id' => $data['id']]) }}">
-                        @method('patch')
-                        @include('admin.pages.contract.type.create-edit-form-content')
+                    <form id="submit-form" class="row" action="{{ route('api.contract.store') }}">
+                        @method('post')
+                        @include('admin.pages.contract.create-edit-form-content')
                         <div class="my-1 col-12 text-center">
                             <button type="submit" class="btn btn-sm btn-primary">
                                 <i class="ti ti-bolt"></i>

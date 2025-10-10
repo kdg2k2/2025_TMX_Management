@@ -98,8 +98,8 @@ trait TryCatchTraits
 
         if (!$result['success']) {
             $errorMessage = is_array($result['error_message'])
-                ? $this->formatValidationErrors($result['error_message'])
-                : $result['error_message'];
+            ? $this->formatValidationErrors($result['error_message'])
+            : $result['error_message'];
 
             return redirect()->back()->with('err', $errorMessage);
         }

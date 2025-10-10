@@ -18,22 +18,7 @@
                 <div class="card-body">
                     <form id="submit-form" class="row" action="{{ route('api.contract.investor.store') }}">
                         @method('post')
-                        <div class="my-1 col-md-6">
-                            <div class="form-group">
-                                <label>
-                                    Tên loại
-                                </label>
-                                <input class="form-control" type="text" name="name" required>
-                            </div>
-                        </div>
-                        <div class="my-1 col-md-6">
-                            <div class="form-group">
-                                <label>
-                                    Địa chỉ
-                                </label>
-                                <input class="form-control" type="text" name="address">
-                            </div>
-                        </div>
+                        @include('admin.pages.contract.investor.create-edit-form-content')
                         <div class="my-1 col-12 text-center">
                             <button type="submit" class="btn btn-sm btn-primary">
                                 <i class="ti ti-bolt"></i>

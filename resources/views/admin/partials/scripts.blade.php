@@ -18,3 +18,9 @@
 <script src="assets/js/datatable/script.js"></script>
 <script src="assets/js/bootstrap-tooltip/script.js"></script>
 <script src="assets/js/http-request/delete.js"></script>
+<script src="assets/libs/sumoselect/jquery.sumoselect.js"></script>
+<script src="assets/js/sumoselect/script.js"></script>
+<script src="assets/js/show-required-fields/script.js"></script>
+<script src="assets/js/validate-input-number/script.js"></script>
+<script src="assets/js/format/format-number.js"></script>
+<script src="assets/js/format/format-date.js"></script>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\ContractInvestorController;
 use App\Http\Controllers\Api\ContractTypeController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,12 @@ Route::middleware(['web', 'auth.any'])->group(function () {
             Route::get('list', 'list')->name('api.contract.investor.list');
             Route::post('store', 'store')->name('api.contract.investor.store');
             Route::patch('update', 'update')->name('api.contract.investor.update');
+        });
+
+        Route::controller(ContractController::class)->group(function () {
+            Route::get('list', 'list')->name('api.contract.list');
+            Route::post('store', 'store')->name('api.contract.store');
+            Route::patch('update', 'update')->name('api.contract.update');
         });
     });
 });

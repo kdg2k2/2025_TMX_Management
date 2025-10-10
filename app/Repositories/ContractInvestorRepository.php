@@ -9,4 +9,15 @@ class ContractInvestorRepository extends BaseRepository
     {
         $this->model = new ContractInvestor();
     }
+
+    public function list(array $request = [], callable|null $searchFunc = null)
+    {
+        $searchFunc = function ($query) use ($request) {
+            $query
+                ->where('name', 'like', "%{$request['search']}%")
+                ->orWhere('address', 'like', "%{$request['search']}%");
+        };
+
+        return parent::list($request, $searchFunc);
+    }
 }

@@ -67,12 +67,23 @@ abstract class BaseRepository
         return $query->first();
     }
 
-    public function list(array $request = [])
+    public function list(array $request = [], ?callable $searchFunc = null)
     {
-        $query = $this->model->orderByDesc('id');
+        $query = $this->model->query();
+
+        if (isset($request['order_by']) && isset($request['sort_by']))
+            $query->orderBy($request['order_by'], $request['sort_by']);
+
+        if (isset($request['columns']))
+            $query->select($request['columns']);
 
         if (isset($request['ids']))
             $query->whereIn('ids', $request['ids']);
+
+        $this->applyListFilters($query, $request);
+
+        if (isset($request['search']) && $searchFunc)
+            $query->where($searchFunc);
 
         if (isset($this->relations))
             $query->with($this->relations);
@@ -82,6 +93,8 @@ abstract class BaseRepository
 
         return $query->get();
     }
+
+    protected function applyListFilters($query, array $request) {}
 
     public function maxId()
     {

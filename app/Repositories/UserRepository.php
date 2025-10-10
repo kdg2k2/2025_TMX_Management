@@ -16,23 +16,14 @@ class UserRepository extends BaseRepository
         return $this->model->where('email', $email)->first();
     }
 
-    public function findByGoogleId(string $googleId)
+    public function list(array $request = [], ?callable $searchFunc = null)
     {
-        return $this->model->where('google_id', $googleId)->first();
-    }
+        $searchFunc = function ($query) use ($request) {
+            $query
+                ->where('name', 'like', "%{$request['search']}%")
+                ->orWhere('email', 'like', "%{$request['search']}%");
+        };
 
-    public function list(array $request = [])
-    {
-        $query = $this->model->orderByDesc('id');
-
-        if (!empty($request['search'])) {
-            $query->where(function ($q) use ($request) {
-                $q
-                    ->where('name', 'like', "%{$request['search']}%")
-                    ->orWhere('email', 'like', "%{$request['search']}%");
-            });
-        }
-
-        return $query->get()->toArray();
+        return parent::list($request, $searchFunc);
     }
 }

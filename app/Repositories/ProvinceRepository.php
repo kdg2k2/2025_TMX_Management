@@ -19,12 +19,17 @@ class ProvinceRepository extends BaseRepository
         return $this->model->where('code', $code)->with($this->relations)->first();
     }
 
-    public function list(array $request = [])
+    public function list(array $request = [], ?callable $searchFunc = null)
     {
-        $query = $this->model->orderByDesc('code')->with($this->relations);
-        if (isset($request['paginate']) && $request['paginate'] == '1') {
-            return $query->paginate($request['per_page'] ?? 10);
-        }
-        return $query->get()->toArray();
+        $request['order_by'] = 'code';
+        $request['sort_by'] = 'desc';
+
+        $searchFunc = function ($query) use ($request) {
+            $query
+                ->where('name', 'like', "%{$request['search']}%")
+                ->orWhere('code', 'like', "%{$request['search']}%");
+        };
+
+        return parent::list($request, $searchFunc);
     }
 }

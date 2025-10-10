@@ -83,7 +83,7 @@
                             </a>
                         </li>
                         <li class="slide">
-                            <a href="javascript:void(0);" class="side-menu__item">
+                            <a href="{{ route('contract.index') }}" class="side-menu__item">
                                 Hợp đồng
                             </a>
                         </li>

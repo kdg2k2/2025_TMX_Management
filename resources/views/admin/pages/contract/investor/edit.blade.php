@@ -6,8 +6,8 @@
         ['label' => 'Nhà đầu tư', 'url' => route('contract.investor.index')],
         ['label' => 'Cập nhật', 'url' => null],
     ]">
-        <button class="btn btn-sm btn-success" onclick="window.location='{{ route('contract.investor.index') }}'" type="button"
-            data-bs-placement="top" data-bs-original-title="Danh sách">
+        <button class="btn btn-sm btn-success" onclick="window.location='{{ route('contract.investor.index') }}'"
+            type="button" data-bs-placement="top" data-bs-original-title="Danh sách">
             <i class="ti ti-list"></i>
         </button>
     </x-breadcrumb>
@@ -19,22 +19,7 @@
                     <form id="submit-form" class="row"
                         action="{{ route('api.contract.investor.update', ['id' => $data['id']]) }}">
                         @method('patch')
-                        <div class="my-1 col-md-6">
-                            <div class="form-group">
-                                <label>
-                                    Tên loại
-                                </label>
-                                <input class="form-control" type="text" name="name" required>
-                            </div>
-                        </div>
-                        <div class="my-1 col-md-6">
-                            <div class="form-group">
-                                <label>
-                                    Địa chỉ
-                                </label>
-                                <input class="form-control" type="text" name="address">
-                            </div>
-                        </div>
+                        @include('admin.pages.contract.investor.create-edit-form-content')
                         <div class="my-1 col-12 text-center">
                             <button type="submit" class="btn btn-sm btn-primary">
                                 <i class="ti ti-bolt"></i>

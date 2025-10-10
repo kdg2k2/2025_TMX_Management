@@ -39,12 +39,12 @@
 
         @if (session('err'))
             var fail = @json(session('err'));
-            alertDanger(fail);
+            alertErr(fail);
         @endif
 
         @if ($errors && $errors->any())
             @foreach ($errors->all() as $error)
-                alertDanger(@json($error));
+                alertErr(@json($error));
             @endforeach
         @endif
     </script>

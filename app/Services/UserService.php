@@ -17,11 +17,6 @@ class UserService extends BaseService
         return $this->repository->findByEmail($email);
     }
 
-    public function findByGoogleId(string $googleId)
-    {
-        return $this->repository->findByGoogleId($googleId);
-    }
-
     public function delete(int $id)
     {
         return $this->tryThrow(function () use ($id) {

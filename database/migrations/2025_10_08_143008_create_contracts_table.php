@@ -15,9 +15,9 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->text('name');
-            $table->string('short_name');
+            $table->string('short_name')->unique();
             $table->integer('year');
-            $table->string('contract_number')->comment('số hợp đồng');
+            $table->string('contract_number')->unique()->comment('số hợp đồng');
 
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('Người tạo hợp đồng');
 
@@ -36,7 +36,7 @@ return new class extends Migration {
             $table->date('signed_date')->nullable()->comment('Ngày ký hợp đồng');
             $table->date('effective_date')->nullable()->comment('Ngày hợp đồng có hiệu lực');
             $table->date('end_date')->nullable()->comment('Ngày kết thúc hợp đồng');
-            $table->date('completion_date')->nullable()->comment('Ngày hoàn thàn');
+            $table->date('completion_date')->nullable()->comment('Ngày hoàn thành');
             $table->date('acceptance_date')->nullable()->comment('Ngày nghiệm thu hợp đồng');
             $table->date('liquidation_date')->nullable()->comment('Ngày thanh lý hợp đồng');
 

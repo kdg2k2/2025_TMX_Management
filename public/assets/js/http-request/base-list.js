@@ -5,19 +5,71 @@ window.loadList = () => {
 };
 
 const createEditBtn = (url) => {
-    return `
-        <button class="mb-1 btn btn-sm btn-warning icon-btn b-r-4 edit-btn" onclick="window.location='${url}'" type="button" data-bs-placement="top" data-toggle="tooltip" data-bs-original-title="Cập nhật">
-            <i class="ti ti-edit"></i>
-        </button>
-    `;
+    return createBtn(
+        "warning",
+        "Cập nhật",
+        false,
+        {},
+        "ti ti-edit",
+        `window.location.href='${url}'`
+    )?.outerHTML;
 };
 
 const createDeleteBtn = (url) => {
-    return `
-        <button class="mb-1 btn btn-sm btn-danger icon-btn b-r-4 delete-btn" type="button" data-bs-target="#modalDelete" data-bs-toggle="modal" data-href="${url}" data-onsuccess="loadList" data-bs-placement="top" data-toggle="tooltip" data-bs-original-title="Xóa">
-            <i class="ti ti-trash"></i>
-        </button>
-    `;
+    return createBtn(
+        "danger",
+        "Xóa",
+        true,
+        {
+            "data-bs-target": "#modalDelete",
+            "data-bs-toggle": "modal",
+            "data-href": url,
+            "data-onsuccess": "loadList",
+        },
+        "ti ti-trash"
+    )?.outerHTML;
+};
+
+const createBtn = (
+    color,
+    title,
+    modal = false,
+    modalAttrs = {},
+    iconClass = "",
+    onClick = null
+) => {
+    const btn = document.createElement("button");
+
+    // classes
+    btn.classList.add("mb-1", "btn", "btn-sm", `btn-${color}`);
+
+    // common attributes
+    btn.type = "button";
+    btn.setAttribute("data-bs-placement", "top");
+    btn.setAttribute("data-bs-toggle", "tooltip");
+    btn.setAttribute("title", title);
+
+    // modal attributes
+    if (modal && modalAttrs && typeof modalAttrs === "object") {
+        Object.entries(modalAttrs).forEach(([attr, val]) => {
+            if (val !== null && val !== undefined && val !== "")
+                btn.setAttribute(attr, val);
+        });
+    }
+
+    // optional icon
+    if (iconClass) {
+        const icon = document.createElement("i");
+        icon.className = iconClass;
+        btn.appendChild(icon);
+    }
+
+    // optional onClick
+    if (onClick) {
+        btn.setAttribute("onclick", onClick);
+    }
+
+    return btn;
 };
 
 document.addEventListener("DOMContentLoaded", () => {

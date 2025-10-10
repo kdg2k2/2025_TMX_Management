@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use App\Traits\GuardTraits;
-use App\Traits\PaginateTraits;
-use App\Traits\TryCatchTraits;
 use App\Traits\AssetPathTraits;
 use App\Traits\CheckLocalTraits;
 use App\Traits\FailedValidation;
 use App\Traits\FormatDataTraits;
+use App\Traits\GuardTraits;
 use App\Traits\HandlePublicFileTraits;
+use App\Traits\PaginateTraits;
+use App\Traits\TryCatchTraits;
 
 class BaseService
 {
@@ -90,10 +90,10 @@ class BaseService
     /**
      * Get list of entities
      */
-    public function list(array $request = [])
+    public function list(array $request = [], ?callable $searchFunc = null)
     {
-        return $this->tryThrow(function () use ($request) {
-            $data = $this->repository->list($request);
+        return $this->tryThrow(function () use ($request, $searchFunc) {
+            $data = $this->repository->list($request, $searchFunc);
 
             if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator) {
                 $data->getCollection()->transform(function ($item) {
