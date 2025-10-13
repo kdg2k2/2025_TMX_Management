@@ -1,3 +1,5 @@
+var selectValueMapping = (inputValueFormatter = {});
+
 // Tự động fill form nếu có dữ liệu và là update (PATCH)
 const autoMatchFieldAndFillPatchForm = (form, method) => {
     if (method === "patch" && $data && typeof $data === "object") {
@@ -5,10 +7,7 @@ const autoMatchFieldAndFillPatchForm = (form, method) => {
             const field = form.querySelector(
                 `[name='${key}'], [name='${key}[]']`
             );
-
-            if (!field) {
-                return;
-            }
+            if (!field) return;
 
             const tag = field.tagName.toLowerCase();
 
@@ -24,48 +23,78 @@ const autoMatchFieldAndFillPatchForm = (form, method) => {
                         field.checked = field.value == value;
                     }
                 } else {
-                    field.value = value ?? "";
+                    // Áp dụng formatter nếu có
+                    const formatter = inputValueFormatter[key];
+                    const formattedValue = formatter
+                        ? formatter(value)
+                        : value ?? "";
+                    field.value = formattedValue;
                 }
             } else if (tag === "select") {
                 destroySumoSelect($(field));
+                let values = [];
 
-                const matchKeys = ["id", "value", "code", "key"];
-                // Chuẩn hoá dữ liệu trả về thành mảng giá trị
+                const mapper =
+                    selectValueMapping[field.name] || selectValueMapping[key];
+
+                // Chuẩn hoá dữ liệu
                 if (Array.isArray(value)) {
-                    // Trường hợp value là mảng object [{id: 1}, {id: 2}]
-                    if (typeof value[0] === "object" && value[0] !== null) {
-                        // Lấy key phù hợp (ưu tiên id, value, code, key)
-                        const detectKey = matchKeys.find((k) => k in value[0]);
-                        values = value.map((v) => String(v[detectKey]));
-                    } else {
+                    if (
+                        value.length > 0 &&
+                        typeof value[0] === "object" &&
+                        value[0] !== null
+                    ) {
+                        if (mapper) {
+                            values = value.map((v) => String(mapper(v)));
+                        } else {
+                            const matchKeys = ["id", "value", "code", "key"];
+                            const detectKey = matchKeys.find(
+                                (k) => k in value[0]
+                            );
+                            if (detectKey) {
+                                values = value.map((v) => String(v[detectKey]));
+                            }
+                        }
+                    } else if (value.length > 0) {
                         values = value.map(String);
                     }
                 } else if (typeof value === "object" && value !== null) {
-                    // Nếu là 1 object duy nhất {id: 3}
-                    const detectKey = Object.keys(value).find((k) =>
-                        matchKeys.includes(k)
-                    );
-                    values = [String(value[detectKey])];
-                } else {
-                    // Nếu là primitive (số, chuỗi, null)
-                    values = [String(value ?? "")];
+                    if (mapper) {
+                        const mappedValue = mapper(value);
+                        values = [String(mappedValue)];
+                    } else {
+                        const matchKeys = ["id", "value", "code", "key"];
+                        const detectKey = Object.keys(value).find((k) =>
+                            matchKeys.includes(k)
+                        );
+                        if (detectKey) {
+                            values = [String(value[detectKey])];
+                        }
+                    }
+                } else if (value != null) {
+                    values = [String(value)];
                 }
 
-                // Đánh dấu selected
-                const options = field.options;
-                for (let i = 0; i < options.length; i++) {
-                    options[i].selected = values.includes(options[i].value);
-                }
+                // Set selected
+                Array.from(field.options).forEach((opt) => {
+                    opt.selected = values.includes(opt.value);
+                });
 
+                $(field).val(values);
                 initSumoSelect($(field));
             } else if (tag === "textarea") {
-                // Xử lý textarea
-                field.value = value ?? "";
+                // Áp dụng formatter cho textarea nếu cần
+                const formatter = inputValueFormatter[key];
+                const formattedValue = formatter
+                    ? formatter(value)
+                    : value ?? "";
+                field.value = formattedValue;
             }
         });
 
-        if (typeof afterAutoMatchFieldAndFillPatchFormDone == "function")
+        if (typeof afterAutoMatchFieldAndFillPatchFormDone == "function") {
             afterAutoMatchFieldAndFillPatchFormDone();
+        }
     }
 };
 

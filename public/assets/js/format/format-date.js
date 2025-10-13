@@ -1,3 +1,14 @@
+const formatDateToYmd = (dateStr) => {
+    if (!dateStr) return "";
+    // Xử lý format d/m/Y hoặc d-m-Y
+    const parts = dateStr.split(/[\/\-]/);
+    if (parts.length === 3) {
+        const [day, month, year] = parts;
+        return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    }
+    return dateStr; // Trả về nguyên gốc nếu không match
+};
+
 const formatDateTime = (dateString) => {
     if (!dateString || typeof dateString !== "string") {
         return "";

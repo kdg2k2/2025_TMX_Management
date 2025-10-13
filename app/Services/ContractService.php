@@ -19,7 +19,7 @@ class ContractService extends BaseService
     {
         $res = [];
         if ($id)
-            $res['data'] = $this->repository->findById($id);
+            $res['data'] = $this->findById($id, true, true);
 
         $res['users'] = $this->userService->list([
             'columns' => [
@@ -67,7 +67,7 @@ class ContractService extends BaseService
         if (isset($array['financial_status']))
             $array['financial_status'] = $this->repository->model->getFinancialStatus($array['financial_status']);
 
-        $array['is_contract_many_year'] = (isset($array['many_years']) && count($array['many_years']) > 0) ? true : false;
+        $array['is_contract_many_year'] = (isset($array['many_years']) && count($array['many_years']) > 0) ? 1 : 0;
 
         return $array;
     }

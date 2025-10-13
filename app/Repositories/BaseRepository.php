@@ -29,10 +29,11 @@ abstract class BaseRepository
 
     public function findById(int $id, bool $loadRelation = true)
     {
-        if (!empty($this->relations) && $loadRelation == true) {
-            return $this->model->with($this->relations)->find($id);
-        }
-        return $this->model->find($id);
+        $data = $this->model->find($id);
+        if (!empty($this->relations) && $loadRelation == true)
+            $data = $data->load($this->relations);
+
+        return $data;
     }
 
     public function findByMultipleKey(array $filters)

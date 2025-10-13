@@ -39,10 +39,13 @@ class BaseService
     /**
      * Find entity by ID
      */
-    public function findById(int $id)
+    public function findById(int $id, bool $loadRelation = true, bool $returnFormatRecord = false)
     {
-        return $this->tryThrow(function () use ($id) {
-            return $this->repository->findById($id);
+        return $this->tryThrow(function () use ($id, $loadRelation, $returnFormatRecord) {
+            $data = $this->repository->findById($id, $loadRelation);
+            if ($returnFormatRecord)
+                return $this->formatRecord($data->toArray());
+            return $data;
         });
     }
 
