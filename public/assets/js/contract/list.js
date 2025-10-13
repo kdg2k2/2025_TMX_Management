@@ -27,7 +27,9 @@ const renderColumns = () => {
             data: null,
             title: "Chủ đầu tư",
             render: (data, type, row) => {
-                return [row?.investor?.name_vi, row?.investor?.name_en].join(' - ');
+                return [row?.investor?.name_vi, row?.investor?.name_en]
+                    .filter((v) => v != null && v !== "")
+                    .join(" - ");
             },
         },
         {
@@ -52,8 +54,11 @@ const renderColumns = () => {
             title: "Ngày kêt thúc",
         },
         {
-            data: "contract_value",
+            data: null,
             title: "Giá trị HĐ",
+            render: (data, type, row) => {
+                return fmNumber(row?.contract_value);
+            },
         },
         {
             data: null,
