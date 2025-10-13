@@ -19,7 +19,7 @@
                         action="{{ route('api.contract.update', [
                             'id' => $data['id'],
                         ]) }}">
-                        @method('post')
+                        @method('patch')
                         @include('admin.pages.contract.create-edit-form-content')
                         <div class="my-1 col-12 text-center">
                             <button type="submit" class="btn btn-sm btn-primary">
@@ -38,4 +38,6 @@
         const $data = @json($data ?? null);
     </script>
     <script src="assets/js/http-request/base-store-and-update.js"></script>
+    <script src="assets/js/contract/base-store-and-update.js"></script>
+    <script src="assets/js/contract/update.js"></script>
 @endsection

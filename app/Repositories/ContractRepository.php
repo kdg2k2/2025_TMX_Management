@@ -21,8 +21,8 @@ class ContractRepository extends BaseRepository
             'extensions',
             'scopes.province',
             'professionals',
-            'disbursement',
-            'intermediateCollaborator',
+            'disbursements',
+            'intermediateCollaborators',
         ];
     }
 }

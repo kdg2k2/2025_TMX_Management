@@ -75,59 +75,59 @@ class ContractService extends BaseService
     public function store(array $request)
     {
         return $this->tryThrow(function () use ($request) {
-            $scopes = $request['contract_scopes'] ?? [];
-            $professionals = $request['professional_ids'] ?? [];
-            $disbursement = $request['disbursement_ids'] ?? [];
-            $instructors = $request['instructor_ids'] ?? [];
+            $scopes = $request['scopes'] ?? [];
+            $professionals = $request['professionals'] ?? [];
+            $disbursements = $request['disbursements'] ?? [];
+            $instructors = $request['instructors'] ?? [];
             $manyYears = $request['many_years'] ?? [];
-            $intermediateCollaborator = $request['intermediate_collaborator_ids'] ?? [];
+            $intermediateCollaborators = $request['intermediate_collaborators'] ?? [];
             unset(
-                $request['contract_scopes'],
-                $request['professional_ids'],
-                $request['disbursement_ids'],
-                $request['instructor_ids'],
+                $request['scopes'],
+                $request['professionals'],
+                $request['disbursements'],
+                $request['instructors'],
                 $request['many_years'],
-                $request['intermediate_collaborator_ids'],
+                $request['intermediate_collaborators'],
             );
 
             $data = $this->repository->store($request);
 
             $this->contractScope($data, $scopes);
             $this->contractProfessionals($data, $professionals);
-            $this->contractDisbursement($data, $disbursement);
+            $this->contractDisbursement($data, $disbursements);
             $this->contractInstructor($data, $instructors);
             $this->contractManyYear($data, $manyYears);
-            $this->contractIntermediateCollaborator($data, $intermediateCollaborator);
+            $this->contractIntermediateCollaborator($data, $intermediateCollaborators);
         }, true);
     }
 
     public function update(array $request)
     {
         return $this->tryThrow(function () use ($request) {
-            $scopes = $request['contract_scopes'] ?? [];
-            $professionals = $request['professional_ids'] ?? [];
-            $disbursement = $request['disbursement_ids'] ?? [];
-            $instructors = $request['instructor_ids'] ?? [];
+            $scopes = $request['scopes'] ?? [];
+            $professionals = $request['professionals'] ?? [];
+            $disbursements = $request['disbursements'] ?? [];
+            $instructors = $request['instructors'] ?? [];
             $manyYears = $request['many_years'] ?? [];
-            $intermediateCollaborator = $request['intermediate_collaborator_ids'] ?? [];
-            
+            $intermediateCollaborators = $request['intermediate_collaborators'] ?? [];
+
             unset(
-                $request['contract_scopes'],
-                $request['professional_ids'],
-                $request['disbursement_ids'],
-                $request['instructor_ids'],
+                $request['scopes'],
+                $request['professionals'],
+                $request['disbursements'],
+                $request['instructors'],
                 $request['many_years'],
-                $request['intermediate_collaborator_ids'],
+                $request['intermediate_collaborators'],
             );
 
             $data = $this->repository->update($request);
 
             $this->contractScope($data, $scopes);
             $this->contractProfessionals($data, $professionals);
-            $this->contractDisbursement($data, $disbursement);
+            $this->contractDisbursement($data, $disbursements);
             $this->contractInstructor($data, $instructors);
             $this->contractManyYear($data, $manyYears);
-            $this->contractIntermediateCollaborator($data, $intermediateCollaborator);
+            $this->contractIntermediateCollaborator($data, $intermediateCollaborators);
         }, true);
     }
 
@@ -147,7 +147,7 @@ class ContractService extends BaseService
             ];
         })->toArray();
 
-        if ($columnName == 'intermediateCollaborator')
+        if ($columnName == 'intermediateCollaborators')
             dd(
                 $data, $relation, $items, $columnName
             );
@@ -168,7 +168,7 @@ class ContractService extends BaseService
 
     private function contractDisbursement(Contract $contract, array $ids)
     {
-        $this->syncRelationship($contract, 'disbursement', $ids);
+        $this->syncRelationship($contract, 'disbursements', $ids);
     }
 
     private function contractInstructor(Contract $contract, array $ids)
@@ -183,6 +183,6 @@ class ContractService extends BaseService
 
     private function contractIntermediateCollaborator(Contract $contract, array $ids)
     {
-        $this->syncRelationship($contract, 'intermediateCollaborator', $ids);
+        $this->syncRelationship($contract, 'intermediateCollaborators', $ids);
     }
 }

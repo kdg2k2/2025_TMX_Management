@@ -126,12 +126,12 @@ class Contract extends Model
         return $this->hasMany(ContractProfessionals::class);
     }
 
-    public function disbursement()
+    public function disbursements()
     {
         return $this->hasMany(ContractDisbursement::class);
     }
 
-    public function intermediateCollaborator()
+    public function intermediateCollaborators()
     {
         return $this->hasMany(ContractIntermediateCollaborators::class);
     }
