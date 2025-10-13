@@ -34,5 +34,6 @@
     <script>
         const $data = @json($data ?? null);
     </script>
+    <script src="assets/js/contract/store.js"></script>
     <script src="assets/js/http-request/base-store-and-update.js"></script>
 @endsection

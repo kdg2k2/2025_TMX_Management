@@ -1,8 +1,12 @@
 const renderColumns = () => {
     return [
         {
-            data: "name",
-            title: "Tên",
+            data: "name_vi",
+            title: "Tên tiếng việt",
+        },
+        {
+            data: "name_en",
+            title: "Tên tiếng anh",
         },
         {
             data: "address",

@@ -10,13 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        // chủ đầu tư của hợp đồng
-        Schema::create('contract_investors', function (Blueprint $table) {
+        Schema::create('contract_intructors', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('name_vi')->unique();
-            $table->string('name_en')->unique();
-            $table->string('address')->nullable();
+            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 
@@ -25,6 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('contract_investors');
+        Schema::dropIfExists('contract_intructors');
     }
 };

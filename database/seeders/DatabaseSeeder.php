@@ -19,6 +19,10 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             PositionSeeder::class,
             JobTitleSeeder::class,
+            ProvinceSeeder::class,
+            CommuneSeeder::class,
+            ContractTypeSeeder::class,
+            ContractInvestorySeeder::class,
             UserSeeder::class,
         ]);
 

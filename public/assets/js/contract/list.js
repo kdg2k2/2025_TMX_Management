@@ -27,7 +27,7 @@ const renderColumns = () => {
             data: null,
             title: "Chủ đầu tư",
             render: (data, type, row) => {
-                return row?.investor?.name;
+                return [row?.investor?.name_vi, row?.investor?.name_en].join(' - ');
             },
         },
         {
@@ -81,7 +81,7 @@ const renderColumns = () => {
             title: "Hành động",
             className: "text-center",
             render: (data, type, row) => {
-                renderActionButtons(row);
+                return renderActionButtons(row);
             },
         },
     ];

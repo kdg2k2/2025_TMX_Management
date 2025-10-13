@@ -14,8 +14,8 @@ class Contract extends Model
 
     public const CONTRACT_STATUS = [
         'in_progress' => [
-            'original' => 'Đang thực hiện',
-            'converted' => 'in_progress',
+            'original' => 'in_progress',
+            'converted' => 'Đang thực hiện',
         ],
         'completed' => [
             'original' => 'completed',
@@ -23,25 +23,16 @@ class Contract extends Model
         ],
     ];
 
-    public const FINANCIAL_STATUS = [
-        'in_progress' => [
-            'original' => 'Đang thực hiện',
-            'converted' => 'in_progress',
-        ],
-        'completed' => [
-            'original' => 'completed',
-            'converted' => 'Hoàn thành',
-        ],
-    ];
+    public const FINANCIAL_STATUS = self::CONTRACT_STATUS;
 
     public const INTERMEDIATE_PRODUCT_STATUS = [
-        'completed' => [
-            'original' => 'completed',
-            'converted' => 'Đã hoàn thành',
-        ],
         'in_progress' => [
             'original' => 'in_progress',
             'converted' => 'Đang thực hiện',
+        ],
+        'completed' => [
+            'original' => 'completed',
+            'converted' => 'Hoàn thành',
         ],
         'pending_review' => [
             'original' => 'pending_review',
@@ -85,9 +76,9 @@ class Contract extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function instructor()
+    public function instructors()
     {
-        return $this->belongsTo(User::class, 'instructor_id');
+        return $this->hasMany(ContractIntructor::class);
     }
 
     public function accountingContact()
@@ -113,5 +104,35 @@ class Contract extends Model
     public function investor()
     {
         return $this->belongsTo(ContractInvestor::class, 'investor_id');
+    }
+
+    public function manyYears()
+    {
+        return $this->hasMany(ContractManyYear::class);
+    }
+
+    public function extensions()
+    {
+        return $this->hasMany(ContractExtension::class);
+    }
+
+    public function scopes()
+    {
+        return $this->hasMany(ContractScope::class);
+    }
+
+    public function professionals()
+    {
+        return $this->hasMany(ContractProfessionals::class);
+    }
+
+    public function disbursement()
+    {
+        return $this->hasMany(ContractDisbursement::class);
+    }
+
+    public function intermediateCollaborator()
+    {
+        return $this->hasMany(ContractIntermediateCollaborators::class);
     }
 }

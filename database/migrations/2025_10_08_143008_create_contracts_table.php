@@ -21,17 +21,20 @@ return new class extends Migration {
 
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('Người tạo hợp đồng');
 
-            $table->foreignId('instructor_id')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('người hướng dẫn');
             $table->foreignId('accounting_contact_id')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('đầu mối kế toán');
             $table->foreignId('inspector_user_id')->nullable()->constrained('users')->nullOnDelete()->comment('Người kiểm tra sản phẩm trung gian của hợp đồng');
             $table->foreignId('executor_user_id')->nullable()->constrained('users')->nullOnDelete()->comment('Người thực hiện sản phẩm trung gian');
 
             $table->foreignId('type_id')->constrained('contract_types')->cascadeOnDelete()->cascadeOnUpdate()->comment('loại hợp đồng');
             $table->foreignId('investor_id')->nullable()->constrained('contract_investors')->cascadeOnDelete()->cascadeOnUpdate()->comment('nhà đầu tư');
+            $table->string('vi_name_of_investor_reference_person')->nullable()->comment('Tên tiếng việt - người tham chiếu của nhà đầu tư');
+            $table->string('en_name_of_investor_reference_person')->nullable()->comment('Tên tiếng anh - người tham chiếu của nhà đầu tư');
 
             $table->double('contract_value')->nullable()->comment('giá trị hợp đồng');
             $table->double('vat_rate')->nullable()->comment('giá trị % thuế');
             $table->double('vat_amount')->nullable()->comment('tiền thuế');
+            $table->double('acceptance_value')->nullable()->comment('giá trị nghiệm thu');
+            $table->double('liquidation_value')->nullable()->comment('giá trị thanh lý');
 
             $table->date('signed_date')->nullable()->comment('Ngày ký hợp đồng');
             $table->date('effective_date')->nullable()->comment('Ngày hợp đồng có hiệu lực');

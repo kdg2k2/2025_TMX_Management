@@ -9,7 +9,8 @@ class StoreRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:contract_investors,name',
+            'name_vi' => 'required|string|max:255|unique:contract_investors,name_vi',
+            'name_en' => 'required|string|max:255|unique:contract_investors,name_en',
             'address' => 'nullable|string|max:255',
         ];
     }

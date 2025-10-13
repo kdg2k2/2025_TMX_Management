@@ -8,7 +8,8 @@ class UpdateRequest extends StoreRequest
     {
         return array_merge(parent::rules(), [
             'id' => app(FindByIdRequest::class)->rules()['id'],
-            'name' => 'required|string|max:255|unique:contract_investors,name,' . $this->id,
+            'name_vi' => 'required|string|max:255|unique:contract_investors,name_vi,' . $this->id,
+            'name_en' => 'required|string|max:255|unique:contract_investors,name_en,' . $this->id,
         ]);
     }
 }

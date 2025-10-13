@@ -19,6 +19,8 @@ class BaseListRequest extends BaseRequest
     public function rules(): array
     {
         return [
+            'order_by' => 'required|string',
+            'sort_by' => 'required|in:desc,asc',
             'paginate' => 'required|in:0,1',
             'per_page' => 'nullable|integer|min:1',
             'page' => 'nullable|integer|min:1',

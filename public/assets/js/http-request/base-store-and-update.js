@@ -55,5 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const formData = new FormData(form);
         const res = await http[method](action, formData);
         if (res.message && method === "post") form.reset();
+
+        if (typeof afterSubmitDone == "function") afterSubmitDone();
     });
 });
