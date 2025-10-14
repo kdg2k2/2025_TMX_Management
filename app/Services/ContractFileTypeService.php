@@ -43,7 +43,6 @@ class ContractFileTypeService extends BaseService
 
     private function extractRelations(array &$request): array
     {
-        dd($request);
         $fields = [
             'extensions',
         ];

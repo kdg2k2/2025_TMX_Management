@@ -43,6 +43,7 @@
     <x-modal id="create-contract-file-modal" title="Thêm mới file hợp đồng" size="md" nested="true"
         action="{{ route('api.contract.file.store') }}" method="post">
         <x-slot:body>
+            <input name="contract_id" hidden>
             <div class="form-group my-1">
                 <label>
                     Loại file

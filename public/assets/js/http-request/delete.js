@@ -1,22 +1,26 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const modalDelete = $("#modalDelete");
-    modalDelete.on("show.bs.modal", (e) => {
-        const btnDelete = modalDelete.find("button[type='submit']");
-        const trigger = $(e.relatedTarget);
-        const deleteUrl = trigger.data("href");
-        const onSuccessFnName = trigger.data("onsuccess");
+const deleteModal = document.getElementById("modalDelete");
+const deleteModalForm = deleteModal.querySelector("form");
 
-        btnDelete.off("click").on("click", async function (evt) {
-            evt.preventDefault();
+const openDeleteModal = (triggerEl) => {
+    deleteModalForm?.setAttribute(
+        "action",
+        triggerEl.getAttribute("data-href")
+    );
+    deleteModalForm?.setAttribute(
+        "data-onsuccess",
+        triggerEl.getAttribute("data-onsuccess")
+    );
 
-            const res = await http.delete(deleteUrl);
-            modalDelete.modal("hide");
-            if (
-                res.message &&
-                onSuccessFnName &&
-                typeof window[onSuccessFnName] === "function"
-            )
-                window[onSuccessFnName]();
+    const modal = createModal(deleteModal);
+    modal.show();
+};
+
+document.addEventListener("DOMContentLoaded", async () => {
+    deleteModalForm.addEventListener("submit", async (e) => {
+        await handleSubmitForm(e, deleteModalForm, () => {
+            const modal = bootstrap.Modal.getOrCreateInstance(deleteModal);
+            modal.hide();
         });
     });
 });
+

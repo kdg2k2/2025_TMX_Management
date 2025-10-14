@@ -10,7 +10,7 @@ const contractFileType = document.getElementById("contract-file-type");
 const contractFileLabel = document.getElementById("contract-file-label");
 const contractFileInput = document.getElementById("contract-file-input");
 
-const renderDocumentsInfo = () => {
+window.renderDocumentsInfo = () => {
     createDataTableServerSide(
         $(documentsInfoDatatable),
         listFileUrl,
@@ -38,7 +38,14 @@ const renderDocumentsInfoColumns = () => {
             data: null,
             title: "Nội dung cập nhật",
             render: (data, type, row) => {
-                return row?.created_by?.name;
+                return row?.updated_content;
+            },
+        },
+        {
+            data: null,
+            title: "Ghi chú",
+            render: (data, type, row) => {
+                return row?.note;
             },
         },
         {
@@ -80,7 +87,6 @@ const viewFileHandler = async (id) => {
 
 const renderDocumentsInfoActionButtons = (row) => {
     return `
-        ${createDeleteBtn(`${deleteFileUrl}?id=${row.id}`)}
         ${
             createBtn(
                 "info",
@@ -101,6 +107,10 @@ const renderDocumentsInfoActionButtons = (row) => {
                 `window.open('${row.path}', "_blank")`
             )?.outerHTML
         }
+        ${createDeleteBtn(
+            `${deleteFileUrl}?id=${row.id}`,
+            "renderDocumentsInfo"
+        )}
     `;
 };
 
@@ -112,7 +122,7 @@ const openCreateFileModal = () => {
     modal.show();
 };
 
-const showAndSetAcceptExts = (extensions) => {
+const showAndSetAcceptExts = (extensions = []) => {
     var span = contractFileLabel.querySelector(
         "span.contract-file-type-extensions"
     );
@@ -126,7 +136,7 @@ const showAndSetAcceptExts = (extensions) => {
         contractFileLabel.appendChild(span);
     }
 
-    const joinExt = `(${extensions.join(",")})`;
+    const joinExt = extensions.join(",");
     span.innerText = joinExt;
     contractFileInput.setAttribute("accept", joinExt);
 };
@@ -143,8 +153,14 @@ createContractFileModal.addEventListener("show.bs.modal", () => {
     });
 
     createContractFileModalForm.addEventListener("submit", async (e) => {
+        const input = createContractFileModalForm?.querySelector(
+            'input[name="contract_id"]'
+        );
+        if (input) input.value = contractId || "";
+        
         await handleSubmitForm(e, createContractFileModalForm, () => {
             refreshSumoSelect();
+            showAndSetAcceptExts();
             renderDocumentsInfo();
         });
     });

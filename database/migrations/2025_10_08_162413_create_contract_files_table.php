@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('type_id')->constrained('contract_file_types')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->text('path');
+            $table->text('path')->nullable();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('updated_content')->nullable()->comment('nội dung cập nhật');
             $table->string('note')->nullable();

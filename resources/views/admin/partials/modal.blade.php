@@ -1,23 +1,19 @@
 <x-modal id="modalLogout" title="Xác nhận" :action="route('logout')" method="POST" size="md">
-
     <x-slot:body>
         <p>Bạn có chắc chắn muốn đăng xuất?</p>
     </x-slot:body>
-
     <x-slot:footer>
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
-        <button type="submit" class="btn btn-primary">Thực hiện</button>
+        <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
+        <x-button-submit />
     </x-slot:footer>
 </x-modal>
 
-<x-modal id="modalDelete" title="Xóa dữ liệu" size="md">
-
+<x-modal id="modalDelete" title="Xóa dữ liệu" size="md" method="delete" nested="true">
     <x-slot:body>
         <p>Bạn có chắc chắn muốn xóa bản ghi này?</p>
     </x-slot:body>
-
     <x-slot:footer>
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
-        <button type="submit" class="btn btn-danger">Xóa</button>
+        <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
+        <x-button-submit variant="danger" />
     </x-slot:footer>
 </x-modal>

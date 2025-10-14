@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Services\BaseService;
+use Exception;
 
 class HandlerUploadFileService extends BaseService
 {

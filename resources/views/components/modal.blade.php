@@ -38,10 +38,12 @@
 @endphp
 
 <div class="{{ $modalClass }}" id="{{ $id }}" data-bs-backdrop="{{ $nested ? 'static' : $backdrop }}"
-    data-bs-keyboard="{{ $keyboard }}" tabindex="-1" aria-labelledby="{{ $id }}Label" aria-hidden="true">
+    data-nested="{{ $nested ? 'true' : 'false' }}" data-bs-keyboard="{{ $keyboard }}" tabindex="-1"
+    aria-labelledby="{{ $id }}Label" aria-hidden="true">
     <div class="{{ $dialogClass }}">
-        @if ($action)
-            <form action="{{ $action }}" enctype="multipart/form-data">
+        @if ($method)
+            <form @if (isset($action)) action="{{ $action }}" @endif class="w-100"
+                enctype="multipart/form-data">
                 @if (isset($method))
                     @method(strtolower($method))
                 @endif

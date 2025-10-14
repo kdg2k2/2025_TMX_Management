@@ -100,26 +100,6 @@ const autoMatchFieldAndFillPatchForm = (form, method) => {
     }
 };
 
-const handleSubmitForm = async (e, form, callbackAfterSubmit = () => {}) => {
-    e.preventDefault();
-    const method = getFormMethod(form);
-    const formData = new FormData(form);
-    const action = form.getAttribute("action")?.toLowerCase();
-    const res = await http[method](action, formData);
-    if (res.message && method === "post") form.reset();
-
-    if (typeof afterSubmitDone == "function") afterSubmitDone();
-
-    if (typeof callbackAfterSubmit == "function") callbackAfterSubmit();
-};
-
-const getFormMethod = (form) => {
-    return (
-        form.querySelector("input[name='_method']")?.value?.toLowerCase() ||
-        "get"
-    );
-};
-
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("submit-form");
     if (!form) return;
