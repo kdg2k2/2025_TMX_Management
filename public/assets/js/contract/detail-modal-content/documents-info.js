@@ -157,7 +157,7 @@ createContractFileModal.addEventListener("show.bs.modal", () => {
             'input[name="contract_id"]'
         );
         if (input) input.value = contractId || "";
-        
+
         await handleSubmitForm(e, createContractFileModalForm, () => {
             refreshSumoSelect();
             showAndSetAcceptExts();

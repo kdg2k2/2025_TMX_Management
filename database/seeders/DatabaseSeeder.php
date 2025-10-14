@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             CommuneSeeder::class,
             ContractTypeSeeder::class,
             ContractInvestorySeeder::class,
+            ContractFileTypeSeeder::class,
             UserSeeder::class,
         ]);
 
