@@ -269,4 +269,24 @@ class BaseService
     {
         // Override in child classes
     }
+
+    protected function syncRelationship($model, $foreignKey, string $relation, array $items, string $columnName)
+    {
+        $model->$relation()->delete();
+
+        if (count($items) == 0)
+            return;
+
+        $data = collect($items)->map(function ($item) use ($model, $columnName, $foreignKey) {
+            return [
+                $columnName => $item,
+                $foreignKey => $model['id'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        })->toArray();
+
+        if (!empty($data))
+            $model->$relation()->insert($data);
+    }
 }

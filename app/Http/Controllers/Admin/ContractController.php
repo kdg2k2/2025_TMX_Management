@@ -5,19 +5,23 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contract\DeleteRequest;
 use App\Http\Requests\Contract\EditRequest;
+use App\Services\ContractFileTypeService;
 use App\Services\ContractService;
 
 class ContractController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct(
+        private ContractFileTypeService $contractFileTypeService
+    ) {
         $this->service = app(ContractService::class);
     }
 
     public function index()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.contract.index');
+            return view('admin.pages.contract.index', [
+                'fileTypes' => $this->contractFileTypeService->list(),
+            ]);
         });
     }
 

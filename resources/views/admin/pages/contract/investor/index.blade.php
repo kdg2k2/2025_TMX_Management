@@ -2,13 +2,10 @@
 @section('content')
     <x-breadcrumb :items="[
         ['label' => 'Trang chủ', 'url' => route('dashboard')],
-        ['label' => 'Hợp đồng', 'url' => null],
+        ['label' => 'Hợp đồng', 'url' => route('contract.index')],
         ['label' => 'Nhà đầu tư', 'url' => null],
     ]">
-        <button class="btn btn-sm btn-success" onclick="window.location='{{ route('contract.investor.create') }}'"
-            type="button" data-bs-placement="top" data-bs-original-title="Thêm mới">
-            <i class="ti ti-plus"></i>
-        </button>
+        <x-button variant="success" size="sm" icon="ti ti-plus" tooltip="Thêm mới" :href="route('contract.investor.create')" />
     </x-breadcrumb>
 
     <div class="row">

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ContractController;
+use App\Http\Controllers\Api\ContractFileController;
+use App\Http\Controllers\Api\ContractFileTypeController;
 use App\Http\Controllers\Api\ContractInvestorController;
 use App\Http\Controllers\Api\ContractTypeController;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +35,22 @@ Route::middleware(['web', 'auth.any'])->group(function () {
             Route::get('show', 'show')->name('api.contract.show');
             Route::post('store', 'store')->name('api.contract.store');
             Route::patch('update', 'update')->name('api.contract.update');
+        });
+
+        Route::prefix('file')->group(function () {
+            Route::controller(ContractFileController::class)->group(function () {
+                Route::get('list', 'list')->name('api.contract.file.list');
+                Route::post('view-file', 'viewFile')->name('api.contract.file.view-file');
+                Route::post('store', 'store')->name('api.contract.file.store');
+                Route::delete('delete', 'delete')->name('api.contract.file.delete');
+            });
+
+            Route::prefix('type')->controller(ContractFileTypeController::class)->group(function () {
+                Route::get('list', 'list')->name('api.contract.file.type.list');
+                Route::post('store', 'store')->name('api.contract.file.type.store');
+                Route::patch('update', 'update')->name('api.contract.file.type.update');
+                Route::delete('delete', 'delete')->name('api.contract.file.type.delete');
+            });
         });
     });
 });

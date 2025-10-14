@@ -10,4 +10,9 @@ class ContractFileTypeExtension extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function extension()
+    {
+        return $this->belongsTo(FileExtension::class, 'extension_id');
+    }
 }

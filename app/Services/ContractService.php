@@ -135,58 +135,33 @@ class ContractService extends BaseService
         $this->contractIntermediateCollaborator($data, $extracted['intermediate_collaborators'] ?? []);
     }
 
-    private function syncRelationship(Contract $contract, string $relation, array $items, string $columnName = 'user_id')
-    {
-        $contract->$relation()->delete();
-
-        if (count($items) == 0)
-            return;
-
-        $data = collect($items)->map(function ($item) use ($contract, $columnName) {
-            return [
-                $columnName => $item,
-                'contract_id' => $contract['id'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        })->toArray();
-
-        if ($columnName == 'intermediateCollaborators')
-            dd(
-                $data, $relation, $items, $columnName
-            );
-
-        if (!empty($data))
-            $contract->$relation()->insert($data);
-    }
-
     private function contractScope(Contract $contract, array $codes)
     {
-        $this->syncRelationship($contract, 'scopes', $codes, 'province_code');
+        $this->syncRelationship($contract, 'contract_id', 'scopes', $codes, 'province_code');
     }
 
     private function contractProfessionals(Contract $contract, array $ids)
     {
-        $this->syncRelationship($contract, 'professionals', $ids);
+        $this->syncRelationship($contract, 'contract_id', 'professionals', $ids, 'user_id');
     }
 
     private function contractDisbursement(Contract $contract, array $ids)
     {
-        $this->syncRelationship($contract, 'disbursements', $ids);
+        $this->syncRelationship($contract, 'contract_id', 'disbursements', $ids, 'user_id');
     }
 
     private function contractInstructor(Contract $contract, array $ids)
     {
-        $this->syncRelationship($contract, 'instructors', $ids);
+        $this->syncRelationship($contract, 'contract_id', 'instructors', $ids, 'user_id');
     }
 
     private function contractManyYear(Contract $contract, array $years)
     {
-        $this->syncRelationship($contract, 'manyYears', $years, 'year');
+        $this->syncRelationship($contract, 'contract_id', 'manyYears', $years, 'year');
     }
 
     private function contractIntermediateCollaborator(Contract $contract, array $ids)
     {
-        $this->syncRelationship($contract, 'intermediateCollaborators', $ids);
+        $this->syncRelationship($contract, 'contract_id', 'intermediateCollaborators', $ids, 'user_id');
     }
 }

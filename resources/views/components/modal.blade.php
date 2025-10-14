@@ -1,19 +1,24 @@
 @props([
-    'id', // bắt buộc có ID modal
-    'title' => 'Xác nhận', // tiêu đề mặc định
-    'size' => 'md', // sm, md, lg, xl, fullscreen
-    'action' => null, // form action
-    'method' => 'POST', // form method
-    'backdrop' => 'static', // có thể đổi thành true/false
-    'keyboard' => 'true', // disable ESC key
-    'centered' => true, // căn giữa modal
-    'scrollable' => false, // có scroll không
+    'id',
+    'title' => 'Xác nhận',
+    'size' => 'md',
+    'action' => null,
+    'method' => 'POST',
+    'backdrop' => 'static',
+    'keyboard' => 'true',
+    'centered' => true,
+    'scrollable' => false,
+    'nested' => false, // Prop để đánh dấu modal lồng nhau
 ])
 
 @php
     $dialogClass = 'modal-dialog';
-    if ($centered) $dialogClass .= ' modal-dialog-centered';
-    if ($scrollable) $dialogClass .= ' modal-dialog-scrollable';
+    if ($centered) {
+        $dialogClass .= ' modal-dialog-centered';
+    }
+    if ($scrollable) {
+        $dialogClass .= ' modal-dialog-scrollable';
+    }
 
     $sizeClass = match ($size) {
         'sm' => ' modal-sm',
@@ -24,38 +29,57 @@
     };
 
     $dialogClass .= $sizeClass;
+
+    // Nếu là nested modal, thêm class để tự tạo backdrop
+    $modalClass = 'modal fade';
+    if ($nested) {
+        $modalClass .= ' bg-dark bg-opacity-50';
+    }
 @endphp
 
-<div class="modal fade" id="{{ $id }}"
-     data-bs-backdrop="{{ $backdrop }}"
-     data-bs-keyboard="{{ $keyboard }}"
-     tabindex="-1"
-     aria-labelledby="{{ $id }}Label"
-     aria-hidden="true">
+<div class="{{ $modalClass }}" id="{{ $id }}" data-bs-backdrop="{{ $nested ? 'static' : $backdrop }}"
+    data-bs-keyboard="{{ $keyboard }}" tabindex="-1" aria-labelledby="{{ $id }}Label" aria-hidden="true">
     <div class="{{ $dialogClass }}">
-        <form class="modal-content" @if($action) action="{{ $action }}" method="{{ strtolower($method) === 'get' ? 'GET' : 'POST' }}" @endif>
-            @csrf
-            @if(!in_array(strtolower($method), ['get', 'post']))
-                @method($method)
-            @endif
+        @if ($action)
+            <form action="{{ $action }}" enctype="multipart/form-data">
+                @if (isset($method))
+                    @method(strtolower($method))
+                @endif
 
-            {{-- Header --}}
-            <div class="modal-header">
-                <h6 class="modal-title" id="{{ $id }}Label">{{ $title }}</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="{{ $id }}Label">{{ $title }}</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
 
-            {{-- Body --}}
-            <div class="modal-body">
-                {{ $body ?? $slot }}
-            </div>
+                    <div class="modal-body">
+                        {{ $body ?? $slot }}
+                    </div>
 
-            {{-- Footer --}}
-            @if (isset($footer))
-                <div class="modal-footer">
-                    {{ $footer }}
+                    @if (isset($footer))
+                        <div class="modal-footer">
+                            {{ $footer }}
+                        </div>
+                    @endif
                 </div>
-            @endif
-        </form>
+            </form>
+        @else
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="{{ $id }}Label">{{ $title }}</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    {{ $body ?? $slot }}
+                </div>
+
+                @if (isset($footer))
+                    <div class="modal-footer">
+                        {{ $footer }}
+                    </div>
+                @endif
+            </div>
+        @endif
     </div>
 </div>

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\ContractController;
+use App\Http\Controllers\Admin\ContractFileController;
+use App\Http\Controllers\Admin\ContractFileTypeController;
 use App\Http\Controllers\Admin\ContractInvestorController;
 use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -36,6 +38,19 @@ Route::middleware(['isLogin'])->group(function () {
             Route::get('create', 'create')->name('contract.create');
             Route::get('edit', 'edit')->name('contract.edit');
             Route::delete('delete', 'delete')->name('contract.delete');
+        });
+
+        Route::prefix('file')->group(function () {
+            Route::controller(ContractFileController::class)->group(function () {
+                Route::delete('delete', 'delete')->name('contract.file.delete');
+            });
+
+            Route::prefix('type')->controller(ContractFileTypeController::class)->group(function () {
+                Route::get('index', 'index')->name('contract.file.type.index');
+                Route::get('create', 'create')->name('contract.file.type.create');
+                Route::get('edit', 'edit')->name('contract.file.type.edit');
+                Route::delete('delete', 'delete')->name('contract.file.type.delete');
+            });
         });
     });
 });

@@ -11,22 +11,15 @@
         </button>
     </x-breadcrumb>
 
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card custom-card">
-                <div class="card-body">
-                    <form id="submit-form" class="row" action="{{ route('api.contract.store') }}">
-                        @method('post')
-                        @include('admin.pages.contract.create-edit-form-content')
-                        <div class="my-1 col-12 text-center">
-                            <button type="submit" class="btn btn-sm btn-primary">
-                                <i class="ti ti-bolt"></i>
-                                Thực hiện
-                            </button>
-                        </div>
-                    </form>
+    <div class="card custom-card">
+        <div class="card-body">
+            <form id="submit-form" action="{{ route('api.contract.store') }}">
+                @method('post')
+                @include('admin.pages.contract.create-edit-form-content')
+                <div class="my-1 col-12 text-center">
+                    <x-button-submit />
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 @endsection

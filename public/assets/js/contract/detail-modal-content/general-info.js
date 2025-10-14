@@ -53,7 +53,8 @@ const listRenderGerenal = [
     },
     {
         title: "Ngày kết thúc gia hạn",
-        content: (item) => formatDateToYmd(item?.extensions?.at(-1)?.new_end_date || ""),
+        content: (item) =>
+            formatDateToYmd(item?.extensions?.at(-1)?.new_end_date || ""),
     },
 ];
 
@@ -92,7 +93,7 @@ const renderGerenaInfo = () => {
     const html = listRenderGerenal
         .map(
             (value) => `
-            <div class="col-md-3 mb-3">
+            <div class="col-lg-3 col-md-6 mb-3">
                 <label class="fw-bold d-block">${value.title}:</label>
                 <div class="mb-0">${value.content(contractDetail)}</div>
             </div>

@@ -83,6 +83,11 @@
                             </a>
                         </li>
                         <li class="slide">
+                            <a href="{{ route('contract.file.type.index') }}" class="side-menu__item">
+                                Loại file
+                            </a>
+                        </li>
+                        <li class="slide">
                             <a href="{{ route('contract.index') }}" class="side-menu__item">
                                 Hợp đồng
                             </a>

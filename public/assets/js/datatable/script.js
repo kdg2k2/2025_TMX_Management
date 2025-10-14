@@ -38,11 +38,7 @@ const initializeTooltipEvents = (dataTable) => {
 };
 
 // Hàm base để khởi tạo DataTable
-const initializeBaseDataTable = (
-    element,
-    additionalConfig = {},
-    func = () => {}
-) => {
+const initializeBaseDataTable = (element, additionalConfig = {}) => {
     // Hủy DataTable cũ nếu tồn tại
     destroyDataTable(element);
 
@@ -50,7 +46,6 @@ const initializeBaseDataTable = (
     const config = {
         ...DEFAULT_DATATABLE_CONFIG,
         drawCallback: function () {
-            if (typeof func === "function") func();
             initializeTooltips();
         },
         initComplete: function () {
@@ -129,6 +124,7 @@ const createDataTableServerSide = (
     extraParams = {},
     func = () => {}
 ) => {
+    var serverResponse = null;
     const serverSideConfig = {
         serverSide: true,
         columns,
@@ -148,6 +144,7 @@ const createDataTableServerSide = (
                 null,
                 false
             ).then((res) => {
+                serverResponse = res;
                 const items = res?.data?.data ?? [];
                 callback({
                     data: items.map(mapFn),
@@ -156,9 +153,14 @@ const createDataTableServerSide = (
                 });
             });
         },
+        drawCallback: function () {
+            // Gọi func SAU KHI data đã được load
+            if (typeof func === "function" && serverResponse)
+                func(serverResponse);
+        },
     };
 
-    const dataTable = initializeBaseDataTable(element, serverSideConfig, func);
+    const dataTable = initializeBaseDataTable(element, serverSideConfig);
     debounceSearch(element, dataTable);
 
     return dataTable;
