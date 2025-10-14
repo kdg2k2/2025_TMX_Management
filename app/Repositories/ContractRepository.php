@@ -11,7 +11,7 @@ class ContractRepository extends BaseRepository
         $this->model = new Contract();
         $this->relations = [
             'createdBy',
-            'instructors',
+            'instructors.user',
             'accountingContact',
             'inspectorUser',
             'executorUser',
@@ -20,9 +20,9 @@ class ContractRepository extends BaseRepository
             'manyYears',
             'extensions',
             'scopes.province',
-            'professionals',
-            'disbursements',
-            'intermediateCollaborators',
+            'professionals.user',
+            'disbursements.user',
+            'intermediateCollaborators.user',
         ];
     }
 }

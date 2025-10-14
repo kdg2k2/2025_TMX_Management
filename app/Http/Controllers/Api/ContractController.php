@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Services\ContractService;
+use App\Http\Requests\Contract\FindByIdRequest;
 use App\Http\Requests\Contract\ListRequest;
 use App\Http\Requests\Contract\StoreRequest;
 use App\Http\Requests\Contract\UpdateRequest;
+use App\Services\ContractService;
 
 class ContractController extends Controller
 {
@@ -20,6 +21,15 @@ class ContractController extends Controller
         return $this->catchAPI(function () use ($request) {
             return response()->json([
                 'data' => $this->service->list($request->validated()),
+            ]);
+        });
+    }
+
+    public function show(FindByIdRequest $request)
+    {
+        return $this->catchAPI(function () use ($request) {
+            return response()->json([
+                'data' => $this->service->findById($request->validated()['id']),
             ]);
         });
     }

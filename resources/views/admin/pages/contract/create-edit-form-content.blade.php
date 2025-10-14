@@ -200,7 +200,7 @@
             <div class="my-1 col-md-4">
                 <div class="form-group">
                     <label for="contract_value">
-                        Giá trị hợp đồng (đồng)
+                        Giá trị hợp đồng(vnđ)
                     </label>
                     <input class="form-control" type="text" name="contract_value" id="contract_value">
                 </div>
@@ -208,7 +208,7 @@
             <div class="my-1 col-md-2">
                 <div class="form-group">
                     <label for="vat_rate">
-                        Giá trị % thuế (%)
+                        Mức thuế(%)
                     </label>
                     <input class="form-control" type="text" name="vat_rate" id="vat_rate">
                 </div>
@@ -216,7 +216,7 @@
             <div class="my-1 col-md-6">
                 <div class="form-group">
                     <label for="vat_amount">
-                        Tiền thuế (đồng)
+                        VAT(vnđ)
                     </label>
                     <input class="form-control bg-light" type="text" name="vat_amount" id="vat_amount" readonly>
                 </div>
@@ -224,7 +224,7 @@
             <div class="my-1 col-md-4">
                 <div class="form-group">
                     <label>
-                        Giá trị nghiệm thu (đồng)
+                        Giá trị nghiệm thu (vnđ)
                     </label>
                     <input class="form-control" type="text" name="acceptance_value" id="acceptance_value">
                 </div>
@@ -232,7 +232,7 @@
             <div class="my-1 col-md-4">
                 <div class="form-group">
                     <label>
-                        Giá trị thanh lý (đồng)
+                        Giá trị thanh lý (vnđ)
                     </label>
                     <input class="form-control" type="text" name="liquidation_value" id="liquidation_value">
                 </div>

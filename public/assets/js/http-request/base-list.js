@@ -36,7 +36,8 @@ const createBtn = (
     modal = false,
     modalAttrs = {},
     iconClass = "",
-    onClick = null
+    onClick = null,
+    btnText = ""
 ) => {
     const btn = document.createElement("button");
 
@@ -68,6 +69,8 @@ const createBtn = (
     if (onClick) {
         btn.setAttribute("onclick", onClick);
     }
+
+    if (btnText) btn.textContent = btnText;
 
     return btn;
 };

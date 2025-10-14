@@ -30,6 +30,7 @@ Route::middleware(['web', 'auth.any'])->group(function () {
 
         Route::controller(ContractController::class)->group(function () {
             Route::get('list', 'list')->name('api.contract.list');
+            Route::get('show', 'show')->name('api.contract.show');
             Route::post('store', 'store')->name('api.contract.store');
             Route::patch('update', 'update')->name('api.contract.update');
         });

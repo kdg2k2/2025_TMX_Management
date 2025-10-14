@@ -5,8 +5,26 @@ const renderColumns = () => {
             title: "Năm",
         },
         {
-            data: "contract_number",
+            data: null,
             title: "Số hợp đồng",
+            render: (data, type, row) => {
+                return createBtn(
+                    "outline-primary",
+                    "Chi tiết hợp đồng",
+                    true,
+                    {
+                        "data-bs-target": `#${contractDetailModal.getAttribute(
+                            "id"
+                        )}`,
+                        "data-bs-toggle": "modal",
+                        "data-id": row.id,
+                        "data-onsuccess": "loadContractDetail",
+                    },
+                    "",
+                    null,
+                    row.contract_number
+                )?.outerHTML;
+            },
         },
         {
             data: "name",
@@ -46,18 +64,30 @@ const renderColumns = () => {
             title: "Ngày ký",
         },
         {
-            data: "effective_date",
-            title: "Ngày HĐ có hiệu lực",
-        },
-        {
             data: "end_date",
             title: "Ngày kêt thúc",
         },
         {
             data: null,
+            title: "Ngày kết thúc gia hạn",
+            render: (data, type, row) => {
+                return formatDateToYmd(
+                    row?.extensions?.at(-1)?.new_end_date || ""
+                );
+            },
+        },
+        {
+            data: null,
+            title: "Mức thuế",
+            render: (data, type, row) => {
+                return row?.vat_rate + "%";
+            },
+        },
+        {
+            data: null,
             title: "Giá trị HĐ",
             render: (data, type, row) => {
-                return fmNumber(row?.contract_value);
+                return fmNumber(row?.contract_value) + " vnđ";
             },
         },
         {

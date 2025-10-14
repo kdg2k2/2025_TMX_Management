@@ -19,6 +19,7 @@
 
         @include('admin.partials.footer')
         @include('admin.partials.modal')
+        @yield('modals')
     </div>
 
     @include('admin.partials.scroll-to-top')
