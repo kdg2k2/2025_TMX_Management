@@ -420,6 +420,23 @@
                     <textarea name="note" rows="1" class="form-control"></textarea>
                 </div>
             </div>
+
+            <div class="my-1 col-md-4">
+                <div class="form-group">
+                    <label>
+                        File Full (.pdf)
+                    </label>
+                    <input type="file" class="form-control" accept=".pdf" name="path_file_full">
+                </div>
+            </div>
+            <div class="my-1 col-md-4">
+                <div class="form-group">
+                    <label>
+                        File Short (.pdf)
+                    </label>
+                    <input type="file" class="form-control" accept=".pdf" name="path_file_short">
+                </div>
+            </div>
         </div>
     </div>
 </div>

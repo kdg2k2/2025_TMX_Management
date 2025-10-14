@@ -96,5 +96,29 @@ const renderActionButtons = (row) => {
     return `
         ${createEditBtn(`${editUrl}?id=${row.id}`)}
         ${createDeleteBtn(`${deleteUrl}?id=${row.id}`)}
+        ${
+            row.path_file_full
+                ? createBtn(
+                      "info",
+                      "Xem file full",
+                      false,
+                      {},
+                      "ti ti-file-type-pdf",
+                      `window.open(${row.path_file_full}, '_blank')`
+                  )?.outerHTML
+                : ""
+        }
+        ${
+            row.path_file_short
+                ? createBtn(
+                      "info",
+                      "Xem file short",
+                      false,
+                      {},
+                      "ti ti-file-type-pdf",
+                      `window.open(${row.path_file_short}, '_blank')`
+                  )?.outerHTML
+                : ""
+        }
     `;
 };

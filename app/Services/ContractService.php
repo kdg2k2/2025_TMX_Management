@@ -10,7 +10,8 @@ class ContractService extends BaseService
         private UserService $userService,
         private ContractTypeService $contractTypeService,
         private ContractInvestorService $contractInvestorService,
-        private ProvinceService $provinceService
+        private ProvinceService $provinceService,
+        private HandlerUploadFileService $handlerUploadFileService
     ) {
         $this->repository = app(ContractRepository::class);
     }
@@ -75,60 +76,63 @@ class ContractService extends BaseService
     public function store(array $request)
     {
         return $this->tryThrow(function () use ($request) {
-            $scopes = $request['scopes'] ?? [];
-            $professionals = $request['professionals'] ?? [];
-            $disbursements = $request['disbursements'] ?? [];
-            $instructors = $request['instructors'] ?? [];
-            $manyYears = $request['many_years'] ?? [];
-            $intermediateCollaborators = $request['intermediate_collaborators'] ?? [];
-            unset(
-                $request['scopes'],
-                $request['professionals'],
-                $request['disbursements'],
-                $request['instructors'],
-                $request['many_years'],
-                $request['intermediate_collaborators'],
-            );
-
+            $extracted = $this->extractRelationsAndFiles($request);
             $data = $this->repository->store($request);
-
-            $this->contractScope($data, $scopes);
-            $this->contractProfessionals($data, $professionals);
-            $this->contractDisbursement($data, $disbursements);
-            $this->contractInstructor($data, $instructors);
-            $this->contractManyYear($data, $manyYears);
-            $this->contractIntermediateCollaborator($data, $intermediateCollaborators);
+            $this->handleFilesAndRelations($data, $extracted);
         }, true);
     }
 
     public function update(array $request)
     {
         return $this->tryThrow(function () use ($request) {
-            $scopes = $request['scopes'] ?? [];
-            $professionals = $request['professionals'] ?? [];
-            $disbursements = $request['disbursements'] ?? [];
-            $instructors = $request['instructors'] ?? [];
-            $manyYears = $request['many_years'] ?? [];
-            $intermediateCollaborators = $request['intermediate_collaborators'] ?? [];
-
-            unset(
-                $request['scopes'],
-                $request['professionals'],
-                $request['disbursements'],
-                $request['instructors'],
-                $request['many_years'],
-                $request['intermediate_collaborators'],
-            );
-
+            $extracted = $this->extractRelationsAndFiles($request);
             $data = $this->repository->update($request);
-
-            $this->contractScope($data, $scopes);
-            $this->contractProfessionals($data, $professionals);
-            $this->contractDisbursement($data, $disbursements);
-            $this->contractInstructor($data, $instructors);
-            $this->contractManyYear($data, $manyYears);
-            $this->contractIntermediateCollaborator($data, $intermediateCollaborators);
+            $this->handleFilesAndRelations($data, $extracted, true);
         }, true);
+    }
+
+    private function extractRelationsAndFiles(array &$request): array
+    {
+        $fields = [
+            'scopes',
+            'professionals',
+            'disbursements',
+            'instructors',
+            'many_years',
+            'intermediate_collaborators',
+            'path_file_full',
+            'path_file_short',
+        ];
+
+        $extracted = [];
+        foreach ($fields as $field) {
+            $extracted[$field] = $request[$field] ?? null;
+            unset($request[$field]);
+        }
+
+        return $extracted;
+    }
+
+    private function handleFilesAndRelations($data, array $extracted, bool $isUpdate = false): void
+    {
+        if ($extracted['path_file_full']) {
+            $oldFile = $isUpdate ? $data['path_file_full'] : null;
+            $data['path_file_full'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path_file_full'], 'contract', 'full', $oldFile);
+            $data->save();
+        }
+
+        if ($extracted['path_file_short']) {
+            $oldFile = $isUpdate ? $data['path_file_short'] : null;
+            $data['path_file_short'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path_file_short'], 'contract', 'short', $oldFile);
+            $data->save();
+        }
+
+        $this->contractScope($data, $extracted['scopes'] ?? []);
+        $this->contractProfessionals($data, $extracted['professionals'] ?? []);
+        $this->contractDisbursement($data, $extracted['disbursements'] ?? []);
+        $this->contractInstructor($data, $extracted['instructors'] ?? []);
+        $this->contractManyYear($data, $extracted['many_years'] ?? []);
+        $this->contractIntermediateCollaborator($data, $extracted['intermediate_collaborators'] ?? []);
     }
 
     private function syncRelationship(Contract $contract, string $relation, array $items, string $columnName = 'user_id')

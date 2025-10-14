@@ -3,10 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Traits\CheckLocalTraits;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {
+    use CheckLocalTraits;
+
     /**
      * Run the database seeds.
      */
@@ -25,5 +28,8 @@ class UserSeeder extends Seeder
             'position_id' => 5,
             'job_title_id' => 15,
         ]);
+
+        if ($this->isLocal())
+            User::factory()->count(10)->create();
     }
 }

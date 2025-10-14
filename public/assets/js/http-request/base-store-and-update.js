@@ -15,6 +15,8 @@ const autoMatchFieldAndFillPatchForm = (form, method) => {
                 const type =
                     field.getAttribute("type")?.toLowerCase() || "text";
 
+                if (type == "file") return;
+
                 if (["checkbox", "radio"].includes(type)) {
                     // Xử lý checkbox / radio
                     if (Array.isArray(value)) {
