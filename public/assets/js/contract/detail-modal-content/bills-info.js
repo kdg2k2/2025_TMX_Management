@@ -1,6 +1,6 @@
 const contractBillModal = document.getElementById("contract-bill-modal");
 const contractBillModalForm = contractBillModal.querySelector("form");
-const billTypeFilter = document.querySelector("bill-type-filter");
+const billTypeFilter = document.getElementById("bill-type-filter");
 const billsInfoDatatable = document.getElementById("bills-info-datatable");
 
 window.renderBillsInfo = () => {
@@ -9,13 +9,22 @@ window.renderBillsInfo = () => {
         listBillUrl,
         renderBillsInfoColumns(),
         (item) => item,
-        {
-            paginate: 1,
-        },
+        getBillsInfoFilterParams(),
         (response) => {
             $("#bill-count").text(response.data.total);
         }
     );
+};
+
+const getBillsInfoFilterParams = () => {
+    const params = {
+        paginate: 1,
+        contract_id: contractId,
+    };
+
+    if (billTypeFilter.value) params["bill_collector"] = billTypeFilter.value;
+
+    return params;
 };
 
 const renderBillsInfoColumns = () => {
@@ -148,6 +157,10 @@ contractBillModalForm.addEventListener("submit", async (e) => {
     await handleSubmitForm(e, contractBillModalForm, () => {
         renderBillsInfo();
     });
+});
+
+billTypeFilter.addEventListener("change", () => {
+    renderBillsInfo();
 });
 
 document.addEventListener("DOMContentLoaded", () => {
