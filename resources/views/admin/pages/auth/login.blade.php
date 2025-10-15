@@ -53,7 +53,7 @@
                             </div>
                         </div>
                         <div class="d-grid mt-3">
-                            <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                            <x-button-submit text="Đăng nhập" icon="ti ti-login-2" />
                         </div>
                     </form>
                 </div>

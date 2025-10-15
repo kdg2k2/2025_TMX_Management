@@ -208,11 +208,11 @@
                             </ul>
                         </li>
                         <li>
-                            <button type="button" class="dropdown-item d-flex align-items-center"
+                            <a class="dropdown-item d-flex align-items-center"
                                 data-bs-toggle="modal" data-bs-target="#modalLogout">
                                 <i class="ti ti-logout me-2 fs-18"></i>
                                 Đăng xuất
-                            </button>
+                            </a>
                         </li>
                     </ul>
                 </div>

@@ -5,10 +5,7 @@
         ['label' => 'Hợp đồng', 'url' => route('contract.index')],
         ['label' => 'Thêm mới', 'url' => null],
     ]">
-        <button class="btn btn-sm btn-success" onclick="window.location='{{ route('contract.index') }}'" type="button"
-            data-bs-placement="top" data-bs-original-title="Danh sách">
-            <i class="ti ti-list"></i>
-        </button>
+        <x-button size="sm" icon="ti ti-list" tooltip="Danh sách" href="{{ route('contract.index') }}"></x-button>
     </x-breadcrumb>
 
     <div class="card custom-card">
