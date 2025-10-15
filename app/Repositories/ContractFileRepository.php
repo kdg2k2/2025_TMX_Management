@@ -14,6 +14,14 @@ class ContractFileRepository extends BaseRepository
         ];
     }
 
+    protected function applyListFilters($query, array $request)
+    {
+        if (isset($request['contract_id']))
+            $query->where('contract_id', $request['contract_id']);
+        if (isset($request['type_id']))
+            $query->where('type_id', $request['type_id']);
+    }
+
     public function list(array $request = [], ?callable $searchFunc = null)
     {
         $searchFunc = function ($query) use ($request) {

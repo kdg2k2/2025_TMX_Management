@@ -86,7 +86,10 @@ abstract class BaseRepository
         if (isset($request['search']) && $searchFunc)
             $query->where($searchFunc);
 
-        if (isset($this->relations) && isset($request['load_relations']))
+        if (!isset($request['load_relations']))
+            $request['load_relations'] = true;
+
+        if (isset($this->relations))
             if ($request['load_relations'] == true)
                 $query->with($this->relations);
 

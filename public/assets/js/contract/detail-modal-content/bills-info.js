@@ -102,7 +102,7 @@ const renderBillsInfoActionButtons = (row) => {
             row.path
                 ? createBtn(
                       "info",
-                      "Xem file",
+                      "Xem",
                       false,
                       {},
                       "ti ti-eye-search",

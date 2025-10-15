@@ -9,6 +9,7 @@ const createContractFileModalForm =
 const contractFileType = document.getElementById("contract-file-type");
 const contractFileLabel = document.getElementById("contract-file-label");
 const contractFileInput = document.getElementById("contract-file-input");
+const documentTypeFilter = document.getElementById("document-type-filter");
 
 window.renderDocumentsInfo = () => {
     createDataTableServerSide(
@@ -16,13 +17,22 @@ window.renderDocumentsInfo = () => {
         listFileUrl,
         renderDocumentsInfoColumns(),
         (item) => item,
-        {
-            paginate: 1,
-        },
+        getDocumentsInfoFilterParams(),
         (response) => {
             $("#document-count").text(response.data.total);
         }
     );
+};
+
+const getDocumentsInfoFilterParams = () => {
+    const params = {
+        paginate: 1,
+        contract_id: contractId,
+    };
+
+    if (documentTypeFilter.value) params["type_id"] = documentTypeFilter.value;
+
+    return params;
 };
 
 const renderDocumentsInfoColumns = () => {
@@ -90,7 +100,7 @@ const renderDocumentsInfoActionButtons = (row) => {
         ${
             createBtn(
                 "info",
-                "Xem file",
+                "Xem",
                 false,
                 {},
                 "ti ti-eye-search",
@@ -101,7 +111,7 @@ const renderDocumentsInfoActionButtons = (row) => {
             row?.type?.type == "file"
                 ? createBtn(
                       "success",
-                      "Tải file",
+                      "Tải",
                       false,
                       {},
                       "ti ti-download",
@@ -121,6 +131,8 @@ const openCreateFileModal = () => {
 };
 
 const showAndSetAcceptExts = (record = {}) => {
+    console.log({ record });
+
     const contractFileInputParent = contractFileInput?.closest(".form-group");
 
     if (!record || Object.keys(record).length === 0) {
@@ -182,4 +194,8 @@ createContractFileModalForm.addEventListener("submit", async (e) => {
 
 createContractFileModal.addEventListener("show.bs.modal", () => {
     showAndSetAcceptExts();
+});
+
+documentTypeFilter.addEventListener("change", () => {
+    renderDocumentsInfo();
 });
