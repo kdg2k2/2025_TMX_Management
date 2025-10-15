@@ -12,15 +12,13 @@ const renderColumns = () => {
             data: null,
             title: "Cho phép upload",
             render: (data, type, row) => {
+                if (row.type == "url") return "Url";
                 return `
-                    <ul class="m-0">
-                        ${row?.extensions
-                            ?.map(
-                                (value, index) =>
-                                    `${value?.extension?.extension}`
-                            )
-                            .join(", ")}
-                    </ul>
+                    ${row?.extensions
+                        ?.map(
+                            (value, index) => `${value?.extension?.extension}`
+                        )
+                        .join(", ")}
                 `;
             },
         },

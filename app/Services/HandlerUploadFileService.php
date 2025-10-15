@@ -12,9 +12,8 @@ class HandlerUploadFileService extends BaseService
         $folderSave = "uploads/$rootFolder/$folder";
         $destinationPath = $this->getAbsolutePublicPath($folderSave);
 
-        if (!is_dir($destinationPath)) {
+        if (!is_dir($destinationPath))
             mkdir($destinationPath, 0777, true);
-        }
 
         // Nếu là file dạng UploadedFile (từ request upload)
         if ($file instanceof \Illuminate\Http\UploadedFile) {
@@ -25,14 +24,15 @@ class HandlerUploadFileService extends BaseService
         elseif (is_string($file) && file_exists($file)) {
             $imageName = uniqid($folder) . '.' . pathinfo($file, PATHINFO_EXTENSION);
             copy($file, $destinationPath . '/' . $imageName);
+        } elseif (filter_var($file, FILTER_VALIDATE_URL)) {
+            return $file;
         } else {
             throw new Exception('Định dạng file không hợp lệ.');
         }
 
         // Xoá file cũ nếu có
-        if ($oldPath && file_exists($this->getAbsolutePublicPath($oldPath))) {
+        if ($oldPath && file_exists($this->getAbsolutePublicPath($oldPath)))
             $this->removeFile($oldPath);
-        }
 
         return "$folderSave/$imageName";
     }

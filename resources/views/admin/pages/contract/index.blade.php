@@ -52,11 +52,9 @@
                     <x-select-options :items="$fileTypes" recordAttribute="data-record"></x-select-options>
                 </select>
             </div>
-            <div class="form-group my-1">
-                <label id="contract-file-label">
-                    Chọn file
-                </label>
-                <input class="form-control" type="file" name="path" id="contract-file-input" required>
+            <div class="form-group my-1" hidden>
+                <label id="contract-file-label"></label>
+                <input class="form-control" type="" name="path" id="contract-file-input" required>
             </div>
             <div class="form-group my-1">
                 <label>

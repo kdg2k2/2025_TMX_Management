@@ -21,8 +21,8 @@ const DEFAULT_DATATABLE_CONFIG = {
         sZeroRecords: "Không tìm thấy dữ liệu phù hợp",
         sInfoFiltered: "",
         paginate: {
-            previous: '<i class="fal fa-angle-left"></i>',
-            next: '<i class="fal fa-angle-right"></i>',
+            previous: '<i class="ti ti-chevron-left"></i>',
+            next: '<i class="ti ti-chevron-right"></i>',
         },
     },
 };

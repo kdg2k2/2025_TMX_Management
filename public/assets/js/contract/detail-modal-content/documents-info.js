@@ -98,14 +98,16 @@ const renderDocumentsInfoActionButtons = (row) => {
             )?.outerHTML
         }
         ${
-            createBtn(
-                "success",
-                "Tải file",
-                false,
-                {},
-                "ti ti-download",
-                `window.open('${row.path}', "_blank")`
-            )?.outerHTML
+            row?.type?.type == "file"
+                ? createBtn(
+                      "success",
+                      "Tải file",
+                      false,
+                      {},
+                      "ti ti-download",
+                      `window.open('${row.path}', "_blank")`
+                  )?.outerHTML
+                : ""
         }
         ${createDeleteBtn(
             `${deleteFileUrl}?id=${row.id}`,
@@ -122,8 +124,33 @@ const openCreateFileModal = () => {
     modal.show();
 };
 
-const showAndSetAcceptExts = (extensions = []) => {
-    var span = contractFileLabel.querySelector(
+const showAndSetAcceptExts = (record = {}) => {
+    const contractFileInputParent = contractFileInput?.closest(".form-group");
+
+    if (!record || Object.keys(record).length === 0) {
+        contractFileInputParent.hidden = true;
+        return;
+    }
+
+    contractFileInputParent.hidden = false;
+
+    let joinExt = "";
+    if (record.type === "file") {
+        contractFileLabel.textContent = "Chọn file";
+        contractFileInput.type = "file";
+        const extensions =
+            record.extensions?.map((item) => `.${item.extension?.extension}`) ||
+            [];
+        joinExt = extensions.join(",");
+        contractFileInput.setAttribute("accept", joinExt);
+    } else {
+        contractFileLabel.textContent = "Nhập link";
+        contractFileInput.type = "url";
+        contractFileInput.removeAttribute("accept");
+        joinExt = "Url";
+    }
+
+    let span = contractFileLabel.querySelector(
         "span.contract-file-type-extensions"
     );
     if (!span) {
@@ -136,32 +163,28 @@ const showAndSetAcceptExts = (extensions = []) => {
         contractFileLabel.appendChild(span);
     }
 
-    const joinExt = extensions.join(",");
-    span.innerText = joinExt;
-    contractFileInput.setAttribute("accept", joinExt);
+    span.textContent = joinExt;
 };
 
+contractFileType.addEventListener("change", () => {
+    const option = contractFileType.options[contractFileType.selectedIndex];
+    const record = JSON.parse(option?.getAttribute("data-record") || "{}");
+    showAndSetAcceptExts(record);
+});
+
+createContractFileModalForm.addEventListener("submit", async (e) => {
+    const input = createContractFileModalForm?.querySelector(
+        'input[name="contract_id"]'
+    );
+    if (input) input.value = contractId || "";
+
+    await handleSubmitForm(e, createContractFileModalForm, () => {
+        refreshSumoSelect();
+        showAndSetAcceptExts();
+        renderDocumentsInfo();
+    });
+});
+
 createContractFileModal.addEventListener("show.bs.modal", () => {
-    contractFileType.addEventListener("change", () => {
-        const option = contractFileType.options[contractFileType.selectedIndex];
-        const record = JSON.parse(option?.getAttribute("data-record") || "");
-        const extensions =
-            record?.extensions?.map(
-                (value, index) => `.${value?.extension.extension}`
-            ) ?? [];
-        showAndSetAcceptExts(extensions);
-    });
-
-    createContractFileModalForm.addEventListener("submit", async (e) => {
-        const input = createContractFileModalForm?.querySelector(
-            'input[name="contract_id"]'
-        );
-        if (input) input.value = contractId || "";
-
-        await handleSubmitForm(e, createContractFileModalForm, () => {
-            refreshSumoSelect();
-            showAndSetAcceptExts();
-            renderDocumentsInfo();
-        });
-    });
+    showAndSetAcceptExts();
 });
