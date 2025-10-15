@@ -1,4 +1,3 @@
-```blade
 <div class="offcanvas offcanvas-end" tabindex="-1" id="switcher-canvas" aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header border-bottom d-block p-0">
         <div class="d-flex align-items-center justify-content-between p-3">
@@ -312,7 +311,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="">
+                <div>
                     <p class="switcher-style-head">Tải trang:</p>
                     <div class="row switcher-style gx-0">
                         <div class="col-4">
@@ -507,4 +506,3 @@
         </div>
     </div>
 </div>
-```
