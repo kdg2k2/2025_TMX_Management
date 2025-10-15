@@ -65,30 +65,42 @@
                 <li class="slide has-sub">
                     <a href="javascript:void(0);" class="side-menu__item">
                         <i class="side-menu__icon ti ti-file-text"></i>
-                        <span class="side-menu__label">Hợp đồng</span>
+                        <span class="side-menu__label">
+                            Hợp đồng
+                        </span>
                         <i class="ri-arrow-right-s-line side-menu__angle"></i>
                     </a>
                     <ul class="slide-menu child1">
                         <li class="slide side-menu__label1">
-                            <a href="javascript:void(0)"></a>
+                            <a href="javascript:void(0)">
+                                Hợp đồng
+                            </a>
                         </li>
                         <li class="slide">
                             <a href="{{ route('contract.type.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon fs-6 ti ti-files"></i>
+
                                 Loại hợp đồng
                             </a>
                         </li>
                         <li class="slide">
                             <a href="{{ route('contract.investor.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon fs-6 ti ti-building-bank"></i>
+
                                 Nhà đầu tư
                             </a>
                         </li>
                         <li class="slide">
                             <a href="{{ route('contract.file.type.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon fs-6 ti ti-file-code-2"></i>
+
                                 Loại file
                             </a>
                         </li>
                         <li class="slide">
                             <a href="{{ route('contract.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon fs-6 ti ti-file-description"></i>
+
                                 Hợp đồng
                             </a>
                         </li>
@@ -97,30 +109,42 @@
                 <li class="slide has-sub">
                     <a href="javascript:void(0);" class="side-menu__item">
                         <i class="side-menu__icon ti ti-assembly"></i>
-                        <span class="side-menu__label">Sản phẩm trung gian</span>
+                        <span class="side-menu__label">
+                            Sản phẩm trung gian
+                        </span>
                         <i class="ri-arrow-right-s-line side-menu__angle"></i>
                     </a>
                     <ul class="slide-menu child1">
                         <li class="slide side-menu__label1">
-                            <a href="javascript:void(0)"></a>
+                            <a href="javascript:void(0)">
+                                Sản phẩm trung gian
+                            </a>
                         </li>
                         <li class="slide">
                             <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon fs-6 ti ti-progress-check"></i>
+
                                 Kiểm tra tiến độ
                             </a>
                         </li>
                         <li class="slide">
                             <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon fs-6 ti ti-file-plus"></i>
+
                                 Tạo biên bản bàn giao
                             </a>
                         </li>
                         <li class="slide">
                             <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon fs-6 ti ti-clipboard-check"></i>
+
                                 Phê duyệt biên bản
                             </a>
                         </li>
                         <li class="slide">
                             <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon fs-6 ti ti-history"></i>
+
                                 Lịch sử phê duyệt
                             </a>
                         </li>
@@ -135,20 +159,28 @@
                 <li class="slide has-sub">
                     <a href="javascript:void(0);" class="side-menu__item">
                         <i class="side-menu__icon ti ti-school"></i>
-                        <span class="side-menu__label">Bằng cấp trình độ</span>
+                        <span class="side-menu__label">
+                            Bằng cấp trình độ
+                        </span>
                         <i class="ri-arrow-right-s-line side-menu__angle"></i>
                     </a>
                     <ul class="slide-menu child1">
                         <li class="slide side-menu__label1">
-                            <a href="javascript:void(0)"></a>
+                            <a href="javascript:void(0)">
+                                Bằng cấp trình độ
+                            </a>
                         </li>
                         <li class="slide">
                             <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon fs-6 ti ti-building"></i>
+
                                 Quản lý đơn vị
                             </a>
                         </li>
                         <li class="slide">
                             <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu__icon ti ti-id-badge-2"></i>
+
                                 Quản lý nhân sự
                             </a>
                         </li>

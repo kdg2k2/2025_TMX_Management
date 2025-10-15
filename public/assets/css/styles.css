@@ -24572,7 +24572,12 @@ ul.widgets-transactions-list li:last-child {
     }
 
     [data-vertical-style=doublemenu] .app-sidebar .slide-menu.child1 .side-menu__item.active {
-        background-color: var(--primary-color) !important;
+        border: 1px var(--primary-color) solid !important;
+        border-radius: 5px;
+    }
+
+    [data-vertical-style=doublemenu] .app-sidebar .slide-menu.child1 .side-menu__item.active i {
+        color: var(--primary-color) !important;
     }
 
     [data-vertical-style=doublemenu] .app-sidebar .slide-menu.child1>.slide.active>.side-menu__item.active {
