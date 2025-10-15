@@ -194,6 +194,20 @@
                         </span>
                     </a>
                 </li>
+
+                <li class="slide__category">
+                    <span class="category-name">
+                        Hệ thống
+                    </span>
+                </li>
+                <li class="slide">
+                    <a href="{{ route('user.index') }}" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-users"></i>
+                        <span class="side-menu__label">
+                            Quản lý tài khoản
+                        </span>
+                    </a>
+                </li>
             </ul>
 
             <div class="slide-right" id="slide-right">

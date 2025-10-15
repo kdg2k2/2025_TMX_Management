@@ -56,9 +56,7 @@ class HandlerUploadFileService extends BaseService
             $paths = [$paths];
 
         foreach ($paths as $p) {
-            if (file_exists($this->getAbsolutePublicPath($p))) {
-                $this->safeDeleteFile($p);
-            }
+            $this->safeDeleteFile($p);
         }
     }
 

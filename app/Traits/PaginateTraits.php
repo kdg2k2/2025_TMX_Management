@@ -8,11 +8,11 @@ trait PaginateTraits
 {
     public function paginateOrNot(array $request, array $data)
     {
-        $request['paginate'] = $request['paginate'] ?? null;
+        $request['paginate'] = $request['paginate'] ?? false;
         $request['per_page'] = $request['per_page'] ?? 10;
         $request['page'] = $request['page'] ?? 1;
 
-        if ($request['paginate'] == 1)
+        if ($request['paginate'])
             $data = $this->paginate($data, $request['per_page'], $request['page']);
         return $data;
     }

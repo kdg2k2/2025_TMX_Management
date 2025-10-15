@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     /**
      * Run the migrations.
-     */
+     */assets/js/http-request/base-list.js
     public function up(): void
     {
         // người dùng
@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->foreignId('department_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate()->comment('phòng ban');
             $table->foreignId('position_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate()->comment('chức vụ');
             $table->foreignId('job_title_id')->constrained()->cascadeOnDelete()->cascadeOnDelete()->comment('chức danh');
+            $table->foreignId('role_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->boolean('is_banned')->default(false)->comment('khóa tài khoản');
             $table->boolean('retired')->default(false)->comment('nghỉ việc');
             $table->integer('jwt_version')->default(1);

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ContractFileTypeController;
 use App\Http\Controllers\Admin\ContractInvestorController;
 use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -62,5 +63,12 @@ Route::middleware(['isLogin'])->group(function () {
         Route::prefix('appendix')->controller(ContractAppendixController::class)->group(function () {
             Route::delete('delete', 'delete')->name('contract.appendix.delete');
         });
+    });
+
+    Route::prefix('user')->controller(UserController::class)->group(function () {
+        Route::get('index', 'index')->name('user.index');
+        Route::get('create', 'create')->name('user.create');
+        Route::get('edit', 'edit')->name('user.edit');
+        Route::delete('delete', 'delete')->name('user.delete');
     });
 });

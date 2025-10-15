@@ -158,7 +158,9 @@
                     aria-labelledby="mainHeaderProfile">
                     <div class="p-3 bg-primary text-fixed-white">
                         <div class="d-flex align-items-center justify-content-between">
-                            <p class="mb-0 fs-16">Profile</p>
+                            <p class="mb-0 fs-16">
+                                Tài khoản
+                            </p>
                             <a href="javascript:void(0);" class="text-fixed-white"><i
                                     class="ti ti-settings-cog"></i></a>
                         </div>
@@ -172,8 +174,12 @@
                                 </span>
                             </div>
                             <div>
-                                <span class="d-block fw-semibold lh-1">Tom Phillip</span>
-                                <span class="text-muted fs-12">tomphillip32@gmail.com</span>
+                                <span class="d-block fw-semibold lh-1">
+                                    {{ auth()->user()->name }}
+                                </span>
+                                <span class="text-muted fs-12">
+                                    {{ auth()->user()->email }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -182,34 +188,22 @@
                         <li>
                             <ul class="list-unstyled mb-0 sub-list">
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="profile"><i
-                                            class="ti ti-user-circle me-2 fs-18"></i>View Profile</a>
+                                    <a class="dropdown-item d-flex align-items-center" href="profile">
+                                        <i class="ti ti-user-circle me-2 fs-18"></i>
+                                        Cá nhân
+                                    </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="mail-settings"><i
-                                            class="ti ti-settings-cog me-2 fs-18"></i>Account Settings</a>
+                                    <a class="dropdown-item d-flex align-items-center" href="mail-settings">
+                                        <i class="ti ti-settings-cog me-2 fs-18"></i>
+                                        Đổi mật khẩu
+                                    </a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <ul class="list-unstyled mb-0 sub-list">
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);"><i
-                                            class="ti ti-lifebuoy me-2 fs-18"></i>Support</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);"><i
-                                            class="ti ti-bolt me-2 fs-18"></i>Activity Log</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);"><i
-                                            class="ti ti-calendar me-2 fs-18"></i>Events</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center"
-                                data-bs-toggle="modal" data-bs-target="#modalLogout">
+                            <a class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
+                                data-bs-target="#modalLogout">
                                 <i class="ti ti-logout me-2 fs-18"></i>
                                 Đăng xuất
                             </a>

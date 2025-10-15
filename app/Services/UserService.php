@@ -2,20 +2,41 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Repositories\UserRepository;
 
 class UserService extends BaseService
 {
     public function __construct(
-        private HandlerUploadFileService $handlerUploadFileService
+        private HandlerUploadFileService $handlerUploadFileService,
+        private RoleService $roleService,
+        private PositionService $positionService,
+        private JobTitleService $jobTitleService,
+        private DepartmentService $departmentService
     ) {
         $this->repository = app(UserRepository::class);
     }
 
-    protected function beforeDelete(int $id)
+    public function baseDataForLCEView(int $id = null)
     {
-        $user = $this->repository->findById($id);
-        $this->handlerUploadFileService->removeFiles([$user['path'], $user['path_signature']]);
+        $res = [];
+        if ($id)
+            $res['data'] = $this->repository->findById($id);
+
+        $res['roles'] = $this->roleService->list([
+            'load_relations' => false,
+        ]);
+        $res['positions'] = $this->positionService->list([
+            'load_relations' => false,
+        ]);
+        $res['jobTitles'] = $this->jobTitleService->list([
+            'load_relations' => false,
+        ]);
+        $res['departments'] = $this->departmentService->list([
+            'load_relations' => false,
+        ]);
+
+        return $res;
     }
 
     public function changePassword($password)
@@ -41,5 +62,68 @@ class UserService extends BaseService
                 $this->repository->model->increment('jwt_version');
             }
         }, true);
+    }
+
+    public function store(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $extracted = $this->extractFields($request);
+            $data = $this->repository->store($request);
+            $this->handleFile($data, $extracted);
+        }, true);
+    }
+
+    public function update(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $extracted = $this->extractFields($request);
+            $data = $this->repository->update($request);
+            $this->handleFile($data, $extracted, true);
+        }, true);
+    }
+
+    private function extractFields(array &$request): array
+    {
+        $fields = [
+            'path',
+            'path_signature',
+        ];
+
+        $extracted = [];
+        foreach ($fields as $field) {
+            $extracted[$field] = $request[$field] ?? null;
+            unset($request[$field]);
+        }
+
+        return $extracted;
+    }
+
+    private function handleFile(User $data, array $extracted, bool $isUpdate = false)
+    {
+        $fields = [
+            'path',
+            'path_signature',
+        ];
+        foreach ($fields as $field) {
+            if ($extracted[$field]) {
+                $oldFile = $isUpdate ? $data[$field] : null;
+                $data[$field] = $this->handlerUploadFileService->storeAndRemoveOld($extracted[$field], 'user', $field, $oldFile);
+                $data->save();
+            }
+        }
+    }
+
+    public function formatRecord(array $array)
+    {
+        $array = parent::formatRecord($array);
+        $array['path'] = $this->getAssetImage($array['path']);
+        $array['path_signature'] = $this->getAssetUrl($array['path_signature']);
+        return $array;
+    }
+
+    protected function beforeDelete(int $id)
+    {
+        $user = $this->repository->findById($id);
+        $this->handlerUploadFileService->removeFiles([$user['path'], $user['path_signature']]);
     }
 }

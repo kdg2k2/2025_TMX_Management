@@ -93,7 +93,7 @@ abstract class BaseRepository
             if ($request['load_relations'] == true)
                 $query->with($this->relations);
 
-        if (isset($request['paginate']) && $request['paginate'] == '1')
+        if (isset($request['paginate']) && $request['paginate'])
             return $query->paginate($request['per_page'] ?? 10);
 
         return $query->get();
