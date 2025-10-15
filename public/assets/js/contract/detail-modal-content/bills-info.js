@@ -140,7 +140,6 @@ const openBillModal = (method = "post", url = storeBillUrl, data = {}) => {
     if (inMethod) inMethod.value = method;
 
     if (method == "patch") {
-        console.log(data);
         selectValueMapping = {
             bill_collector: (item) => item.id,
         };

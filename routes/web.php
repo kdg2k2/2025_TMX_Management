@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ContractAppendixController;
 use App\Http\Controllers\Admin\ContractBillController;
 use App\Http\Controllers\Admin\ContractController;
 use App\Http\Controllers\Admin\ContractFileController;
@@ -56,6 +57,10 @@ Route::middleware(['isLogin'])->group(function () {
 
         Route::prefix('bill')->controller(ContractBillController::class)->group(function () {
             Route::delete('delete', 'delete')->name('contract.bill.delete');
+        });
+
+        Route::prefix('appendix')->controller(ContractAppendixController::class)->group(function () {
+            Route::delete('delete', 'delete')->name('contract.appendix.delete');
         });
     });
 });

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ContractAppendixController;
 use App\Http\Controllers\Api\ContractBillController;
 use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\ContractFileController;
@@ -58,6 +59,12 @@ Route::middleware(['web', 'auth.any'])->group(function () {
             Route::get('list', 'list')->name('api.contract.bill.list');
             Route::post('store', 'store')->name('api.contract.bill.store');
             Route::patch('update', 'update')->name('api.contract.bill.update');
+        });
+
+        Route::prefix('appendix')->controller(ContractAppendixController::class)->group(function () {
+            Route::get('list', 'list')->name('api.contract.appendix.list');
+            Route::post('store', 'store')->name('api.contract.appendix.store');
+            Route::patch('update', 'update')->name('api.contract.appendix.update');
         });
     });
 });

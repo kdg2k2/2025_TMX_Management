@@ -31,6 +31,7 @@
                         'content' => view('admin.pages.contract.partials.documents-info', [
                             'fileTypes' => $fileTypes,
                         ])->render(),
+                        'onclick' => 'renderDocumentsInfo()',
                     ],
                     [
                         'title' => 'Hóa đơn',
@@ -39,6 +40,16 @@
                         'content' => view('admin.pages.contract.partials.bills-info', [
                             'users' => $users,
                         ])->render(),
+                        'onclick' => 'renderBillsInfo()',
+                    ],
+                    [
+                        'title' => 'Phụ lục hợp đồng',
+                        'icon' => 'ti ti-receipt-2',
+                        'badge' => ['text' => '', 'color' => 'info', 'id' => 'appendix-count'],
+                        'content' => view('admin.pages.contract.partials.appendixes-info', [
+                            'users' => $users,
+                        ])->render(),
+                        'onclick' => 'renderAppendixesInfo()',
                     ],
                 ]" />
             </div>
@@ -128,6 +139,70 @@
             <x-button-submit />
         </x-slot:footer>
     </x-modal>
+
+    <x-modal id="contract-appendix-modal" title="Phụ lục hợp đồng" size="md" nested="true">
+        <x-slot:body>
+            <input name="contract_id" hidden>
+            <div class="form-group my-1">
+                <label>
+                    Nội dung
+                </label>
+                <input class="form-control" type="text" name="content" required>
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Ngày gia hạn
+                </label>
+                <input class="form-control" type="date" name="renewal_date" required>
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Ngày kết thúc gia hạn
+                </label>
+                <input class="form-control" type="date" name="renewal_end_date" required>
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Công văn gia hạn (doc,docx,pdf,rar,zip)
+                </label>
+                <input class="form-control" type="file" name="renewal_letter" accept=".doc,.docx,.pdf,.rar,.zip">
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Công văn đồng ý gia hạn (doc,docx,pdf,rar,zip)
+                </label>
+                <input class="form-control" type="file" name="renewal_approval_letter"
+                    accept=".doc,.docx,.pdf,.rar,.zip">
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Phụ lục gia hạn (doc,docx,pdf,rar,zip)
+                </label>
+                <input class="form-control" type="file" name="renewal_appendix" accept=".doc,.docx,.pdf,.rar,.zip">
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Hồ sơ khác (doc,docx,pdf,rar,zip)
+                </label>
+                <input class="form-control" type="file" name="other_documents" accept=".doc,.docx,.pdf,.rar,.zip">
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Giá trị điều chỉnh
+                </label>
+                <input class="form-control" type="text" name="adjusted_value" id="appendix-adjusted-value">
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Ghi chú
+                </label>
+                <input class="form-control" type="text" name="note">
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button-submit />
+        </x-slot:footer>
+    </x-modal>
 @endsection
 @section('scripts')
     <script>
@@ -145,6 +220,11 @@
         const storeBillUrl = @json(route('api.contract.bill.store'));
         const updateBillUrl = @json(route('api.contract.bill.update'));
         const deleteBillUrl = @json(route('contract.bill.delete'));
+
+        const listAppendixUrl = @json(route('api.contract.appendix.list'));
+        const storeAppendixUrl = @json(route('api.contract.appendix.store'));
+        const updateAppendixUrl = @json(route('api.contract.appendix.update'));
+        const deleteAppendixUrl = @json(route('contract.appendix.delete'));
     </script>
     <script src="assets/js/http-request/base-list.js"></script>
     <script src="assets/js/http-request/base-store-and-update.js"></script>
@@ -153,4 +233,5 @@
     <script src="assets/js/contract/detail-modal-content/general-info.js"></script>
     <script src="assets/js/contract/detail-modal-content/documents-info.js"></script>
     <script src="assets/js/contract/detail-modal-content/bills-info.js"></script>
+    <script src="assets/js/contract/detail-modal-content/appendixes-info.js"></script>
 @endsection

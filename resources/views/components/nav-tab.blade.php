@@ -36,7 +36,8 @@
                 <li class="nav-item" role="presentation">
                     <a class="nav-link {{ $index === 0 ? 'active' : '' }}" data-bs-toggle="tab" role="tab"
                         href="#{{ $id }}-tab-{{ $index }}"
-                        aria-selected="{{ $index === 0 ? 'true' : 'false' }}" {!! $index > 0 ? 'tabindex="-1"' : '' !!}>
+                        aria-selected="{{ $index === 0 ? 'true' : 'false' }}" {!! $index > 0 ? 'tabindex="-1"' : '' !!}
+                        @if (isset($tab['onclick'])) onclick="{{ $tab['onclick'] }}" @endif>
                         @if (isset($tab['icon']))
                             <i class="{{ $tab['icon'] }} me-1"></i>
                         @endif

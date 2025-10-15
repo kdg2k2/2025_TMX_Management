@@ -12,8 +12,10 @@ trait AssetPathTraits
         return $this->getAssetUrl($path);
     }
 
-    public function getAssetUrl($url)
+    public function getAssetUrl($url = null)
     {
+        if (!$url)
+            return null;
         return asset($url);
     }
 }

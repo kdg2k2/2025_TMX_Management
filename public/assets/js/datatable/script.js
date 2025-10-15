@@ -7,8 +7,8 @@ const DEFAULT_DATATABLE_CONFIG = {
     ordering: false,
     searching: true,
     lengthMenu: [
-        [10, 50, 100],
-        [10, 50, 100],
+        [10, 30],
+        [10, 30],
     ],
     bLengthChange: true,
     language: {
@@ -142,7 +142,7 @@ const createDataTableServerSide = (
                     search: search,
                 },
                 null,
-                false
+                true
             ).then((res) => {
                 serverResponse = res;
                 const items = res?.data?.data ?? [];

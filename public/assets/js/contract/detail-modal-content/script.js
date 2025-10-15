@@ -10,10 +10,12 @@ const loadContractDetail = async (id) => {
     renderGerenaInfo();
     renderDocumentsInfo();
     renderBillsInfo();
+    renderAppendixesInfo();
 };
 
 contractDetailModal.addEventListener("show.bs.modal", async (e) => {
     const relatedTarget = e.relatedTarget;
     contractId = relatedTarget.getAttribute("data-id") ?? null;
+
     await loadContractDetail(contractId);
 });
