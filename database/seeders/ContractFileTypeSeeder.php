@@ -100,6 +100,21 @@ class ContractFileTypeSeeder extends Seeder
                 'type' => 'file',
                 'extensions' => ['zip', 'rar', 'pdf'],
             ],
+            [
+                'name' => 'Phân bổ',
+                'type' => 'file',
+                'extensions' => ['xls', 'xlsx', 'xlsm'],
+            ],
+            [
+                'name' => 'Hợp đồng nhân công',
+                'type' => 'file',
+                'extensions' => ['doc', 'docx'],
+            ],
+            [
+                'name' => 'Chi khác',
+                'type' => 'file',
+                'extensions' => ['doc', 'docx', 'xls', 'xlsx', 'zip', 'rar'],
+            ],
         ] as $item) {
             $type = ContractFileType::create([
                 'name' => $item['name'],
