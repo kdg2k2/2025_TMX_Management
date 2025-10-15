@@ -9,6 +9,7 @@ const loadContractDetail = async (id) => {
 
     renderGerenaInfo();
     renderDocumentsInfo();
+    renderBillsInfo();
 };
 
 contractDetailModal.addEventListener("show.bs.modal", async (e) => {

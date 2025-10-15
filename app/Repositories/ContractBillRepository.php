@@ -1,16 +1,16 @@
 <?php
 namespace App\Repositories;
 
-use App\Models\ContractFile;
+use App\Models\ContractBill;
 
-class ContractFileRepository extends BaseRepository
+class ContractBillRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new ContractFile();
+        $this->model = new ContractBill();
         $this->relations = [
-            'type',
             'createdBy',
+            'billCollector',
         ];
     }
 
@@ -24,12 +24,14 @@ class ContractFileRepository extends BaseRepository
 
             $query->where(function ($q) use ($search) {
                 $q
-                    ->where('updated_content', 'like', $search)
+                    ->where('amount', 'like', $search)
+                    ->orWhere('duration', 'like', $search)
+                    ->orWhere('content_in_the_estimate', 'like', $search)
                     ->orWhere('note', 'like', $search)
                     ->orWhereHas('createdBy', function ($q) use ($search) {
                         $q->where('name', 'like', $search);
                     })
-                    ->orWhereHas('type', function ($q) use ($search) {
+                    ->orWhereHas('billCollector', function ($q) use ($search) {
                         $q->where('name', 'like', $search);
                     });
             });

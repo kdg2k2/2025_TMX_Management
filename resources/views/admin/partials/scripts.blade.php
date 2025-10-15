@@ -19,6 +19,8 @@
 <script src="assets/js/http-request/handle-form-submit.js"></script>
 <script src="assets/js/bootstrap-tooltip/script.js"></script>
 <script src="assets/js/bootsrap-modal/script.js"></script>
+<script src="assets/js/bootsrap-modal/nested-modal.js"></script>
+<script src="assets/js/http-request/auto-fill-form-patch.js"></script>
 <script src="assets/js/http-request/create-action-button.js"></script>
 <script src="assets/js/http-request/delete.js"></script>
 <script src="assets/libs/sumoselect/jquery.sumoselect.js"></script>

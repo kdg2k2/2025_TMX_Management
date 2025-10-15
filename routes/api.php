@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ContractBillController;
 use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\ContractFileController;
 use App\Http\Controllers\Api\ContractFileTypeController;
@@ -51,6 +52,12 @@ Route::middleware(['web', 'auth.any'])->group(function () {
                 Route::patch('update', 'update')->name('api.contract.file.type.update');
                 Route::delete('delete', 'delete')->name('api.contract.file.type.delete');
             });
+        });
+
+        Route::prefix('bill')->controller(ContractBillController::class)->group(function () {
+            Route::get('list', 'list')->name('api.contract.bill.list');
+            Route::post('store', 'store')->name('api.contract.bill.store');
+            Route::patch('update', 'update')->name('api.contract.bill.update');
         });
     });
 });

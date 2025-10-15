@@ -1,15 +1,15 @@
 <?php
 namespace App\Services;
 
-use App\Models\ContractFile;
-use App\Repositories\ContractFileRepository;
+use App\Models\ContractBill;
+use App\Repositories\ContractBillRepository;
 
-class ContractFileService extends BaseService
+class ContractBillService extends BaseService
 {
     public function __construct(
         private HandlerUploadFileService $handlerUploadFileService
     ) {
-        $this->repository = app(ContractFileRepository::class);
+        $this->repository = app(ContractBillRepository::class);
     }
 
     public function store(array $request)
@@ -45,23 +45,25 @@ class ContractFileService extends BaseService
         return $extracted;
     }
 
-    private function handleFile(ContractFile $data, array $extracted, bool $isUpdate = false)
+    private function handleFile(ContractBill $data, array $extracted, bool $isUpdate = false)
     {
         if ($extracted['path']) {
             $oldFile = $isUpdate ? $data['path'] : null;
-            $data['path'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path'], 'contract', 'files', $oldFile);
+            $data['path'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path'], 'contract', 'bills', $oldFile);
             $data->save();
         }
-    }
-
-    public function viewFile(int $id)
-    {
-        $data = $this->repository->findById($id, false);
-        return $this->getAssetUrl($data['path']);
     }
 
     protected function beforeDelete(int $id)
     {
         $this->handlerUploadFileService->removeFiles($this->repository->findById($id, false)['path'] ?? null);
+    }
+
+    public function formatRecord(array $array)
+    {
+        $array = parent::formatRecord($array);
+        $array['duration'] = $this->formatDateForPreview($array['duration']);
+        $array['path'] = $this->getAssetUrl($array['path']);
+        return $array;
     }
 }

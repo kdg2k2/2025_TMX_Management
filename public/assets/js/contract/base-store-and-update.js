@@ -82,7 +82,6 @@ const handleInputChange = (input) => {
 };
 
 const refreshSubmitFrom = () => {
-    refreshSumoSelect();
     toggleManyYear();
     clearLabelSpans();
     calcVat();

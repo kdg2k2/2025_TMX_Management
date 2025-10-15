@@ -86,8 +86,9 @@ abstract class BaseRepository
         if (isset($request['search']) && $searchFunc)
             $query->where($searchFunc);
 
-        if (isset($this->relations))
-            $query->with($this->relations);
+        if (isset($this->relations) && isset($request['load_relations']))
+            if ($request['load_relations'] == true)
+                $query->with($this->relations);
 
         if (isset($request['paginate']) && $request['paginate'] == '1')
             return $query->paginate($request['per_page'] ?? 10);

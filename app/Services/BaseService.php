@@ -7,7 +7,6 @@ use App\Traits\CheckLocalTraits;
 use App\Traits\FailedValidation;
 use App\Traits\FormatDataTraits;
 use App\Traits\GuardTraits;
-use App\Traits\HandlePublicFileTraits;
 use App\Traits\PaginateTraits;
 use App\Traits\TryCatchTraits;
 
@@ -19,8 +18,7 @@ class BaseService
         CheckLocalTraits,
         AssetPathTraits,
         FormatDataTraits,
-        GuardTraits,
-        HandlePublicFileTraits;
+        GuardTraits;
 
     public $repository;
 

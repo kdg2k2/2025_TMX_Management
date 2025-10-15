@@ -12,22 +12,10 @@ class UserService extends BaseService
         $this->repository = app(UserRepository::class);
     }
 
-    public function findByEmail(string $email)
+    protected function beforeDelete(int $id)
     {
-        return $this->repository->findByEmail($email);
-    }
-
-    public function delete(int $id)
-    {
-        return $this->tryThrow(function () use ($id) {
-            $user = $this->repository->findById($id);
-            if ($user && !empty($user['path']))
-                $this->handlerUploadFileService->removeFile($user['path']);
-            if ($user && !empty($user['path_signature']))
-                $this->handlerUploadFileService->removeFile($user['path_signature']);
-
-            $this->repository->delete($id);
-        }, true);
+        $user = $this->repository->findById($id);
+        $this->handlerUploadFileService->removeFiles([$user['path'], $user['path_signature']]);
     }
 
     public function changePassword($password)

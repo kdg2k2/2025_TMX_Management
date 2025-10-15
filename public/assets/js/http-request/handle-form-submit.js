@@ -10,7 +10,10 @@ const handleSubmitForm = async (e, form, callbackAfterSubmit = () => {}) => {
         btnSubmit?.setAttribute("disabled", true);
 
         const res = await http[method](action, formData);
-        if (res.message && method === "post") form.reset();
+        if (res.message && method === "post") {
+            form.reset();
+            refreshSumoSelect();
+        }
 
         if (typeof window[onSuccess] == "function") window[onSuccess]();
 

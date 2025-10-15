@@ -135,4 +135,9 @@ class Contract extends Model
     {
         return $this->hasMany(ContractIntermediateCollaborators::class);
     }
+
+    public function bills()
+    {
+        return $this->hasMany(ContractBill::class);
+    }
 }

@@ -18,9 +18,7 @@ const openDeleteModal = (triggerEl) => {
 document.addEventListener("DOMContentLoaded", async () => {
     deleteModalForm.addEventListener("submit", async (e) => {
         await handleSubmitForm(e, deleteModalForm, () => {
-            const modal = bootstrap.Modal.getOrCreateInstance(deleteModal);
-            modal.hide();
+            hideModal(deleteModal);
         });
     });
 });
-

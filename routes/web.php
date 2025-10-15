@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ContractBillController;
 use App\Http\Controllers\Admin\ContractController;
 use App\Http\Controllers\Admin\ContractFileController;
 use App\Http\Controllers\Admin\ContractFileTypeController;
@@ -51,6 +52,10 @@ Route::middleware(['isLogin'])->group(function () {
                 Route::get('edit', 'edit')->name('contract.file.type.edit');
                 Route::delete('delete', 'delete')->name('contract.file.type.delete');
             });
+        });
+
+        Route::prefix('bill')->controller(ContractBillController::class)->group(function () {
+            Route::delete('delete', 'delete')->name('contract.bill.delete');
         });
     });
 });

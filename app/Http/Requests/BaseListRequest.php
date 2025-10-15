@@ -7,6 +7,7 @@ class BaseListRequest extends BaseRequest
     public function prepareForValidation()
     {
         $this->merge([
+            'load_relations' => $this->boolean('load_relations', true),
             'order_by' => $this->order_by ?? 'id',
             'sort_by' => $this->sort_by ? in_array($this->sort_by, ['desc', 'asc']) ? $this->sort_by : 'desc' : 'desc',
             'paginate' => $this->paginate ?? '0',
@@ -19,6 +20,7 @@ class BaseListRequest extends BaseRequest
     public function rules(): array
     {
         return [
+            'load_relations' => 'required|boolean',
             'order_by' => 'required|string',
             'sort_by' => 'required|in:desc,asc',
             'paginate' => 'required|in:0,1',

@@ -24,11 +24,15 @@ class ProvinceRepository extends BaseRepository
         $request['order_by'] = 'code';
         $request['sort_by'] = 'desc';
 
-        $searchFunc = function ($query) use ($request) {
-            $query
-                ->where('name', 'like', "%{$request['search']}%")
-                ->orWhere('code', 'like', "%{$request['search']}%");
-        };
+    $searchFunc = function ($query) use ($request) {
+        if (empty($request['search'])) return;
+
+        $search = "%{$request['search']}%";
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', $search)
+              ->orWhere('code', 'like', $search);
+        });
+    };
 
         return parent::list($request, $searchFunc);
     }

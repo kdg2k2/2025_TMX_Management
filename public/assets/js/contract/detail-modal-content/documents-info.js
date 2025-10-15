@@ -117,11 +117,7 @@ const renderDocumentsInfoActionButtons = (row) => {
 };
 
 const openCreateFileModal = () => {
-    const modal = new bootstrap.Modal(createContractFileModal, {
-        backdrop: "static",
-        keyboard: false,
-    });
-    modal.show();
+    showModal(createContractFileModal);
 };
 
 const showAndSetAcceptExts = (record = {}) => {
@@ -179,7 +175,6 @@ createContractFileModalForm.addEventListener("submit", async (e) => {
     if (input) input.value = contractId || "";
 
     await handleSubmitForm(e, createContractFileModalForm, () => {
-        refreshSumoSelect();
         showAndSetAcceptExts();
         renderDocumentsInfo();
     });

@@ -11,9 +11,24 @@ class ContractService extends BaseService
         private ContractTypeService $contractTypeService,
         private ContractInvestorService $contractInvestorService,
         private ProvinceService $provinceService,
-        private HandlerUploadFileService $handlerUploadFileService
+        private HandlerUploadFileService $handlerUploadFileService,
+        private ContractFileTypeService $contractFileTypeService
     ) {
         $this->repository = app(ContractRepository::class);
+    }
+
+    public function getBaseListViewData()
+    {
+        $res = [];
+        $res['fileTypes'] = $this->contractFileTypeService->list();
+        $res['users'] = $this->userService->list([
+            'load_relations' => false,
+            'columns' => [
+                'id',
+                'name',
+            ]
+        ]);
+        return $res;
     }
 
     public function getCreateOrUpdateData(int $id = null)
@@ -23,6 +38,7 @@ class ContractService extends BaseService
             $res['data'] = $this->findById($id, true, true);
 
         $res['users'] = $this->userService->list([
+            'load_relations' => false,
             'columns' => [
                 'id',
                 'name',
@@ -163,5 +179,11 @@ class ContractService extends BaseService
     private function contractIntermediateCollaborator(Contract $contract, array $ids)
     {
         $this->syncRelationship($contract, 'contract_id', 'intermediateCollaborators', $ids, 'user_id');
+    }
+
+    protected function beforeDelete(int $id)
+    {
+        $data = $this->repository->findById($id, false);
+        $this->handlerUploadFileService->removeFiles([$data['path_file_short'], $data['path_file_full']]);
     }
 }

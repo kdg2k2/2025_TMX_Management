@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\BaseService;
 use Exception;
+use Log;
 
 class HandlerUploadFileService extends BaseService
 {
@@ -32,7 +33,7 @@ class HandlerUploadFileService extends BaseService
 
         // Xoá file cũ nếu có
         if ($oldPath && file_exists($this->getAbsolutePublicPath($oldPath)))
-            $this->removeFile($oldPath);
+            $this->removeFiles($oldPath);
 
         return "$folderSave/$imageName";
     }
@@ -46,8 +47,11 @@ class HandlerUploadFileService extends BaseService
         }
     }
 
-    public function removeFile(array|string $paths)
+    public function removeFiles(array|string $paths = null)
     {
+        if (!$paths)
+            return;
+
         if (!is_array($paths))
             $paths = [$paths];
 
@@ -55,6 +59,58 @@ class HandlerUploadFileService extends BaseService
             if (file_exists($this->getAbsolutePublicPath($p))) {
                 $this->safeDeleteFile($p);
             }
+        }
+    }
+
+    /**
+     * Xóa file an toàn với xử lý lỗi
+     *
+     * @param string $filePath Đường dẫn file relative từ public
+     * @return bool
+     */
+    public function safeDeleteFile($filePath = null)
+    {
+        try {
+            if (!$filePath)
+                return true;
+
+            $fullPath = app(\App\Services\HandlerUploadFileService::class)->getAbsolutePublicPath($filePath);
+
+            // Kiểm tra file có tồn tại không
+            if (!file_exists($fullPath)) {
+                Log::info("File không tồn tại: {$fullPath}");
+                return true;  // Coi như đã xóa thành công
+            }
+
+            // Kiểm tra quyền đọc/ghi
+            if (!is_readable($fullPath) || !is_writable($fullPath)) {
+                Log::warning("Không có quyền xóa file: {$fullPath}");
+
+                // Thử chmod để cấp quyền
+                if (PHP_OS_FAMILY !== 'Windows') {
+                    @chmod($fullPath, 0666);
+                }
+
+                // Kiểm tra lại sau khi chmod
+                if (!is_writable($fullPath)) {
+                    Log::error("Vẫn không thể xóa file sau khi chmod: {$fullPath}");
+                    return false;
+                }
+            }
+
+            // Thử xóa file
+            $result = @unlink($fullPath);
+
+            if ($result) {
+                Log::info("Xóa file thành công: {$fullPath}");
+                return true;
+            } else {
+                Log::error("Không thể xóa file: {$fullPath}. Error: " . error_get_last()['message'] ?? 'Unknown error');
+                return false;
+            }
+        } catch (\Exception $e) {
+            Log::error("Exception khi xóa file {$filePath}: " . $e->getMessage());
+            return false;
         }
     }
 
@@ -83,7 +139,7 @@ class HandlerUploadFileService extends BaseService
             if (is_dir($fullPath)) {
                 $this->removeFolder($fullPath);
             } else {
-                $this->removeFile($fullPath);
+                $this->removeFiles($fullPath);
             }
         }
     }

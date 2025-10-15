@@ -2,15 +2,13 @@
 
 namespace App\Http\Requests\ContractInvestor;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\BaseFindByIdRequest;
 
-class FindByIdRequest extends BaseRequest
+class FindByIdRequest extends BaseFindByIdRequest
 {
     public function prepareForValidation()
     {
-        $this->merge([
-            'id' => $this->query('id'),
-        ]);
+        $this->merge(parent::prepareForValidation());
     }
 
     public function rules(): array

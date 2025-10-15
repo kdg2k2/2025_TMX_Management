@@ -19,9 +19,7 @@ class ContractController extends Controller
     public function index()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.contract.index', [
-                'fileTypes' => $this->contractFileTypeService->list(),
-            ]);
+            return view('admin.pages.contract.index', $this->service->getBaseListViewData());
         });
     }
 
