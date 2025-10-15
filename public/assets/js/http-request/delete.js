@@ -11,8 +11,7 @@ const openDeleteModal = (triggerEl) => {
         triggerEl.getAttribute("data-onsuccess")
     );
 
-    const modal = createModal(deleteModal);
-    modal.show();
+    showModal(deleteModal);
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
