@@ -171,6 +171,12 @@
                                     </a>
                                 </li>
                                 <li class="slide">
+                                    <a href="{{ route('contract.unit.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-handshake"></i>
+                                        Đơn vị liên danh
+                                    </a>
+                                </li>
+                                <li class="slide">
                                     <a href="{{ route('contract.file.type.index') }}" class="side-menu__item">
                                         <i class="side-menu-doublemenu__icon fs-6 ti ti-file-code-2"></i>
                                         Loại file

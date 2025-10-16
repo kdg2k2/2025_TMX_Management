@@ -3,20 +3,20 @@
     <x-breadcrumb :items="[
         ['label' => 'Trang chủ', 'url' => route('dashboard')],
         ['label' => 'Hợp đồng', 'url' => route('contract.index')],
-        ['label' => 'Loại file', 'url' => route('contract.file.type.index')],
+        ['label' => 'Đơn vị', 'url' => route('contract.unit.index')],
         ['label' => 'Cập nhật', 'url' => null],
     ]">
-        <x-button variant="primary" size="sm" icon="ti ti-list" tooltip="Danh sách" :href="route('contract.file.type.index')" />
+        <x-button variant="primary" size="sm" icon="ti ti-list" tooltip="Danh sách" :href="route('contract.unit.index')" />
     </x-breadcrumb>
 
     <div class="card custom-card">
         <div class="card-body">
             <form id="submit-form" class="row"
-                action="{{ route('api.contract.file.type.update', [
+                action="{{ route('api.contract.unit.update', [
                     'id' => $data['id'],
                 ]) }}">
                 @method('patch')
-                @include('admin.pages.contract.file.type.create-edit-form-content')
+                @include('admin.pages.contract.unit.create-edit-form-content')
                 <div class="my-1 col-12 text-center">
                     <x-button-submit />
                 </div>
@@ -29,6 +29,4 @@
         const $data = @json($data ?? null);
     </script>
     <script src="assets/js/http-request/base-store-and-update.js"></script>
-    <script src="assets/js/contract/file/type/base-store-and-update.js"></script>
-    <script src="assets/js/contract/file/type/update.js"></script>
 @endsection

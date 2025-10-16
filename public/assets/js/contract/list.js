@@ -38,14 +38,17 @@ const renderColumns = () => {
             data: null,
             title: "Loại HĐ",
             render: (data, type, row) => {
-                return row?.type?.name;
+                return row?.type?.name || "";
             },
         },
         {
             data: null,
             title: "Chủ đầu tư",
             render: (data, type, row) => {
-                return [row?.investor?.name_vi, row?.investor?.name_en]
+                return [
+                    row?.investor?.name_vi || "",
+                    row?.investor?.name_en || "",
+                ]
                     .filter((v) => v != null && v !== "")
                     .join(" - ");
             },

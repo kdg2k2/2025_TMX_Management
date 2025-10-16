@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ContractFileController;
 use App\Http\Controllers\Api\ContractFileTypeController;
 use App\Http\Controllers\Api\ContractInvestorController;
 use App\Http\Controllers\Api\ContractTypeController;
+use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -66,6 +67,13 @@ Route::middleware(['web', 'auth.any'])->group(function () {
             Route::get('list', 'list')->name('api.contract.appendix.list');
             Route::post('store', 'store')->name('api.contract.appendix.store');
             Route::patch('update', 'update')->name('api.contract.appendix.update');
+        });
+
+        Route::prefix('unit')->controller(ContractUnitController::class)->group(function () {
+            Route::get('list', 'list')->name('api.contract.unit.list');
+            Route::post('store', 'store')->name('api.contract.unit.store');
+            Route::patch('update', 'update')->name('api.contract.unit.update');
+            Route::delete('delete', 'delete')->name('api.contract.unit.delete');
         });
     });
 
