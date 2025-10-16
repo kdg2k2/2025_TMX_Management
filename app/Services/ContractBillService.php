@@ -62,8 +62,10 @@ class ContractBillService extends BaseService
     public function formatRecord(array $array)
     {
         $array = parent::formatRecord($array);
-        $array['duration'] = $this->formatDateForPreview($array['duration']);
-        $array['path'] = $this->getAssetUrl($array['path']);
+        if (isset($array['duration']))
+            $array['duration'] = $this->formatDateForPreview($array['duration']);
+        if (isset($array['path']))
+            $array['path'] = $this->getAssetUrl($array['path']);
         return $array;
     }
 }

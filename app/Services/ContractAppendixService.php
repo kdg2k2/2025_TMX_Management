@@ -86,12 +86,19 @@ class ContractAppendixService extends BaseService
     public function formatRecord(array $array)
     {
         $array = parent::formatRecord($array);
-        $array['renewal_date'] = $this->formatDateForPreview($array['renewal_date']);
-        $array['renewal_end_date'] = $this->formatDateForPreview($array['renewal_end_date']);
-        $array['renewal_letter'] = $this->getAssetUrl($array['renewal_letter']);
-        $array['renewal_approval_letter'] = $this->getAssetUrl($array['renewal_approval_letter']);
-        $array['renewal_appendix'] = $this->getAssetUrl($array['renewal_appendix']);
-        $array['other_documents'] = $this->getAssetUrl($array['other_documents']);
+        if (isset($array['renewal_date']))
+            $array['renewal_date'] = $this->formatDateForPreview($array['renewal_date']);
+        if (isset($array['renewal_end_date']))
+            $array['renewal_end_date'] = $this->formatDateForPreview($array['renewal_end_date']);
+
+        if (isset($array['renewal_letter']))
+            $array['renewal_letter'] = $this->getAssetUrl($array['renewal_letter']);
+        if (isset($array['renewal_approval_letter']))
+            $array['renewal_approval_letter'] = $this->getAssetUrl($array['renewal_approval_letter']);
+        if (isset($array['renewal_appendix']))
+            $array['renewal_appendix'] = $this->getAssetUrl($array['renewal_appendix']);
+        if (isset($array['other_documents']))
+            $array['other_documents'] = $this->getAssetUrl($array['other_documents']);
         return $array;
     }
 }

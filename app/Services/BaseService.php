@@ -185,12 +185,10 @@ class BaseService
      */
     public function formatRecord(array $array)
     {
-        if (isset($array['created_at'])) {
+        if (isset($array['created_at']))
             $array['created_at'] = $this->formatDateTimeForPreview($array['created_at']);
-        }
-        if (isset($array['updated_at'])) {
+        if (isset($array['updated_at']))
             $array['updated_at'] = $this->formatDateTimeForPreview($array['updated_at']);
-        }
         return $array;
     }
 

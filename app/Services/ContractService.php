@@ -26,8 +26,8 @@ class ContractService extends BaseService
             'columns' => [
                 'id',
                 'name',
-            ]
-        ]);
+                ]
+            ]);
         return $res;
     }
 

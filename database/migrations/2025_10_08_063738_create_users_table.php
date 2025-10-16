@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     /**
      * Run the migrations.
-     */assets/js/http-request/base-list.js
+     */
     public function up(): void
     {
         // người dùng
