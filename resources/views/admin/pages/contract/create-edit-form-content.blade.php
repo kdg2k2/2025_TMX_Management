@@ -194,7 +194,7 @@
     <div class="card-body row">
         <div class="my-1 col-md-4">
             <div class="form-group">
-                <label for="contract_value">
+                <label>
                     Giá trị hợp đồng(vnđ)
                 </label>
                 <input class="form-control" type="text" name="contract_value" id="contract_value">
@@ -202,7 +202,7 @@
         </div>
         <div class="my-1 col-md-2">
             <div class="form-group">
-                <label for="vat_rate">
+                <label>
                     Mức thuế(%)
                 </label>
                 <input class="form-control" type="text" name="vat_rate" id="vat_rate">
@@ -210,7 +210,7 @@
         </div>
         <div class="my-1 col-md-6">
             <div class="form-group">
-                <label for="vat_amount">
+                <label>
                     VAT(vnđ)
                 </label>
                 <input class="form-control bg-light" type="text" name="vat_amount" id="vat_amount" readonly>

@@ -232,8 +232,7 @@ const createDateBadge = (date, color = "secondary") => {
         date,
         `outline-${color}`,
         "ti ti-calendar",
-        true,
-        color
+        true
     );
 };
 

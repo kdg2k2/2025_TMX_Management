@@ -25,6 +25,8 @@
         const $data = @json($data ?? null);
     </script>
     <script src="assets/js/http-request/base-store-and-update.js"></script>
+    <script src="assets/js/format/span-formatter.js"></script>
+    <script src="assets/js/contract/vat-calculator.js"></script>
     <script src="assets/js/contract/base-store-and-update.js"></script>
     <script src="assets/js/contract/store.js"></script>
 @endsection
