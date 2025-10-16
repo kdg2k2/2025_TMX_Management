@@ -64,15 +64,18 @@ const renderColumns = () => {
             title: "Ngày ký",
         },
         {
-            data: "end_date",
+            data: null,
             title: "Ngày kêt thúc",
+            render: (data, type, row) => {
+                return formatDateTime(row?.end_date || "");
+            },
         },
         {
             data: null,
             title: "Ngày kết thúc gia hạn",
             render: (data, type, row) => {
-                return formatDateToYmd(
-                    row?.extensions?.at(-1)?.new_end_date || ""
+                return formatDateTime(
+                    row?.appendixes?.at(-1)?.renewal_end_date || ""
                 );
             },
         },

@@ -49,12 +49,12 @@ const listRenderGerenal = [
     },
     {
         title: "Ngày kết thúc",
-        content: (item) => formatDateToYmd(item?.end_date),
+        content: (item) => formatDateTime(item?.end_date),
     },
     {
         title: "Ngày kết thúc gia hạn",
         content: (item) =>
-            formatDateToYmd(item?.extensions?.at(-1)?.new_end_date || ""),
+            formatDateTime(item?.appendixes?.at(-1)?.renewal_end_date || ""),
     },
 ];
 

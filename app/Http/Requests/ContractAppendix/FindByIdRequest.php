@@ -14,7 +14,7 @@ class FindByIdRequest extends BaseFindByIdRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:contract_appendixes,column',
+            'id' => 'required|exists:contract_appendixes,id',
         ];
     }
 }

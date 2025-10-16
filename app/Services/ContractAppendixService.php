@@ -17,7 +17,7 @@ class ContractAppendixService extends BaseService
         return $this->tryThrow(function () use ($request) {
             $extracted = $this->extractFields($request);
             $data = $this->repository->store($request);
-            $this->handleFile($data, $extracted);
+            $this->handleExtracted($data, $extracted);
         }, true);
     }
 
@@ -26,7 +26,7 @@ class ContractAppendixService extends BaseService
         return $this->tryThrow(function () use ($request) {
             $extracted = $this->extractFields($request);
             $data = $this->repository->update($request);
-            $this->handleFile($data, $extracted, true);
+            $this->handleExtracted($data, $extracted, true);
         }, true);
     }
 
@@ -48,28 +48,26 @@ class ContractAppendixService extends BaseService
         return $extracted;
     }
 
-    private function handleFile(ContractAppendix $data, array $extracted, bool $isUpdate = false)
+    private function handleExtracted(ContractAppendix $data, array $extracted, bool $isUpdate = false)
     {
-        if ($extracted['renewal_letter']) {
-            $oldFile = $isUpdate ? $data['renewal_letter'] : null;
-            $data['renewal_letter'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['renewal_letter'], 'contract', 'appendix', $oldFile);
-            $data->save();
+        $fields = [
+            'renewal_letter',
+            'renewal_approval_letter',
+            'renewal_appendix',
+            'other_documents',
+        ];
+        foreach ($fields as $field) {
+            if ($extracted[$field]) {
+                $oldFile = $isUpdate ? $data[$field] : null;
+                $data[$field] = $this->handlerUploadFileService->storeAndRemoveOld($extracted[$field], 'contract', $field, $oldFile);
+                $data->save();
+            }
         }
-        if ($extracted['renewal_approval_letter']) {
-            $oldFile = $isUpdate ? $data['renewal_approval_letter'] : null;
-            $data['renewal_approval_letter'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['renewal_approval_letter'], 'contract', 'appendix', $oldFile);
-            $data->save();
-        }
-        if ($extracted['renewal_appendix']) {
-            $oldFile = $isUpdate ? $data['renewal_appendix'] : null;
-            $data['renewal_appendix'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['renewal_appendix'], 'contract', 'appendix', $oldFile);
-            $data->save();
-        }
-        if ($extracted['other_documents']) {
-            $oldFile = $isUpdate ? $data['other_documents'] : null;
-            $data['other_documents'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['other_documents'], 'contract', 'appendix', $oldFile);
-            $data->save();
-        }
+
+        if ($isUpdate == false)
+            $data->update([
+                'times' => $this->repository->getMaxTimesByContractId($data['contract_id']) + 1,
+            ]);
     }
 
     protected function beforeDelete(int $id)

@@ -32,6 +32,13 @@ const renderAppendixesInfoColumns = () => {
     return [
         {
             data: null,
+            title: "Lần",
+            render: (data, type, row) => {
+                return row?.times;
+            },
+        },
+        {
+            data: null,
             title: "Nội dung",
             render: (data, type, row) => {
                 return row?.content;

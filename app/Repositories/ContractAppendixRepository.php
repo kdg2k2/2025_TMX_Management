@@ -43,4 +43,9 @@ class ContractAppendixRepository extends BaseRepository
 
         return parent::list($request, $searchFunc);
     }
+
+    public function getMaxTimesByContractId(int $contractId)
+    {
+        return $this->model->where('contract_id', $contractId)->max('times');
+    }
 }

@@ -1,42 +1,42 @@
 @props([
-    'id' => 'navTab' . uniqid(), // ID unique cho nav-tab
-    'style' => 'pills', // pills, tabs, underline
-    'justified' => false, // nav-fill hoặc nav-justified
-    'vertical' => false, // tab dọc
-    'tabs' => [], // Array các tab
+    'id' => 'navTab' . uniqid(),
+    'style' => 'pills',
+    'justified' => false,
+    'vertical' => false,
+    'tabs' => [],
 ])
 
 @php
     $navClass = 'nav border-bottom';
 
-    // Style
     $navClass .= match ($style) {
         'tabs' => ' nav-tabs',
         'underline' => ' nav-underline',
-        default => ' nav-pills nav-style-2', // pills
+        default => ' nav-pills nav-style-2',
     };
 
-    // Justified
     if ($justified === 'fill') {
         $navClass .= ' nav-fill';
     } elseif ($justified === true || $justified === 'justified') {
         $navClass .= ' nav-justified';
     }
 
-    // Vertical
     if ($vertical) {
         $navClass .= ' flex-column';
     }
 @endphp
 
-<div class="{{ $vertical ? 'row' : '' }}">
+<div {{ $attributes->merge(['class' => $vertical ? 'row' : '']) }}>
     <div class="{{ $vertical ? 'col-md-3 col-xl-2' : '' }}">
         <ul class="{{ $navClass }}" role="tablist">
             @foreach ($tabs as $index => $tab)
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link {{ $index === 0 ? 'active' : '' }}" data-bs-toggle="tab" role="tab"
+                    <a class="nav-link {{ $index === 0 ? 'active' : '' }}"
+                        data-bs-toggle="tab"
+                        role="tab"
                         href="#{{ $id }}-tab-{{ $index }}"
-                        aria-selected="{{ $index === 0 ? 'true' : 'false' }}" {!! $index > 0 ? 'tabindex="-1"' : '' !!}
+                        aria-selected="{{ $index === 0 ? 'true' : 'false' }}"
+                        {!! $index > 0 ? 'tabindex="-1"' : '' !!}
                         @if (isset($tab['onclick'])) onclick="{{ $tab['onclick'] }}" @endif>
                         @if (isset($tab['icon']))
                             <i class="{{ $tab['icon'] }} me-1"></i>
@@ -55,10 +55,11 @@
     </div>
 
     <div class="{{ $vertical ? 'col-md-9 col-xl-10' : '' }}">
-        <div class="tab-content {{ $vertical ? '' : 'mt-3' }}">
+        <div class="tab-content">
             @foreach ($tabs as $index => $tab)
-                <div class="tab-pane {{ $index === 0 ? 'active show' : '' }}"
-                    id="{{ $id }}-tab-{{ $index }}" role="tabpanel">
+                <div class="tab-pane {{ $index === 0 ? 'active show' : '' }} {{ $tab['class'] ?? '' }}"
+                    id="{{ $id }}-tab-{{ $index }}"
+                    role="tabpanel">
                     {!! $tab['content'] !!}
                 </div>
             @endforeach

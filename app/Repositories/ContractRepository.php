@@ -22,6 +22,9 @@ class ContractRepository extends BaseRepository
             'professionals.user',
             'disbursements.user',
             'intermediateCollaborators.user',
+            'appendixes' => function ($q) {
+                $q->orderByDesc('times');
+            },
         ];
     }
 }

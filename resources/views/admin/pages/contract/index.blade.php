@@ -23,8 +23,10 @@
                         'title' => 'Thông tin chung',
                         'icon' => 'ti ti-info-circle',
                         'content' => view('admin.pages.contract.partials.general-info')->render(),
+                        'onclick' => 'loadContractDetail()',
                     ],
                     [
+                        'class' => 'border-0',
                         'title' => 'Tài liệu',
                         'icon' => 'ti ti-files',
                         'badge' => ['text' => '', 'color' => 'info', 'id' => 'document-count'],
@@ -34,6 +36,7 @@
                         'onclick' => 'renderDocumentsInfo()',
                     ],
                     [
+                        'class' => 'border-0',
                         'title' => 'Hóa đơn',
                         'icon' => 'ti ti-receipt-2',
                         'badge' => ['text' => '', 'color' => 'info', 'id' => 'bill-count'],
@@ -43,6 +46,7 @@
                         'onclick' => 'renderBillsInfo()',
                     ],
                     [
+                        'class' => 'border-0',
                         'title' => 'Phụ lục hợp đồng',
                         'icon' => 'ti ti-receipt-2',
                         'badge' => ['text' => '', 'color' => 'info', 'id' => 'appendix-count'],

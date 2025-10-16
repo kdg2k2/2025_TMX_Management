@@ -3,8 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
@@ -29,23 +29,37 @@ class BaseRequest extends FormRequest
             return $this->tableName;
         }
 
-        // Lấy namespace: App\Http\Requests\ContractAppendix\StoreRequest
-        $namespace = get_class($this);
+        // Lấy namespace và tách thành mảng
+        $namespaceParts = explode('\\', get_class($this));
 
-        // Tách lấy phần sau Requests\ và trước \StoreRequest
-        if (preg_match('/Requests\\\\(.+?)\\\\[A-Z][a-z]+Request$/', $namespace, $matches)) {
-            $modelName = $matches[1];
+        // Tìm vị trí của "Requests" trong namespace
+        $requestsIndex = array_search('Requests', $namespaceParts);
 
-            // Kiểm tra xem Model có tồn tại không
-            $modelClass = 'App\\Models\\' . $modelName;
+        if ($requestsIndex !== false && isset($namespaceParts[$requestsIndex + 1])) {
+            // Lấy phần ngay sau "Requests" và trước file Request cuối
+            $modelParts = array_slice($namespaceParts, $requestsIndex + 1, -1);
 
-            if (class_exists($modelClass)) {
-                $model = new $modelClass;
-                return $model->getTable();
+            if (!empty($modelParts)) {
+                $modelName = implode('\\', $modelParts);
+
+                // Thử tìm Model
+                $possibleClasses = [
+                    'App\\Models\\' . $modelName,
+                    'App\\Models\\' . str_replace('\\', '', $modelName),
+                    'App\\Models\\' . end($modelParts),
+                ];
+
+                foreach ($possibleClasses as $modelClass) {
+                    if (class_exists($modelClass)) {
+                        $model = new $modelClass;
+                        return $model->getTable();
+                    }
+                }
+
+                // Fallback: generate table name
+                $modelName = str_replace('\\', '', $modelName);
+                return Str::snake(Str::plural($modelName));
             }
-
-            // Fallback: tự generate table name theo convention
-            return Str::snake(Str::plural($modelName));
         }
 
         return null;
@@ -76,13 +90,13 @@ class BaseRequest extends FormRequest
                     return [];
                 }
 
-                $query = match($driver) {
-                    'mysql', 'mariadb' => "
+                $query = match ($driver) {
+                    'mysql', 'mariadb' => '
                         SELECT COLUMN_NAME, COLUMN_COMMENT
                         FROM INFORMATION_SCHEMA.COLUMNS
                         WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?
-                    ",
-                    'pgsql' => "
+                    ',
+                    'pgsql' => '
                         SELECT
                             a.attname AS column_name,
                             d.description AS column_comment
@@ -90,7 +104,7 @@ class BaseRequest extends FormRequest
                         LEFT JOIN pg_description d ON d.objoid = a.attrelid AND d.objsubid = a.attnum
                         LEFT JOIN pg_class c ON c.oid = a.attrelid
                         WHERE c.relname = ? AND a.attnum > 0 AND NOT a.attisdropped
-                    ",
+                    ',
                     default => null
                 };
 
@@ -113,7 +127,6 @@ class BaseRequest extends FormRequest
                 }
 
                 return $comments;
-
             } catch (\Exception $e) {
                 return [];
             }
@@ -139,15 +152,15 @@ class BaseRequest extends FormRequest
     public function attributes()
     {
         $comments = $this->getColumnComments();
+        // Map thêm các field đặc biệt nếu cần (override ở class con)
+        $customMap = $this->customAttributes();
+        if (empty($comments) && empty($customMap))
+            return [];
 
         // Format các comment
         $formattedComments = [];
-        foreach ($comments as $field => $comment) {
+        foreach ($comments as $field => $comment)
             $formattedComments[$field] = $this->formatAttributeName($comment);
-        }
-
-        // Map thêm các field đặc biệt nếu cần (override ở class con)
-        $customMap = $this->customAttributes();
 
         // Format custom attributes
         $formattedCustom = [];
