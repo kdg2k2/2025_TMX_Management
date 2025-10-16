@@ -14,6 +14,7 @@ return new class extends Migration {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
             $table->rememberToken();
             $table->string('name');
             $table->string('email')->unique();
@@ -29,6 +30,8 @@ return new class extends Migration {
             $table->boolean('is_banned')->default(false)->comment('khóa tài khoản');
             $table->boolean('retired')->default(false)->comment('nghỉ việc');
             $table->integer('jwt_version')->default(1);
+
+            $table->unique(['email', 'phone'], 'unique_not_deleted')->whereNull('deleted_at');
         });
     }
 

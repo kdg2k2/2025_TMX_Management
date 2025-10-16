@@ -14,6 +14,7 @@ return new class extends Migration {
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
             $table->text('name');
             $table->string('short_name')->unique();
             $table->integer('year');
@@ -64,6 +65,8 @@ return new class extends Migration {
 
             $table->string('a_side')->comment('bên a');
             $table->string('b_side')->comment('bên b');
+
+            $table->unique(['short_name', 'contract_number'], 'unique_not_deleted')->whereNull('deleted_at');
         });
     }
 

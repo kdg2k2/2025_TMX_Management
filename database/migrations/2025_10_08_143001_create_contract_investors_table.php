@@ -14,9 +14,12 @@ return new class extends Migration {
         Schema::create('contract_investors', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
             $table->string('name_vi')->unique();
             $table->string('name_en')->unique();
             $table->string('address')->nullable();
+
+            $table->unique(['name_vi', 'name_en'], 'unique_not_deleted')->whereNull('deleted_at');
         });
     }
 

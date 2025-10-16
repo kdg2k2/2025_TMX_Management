@@ -14,8 +14,11 @@ return new class extends Migration {
         Schema::create('positions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
             $table->string('name')->unique();
             $table->integer('level')->nullable()->comment('dùng để sort cấp vụ nào cao hơn');
+
+            $table->unique(['name'], 'unique_not_deleted')->whereNull('deleted_at');
         });
     }
 

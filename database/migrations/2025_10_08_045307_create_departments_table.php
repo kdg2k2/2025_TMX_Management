@@ -14,8 +14,11 @@ return new class extends Migration {
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
             $table->string('name')->unique();
             $table->string('description')->nullable();
+
+            $table->unique(['name'], 'unique_not_deleted')->whereNull('deleted_at');
         });
     }
 
