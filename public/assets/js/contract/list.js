@@ -74,9 +74,11 @@ const renderColumns = () => {
             data: null,
             title: "Ngày kết thúc gia hạn",
             render: (data, type, row) => {
-                return formatDateTime(
-                    row?.appendixes?.at(-1)?.renewal_end_date || ""
-                );
+                const appendix = row?.appendixes[0] || [];
+                const date = formatDateTime(appendix?.renewal_end_date || "");
+                return date
+                    ? date + ` (theo phụ lục HĐ lần ${appendix?.times})`
+                    : "";
             },
         },
         {

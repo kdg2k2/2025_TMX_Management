@@ -133,11 +133,14 @@ const fieldMapping = {
     },
     renewal_end_date: {
         label: "Ngày kết thúc gia hạn",
-        render: (item) =>
-            createDateBadge(
-                item?.appendixes?.at(-1)?.renewal_end_date,
+        render: (item) => {
+            const appendix = item?.appendixes[0] || [];
+            const date = formatDateTime(appendix?.renewal_end_date || "");
+            return createDateBadge(
+                date ? date + ` (theo phụ lục HĐ lần ${appendix?.times})` : "",
                 "danger"
-            ),
+            );
+        },
     },
     completion_date: {
         label: "Ngày hoàn thành",
@@ -161,8 +164,7 @@ const fieldMapping = {
     },
     contract_number: {
         label: "Số hợp đồng",
-        render: (item) =>
-            createBadge(item?.contract_number, "outline-primary"),
+        render: (item) => createBadge(item?.contract_number, "outline-primary"),
     },
     year: {
         label: "Năm",
@@ -228,12 +230,7 @@ const createDateBadge = (date, color = "secondary") => {
     if (!date)
         return '<span class="text-muted fst-italic small">Chưa cập nhật</span>';
 
-    return createBadge(
-        date,
-        `outline-${color}`,
-        "ti ti-calendar",
-        true
-    );
+    return createBadge(date, `outline-${color}`, "ti ti-calendar", true);
 };
 
 const renderGerenaInfo = () => {
