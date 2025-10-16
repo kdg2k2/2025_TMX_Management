@@ -70,7 +70,7 @@ const renderColumns = () => {
             data: null,
             title: "Ngày kêt thúc",
             render: (data, type, row) => {
-                return formatDateTime(row?.end_date || "");
+                return row?.end_date || "";
             },
         },
         {
@@ -78,7 +78,7 @@ const renderColumns = () => {
             title: "Ngày kết thúc gia hạn",
             render: (data, type, row) => {
                 const appendix = row?.appendixes[0] || [];
-                const date = formatDateTime(appendix?.renewal_end_date || "");
+                const date = appendix?.renewal_end_date || "";
                 return date
                     ? date + ` (theo phụ lục HĐ lần ${appendix?.times})`
                     : "";

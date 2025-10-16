@@ -18,10 +18,17 @@ class StoreRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:255',
+            'name' => 'required|max:3000',
             'short_name' => 'required|max:255|unique:contracts,short_name',
             'year' => 'required|integer|min:1',
             'contract_number' => 'required|max:255|unique:contracts,contract_number',
+            'name_en' => 'nullable|max:3000',
+            'target_vi' => 'nullable|max:3000',
+            'target_en' => 'nullable|max:3000',
+            'main_activities_vi' => 'nullable|max:3000',
+            'main_activities_en' => 'nullable|max:3000',
+            'product_vi' => 'nullable|max:3000',
+            'product_en' => 'nullable|max:3000',
             'created_by' => 'required|exists:users,id',
             'instructors' => 'nullable|array',
             'instructors.*' => 'nullable|exists:users,id',

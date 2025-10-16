@@ -84,7 +84,7 @@
         <div class="my-1 col-md-4">
             <div class="form-group">
                 <label>
-                    Tên tiếng việt - người tham chiếu của nhà đầu tư
+                    Tên người tham chiếu của nhà đầu tư (tiếng việt)
                 </label>
                 <input class="form-control" type="text" name="vi_name_of_investor_reference_person">
             </div>
@@ -92,9 +92,66 @@
         <div class="my-1 col-md-4">
             <div class="form-group">
                 <label>
-                    Tên tiếng anh - người tham chiếu của nhà đầu tư
+                    Tên người tham chiếu của nhà đầu tư (tiếng anh)
                 </label>
                 <input class="form-control" type="text" name="en_name_of_investor_reference_person">
+            </div>
+        </div>
+
+        <div class="my-1 col-md-4">
+            <div class="form-group">
+                <label>
+                    Tên hợp đồng (tiếng anh)
+                </label>
+                <input class="form-control" type="text" name="name_en">
+            </div>
+        </div>
+        <div class="my-1 col-md-4">
+            <div class="form-group">
+                <label>
+                    Mục tiêu (tiếng việt)
+                </label>
+                <input class="form-control" type="text" name="target_vi">
+            </div>
+        </div>
+        <div class="my-1 col-md-4">
+            <div class="form-group">
+                <label>
+                    Mục tiêu (tiếng anh)
+                </label>
+                <textarea name="target_en" class="form-control" rows="1"></textarea>
+            </div>
+        </div>
+        <div class="my-1 col-md-4">
+            <div class="form-group">
+                <label>
+                    Hoạt động chính (tiếng việt)
+                </label>
+                <textarea name="main_activities_vi" class="form-control" rows="1"></textarea>
+            </div>
+        </div>
+        <div class="my-1 col-md-4">
+            <div class="form-group">
+                <label>
+                    Hoạt động chính (tiếng anh)
+                </label>
+                <textarea name="main_activities_en" class="form-control" rows="1"></textarea>
+            </div>
+        </div>
+        <div class="my-1 col-md-4">
+            <div class="form-group">
+                <label>
+                    Sản phẩm (tiếng việt)
+                </label>
+                <textarea name="product_vi" class="form-control" rows="1"></textarea>
+            </div>
+        </div>
+        <div class="my-1 col-md-4">
+            <div class="form-group">
+                <label>
+                    Sản phẩm (tiếng anh)
+                </label>
+                <textarea name="product_en" class="form-control" rows="1"></textarea>
             </div>
         </div>
 

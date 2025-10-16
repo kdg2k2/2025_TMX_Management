@@ -11,7 +11,7 @@ const formatDateToYmd = (dateStr) => {
 
 const formatDateTime = (dateString) => {
     if (!dateString || typeof dateString !== "string") {
-        return "";
+        return dateString;
     }
 
     try {

@@ -20,6 +20,14 @@ return new class extends Migration {
             $table->integer('year')->comment('năm');
             $table->string('contract_number')->unique()->comment('số hợp đồng');
 
+            $table->text('name_en')->nullable()->comment('tên hợp đồng (tiếng anh)');
+            $table->text('target_vi')->nullable()->comment('Mục tiêu (tiếng việt)');
+            $table->text('target_en')->nullable()->comment('Mục tiêu (tiếng anh)');
+            $table->text('main_activities_vi')->nullable()->comment('Hoạt động chinh (tiếng việt)');
+            $table->text('main_activities_en')->nullable()->comment('Hoạt động chinh (tiếng anh)');
+            $table->text('product_vi')->nullable()->comment('Sản phẩm (tiếng việt)');
+            $table->text('product_en')->nullable()->comment('Sản phẩm (tiếng anh)');
+
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('Người tạo hợp đồng');
 
             $table->foreignId('accounting_contact_id')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('đầu mối kế toán');

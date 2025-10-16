@@ -62,14 +62,22 @@ document.addEventListener("DOMContentLoaded", () => {
         "liquidation_value",
     ]);
 
-    [
+    const inputValues = [
         contractValueInput,
         vatRateInput,
         acceptanceValueInput,
         liquidationValueInput,
-    ].forEach((input) => {
+    ];
+
+    inputValues.forEach((input) => {
         ["input", "paste", "change", "blur"].forEach((evt) => {
             input.addEventListener(evt, () => handleInputChange(input));
         });
     });
+
+    setTimeout(() => {
+        inputValues.forEach((input) => {
+            handleInputChange(input);
+        });
+    }, 500);
 });
