@@ -38,7 +38,6 @@ const infoGroups = {
             "vat_rate",
             "vat_amount",
             "acceptance_value",
-            "liquidation_value",
         ],
     },
     timeline: {
@@ -113,11 +112,6 @@ const fieldMapping = {
         label: "Giá trị nghiệm thu",
         render: (item) =>
             renderFinancialInfo(item?.acceptance_value, "fw-bold fs-5"),
-    },
-    liquidation_value: {
-        label: "Giá trị thanh lý",
-        render: (item) =>
-            renderFinancialInfo(item?.liquidation_value, "fw-bold fs-5"),
     },
     signed_date: {
         label: "Ngày ký hợp đồng",

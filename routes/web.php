@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ContractBillController;
 use App\Http\Controllers\Admin\ContractController;
 use App\Http\Controllers\Admin\ContractFileController;
 use App\Http\Controllers\Admin\ContractFileTypeController;
+use App\Http\Controllers\Admin\ContractFinanceController;
 use App\Http\Controllers\Admin\ContractInvestorController;
 use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\ContractUnitController;
@@ -70,6 +71,10 @@ Route::middleware(['isLogin'])->group(function () {
             Route::get('create', 'create')->name('contract.unit.create');
             Route::get('edit', 'edit')->name('contract.unit.edit');
             Route::delete('delete', 'delete')->name('contract.unit.delete');
+        });
+
+        Route::prefix('finance')->controller(ContractFinanceController::class)->group(function () {
+            Route::delete('delete', 'delete')->name('contract.finance.delete');
         });
     });
 

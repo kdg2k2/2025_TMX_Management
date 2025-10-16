@@ -39,11 +39,10 @@ return new class extends Migration {
             $table->string('vi_name_of_investor_reference_person')->nullable()->comment('Tên tiếng việt - người tham chiếu của nhà đầu tư');
             $table->string('en_name_of_investor_reference_person')->nullable()->comment('Tên tiếng anh - người tham chiếu của nhà đầu tư');
 
-            $table->double('contract_value')->nullable()->comment('giá trị hợp đồng');
+            $table->bigInteger('contract_value')->nullable()->comment('giá trị hợp đồng');
             $table->double('vat_rate')->nullable()->comment('giá trị % thuế');
-            $table->double('vat_amount')->nullable()->comment('tiền thuế');
-            $table->double('acceptance_value')->nullable()->comment('giá trị nghiệm thu');
-            $table->double('liquidation_value')->nullable()->comment('giá trị thanh lý');
+            $table->bigInteger('vat_amount')->nullable()->comment('tiền thuế');
+            $table->bigInteger('acceptance_value')->nullable()->comment('giá trị nghiệm thu');
 
             $table->date('signed_date')->nullable()->comment('Ngày ký hợp đồng');
             $table->date('effective_date')->nullable()->comment('Ngày hợp đồng có hiệu lực');

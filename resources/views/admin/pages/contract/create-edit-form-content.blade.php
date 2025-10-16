@@ -249,7 +249,7 @@
         </h6>
     </div>
     <div class="card-body row">
-        <div class="my-1 col-md-4">
+        <div class="my-1 col-md-6">
             <div class="form-group">
                 <label>
                     Giá trị hợp đồng(vnđ)
@@ -257,7 +257,7 @@
                 <input class="form-control" type="text" name="contract_value" id="contract_value">
             </div>
         </div>
-        <div class="my-1 col-md-2">
+        <div class="my-1 col-md-6">
             <div class="form-group">
                 <label>
                     Mức thuế(%)
@@ -273,20 +273,12 @@
                 <input class="form-control bg-light" type="text" name="vat_amount" id="vat_amount" readonly>
             </div>
         </div>
-        <div class="my-1 col-md-4">
+        <div class="my-1 col-md-6">
             <div class="form-group">
                 <label>
                     Giá trị nghiệm thu (vnđ)
                 </label>
-                <input class="form-control" type="text" name="acceptance_value" id="acceptance_value">
-            </div>
-        </div>
-        <div class="my-1 col-md-4">
-            <div class="form-group">
-                <label>
-                    Giá trị thanh lý (vnđ)
-                </label>
-                <input class="form-control" type="text" name="liquidation_value" id="liquidation_value">
+                <input class="form-control" type="text" name="acceptance_value" id="acceptance_value" disabled>
             </div>
         </div>
     </div>

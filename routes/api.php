@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ContractBillController;
 use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\ContractFileController;
 use App\Http\Controllers\Api\ContractFileTypeController;
+use App\Http\Controllers\Api\ContractFinanceController;
 use App\Http\Controllers\Api\ContractInvestorController;
 use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
@@ -74,6 +75,13 @@ Route::middleware(['web', 'auth.any'])->group(function () {
             Route::post('store', 'store')->name('api.contract.unit.store');
             Route::patch('update', 'update')->name('api.contract.unit.update');
             Route::delete('delete', 'delete')->name('api.contract.unit.delete');
+        });
+
+        Route::prefix('finance')->controller(ContractFinanceController::class)->group(function () {
+            Route::get('list', 'list')->name('api.contract.finance.list');
+            Route::post('store', 'store')->name('api.contract.finance.store');
+            Route::patch('update', 'update')->name('api.contract.finance.update');
+            Route::delete('delete', 'delete')->name('api.contract.finance.delete');
         });
     });
 

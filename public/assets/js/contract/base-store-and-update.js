@@ -2,7 +2,6 @@ const contractValueInput = document.getElementById("contract_value");
 const vatRateInput = document.getElementById("vat_rate");
 const vatAmountInput = document.getElementById("vat_amount");
 const acceptanceValueInput = document.getElementById("acceptance_value");
-const liquidationValueInput = document.getElementById("liquidation_value");
 let formatTimeout;
 const selectManyYear = document.getElementById("is_contract_many_year");
 const colManyYear = document.querySelector("#many_years").closest(".col-md-4");
@@ -59,14 +58,12 @@ document.addEventListener("DOMContentLoaded", () => {
         "contract_value",
         "vat_rate",
         "acceptance_value",
-        "liquidation_value",
     ]);
 
     const inputValues = [
         contractValueInput,
         vatRateInput,
         acceptanceValueInput,
-        liquidationValueInput,
     ];
 
     inputValues.forEach((input) => {
