@@ -14,10 +14,7 @@ return new class extends Migration {
         Schema::create('file_extensions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table
-                ->string('extension')
-                ->unique()
-                ->comment('Phần mở rộng file, ví dụ: pdf, docx, xlsx');
+            $table->string('extension')->unique()->comment('định dạng file');  // ví dụ: pdf, docx, xlsx
         });
     }
 

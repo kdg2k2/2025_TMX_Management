@@ -14,12 +14,12 @@ return new class extends Migration {
         Schema::create('contract_files', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('type_id')->constrained('contract_file_types')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->text('path')->nullable();
-            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate()->comment('khóa ngoại hợp đồng');
+            $table->foreignId('type_id')->constrained('contract_file_types')->cascadeOnDelete()->cascadeOnUpdate()->comment('khóa ngoại loại file');
+            $table->text('path')->nullable()->comment('đường dẫn lưu file');
+            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('người tạo-cập nhật');
             $table->string('updated_content')->nullable()->comment('nội dung cập nhật');
-            $table->string('note')->nullable();
+            $table->string('note')->nullable()->comment('ghi chú');
         });
     }
 

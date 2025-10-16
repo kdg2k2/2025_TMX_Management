@@ -14,9 +14,9 @@ return new class extends Migration {
         Schema::create('contract_file_types', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('name')->unique();
-            $table->string('description')->nullable();
-            $table->enum('type', ['file', 'url']);
+            $table->string('name')->unique()->comment('tên loại file hợp đồng');
+            $table->string('description')->nullable()->comment('mô tả');
+            $table->enum('type', ['file', 'url'])->comment('loại file');  // lưu file hay url
         });
     }
 

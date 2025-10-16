@@ -18,7 +18,6 @@ class ContractRepository extends BaseRepository
             'type',
             'investor',
             'manyYears',
-            'extensions',
             'scopes.province',
             'professionals.user',
             'disbursements.user',

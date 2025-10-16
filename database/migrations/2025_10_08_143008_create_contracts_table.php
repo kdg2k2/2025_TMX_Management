@@ -15,9 +15,9 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->softDeletes();
-            $table->text('name');
-            $table->string('short_name')->unique();
-            $table->integer('year');
+            $table->text('name')->comment('tên hợp đồng');
+            $table->string('short_name')->unique()->comment('tên viết tắt');
+            $table->integer('year')->comment('năm');
             $table->string('contract_number')->unique()->comment('số hợp đồng');
 
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('Người tạo hợp đồng');

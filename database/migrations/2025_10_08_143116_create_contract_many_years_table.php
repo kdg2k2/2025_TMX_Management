@@ -14,8 +14,8 @@ return new class extends Migration {
         Schema::create('contract_many_years', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->integer('year');
+            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate()->comment('khóa ngoại hợp đồng');
+            $table->integer('year')->comment('năm');
         });
     }
 

@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // các định dạng cho loại file scan hợp đồng
         Schema::create('contract_scan_file_type_extensions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();

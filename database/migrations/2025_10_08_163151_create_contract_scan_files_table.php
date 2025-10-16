@@ -13,10 +13,10 @@ return new class extends Migration {
         Schema::create('contract_scan_files', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate()->comment('khóa ngoại hợp đồng');
             $table->foreignId('type_id')->constrained('contract_scan_file_types')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->text('path');
-            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->text('path')->comment('đường dẫn lưu file');
+            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('người tạo-cập nhật');
         });
     }
 

@@ -15,9 +15,9 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->softDeletes();
-            $table->string('name_vi')->unique();
-            $table->string('name_en')->unique();
-            $table->string('address')->nullable();
+            $table->string('name_vi')->unique()->comment('tên tiếng việt');
+            $table->string('name_en')->unique()->comment('tên tiếng anh');
+            $table->string('address')->nullable()->comment('địa chỉ');
 
             $table->unique(['name_vi', 'name_en'], 'unique_not_deleted')->whereNull('deleted_at');
         });

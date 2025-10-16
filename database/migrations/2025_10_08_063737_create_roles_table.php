@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->softDeletes();
-            $table->string('name')->unique();
-            $table->text('description')->nullable();
+            $table->string('name')->unique()->comment('tên quyền');
+            $table->text('description')->nullable()->comment('mô tả');
 
             $table->unique(['name'], 'unique_not_deleted')->whereNull('deleted_at');
         });

@@ -10,11 +10,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // phụ lục hợp đồng
         Schema::create('contract_appendixes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('người tạo-cập nhật');
+            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate()->comment('khóa ngoại hợp đồng');
+            $table->integer('times')->default(1)->comment('số lần gia hạn hợp đồng');
             $table->string('content')->nullable()->comment('nội dung');
             $table->date('renewal_date')->comment('ngày gia hạn');
             $table->date('renewal_end_date')->comment('ngày gia hạn');

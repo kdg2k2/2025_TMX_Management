@@ -20,7 +20,7 @@ class StoreRequest extends BaseRequest
             'contract_id' => 'required|exists:contracts,id',
             'content' => 'nullable|max:255',
             'renewal_date' => 'required|date_format:Y-m-d',
-            'renewal_end_date' => 'required|date_format:Y-m-d',
+            'renewal_end_date' => 'required|date_format:Y-m-d|after_or_equal:renewal_date',
             'renewal_letter' => 'nullable|file|mimes:doc,docx,pdf,rar,zip',
             'renewal_approval_letter' => 'nullable|file|mimes:doc,docx,pdf,rar,zip',
             'renewal_appendix' => 'nullable|file|mimes:doc,docx,pdf,rar,zip',

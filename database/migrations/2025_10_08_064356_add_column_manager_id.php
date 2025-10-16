@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         // thêm cột trường phòng
         Schema::table('departments', function (Blueprint $table) {
-            $table->foreignId('manager_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('manager_id')->nullable()->constrained('users')->onDelete('set null')->commment('khóa ngoại user là trường phòng');
         });
     }
 

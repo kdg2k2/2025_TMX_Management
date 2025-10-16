@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        // loại file hợp đồng cho phép các định dạng file gì
+        // các định dạng cho loại file hợp đồng
         Schema::create('contract_file_type_extensions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();

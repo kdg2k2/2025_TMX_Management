@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('contract_scopes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate()->comment('khóa ngoại hợp đồng');
             $table->string('province_code');
             $table->foreign('province_code')->references('code')->on('provinces')->cascadeOnDelete()->cascadeOnUpdate();
 

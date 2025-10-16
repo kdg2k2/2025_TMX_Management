@@ -16,10 +16,10 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
             $table->rememberToken();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('phone')->nullable()->unique();
+            $table->string('name')->comment('tên');
+            $table->string('email')->unique()->comment('email');
+            $table->string('password')->comment('mật khẩu');
+            $table->string('phone')->nullable()->unique()->comment('số điện thoại');
             $table->string('citizen_identification_number')->nullable()->comment('số căn cước công dân');
             $table->text('path')->nullable()->comment('ảnh đại diện');
             $table->text('path_signature')->nullable()->comment('ảnh chữ ký -  đùng cho chức năng ký số');
@@ -29,7 +29,7 @@ return new class extends Migration {
             $table->foreignId('role_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->boolean('is_banned')->default(false)->comment('khóa tài khoản');
             $table->boolean('retired')->default(false)->comment('nghỉ việc');
-            $table->integer('jwt_version')->default(1);
+            $table->integer('jwt_version')->default(1)->comment('phiên bản token đăng nhập - dựa vào đây để ép logout user mobile');
 
             $table->unique(['email', 'phone'], 'unique_not_deleted')->whereNull('deleted_at');
         });

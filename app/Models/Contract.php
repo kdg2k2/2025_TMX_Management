@@ -112,11 +112,6 @@ class Contract extends Model
         return $this->hasMany(ContractManyYear::class);
     }
 
-    public function extensions()
-    {
-        return $this->hasMany(ContractExtension::class);
-    }
-
     public function scopes()
     {
         return $this->hasMany(ContractScope::class);

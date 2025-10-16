@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // loại file scan hợp đồng
         Schema::create('contract_scan_file_types', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('name')->unique();
-            $table->string('description')->nullable();
+            $table->string('name')->unique()->comment('tên');
+            $table->string('description')->nullable()->comment('mô tả');
         });
     }
 
