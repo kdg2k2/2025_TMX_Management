@@ -26,8 +26,8 @@ class ContractService extends BaseService
             'columns' => [
                 'id',
                 'name',
-                ]
-            ]);
+            ]
+        ]);
         return $res;
     }
 
@@ -59,23 +59,25 @@ class ContractService extends BaseService
     {
         $array = parent::formatRecord($array);
 
-        if (isset($array['signed_date']))
-            $array['signed_date'] = $this->formatDateForPreview($array['signed_date']);
-        if (isset($array['effective_date']))
-            $array['effective_date'] = $this->formatDateForPreview($array['effective_date']);
-        if (isset($array['end_date']))
-            $array['end_date'] = $this->formatDateForPreview($array['end_date']);
-        if (isset($array['completion_date']))
-            $array['completion_date'] = $this->formatDateForPreview($array['completion_date']);
-        if (isset($array['acceptance_date']))
-            $array['acceptance_date'] = $this->formatDateForPreview($array['acceptance_date']);
-        if (isset($array['liquidation_date']))
-            $array['liquidation_date'] = $this->formatDateForPreview($array['liquidation_date']);
+        $dates = [
+            'signed_date',
+            'effective_date',
+            'end_date',
+            'completion_date',
+            'acceptance_date',
+            'liquidation_date',
+        ];
+        foreach ($dates as $date)
+            if (isset($array[$date]))
+                $array[$date] = $this->formatDateForPreview($array[$date]);
 
-        if (isset($array['path_file_full']))
-            $array['path_file_full'] = $this->getAssetUrl($array['path_file_full']);
-        if (isset($array['path_file_short']))
-            $array['path_file_short'] = $this->getAssetUrl($array['path_file_short']);
+        $files = [
+            'path_file_full',
+            'path_file_short',
+        ];
+        foreach ($files as $file)
+            if (isset($array[$file]))
+                $array[$file] = $this->getAssetUrl($array[$file]);
 
         if (isset($array['contract_status']))
             $array['contract_status'] = $this->repository->model->getContractStatus($array['contract_status']);
@@ -131,16 +133,16 @@ class ContractService extends BaseService
 
     private function handleFilesAndRelations($data, array $extracted, bool $isUpdate = false): void
     {
-        if ($extracted['path_file_full']) {
-            $oldFile = $isUpdate ? $data['path_file_full'] : null;
-            $data['path_file_full'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path_file_full'], 'contract', 'full', $oldFile);
-            $data->save();
-        }
-
-        if ($extracted['path_file_short']) {
-            $oldFile = $isUpdate ? $data['path_file_short'] : null;
-            $data['path_file_short'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path_file_short'], 'contract', 'short', $oldFile);
-            $data->save();
+        $fields = [
+            'path_file_full',
+            'path_file_short',
+        ];
+        foreach ($fields as $field) {
+            if ($extracted[$field]) {
+                $oldFile = $isUpdate ? $data[$field] : null;
+                $data[$field] = $this->handlerUploadFileService->storeAndRemoveOld($extracted[$field], 'contract', $field, $oldFile);
+                $data->save();
+            }
         }
 
         $this->contractScope($data, $extracted['scopes'] ?? []);

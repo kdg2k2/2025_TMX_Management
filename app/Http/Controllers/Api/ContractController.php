@@ -29,7 +29,7 @@ class ContractController extends Controller
     {
         return $this->catchAPI(function () use ($request) {
             return response()->json([
-                'data' => $this->service->findById($request->validated()['id']),
+                'data' => $this->service->findById($request->validated()['id'], true, true),
             ]);
         });
     }

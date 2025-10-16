@@ -163,7 +163,7 @@
                 <label>
                     Ngày hoàn thành
                 </label>
-                <input class="form-control" type="date" name="completion_date" disabled>
+                <input class="form-control" type="date" name="completion_date">
             </div>
         </div>
         <div class="my-1 col-md-3">
