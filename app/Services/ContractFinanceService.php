@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\ContractFinanceRepository;
+use Exception;
 
 class ContractFinanceService extends BaseService
 {
@@ -22,5 +23,14 @@ class ContractFinanceService extends BaseService
         if (isset($array['role']))
             $array['role'] = $this->getRole($array['role']);
         return $array;
+    }
+
+    public function beforeStore(array $request)
+    {
+        $isJointVentureContract = $this->repository->isJointVentureContract($request['contract_id']);
+        if ($isJointVentureContract['isJointVentureContract'] && $isJointVentureContract['count'] > 0)
+            throw new Exception('Không thể thêm đơn vị do gói thầu không phải gói liên danh');
+
+        return $request;
     }
 }

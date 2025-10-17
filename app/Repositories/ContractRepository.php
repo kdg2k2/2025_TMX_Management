@@ -64,4 +64,9 @@ class ContractRepository extends BaseRepository
 
         return parent::list($request, $searchFunc);
     }
+
+    public function isJointVentureContract(int $id)
+    {
+        return $this->model->find($id)->type_id == 2;
+    }
 }
