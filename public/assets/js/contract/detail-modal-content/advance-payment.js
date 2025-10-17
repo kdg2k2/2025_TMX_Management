@@ -59,7 +59,7 @@ const triggerChangeAdvancePaymentInputValues = () => {
 };
 
 contractAdvancePaymentModalForm.addEventListener("submit", async (e) => {
-    appendAdvancePaymentIdInForm(contractAdvancePaymentModalForm);
+    appendFinanceIdInForm(contractAdvancePaymentModalForm);
     await handleSubmitForm(e, contractAdvancePaymentModalForm, () => {
         renderFinancesInfo();
         triggerChangeAdvancePaymentInputValues();

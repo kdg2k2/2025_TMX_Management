@@ -33,7 +33,7 @@ const appendContractIdInForm = (form) => {
     findInputInFormAndSetValue(form, "contract_id", contractId);
 };
 
-const appendAdvancePaymentIdInForm = (form) => {
+const appendFinanceIdInForm = (form) => {
     findInputInFormAndSetValue(form, "contract_finance_id", financeId);
 };
 

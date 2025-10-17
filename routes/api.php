@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ContractFileController;
 use App\Http\Controllers\Api\ContractFileTypeController;
 use App\Http\Controllers\Api\ContractFinanceController;
 use App\Http\Controllers\Api\ContractInvestorController;
+use App\Http\Controllers\Api\ContractPaymentController;
 use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\UserController;
@@ -89,6 +90,11 @@ Route::middleware(['web', 'auth.any'])->group(function () {
             Route::prefix('advance-payment')->controller(ContractAdvancePaymentController::class)->group(function () {
                 Route::post('store', 'store')->name('api.contract.finance.advance-payment.store');
                 Route::patch('update', 'update')->name('api.contract.finance.advance-payment.update');
+            });
+
+            Route::prefix('payment')->controller(ContractPaymentController::class)->group(function () {
+                Route::post('store', 'store')->name('api.contract.finance.payment.store');
+                Route::patch('update', 'update')->name('api.contract.finance.payment.update');
             });
         });
     });

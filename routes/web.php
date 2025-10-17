@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ContractFileController;
 use App\Http\Controllers\Admin\ContractFileTypeController;
 use App\Http\Controllers\Admin\ContractFinanceController;
 use App\Http\Controllers\Admin\ContractInvestorController;
+use App\Http\Controllers\Admin\ContractPaymentController;
 use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\ContractUnitController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -81,6 +82,10 @@ Route::middleware(['isLogin'])->group(function () {
 
             Route::prefix('advance-payment')->controller(ContractAdvancePaymentController::class)->group(function () {
                 Route::delete('delete', 'delete')->name('contract.finance.advance-payment.delete');
+            });
+
+            Route::prefix('payment')->controller(ContractPaymentController::class)->group(function () {
+                Route::delete('delete', 'delete')->name('contract.finance.payment.delete');
             });
         });
     });

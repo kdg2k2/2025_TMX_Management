@@ -64,6 +64,10 @@ const renderFinancesInfoTbody = (data) => {
     const maxAdvanceTimes = Math.max(
         ...data.map((d) => d.advance_payment?.length || 0)
     );
+    // số lần thanh toán lớn nhất
+    const maxPaymentTimes = Math.max(
+        ...data.map((d) => d.payment?.length || 0)
+    );
 
     let tbody = `
         <tbody>
@@ -117,14 +121,16 @@ const renderFinancesInfoTbody = (data) => {
                                     advance
                                         ? `
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <div>${fmNumber(
-                                                    advance.amount
-                                                )}</div>
-                                                <small class="text-muted">
-                                                    (${formatDateTime(
-                                                        advance.date
-                                                    )})
-                                                </small>
+                                                <ul class="m-0 list-unstyled">
+                                                    <li><span class="fw-bold">Số tiền: </span>${fmNumber(
+                                                        advance.amount
+                                                    )}vnđ</li>
+                                                    <li><span class="fw-bold">Ngày: </span>
+                                                        ${formatDateTime(
+                                                            advance.date
+                                                        )}
+                                                    </li>
+                                                </ul>
                                                 <div>
                                                     ${
                                                         createBtn(
@@ -159,18 +165,118 @@ const renderFinancesInfoTbody = (data) => {
         `;
     }
 
-    // tổng tiền tạm ứng
+    // thanh toán lần N
+    for (let i = 0; i < maxPaymentTimes; i++) {
+        tbody += `
+            <tr>
+                <th>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>Thanh toán lần ${i + 1}</div>
+                    </div>
+                </th>
+                ${data
+                    .map((v) => {
+                        const payment = v.payment?.[i];
+                        return `
+                            <td>
+                                ${
+                                    payment
+                                        ? `
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <ul class="m-0 list-unstyled">
+                                                    <li><span class="fw-bold">Số tiền thanh toán: </span>${fmNumber(
+                                                        payment.payment_amount
+                                                    )}vnđ</li>
+                                                    <li><span class="fw-bold">Ngày thanh toán: </span>
+                                                        ${formatDateTime(
+                                                            payment.payment_date
+                                                        )}
+                                                    </li>
+                                                    <li><span class="fw-bold">Số tiền hóa đơn: </span>${fmNumber(
+                                                        payment.invoice_amount
+                                                    )}vnđ</li>
+                                                    <li><span class="fw-bold">Ngày hóa đơn: </span>
+                                                        ${formatDateTime(
+                                                            payment.invoice_date
+                                                        )}
+                                                    </li>
+                                                    <li><span class="fw-bold">Số hóa đơn: </span>${
+                                                        payment.invoice_number
+                                                    }</li>
+                                                </ul>
+                                                <div>
+                                                    ${
+                                                        createBtn(
+                                                            "outline-primary",
+                                                            "Cập nhật thanh toán",
+                                                            false,
+                                                            {},
+                                                            "ti ti-edit",
+                                                            `openPaymentModal(${
+                                                                payment.id
+                                                            }, 'patch', '${updatePaymentUrl}?id=${
+                                                                payment.id
+                                                            }', '${JSON.stringify(
+                                                                payment
+                                                            )}')`
+                                                        )?.outerHTML
+                                                    }
+                                                    ${createDeleteBtn(
+                                                        `${deletePaymentUrl}?id=${payment.id}`,
+                                                        "renderFinancesInfo"
+                                                    )}
+                                                </div>
+                                            </div>
+                                        `
+                                        : "-"
+                                }
+                            </td>
+                        `;
+                    })
+                    .join("")}
+            </tr>
+        `;
+    }
+
     tbody += `
-        <tr class="text-danger">
-            <th>Tổng tiền tạm ứng(vnđ)</th>
+        <tr class="text-success">
+            <th>Tổng tiền tạm ứng + thanh toán(vnđ)</th>
             ${data
                 .map((v) => {
                     const total =
+                        (v.advance_payment?.reduce(
+                            (sum, a) => sum + (a.amount || 0),
+                            0
+                        ) || 0) +
+                        (v.payment?.reduce(
+                            (sum, a) => sum + (a.payment_amount || 0),
+                            0
+                        ) || 0);
+                    return `<th>${fmNumber(total)}</th>`;
+                })
+                .join("")}
+        </tr>
+    `;
+
+    tbody += `
+        <tr class="fw-bold text-danger">
+            <th>Còn nợ(vnđ)</th>
+            ${data
+                .map((v) => {
+                    const totalAdvance =
                         v.advance_payment?.reduce(
                             (sum, a) => sum + (a.amount || 0),
                             0
                         ) || 0;
-                    return `<th>${fmNumber(total)}</th>`;
+                    const totalPayment =
+                        v.payment?.reduce(
+                            (sum, a) => sum + (a.payment_amount || 0),
+                            0
+                        ) || 0;
+                    const totalPaid = totalAdvance + totalPayment;
+                    const remaining = (v.acceptance_value || 0) - totalPaid;
+
+                    return `<th>${fmNumber(remaining)}</th>`;
                 })
                 .join("")}
         </tr>
@@ -183,6 +289,16 @@ const renderFinancesInfoTbody = (data) => {
 
 const renderFinancesInfoActionButtons = (row) => {
     return `
+        ${
+            createBtn(
+                "primary",
+                "Thêm thanh toán",
+                false,
+                {},
+                "ti ti-tax",
+                `openPaymentModal(${row.id})`
+            )?.outerHTML
+        }
         ${
             createBtn(
                 "secondary",

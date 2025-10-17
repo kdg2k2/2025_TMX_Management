@@ -283,6 +283,44 @@
             <x-button-submit />
         </x-slot:footer>
     </x-modal>
+
+    <x-modal id="contract-payment-modal" title="Thanh toán" size="sm" nested="true">
+        <x-slot:body>
+            <div class="form-group my-1">
+                <label>
+                    Số tiền thanh toán(vnđ)
+                </label>
+                <input class="form-control" type="text" name="payment_amount" id="payment-amount" required>
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Ngày thanh toán
+                </label>
+                <input class="form-control" type="date" name="payment_date" id="payment-date" required>
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Số tiền hóa đơn(vnđ)
+                </label>
+                <input class="form-control" type="text" name="invoice_amount" id="invoice-amount" required>
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Ngày hóa đơn
+                </label>
+                <input class="form-control" type="date" name="invoice_date" id="invoice-date" required>
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Số hóa đơn
+                </label>
+                <input class="form-control" type="text" name="invoice_number" id="invoice-number" required>
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button-submit />
+        </x-slot:footer>
+    </x-modal>
 @endsection
 @section('scripts')
     <script>
@@ -314,6 +352,10 @@
         const storeAdvancePaymentUrl = @json(route('api.contract.finance.advance-payment.store'));
         const updateAdvancePaymentUrl = @json(route('api.contract.finance.advance-payment.update'));
         const deleteAdvancePaymentUrl = @json(route('contract.finance.advance-payment.delete'));
+
+        const storePaymentUrl = @json(route('api.contract.finance.payment.store'));
+        const updatePaymentUrl = @json(route('api.contract.finance.payment.update'));
+        const deletePaymentUrl = @json(route('contract.finance.payment.delete'));
     </script>
     <script src="assets/js/http-request/base-list.js"></script>
     <script src="assets/js/http-request/base-store-and-update.js"></script>
@@ -327,4 +369,5 @@
     <script src="assets/js/contract/detail-modal-content/appendixes-info.js"></script>
     <script src="assets/js/contract/detail-modal-content/finances-info.js"></script>
     <script src="assets/js/contract/detail-modal-content/advance-payment.js"></script>
+    <script src="assets/js/contract/detail-modal-content/payment.js"></script>
 @endsection

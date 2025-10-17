@@ -14,6 +14,7 @@ class ContractFinanceRepository extends BaseRepository
         $this->relations = [
             'contractUnit',
             'advancePayment',
+            'payment',
         ];
     }
 
