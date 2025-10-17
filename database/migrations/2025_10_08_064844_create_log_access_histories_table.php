@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('log_access_histories', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('user_id')->comment('khóa ngoại tài khoản')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('permission_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->text('url');
             $table->string('method');

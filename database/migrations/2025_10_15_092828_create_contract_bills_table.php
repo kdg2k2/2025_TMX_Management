@@ -16,9 +16,9 @@ return new class extends Migration {
             $table->timestamps();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('người tạo-cập nhật');
             $table->foreignId('bill_collector')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('người phụ trách lấy');
-            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate()->comment('khóa ngoại hợp đồng');
+            $table->foreignId('contract_id')->comment('khóa ngoại hợp đồng')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->text('path')->nullable()->comment('đường dẫn lưu file');
-            $table->float('amount')->comment('số tiền');
+            $table->bigInteger('amount')->comment('số tiền');
             $table->date('duration')->comment('thời hạn');
             $table->text('content_in_the_estimate')->comment('Nội dung trong dự toán');
             $table->string('note')->nullable()->comment('ghi chú');

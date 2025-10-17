@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('contract_files', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate()->comment('khóa ngoại hợp đồng');
+            $table->foreignId('contract_id')->comment('khóa ngoại hợp đồng')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('type_id')->constrained('contract_file_types')->cascadeOnDelete()->cascadeOnUpdate()->comment('khóa ngoại loại file');
             $table->text('path')->nullable()->comment('đường dẫn lưu file');
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('người tạo-cập nhật');

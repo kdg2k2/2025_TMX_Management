@@ -141,4 +141,9 @@ class Contract extends Model
     {
         return $this->hasMany(ContractAppendix::class);
     }
+
+    public function finances()
+    {
+        return $this->hasMany(ContractFinance::class);
+    }
 }

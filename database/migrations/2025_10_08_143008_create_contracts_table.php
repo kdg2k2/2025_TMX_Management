@@ -28,21 +28,20 @@ return new class extends Migration {
             $table->text('product_vi')->nullable()->comment('Sản phẩm (tiếng việt)');
             $table->text('product_en')->nullable()->comment('Sản phẩm (tiếng anh)');
 
-            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('Người tạo hợp đồng');
+            $table->foreignId('created_by')->comment('Người tạo hợp đồng')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
 
-            $table->foreignId('accounting_contact_id')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('đầu mối kế toán');
-            $table->foreignId('inspector_user_id')->nullable()->constrained('users')->nullOnDelete()->comment('Người kiểm tra sản phẩm trung gian của hợp đồng');
-            $table->foreignId('executor_user_id')->nullable()->constrained('users')->nullOnDelete()->comment('Người thực hiện sản phẩm trung gian');
+            $table->foreignId('accounting_contact_id')->comment('đầu mối kế toán')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('inspector_user_id')->comment('Người kiểm tra sản phẩm trung gian của hợp đồng')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('executor_user_id')->comment('Người thực hiện sản phẩm trung gian')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
 
-            $table->foreignId('type_id')->constrained('contract_types')->cascadeOnDelete()->cascadeOnUpdate()->comment('loại hợp đồng');
-            $table->foreignId('investor_id')->nullable()->constrained('contract_investors')->cascadeOnDelete()->cascadeOnUpdate()->comment('nhà đầu tư');
+            $table->foreignId('type_id')->comment('loại hợp đồng')->constrained('contract_types')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('investor_id')->comment('nhà đầu tư')->nullable()->constrained('contract_investors')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('vi_name_of_investor_reference_person')->nullable()->comment('Tên tiếng việt - người tham chiếu của nhà đầu tư');
             $table->string('en_name_of_investor_reference_person')->nullable()->comment('Tên tiếng anh - người tham chiếu của nhà đầu tư');
 
             $table->bigInteger('contract_value')->nullable()->comment('giá trị hợp đồng');
             $table->double('vat_rate')->nullable()->comment('giá trị % thuế');
             $table->bigInteger('vat_amount')->nullable()->comment('tiền thuế');
-            $table->bigInteger('acceptance_value')->nullable()->comment('giá trị nghiệm thu');
 
             $table->date('signed_date')->nullable()->comment('Ngày ký hợp đồng');
             $table->date('effective_date')->nullable()->comment('Ngày hợp đồng có hiệu lực');

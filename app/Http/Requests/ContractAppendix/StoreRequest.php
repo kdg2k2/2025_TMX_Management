@@ -25,7 +25,7 @@ class StoreRequest extends BaseRequest
             'renewal_approval_letter' => 'nullable|file|mimes:doc,docx,pdf,rar,zip',
             'renewal_appendix' => 'nullable|file|mimes:doc,docx,pdf,rar,zip',
             'other_documents' => 'nullable|file|mimes:doc,docx,pdf,rar,zip',
-            'adjusted_value' => 'nullable|numeric|min:0',
+            'adjusted_value' => 'nullable|integer|min:0',
             'note' => 'nullable|max:255',
         ];
     }

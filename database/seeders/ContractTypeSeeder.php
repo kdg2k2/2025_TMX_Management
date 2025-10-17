@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\ContractType;
-use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
 class ContractTypeSeeder extends Seeder
 {
@@ -14,7 +14,11 @@ class ContractTypeSeeder extends Seeder
     public function run(): void
     {
         ContractType::truncate();
-        ContractType::insert([
+        ContractType::insert(array_map(function ($item) {
+            $item['created_at'] = now();
+            $item['updated_at'] = now();
+            return $item;
+        }, [
             [
                 'name' => 'Thầu phụ',
             ],
@@ -27,6 +31,6 @@ class ContractTypeSeeder extends Seeder
             [
                 'name' => 'Tư vấn cá nhân',
             ],
-        ]);
+        ]));
     }
 }

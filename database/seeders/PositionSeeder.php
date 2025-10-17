@@ -13,7 +13,11 @@ class PositionSeeder extends Seeder
     public function run(): void
     {
         Position::truncate();
-        Position::insert([
+        Position::insert(array_map(function ($item) {
+            $item['created_at'] = now();
+            $item['updated_at'] = now();
+            return $item;
+        }, [
             [
                 'name' => 'Giám Đốc',
                 'level' => 1,
@@ -38,6 +42,6 @@ class PositionSeeder extends Seeder
                 'name' => 'Cộng Tác Viên',
                 'level' => 6,
             ],
-        ]);
+        ]));
     }
 }

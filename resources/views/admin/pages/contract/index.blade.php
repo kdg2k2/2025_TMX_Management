@@ -48,12 +48,22 @@
                     [
                         'class' => 'border-0',
                         'title' => 'Phụ lục hợp đồng',
-                        'icon' => 'ti ti-receipt-2',
+                        'icon' => 'ti ti-file-plus',
                         'badge' => ['text' => '', 'color' => 'info', 'id' => 'appendix-count'],
                         'content' => view('admin.pages.contract.partials.appendixes-info', [
                             'users' => $users,
                         ])->render(),
                         'onclick' => 'renderAppendixesInfo()',
+                    ],
+                    [
+                        'class' => 'border-0',
+                        'title' => 'Tài chính',
+                        'icon' => 'ti ti-brand-cashapp',
+                        'badge' => ['text' => '', 'color' => 'info', 'id' => 'finance-count'],
+                        'content' => view('admin.pages.contract.partials.finances-info', [
+                            'users' => $users,
+                        ])->render(),
+                        'onclick' => 'renderFinancesInfo()',
                     ],
                 ]" />
             </div>
@@ -110,7 +120,7 @@
             </div>
             <div class="form-group my-1">
                 <label>
-                    Số tiền HĐ
+                    Số tiền HĐ(vnđ)
                 </label>
                 <input class="form-control" type="text" name="amount" id="bill-amount" required>
             </div>
@@ -192,7 +202,7 @@
             </div>
             <div class="form-group my-1">
                 <label>
-                    Giá trị điều chỉnh
+                    Giá trị điều chỉnh(vnđ)
                 </label>
                 <input class="form-control" type="text" name="adjusted_value" id="appendix-adjusted-value">
             </div>
@@ -201,6 +211,56 @@
                     Ghi chú
                 </label>
                 <input class="form-control" type="text" name="note">
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button-submit />
+        </x-slot:footer>
+    </x-modal>
+
+    <x-modal id="contract-finance-modal" title="Tài chính" size="md" nested="true">
+        <x-slot:body>
+            <input name="contract_id" hidden>
+            <div class="form-group my-1">
+                <label>
+                    Đơn vị
+                </label>
+                <select name="contract_unit_id" required>
+                    <x-select-options :items="$contractUnits"></x-select-options>
+                </select>
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Vai trò
+                </label>
+                <select name="role" required>
+                    <x-select-options :items="$financeRoles" keyField="original" valueFields="converted"></x-select-options>
+                </select>
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Giá trị thực hiện(vnđ)
+                </label>
+                <input class="form-control" type="text" name="realized_value" id="finance-realized-value" required>
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Giá trị nghiệm thu(vnđ)
+                </label>
+                <input class="form-control" type="text" name="acceptance_value" id="finance-acceptance-value"
+                    required>
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Mức thuế(%)
+                </label>
+                <input class="form-control" type="text" name="vat_rate" id="finance-vat-rate" required>
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    VAT(vnđ)
+                </label>
+                <input class="form-control bg-light" type="text" name="vat_amount" id="finance-vat-amount" readonly>
             </div>
         </x-slot:body>
         <x-slot:footer>
@@ -229,13 +289,21 @@
         const storeAppendixUrl = @json(route('api.contract.appendix.store'));
         const updateAppendixUrl = @json(route('api.contract.appendix.update'));
         const deleteAppendixUrl = @json(route('contract.appendix.delete'));
+
+        const listFinanceUrl = @json(route('api.contract.finance.list'));
+        const storeFinanceUrl = @json(route('api.contract.finance.store'));
+        const updateFinanceUrl = @json(route('api.contract.finance.update'));
+        const deleteFinanceUrl = @json(route('contract.finance.delete'));
     </script>
     <script src="assets/js/http-request/base-list.js"></script>
     <script src="assets/js/http-request/base-store-and-update.js"></script>
     <script src="assets/js/contract/list.js"></script>
+    <script src="assets/js/format/span-formatter.js"></script>
+    <script src="assets/js/contract/vat-calculator.js"></script>
     <script src="assets/js/contract/detail-modal-content/script.js"></script>
     <script src="assets/js/contract/detail-modal-content/general-info.js"></script>
     <script src="assets/js/contract/detail-modal-content/documents-info.js"></script>
     <script src="assets/js/contract/detail-modal-content/bills-info.js"></script>
     <script src="assets/js/contract/detail-modal-content/appendixes-info.js"></script>
+    <script src="assets/js/contract/detail-modal-content/finances-info.js"></script>
 @endsection

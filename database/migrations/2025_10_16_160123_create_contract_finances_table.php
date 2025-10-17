@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('contract_finances', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('contract_unit_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('contract_id')->comment('khóa ngoại hợp đồng')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('contract_unit_id')->comment('khóa ngoại đơn vị liên danh')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->enum('role', [
                 'head_of_the_joint_venture',  // Đứng đầu liên danh
                 'joint_venture_members',  // Thành viên liên danh
@@ -24,6 +24,8 @@ return new class extends Migration {
             $table->bigInteger('acceptance_value')->comment('giá trị nghiệm thu');
             $table->double('vat_rate')->comment('giá trị % thuế');
             $table->bigInteger('vat_amount')->comment('tiền thuế');
+
+            $table->unique(['contract_id', 'contract_unit_id']);
         });
     }
 

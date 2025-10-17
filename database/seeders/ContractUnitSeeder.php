@@ -2,11 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\ContractInvestor;
+use App\Models\ContractUnit;
 use App\Traits\CheckLocalTraits;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class ContractInvestorySeeder extends Seeder
+class ContractUnitSeeder extends Seeder
 {
     use CheckLocalTraits;
 
@@ -16,8 +17,8 @@ class ContractInvestorySeeder extends Seeder
     public function run(): void
     {
         if ($this->isLocal()) {
-            ContractInvestor::truncate();
-            ContractInvestor::factory()->count(10)->create();
+            ContractUnit::truncate();
+            ContractUnit::factory()->count(10)->create();
         }
     }
 }

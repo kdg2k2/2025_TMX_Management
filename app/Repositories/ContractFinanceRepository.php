@@ -9,6 +9,8 @@ class ContractFinanceRepository extends BaseRepository
     public function __construct()
     {
         $this->model = new ContractFinance();
-        $this->relations = [];
+        $this->relations = [
+            'contractUnit',
+        ];
     }
 }

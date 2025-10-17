@@ -276,7 +276,7 @@
         <div class="my-1 col-md-6">
             <div class="form-group">
                 <label>
-                    Giá trị nghiệm thu (vnđ)
+                    Giá trị nghiệm thu(vnđ)
                 </label>
                 <input class="form-control" type="text" name="acceptance_value" id="acceptance_value" disabled>
             </div>

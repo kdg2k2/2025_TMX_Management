@@ -60,8 +60,8 @@ class ContractFileService extends BaseService
         return $this->getAssetUrl($data['path']);
     }
 
-    protected function beforeDelete(int $id)
+    public function afterDelete($entity)
     {
-        $this->handlerUploadFileService->removeFiles($this->repository->findById($id, false)['path'] ?? null);
+        $this->handlerUploadFileService->removeFiles($entity['path'] ?? null);
     }
 }

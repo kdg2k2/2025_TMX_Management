@@ -42,7 +42,6 @@ class StoreRequest extends BaseRequest
             'en_name_of_investor_reference_person' => 'nullable|string|max:255',
             'vat_rate' => 'nullable|numeric|min:0',
             'vat_amount' => 'nullable|integer|min:0',
-            'acceptance_value' => 'nullable|integer|min:0',
             'signed_date' => 'nullable|date_format:Y-m-d',
             'effective_date' => 'nullable|date_format:Y-m-d',
             'end_date' => 'nullable|date_format:Y-m-d',

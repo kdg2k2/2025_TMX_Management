@@ -5,6 +5,11 @@ const contractAppendixModalForm = contractAppendixModal.querySelector("form");
 const appendixesInfoDatatable = document.getElementById(
     "appendixes-info-datatable"
 );
+const appendixAdjustedValue = document.getElementById(
+    "appendix-adjusted-value"
+);
+const appendixInputValues = [appendixAdjustedValue];
+let formatAppendixAmoutTimeout;
 
 window.renderAppendixesInfo = () => {
     createDataTableServerSide(
@@ -212,11 +217,6 @@ const openAppendixModal = (
 ) => {
     contractAppendixModalForm.setAttribute("action", url);
 
-    const inputContractId = contractAppendixModalForm?.querySelector(
-        'input[name="contract_id"]'
-    );
-    if (inputContractId) inputContractId.value = contractId || "";
-
     const inMethod = contractAppendixModalForm?.querySelector(
         'input[name="_method"]'
     );
@@ -229,17 +229,49 @@ const openAppendixModal = (
             renewal_end_date: (value) => formatDateToYmd(value),
         };
         autoMatchFieldAndFillPatchForm(contractAppendixModalForm, method, data);
+    } else {
+        contractAppendixModalForm.reset();
+        refreshSumoSelect($(contractAppendixModalForm).find("select"));
     }
 
+    triggerChangeAppendixInputValues();
     showModal(contractAppendixModal);
 };
 
+// Cập nhật label hiển thị format
+const updateAppendixSpanDisplayNumberFormart = (input) => {
+    updateFormattedSpan(input, null);
+};
+
+// Xử lý thay đổi input
+const appendixHandleInputChange = (input) => {
+    clearTimeout(formatAppendixAmoutTimeout);
+    updateAppendixSpanDisplayNumberFormart(input);
+    formatAppendixAmoutTimeout = setTimeout(() => {
+        updateAppendixSpanDisplayNumberFormart(input);
+    }, 1000);
+};
+
+const triggerChangeAppendixInputValues = () => {
+    appendixInputValues.forEach((input) => {
+        appendixHandleInputChange(input);
+    });
+};
+
 contractAppendixModalForm.addEventListener("submit", async (e) => {
+    appendContractIdInForm(contractAppendixModalForm);
     await handleSubmitForm(e, contractAppendixModalForm, () => {
         renderAppendixesInfo();
+        triggerChangeAppendixInputValues();
     });
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    applyIntegerValidation(["appendix-adjusted-value"]);
+    applyIntegerValidation([appendixAdjustedValue.getAttribute("id")]);
+
+    appendixInputValues.forEach((input) => {
+        ["input", "paste", "change", "blur"].forEach((evt) => {
+            input.addEventListener(evt, () => appendixHandleInputChange(input));
+        });
+    });
 });

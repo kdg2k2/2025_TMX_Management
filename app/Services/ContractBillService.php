@@ -54,9 +54,9 @@ class ContractBillService extends BaseService
         }
     }
 
-    protected function beforeDelete(int $id)
+    protected function afterDelete($entity)
     {
-        $this->handlerUploadFileService->removeFiles($this->repository->findById($id, false)['path'] ?? null);
+        $this->handlerUploadFileService->removeFiles($entity['path'] ?? null);
     }
 
     public function formatRecord(array $array)

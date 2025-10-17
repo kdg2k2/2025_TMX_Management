@@ -12,7 +12,9 @@ class ContractService extends BaseService
         private ContractInvestorService $contractInvestorService,
         private ProvinceService $provinceService,
         private HandlerUploadFileService $handlerUploadFileService,
-        private ContractFileTypeService $contractFileTypeService
+        private ContractFileTypeService $contractFileTypeService,
+        private ContractUnitService $contractUnitService,
+        private ContractFinanceService $contractFinanceService
     ) {
         $this->repository = app(ContractRepository::class);
     }
@@ -28,6 +30,8 @@ class ContractService extends BaseService
                 'name',
             ]
         ]);
+        $res['contractUnits'] = $this->contractUnitService->list();
+        $res['financeRoles'] = $this->contractFinanceService->getRole();
         return $res;
     }
 
@@ -87,6 +91,8 @@ class ContractService extends BaseService
             $array['financial_status'] = $this->repository->model->getFinancialStatus($array['financial_status']);
 
         $array['is_contract_many_year'] = (isset($array['many_years']) && count($array['many_years']) > 0) ? 1 : 0;
+
+        $array['acceptance_value'] = array_sum(array_column($this->contractFinanceService->list(['contract_id' => $array['id']]), 'acceptance_value'));
 
         return $array;
     }
@@ -183,9 +189,8 @@ class ContractService extends BaseService
         $this->syncRelationship($contract, 'contract_id', 'intermediateCollaborators', $ids, 'user_id');
     }
 
-    protected function beforeDelete(int $id)
+    protected function afterDelete($entity)
     {
-        $data = $this->repository->findById($id, false);
-        $this->handlerUploadFileService->removeFiles([$data['path_file_short'], $data['path_file_full']]);
+        $this->handlerUploadFileService->removeFiles([$entity['path_file_short'], $entity['path_file_full']]);
     }
 }

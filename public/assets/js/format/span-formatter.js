@@ -57,8 +57,8 @@ const updateFormattedSpan = (input, content = null) => {
 };
 
 // Xóa tất cả span formatted
-const clearAllFormattedSpans = () => {
-    document
+const clearAllFormattedSpans = (parent = document) => {
+    parent
         .querySelectorAll(".span-formatted-value")
         .forEach((el) => el.remove());
 };

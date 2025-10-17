@@ -70,14 +70,32 @@ class ContractAppendixService extends BaseService
             ]);
     }
 
-    protected function beforeDelete(int $id)
+    private function updateTimes(int $contractId)
     {
-        $data = $this->repository->findById($id, false);
+        $list = $this->repository->list([
+            'order_by' => 'id',
+            'sort_by' => 'asc',
+            'contract_id' => $contractId,
+            'load_relations' => false,
+        ]);
+
+        if (count($list) == 0)
+            return;
+
+        $list->values()->each(function ($item, $index) {
+            $item->update(['times' => $index + 1]);
+        });
+    }
+
+    protected function afterDelete($entity)
+    {
+        $this->updateTimes($entity['contract_id']);
+
         $this->handlerUploadFileService->removeFiles([
-            $data['renewal_letter'],
-            $data['renewal_approval_letter'],
-            $data['renewal_appendix'],
-            $data['other_documents'],
+            $entity['renewal_letter'],
+            $entity['renewal_approval_letter'],
+            $entity['renewal_appendix'],
+            $entity['other_documents'],
         ]);
     }
 

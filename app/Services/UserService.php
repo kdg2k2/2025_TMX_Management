@@ -123,9 +123,8 @@ class UserService extends BaseService
         return $array;
     }
 
-    protected function beforeDelete(int $id)
+    protected function afterDelete($entity)
     {
-        $user = $this->repository->findById($id);
-        $this->handlerUploadFileService->removeFiles([$user['path'], $user['path_signature']]);
+        $this->handlerUploadFileService->removeFiles([$entity['path'], $entity['path_signature']]);
     }
 }

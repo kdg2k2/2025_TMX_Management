@@ -87,6 +87,8 @@ const setupTooltipObserver = (tooltipSelector) => {
 
 const createTooltipForElement = (el) => {
     try {
+        if (!document.body.contains(el)) return;
+
         destroyTooltipForElement(el);
 
         const isFullscreen = !!document.fullscreenElement;

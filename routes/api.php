@@ -77,11 +77,13 @@ Route::middleware(['web', 'auth.any'])->group(function () {
             Route::delete('delete', 'delete')->name('api.contract.unit.delete');
         });
 
-        Route::prefix('finance')->controller(ContractFinanceController::class)->group(function () {
-            Route::get('list', 'list')->name('api.contract.finance.list');
-            Route::post('store', 'store')->name('api.contract.finance.store');
-            Route::patch('update', 'update')->name('api.contract.finance.update');
-            Route::delete('delete', 'delete')->name('api.contract.finance.delete');
+        Route::prefix('finance')->group(function () {
+            Route::controller(ContractFinanceController::class)->group(function () {
+                Route::get('list', 'list')->name('api.contract.finance.list');
+                Route::post('store', 'store')->name('api.contract.finance.store');
+                Route::patch('update', 'update')->name('api.contract.finance.update');
+                Route::delete('delete', 'delete')->name('api.contract.finance.delete');
+            });
         });
     });
 

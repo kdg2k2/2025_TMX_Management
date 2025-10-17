@@ -131,8 +131,6 @@ const openCreateFileModal = () => {
 };
 
 const showAndSetAcceptExts = (record = {}) => {
-    console.log({ record });
-
     const contractFileInputParent = contractFileInput?.closest(".form-group");
 
     if (!record || Object.keys(record).length === 0) {
@@ -181,10 +179,7 @@ contractFileType.addEventListener("change", () => {
 });
 
 createContractFileModalForm.addEventListener("submit", async (e) => {
-    const input = createContractFileModalForm?.querySelector(
-        'input[name="contract_id"]'
-    );
-    if (input) input.value = contractId || "";
+    appendContractIdInForm(createContractFileModalForm);
 
     await handleSubmitForm(e, createContractFileModalForm, () => {
         showAndSetAcceptExts();

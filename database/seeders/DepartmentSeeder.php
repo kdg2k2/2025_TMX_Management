@@ -13,7 +13,11 @@ class DepartmentSeeder extends Seeder
     public function run(): void
     {
         Department::truncate();
-        Department::insert([
+        Department::insert(array_map(function ($item) {
+            $item['created_at'] = now();
+            $item['updated_at'] = now();
+            return $item;
+        }, [
             [
                 'name' => 'Ban Giám Đốc',
             ],
@@ -32,6 +36,6 @@ class DepartmentSeeder extends Seeder
             [
                 'name' => 'Đào Tạo',
             ],
-        ]);
+        ]));
     }
 }

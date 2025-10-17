@@ -73,8 +73,10 @@ Route::middleware(['isLogin'])->group(function () {
             Route::delete('delete', 'delete')->name('contract.unit.delete');
         });
 
-        Route::prefix('finance')->controller(ContractFinanceController::class)->group(function () {
-            Route::delete('delete', 'delete')->name('contract.finance.delete');
+        Route::prefix('finance')->group(function () {
+            Route::controller(ContractFinanceController::class)->group(function () {
+                Route::delete('delete', 'delete')->name('contract.finance.delete');
+            });
         });
     });
 

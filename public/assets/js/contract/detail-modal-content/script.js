@@ -11,6 +11,12 @@ const loadContractDetail = async () => {
     renderDocumentsInfo();
     renderBillsInfo();
     renderAppendixesInfo();
+    renderFinancesInfo();
+};
+
+const appendContractIdInForm = (form) => {
+    const inputContractId = form?.querySelector('input[name="contract_id"]');
+    if (inputContractId) inputContractId.value = contractId || "";
 };
 
 contractDetailModal.addEventListener("show.bs.modal", async (e) => {

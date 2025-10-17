@@ -2,6 +2,9 @@ const contractBillModal = document.getElementById("contract-bill-modal");
 const contractBillModalForm = contractBillModal.querySelector("form");
 const billTypeFilter = document.getElementById("bill-type-filter");
 const billsInfoDatatable = document.getElementById("bills-info-datatable");
+const billAmount = document.getElementById("bill-amount");
+const billInputValues = [billAmount];
+let formatBillAmoutTimeout;
 
 window.renderBillsInfo = () => {
     createDataTableServerSide(
@@ -129,11 +132,6 @@ const renderBillsInfoActionButtons = (row) => {
 const openBillModal = (method = "post", url = storeBillUrl, data = {}) => {
     contractBillModalForm.setAttribute("action", url);
 
-    const inputContractId = contractBillModalForm?.querySelector(
-        'input[name="contract_id"]'
-    );
-    if (inputContractId) inputContractId.value = contractId || "";
-
     const inMethod = contractBillModalForm?.querySelector(
         'input[name="_method"]'
     );
@@ -147,14 +145,41 @@ const openBillModal = (method = "post", url = storeBillUrl, data = {}) => {
             duration: (value) => formatDateToYmd(value),
         };
         autoMatchFieldAndFillPatchForm(contractBillModalForm, method, data);
+    } else {
+        contractBillModalForm.reset();
+        refreshSumoSelect($(contractBillModalForm).find("select"));
     }
+
+    triggerChangeBillInputValues();
 
     showModal(contractBillModal);
 };
 
+// Cập nhật label hiển thị format
+const updateBillSpanDisplayNumberFormart = (input) => {
+    updateFormattedSpan(input, null);
+};
+
+// Xử lý thay đổi input
+const billHandleInputChange = (input) => {
+    clearTimeout(formatBillAmoutTimeout);
+    updateBillSpanDisplayNumberFormart(input);
+    formatBillAmoutTimeout = setTimeout(() => {
+        updateBillSpanDisplayNumberFormart(input);
+    }, 1000);
+};
+
+const triggerChangeBillInputValues = () => {
+    billInputValues.forEach((input) => {
+        billHandleInputChange(input);
+    });
+};
+
 contractBillModalForm.addEventListener("submit", async (e) => {
+    appendContractIdInForm(contractBillModalForm);
     await handleSubmitForm(e, contractBillModalForm, () => {
         renderBillsInfo();
+        triggerChangeBillInputValues();
     });
 });
 
@@ -163,5 +188,11 @@ billTypeFilter.addEventListener("change", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    applyIntegerValidation(["bill-amount"]);
+    applyIntegerValidation([billAmount.getAttribute("id")]);
+
+    billInputValues.forEach((input) => {
+        ["input", "paste", "change", "blur"].forEach((evt) => {
+            input.addEventListener(evt, () => billHandleInputChange(input));
+        });
+    });
 });
