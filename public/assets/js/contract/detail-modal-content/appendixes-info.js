@@ -145,7 +145,7 @@ const renderAppendixesInfoColumns = () => {
         },
         {
             data: null,
-            title: "Giá trị điều chỉnh",
+            title: "Giá trị điều chỉnh(vnđ)",
             render: (data, type, row) => {
                 return fmNumber(row?.adjusted_value || "");
             },

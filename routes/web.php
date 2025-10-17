@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ContractAdvancePaymentController;
 use App\Http\Controllers\Admin\ContractAppendixController;
 use App\Http\Controllers\Admin\ContractBillController;
 use App\Http\Controllers\Admin\ContractController;
@@ -76,6 +77,10 @@ Route::middleware(['isLogin'])->group(function () {
         Route::prefix('finance')->group(function () {
             Route::controller(ContractFinanceController::class)->group(function () {
                 Route::delete('delete', 'delete')->name('contract.finance.delete');
+            });
+
+            Route::prefix('advance-payment')->controller(ContractAdvancePaymentController::class)->group(function () {
+                Route::delete('delete', 'delete')->name('contract.finance.advance-payment.delete');
             });
         });
     });

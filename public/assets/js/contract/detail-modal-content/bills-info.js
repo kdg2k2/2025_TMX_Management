@@ -41,7 +41,7 @@ const renderBillsInfoColumns = () => {
         },
         {
             data: null,
-            title: "Số tiền HĐ",
+            title: "Số tiền HĐ(vnđ)",
             render: (data, type, row) => {
                 return fmNumber(row?.amount || "");
             },

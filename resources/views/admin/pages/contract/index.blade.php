@@ -76,7 +76,6 @@
     <x-modal id="create-contract-file-modal" title="Thêm mới file hợp đồng" size="md" nested="true"
         action="{{ route('api.contract.file.store') }}" method="post">
         <x-slot:body>
-            <input name="contract_id" hidden>
             <div class="form-group my-1">
                 <label>
                     Loại file
@@ -109,7 +108,6 @@
 
     <x-modal id="contract-bill-modal" title="Hóa đơn" size="md" nested="true">
         <x-slot:body>
-            <input name="contract_id" hidden>
             <div class="form-group my-1">
                 <label>
                     Người phụ trách lấy
@@ -156,7 +154,6 @@
 
     <x-modal id="contract-appendix-modal" title="Phụ lục hợp đồng" size="md" nested="true">
         <x-slot:body>
-            <input name="contract_id" hidden>
             <div class="form-group my-1">
                 <label>
                     Nội dung
@@ -220,7 +217,6 @@
 
     <x-modal id="contract-finance-modal" title="Tài chính" size="md" nested="true">
         <x-slot:body>
-            <input name="contract_id" hidden>
             <div class="form-group my-1">
                 <label>
                     Đơn vị
@@ -267,6 +263,26 @@
             <x-button-submit />
         </x-slot:footer>
     </x-modal>
+
+    <x-modal id="contract-advance-payment-modal" title="Tạm ứng" size="sm" nested="true">
+        <x-slot:body>
+            <div class="form-group my-1">
+                <label>
+                    Số tiền(vnđ)
+                </label>
+                <input class="form-control" type="text" name="amount" id="advance-payment-amount" required>
+            </div>
+            <div class="form-group my-1">
+                <label>
+                    Ngày
+                </label>
+                <input class="form-control" type="date" name="date" id="advance-payment-date" required>
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button-submit />
+        </x-slot:footer>
+    </x-modal>
 @endsection
 @section('scripts')
     <script>
@@ -294,6 +310,10 @@
         const storeFinanceUrl = @json(route('api.contract.finance.store'));
         const updateFinanceUrl = @json(route('api.contract.finance.update'));
         const deleteFinanceUrl = @json(route('contract.finance.delete'));
+
+        const storeAdvancePaymentUrl = @json(route('api.contract.finance.advance-payment.store'));
+        const updateAdvancePaymentUrl = @json(route('api.contract.finance.advance-payment.update'));
+        const deleteAdvancePaymentUrl = @json(route('contract.finance.advance-payment.delete'));
     </script>
     <script src="assets/js/http-request/base-list.js"></script>
     <script src="assets/js/http-request/base-store-and-update.js"></script>
@@ -306,4 +326,5 @@
     <script src="assets/js/contract/detail-modal-content/bills-info.js"></script>
     <script src="assets/js/contract/detail-modal-content/appendixes-info.js"></script>
     <script src="assets/js/contract/detail-modal-content/finances-info.js"></script>
+    <script src="assets/js/contract/detail-modal-content/advance-payment.js"></script>
 @endsection

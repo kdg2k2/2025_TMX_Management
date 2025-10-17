@@ -10,6 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // đơn vị liên danh
         Schema::create('contract_units', function (Blueprint $table) {
             $table->id();
             $table->timestamps();

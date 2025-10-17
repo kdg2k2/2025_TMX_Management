@@ -36,4 +36,9 @@ class ContractFinance extends Model
     {
         return $this->belongsTo(ContractUnit::class);
     }
+
+    public function advancePayment()
+    {
+        return $this->hasMany(ContractAdvancePayment::class);
+    }
 }

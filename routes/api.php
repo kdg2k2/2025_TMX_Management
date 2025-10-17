@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ContractAdvancePaymentController;
 use App\Http\Controllers\Api\ContractAppendixController;
 use App\Http\Controllers\Api\ContractBillController;
 use App\Http\Controllers\Api\ContractController;
@@ -83,6 +84,11 @@ Route::middleware(['web', 'auth.any'])->group(function () {
                 Route::post('store', 'store')->name('api.contract.finance.store');
                 Route::patch('update', 'update')->name('api.contract.finance.update');
                 Route::delete('delete', 'delete')->name('api.contract.finance.delete');
+            });
+
+            Route::prefix('advance-payment')->controller(ContractAdvancePaymentController::class)->group(function () {
+                Route::post('store', 'store')->name('api.contract.finance.advance-payment.store');
+                Route::patch('update', 'update')->name('api.contract.finance.advance-payment.update');
             });
         });
     });

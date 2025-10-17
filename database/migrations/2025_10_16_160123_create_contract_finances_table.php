@@ -10,6 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // tài chính
         Schema::create('contract_finances', function (Blueprint $table) {
             $table->id();
             $table->timestamps();

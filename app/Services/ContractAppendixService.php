@@ -65,9 +65,7 @@ class ContractAppendixService extends BaseService
         }
 
         if ($isUpdate == false)
-            $data->update([
-                'times' => $this->repository->getMaxTimesByContractId($data['contract_id']) + 1,
-            ]);
+            $this->updateTimes($data['contract_id']);
     }
 
     private function updateTimes(int $contractId)

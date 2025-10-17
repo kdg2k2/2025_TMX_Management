@@ -1,6 +1,5 @@
 const contractDetailModal = document.getElementById("contract-detail-modal");
-var contractId = null;
-var contractDetail = null;
+var contractId = (contractDetail = financeId = null);
 
 const loadContractDetail = async () => {
     contractDetail = null;
@@ -14,9 +13,28 @@ const loadContractDetail = async () => {
     renderFinancesInfo();
 };
 
+const createInputWithAttrName = (name) => {
+    const input = document.createElement("input");
+    input.setAttribute("name", name);
+    input.hidden = true;
+    return input;
+};
+
+const findInputInFormAndSetValue = (form, name, value) => {
+    var input = form?.querySelector(`input[name="${name}"]`);
+    if (!input) {
+        input = createInputWithAttrName(name);
+        form.prepend(input);
+    }
+    input.value = value || "";
+};
+
 const appendContractIdInForm = (form) => {
-    const inputContractId = form?.querySelector('input[name="contract_id"]');
-    if (inputContractId) inputContractId.value = contractId || "";
+    findInputInFormAndSetValue(form, "contract_id", contractId);
+};
+
+const appendAdvancePaymentIdInForm = (form) => {
+    findInputInFormAndSetValue(form, "contract_finance_id", financeId);
 };
 
 contractDetailModal.addEventListener("show.bs.modal", async (e) => {

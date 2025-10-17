@@ -6,7 +6,14 @@ const infoGroups = {
         title: "Thông tin chung",
         icon: "ti ti-file-info",
         color: "info",
-        items: ["name", "short_name", "contract_number", "year", "scopes"],
+        items: [
+            "name",
+            "short_name",
+            "contract_number",
+            "type",
+            "year",
+            "scopes",
+        ],
     },
     personnel: {
         title: "Nhân sự phụ trách",
@@ -33,12 +40,7 @@ const infoGroups = {
         title: "Thông tin tài chính",
         icon: "ti ti-currency-dollar",
         color: "warning",
-        items: [
-            "contract_value",
-            "vat_rate",
-            "vat_amount",
-            "acceptance_value",
-        ],
+        items: ["contract_value", "vat_rate", "vat_amount", "acceptance_value"],
     },
     timeline: {
         title: "Thời gian",
@@ -159,6 +161,10 @@ const fieldMapping = {
     contract_number: {
         label: "Số hợp đồng",
         render: (item) => createBadge(item?.contract_number, "outline-primary"),
+    },
+    type: {
+        label: "Loại hợp đồng",
+        render: (item) => item?.type?.name || "",
     },
     year: {
         label: "Năm",

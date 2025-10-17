@@ -60,68 +60,143 @@ const renderFinancesInfoThead = (data) => {
 };
 
 const renderFinancesInfoTbody = (data) => {
-    return `
+    // số lần tạm ứng lớn nhất
+    const maxAdvanceTimes = Math.max(
+        ...data.map((d) => d.advance_payment?.length || 0)
+    );
+
+    let tbody = `
         <tbody>
             <tr>
                 <th>Vai trò</th>
                 ${data
-                    ?.map(
-                        (value, index) => `<td>${value?.role?.converted}</td>`
-                    )
+                    .map((v) => `<td>${v?.role?.converted || ""}</td>`)
                     .join("")}
             </tr>
             <tr>
                 <th>Giá trị thực hiện(vnđ)</th>
                 ${data
-                    ?.map(
-                        (value, index) =>
-                            `<td>${fmNumber(value?.realized_value || 0)}</td>`
-                    )
+                    .map((v) => `<td>${fmNumber(v?.realized_value || 0)}</td>`)
                     .join("")}
             </tr>
             <tr>
                 <th>Giá trị nghiệm thu(vnđ)</th>
                 ${data
-                    ?.map(
-                        (value, index) =>
-                            `<td>${fmNumber(value?.acceptance_value || 0)}</td>`
+                    .map(
+                        (v) => `<td>${fmNumber(v?.acceptance_value || 0)}</td>`
                     )
                     .join("")}
             </tr>
             <tr>
                 <th>Mức thuế(%)</th>
-                ${data
-                    ?.map((value, index) => `<td>${value?.vat_rate}</td>`)
-                    .join("")}
+                ${data.map((v) => `<td>${v?.vat_rate || 0}</td>`).join("")}
             </tr>
             <tr>
                 <th>VAT(vnđ)</th>
                 ${data
-                    ?.map(
-                        (value, index) =>
-                            `<td>${fmNumber(value?.vat_amount || 0)}</td>`
-                    )
+                    .map((v) => `<td>${fmNumber(v?.vat_amount || 0)}</td>`)
                     .join("")}
             </tr>
-        </tbody>
     `;
-};
 
-const getFinancesInfoFilterParams = () => {
-    const params = {
-        paginate: 1,
-        contract_id: contractId,
-    };
+    // tạm ứng lần N
+    for (let i = 0; i < maxAdvanceTimes; i++) {
+        tbody += `
+            <tr>
+                <th>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>Tạm ứng lần ${i + 1}</div>
+                    </div>
+                </th>
+                ${data
+                    .map((v) => {
+                        const advance = v.advance_payment?.[i];
+                        return `
+                            <td>
+                                ${
+                                    advance
+                                        ? `
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>${fmNumber(
+                                                    advance.amount
+                                                )}</div>
+                                                <small class="text-muted">
+                                                    (${formatDateTime(
+                                                        advance.date
+                                                    )})
+                                                </small>
+                                                <div>
+                                                    ${
+                                                        createBtn(
+                                                            "outline-secondary",
+                                                            "Cập nhật tạm ứng",
+                                                            false,
+                                                            {},
+                                                            "ti ti-edit",
+                                                            `openAdvancePaymentModal(${
+                                                                advance.id
+                                                            }, 'patch', '${updateAdvancePaymentUrl}?id=${
+                                                                advance.id
+                                                            }', '${JSON.stringify(
+                                                                advance
+                                                            )}')`
+                                                        )?.outerHTML
+                                                    }
+                                                    ${createDeleteBtn(
+                                                        `${deleteAdvancePaymentUrl}?id=${advance.id}`,
+                                                        "renderFinancesInfo"
+                                                    )}
+                                                </div>
+                                            </div>
+                                        `
+                                        : "-"
+                                }
+                            </td>
+                        `;
+                    })
+                    .join("")}
+            </tr>
+        `;
+    }
 
-    return params;
+    // tổng tiền tạm ứng
+    tbody += `
+        <tr class="text-danger">
+            <th>Tổng tiền tạm ứng(vnđ)</th>
+            ${data
+                .map((v) => {
+                    const total =
+                        v.advance_payment?.reduce(
+                            (sum, a) => sum + (a.amount || 0),
+                            0
+                        ) || 0;
+                    return `<th>${fmNumber(total)}</th>`;
+                })
+                .join("")}
+        </tr>
+    `;
+
+    tbody += "</tbody>";
+
+    return tbody;
 };
 
 const renderFinancesInfoActionButtons = (row) => {
     return `
         ${
             createBtn(
+                "secondary",
+                "Thêm tạm ứng",
+                false,
+                {},
+                "ti ti-credit-card-pay",
+                `openAdvancePaymentModal(${row.id})`
+            )?.outerHTML
+        }
+        ${
+            createBtn(
                 "warning",
-                "Cập nhật",
+                "Cập nhật đơn vị",
                 false,
                 {},
                 "ti ti-edit",
