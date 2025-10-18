@@ -27,24 +27,13 @@ const findInputInFormAndSetValue = (form, name, value) => {
         form.prepend(input);
     }
     input.value = value || "";
-    console.log({
-        form,
-        name,
-        value,
-        input,
-        "input.value": input.value,
-    });
 };
 
 const appendContractIdInForm = (form) => {
-    console.log({contractId});
-
     findInputInFormAndSetValue(form, "contract_id", contractId);
 };
 
 const appendFinanceIdInForm = (form) => {
-    console.log({financeId});
-
     findInputInFormAndSetValue(form, "contract_finance_id", financeId);
 };
 

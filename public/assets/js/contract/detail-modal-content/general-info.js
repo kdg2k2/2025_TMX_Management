@@ -184,16 +184,19 @@ const renderMultipleGerenaInfo = (
     return `
         <div class="d-flex flex-wrap gap-2">
             ${array
-                .map((value) =>
-                    createBadge(
-                        value[multipleKey]?.[singleKey] ||
-                            value[singleKey] ||
-                            "N/A",
+                .map((value) => {
+                    if (!value) return "";
+                    const name =
+                        value?.[multipleKey]?.[singleKey] ||
+                        value?.[singleKey] ||
+                        "N/A";
+                    return createBadge(
+                        name,
                         "outline-light border",
                         "ti ti-user-circle",
                         "dark"
-                    )
-                )
+                    );
+                })
                 .join("")}
         </div>
     `;
