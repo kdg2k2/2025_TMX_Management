@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Services\SearchService;
 use App\Traits\GuardTraits;
 
 abstract class BaseRepository
@@ -84,7 +85,7 @@ abstract class BaseRepository
         $this->applyListFilters($query, $request);
 
         if (isset($request['search']))
-            $this->applySearch($query, "%{$request['search']}%");
+            $this->applySearch($query, $request['search']);
 
         if (!isset($request['load_relations']))
             $request['load_relations'] = true;
@@ -99,9 +100,30 @@ abstract class BaseRepository
         return $query->get();
     }
 
-    protected function applySearch($query, string $search){}
+    /**
+     * Apply search với cấu hình mặc địnhapplySearch
+     */
+    protected function applySearch($query, string $search)
+    {
+        $config = $this->getSearchConfig();
+        $config['datetime'] = array_merge($config['datetime'], ['created_at', 'updated_at']);
+        app(\App\Services\SearchService::class)->applySearch($query, $search, $config);
+    }
 
-    protected function applyListFilters($query, array $request){}
+    /**
+     * Định nghĩa cấu hình search - các class con override
+     */
+    protected function getSearchConfig(): array
+    {
+        return [
+            'text' => [],
+            'date' => [],
+            'datetime' => [],
+            'relations' => []
+        ];
+    }
+
+    protected function applyListFilters($query, array $request) {}
 
     public function maxId()
     {

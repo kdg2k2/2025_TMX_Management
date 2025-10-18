@@ -20,19 +20,22 @@ class ContractAppendixRepository extends BaseRepository
             $query->where('contract_id', $request['contract_id']);
     }
 
-    protected function applySearch($query, string $search): void
+    protected function getSearchConfig(): array
     {
-        $query->where(function ($q) use ($search) {
-            $q
-                ->where('content', 'like', $search)
-                ->orWhere('renewal_date', 'like', $search)
-                ->orWhere('renewal_end_date', 'like', $search)
-                ->orWhere('adjusted_value', 'like', $search)
-                ->orWhere('note', 'like', $search)
-                ->orWhereHas('createdBy', function ($q) use ($search) {
-                    $q->where('name', 'like', $search);
-                });
-        });
+        return [
+            'text' => [
+                'content',
+                'renewal_date',
+                'renewal_end_date',
+                'adjusted_value',
+                'note',
+            ],
+            'date' => [],
+            'datetime' => [],
+            'relations' => [
+                'createdBy' => ['name'],
+            ]
+        ];
     }
 
     public function getMaxTimesByContractId(int $contractId)

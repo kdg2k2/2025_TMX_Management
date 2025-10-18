@@ -11,12 +11,16 @@ class ContractTypeRepository extends BaseRepository
         $this->model = new ContractType();
     }
 
-    protected function applySearch($query, string $search): void
+    protected function getSearchConfig(): array
     {
-        $query->where(function ($q) use ($search) {
-            $q
-                ->where('name', 'like', $search)
-                ->orWhere('description', 'like', $search);
-        });
+        return [
+            'text' => [
+                'name',
+                'description',
+            ],
+            'date' => [],
+            'datetime' => [],
+            'relations' => []
+        ];
     }
 }

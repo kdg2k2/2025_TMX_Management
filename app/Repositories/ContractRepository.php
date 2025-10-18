@@ -27,31 +27,29 @@ class ContractRepository extends BaseRepository
         ];
     }
 
-    protected function applySearch($query, string $search): void
+    protected function getSearchConfig(): array
     {
-        $query->where(function ($q) use ($search) {
-            $q
-                ->where('name', 'like', $search)
-                ->orWhere('short_name', 'like', $search)
-                ->orWhere('year', 'like', $search)
-                ->orWhere('contract_number', 'like', $search)
-                ->orWhere('contract_value', 'like', $search)
-                ->orWhere('vat_rate', 'like', $search)
-                ->orWhere('vat_amount', 'like', $search)
-                ->orWhereHas('scopes', function ($scopeQuery) use ($search) {
-                    $scopeQuery->whereHas('province', function ($provinceQuery) use ($search) {
-                        $provinceQuery->where('name', 'like', $search);
-                    });
-                })
-                ->orWhereHas('type', function ($q) use ($search) {
-                    $q->where('name', 'like', $search);
-                })
-                ->orWhereHas('investor', function ($q) use ($search) {
-                    $q->where('name', 'like', $search);
-                })
-                ->orWhereRaw("DATE_FORMAT(signed_date, '%d/%m/%Y') LIKE ?", [$search])
-                ->orWhereRaw("DATE_FORMAT(end_date, '%d/%m/%Y') LIKE ?", [$search]);
-        });
+        return [
+            'text' => [
+                'name',
+                'short_name',
+                'year',
+                'contract_number',
+                'contract_value',
+                'vat_rate',
+                'vat_amount',
+            ],
+            'date' => [
+                'signed_date',
+                'end_date',
+            ],
+            'datetime' => [],
+            'relations' => [
+                'scopes' => ['name'],
+                'type' => ['name'],
+                'investor' => ['name'],
+            ]
+        ];
     }
 
     public function isJointVentureContract(int $id)

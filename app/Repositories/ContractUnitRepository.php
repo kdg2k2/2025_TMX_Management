@@ -12,12 +12,16 @@ class ContractUnitRepository extends BaseRepository
         $this->relations = [];
     }
 
-    protected function applySearch($query, string $search): void
+    protected function getSearchConfig(): array
     {
-        $query->where(function ($q) use ($search) {
-            $q
-                ->where('name', 'like', $search)
-                ->orWhere('address', 'like', $search);
-        });
+        return [
+            'text' => [
+                'name',
+                'address',
+            ],
+            'date' => [],
+            'datetime' => [],
+            'relations' => []
+        ];
     }
 }

@@ -16,12 +16,16 @@ class CommuneRepository extends BaseRepository
         return $this->model->where('code', $code)->first();
     }
 
-    protected function applySearch($query, string $search): void
+    protected function getSearchConfig(): array
     {
-        $query->where(function ($q) use ($search) {
-            $q
-                ->where('name', 'like', $search)
-                ->orWhere('code', 'like', $search);
-        });
+        return [
+            'text' => [
+                'name',
+                'code',
+            ],
+            'date' => [],
+            'datetime' => [],
+            'relations' => []
+        ];
     }
 }

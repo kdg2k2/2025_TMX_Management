@@ -22,20 +22,21 @@ class ContractBillRepository extends BaseRepository
             $query->where('bill_collector', $request['bill_collector']);
     }
 
-    protected function applySearch($query, string $search): void
+    protected function getSearchConfig(): array
     {
-        $query->where(function ($q) use ($search) {
-            $q
-                ->where('amount', 'like', $search)
-                ->orWhere('duration', 'like', $search)
-                ->orWhere('content_in_the_estimate', 'like', $search)
-                ->orWhere('note', 'like', $search)
-                ->orWhereHas('createdBy', function ($q) use ($search) {
-                    $q->where('name', 'like', $search);
-                })
-                ->orWhereHas('billCollector', function ($q) use ($search) {
-                    $q->where('name', 'like', $search);
-                });
-        });
+        return [
+            'text' => [
+                'amount',
+                'duration',
+                'content_in_the_estimate',
+                'note',
+            ],
+            'date' => [],
+            'datetime' => [],
+            'relations' => [
+                'createdBy' => ['name'],
+                'billCollector' => ['name'],
+            ]
+        ];
     }
 }

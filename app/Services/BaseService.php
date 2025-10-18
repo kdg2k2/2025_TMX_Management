@@ -10,7 +10,7 @@ use App\Traits\GuardTraits;
 use App\Traits\PaginateTraits;
 use App\Traits\TryCatchTraits;
 
-class BaseService
+abstract class BaseService
 {
     use TryCatchTraits,
         PaginateTraits,

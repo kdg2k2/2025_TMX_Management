@@ -34,25 +34,22 @@ class UserRepository extends BaseRepository
             $query->where('role_id', $request['role_id']);
     }
 
-    protected function applySearch($query, string $search): void
+    protected function getSearchConfig(): array
     {
-        $query->where(function ($q) use ($search) {
-            $q
-                ->where('name', 'like', $search)
-                ->orWhere('email', 'like', $search)
-                ->orWhere('citizen_identification_number', 'like', $search)
-                ->orWhereHas('role', function ($q) use ($search) {
-                    $q->where('name', 'like', $search);
-                })
-                ->orWhereHas('department', function ($q) use ($search) {
-                    $q->where('name', 'like', $search);
-                })
-                ->orWhereHas('position', function ($q) use ($search) {
-                    $q->where('name', 'like', $search);
-                })
-                ->orWhereHas('jobTitle', function ($q) use ($search) {
-                    $q->where('name', 'like', $search);
-                });
-        });
+        return [
+            'text' => [
+                'name',
+                'email',
+                'citizen_identification_number',
+            ],
+            'date' => [],
+            'datetime' => [],
+            'relations' => [
+                'role' => ['name'],
+                'department' => ['name'],
+                'position' => ['name'],
+                'jobTitle' => ['name'],
+            ]
+        ];
     }
 }

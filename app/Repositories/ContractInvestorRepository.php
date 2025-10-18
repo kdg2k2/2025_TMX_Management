@@ -10,13 +10,17 @@ class ContractInvestorRepository extends BaseRepository
         $this->model = new ContractInvestor();
     }
 
-    protected function applySearch($query, string $search): void
+    protected function getSearchConfig(): array
     {
-        $query->where(function ($q) use ($search) {
-            $q
-                ->where('name_vi', 'like', $search)
-                ->orWhere('name_en', 'like', $search)
-                ->orWhere('address', 'like', $search);
-        });
+        return [
+            'text' => [
+                'name_vi',
+                'name_en',
+                'address',
+            ],
+            'date' => [],
+            'datetime' => [],
+            'relations' => []
+        ];
     }
 }
