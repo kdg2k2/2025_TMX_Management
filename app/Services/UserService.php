@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Exception;
 
 class UserService extends BaseService
 {
@@ -121,6 +122,13 @@ class UserService extends BaseService
         if (isset($array['path_signature']))
             $array['path_signature'] = $this->getAssetUrl($array['path_signature']);
         return $array;
+    }
+
+    protected function beforeDelete(int $id)
+    {
+        if ($id == 1)
+            throw new Exception('Không thể xóa tài khoản quản trị khởi tạo');
+        return parent::beforeDelete($id);
     }
 
     protected function afterDelete($entity)
