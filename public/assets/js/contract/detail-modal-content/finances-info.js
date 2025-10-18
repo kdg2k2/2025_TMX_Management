@@ -140,7 +140,7 @@ const renderFinancesInfoTbody = (data) => {
                                                             {},
                                                             "ti ti-edit",
                                                             `openAdvancePaymentModal(${
-                                                                advance.id
+                                                                advance.contract_finance_id
                                                             }, 'patch', '${updateAdvancePaymentUrl}?id=${
                                                                 advance.id
                                                             }', '${JSON.stringify(
@@ -213,7 +213,7 @@ const renderFinancesInfoTbody = (data) => {
                                                             {},
                                                             "ti ti-edit",
                                                             `openPaymentModal(${
-                                                                payment.id
+                                                                payment.contract_finance_id
                                                             }, 'patch', '${updatePaymentUrl}?id=${
                                                                 payment.id
                                                             }', '${JSON.stringify(

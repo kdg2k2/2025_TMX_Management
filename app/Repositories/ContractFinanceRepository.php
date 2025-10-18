@@ -18,6 +18,12 @@ class ContractFinanceRepository extends BaseRepository
         ];
     }
 
+    protected function applyListFilters($query, array $request)
+    {
+        if (isset($request['contract_id']))
+            $query->where('contract_id', $request['contract_id']);
+    }
+
     public function isJointVentureContract(int $contractId)
     {
         return [
