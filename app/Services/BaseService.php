@@ -88,13 +88,20 @@ class BaseService
         });
     }
 
+    protected function beforeListQuery(array $request)
+    {
+        return $request;
+    }
+
     /**
      * Get list of entities
      */
-    public function list(array $request = [], ?callable $searchFunc = null)
+    public function list(array $request = [])
     {
-        return $this->tryThrow(function () use ($request, $searchFunc) {
-            $data = $this->repository->list($request, $searchFunc);
+        return $this->tryThrow(function () use ($request) {
+            $request = $this->beforeListQuery($request);
+
+            $data = $this->repository->list($request);
 
             if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator) {
                 $data->getCollection()->transform(function ($item) {

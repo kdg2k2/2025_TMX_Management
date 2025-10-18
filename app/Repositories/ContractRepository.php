@@ -27,40 +27,31 @@ class ContractRepository extends BaseRepository
         ];
     }
 
-    public function list(array $request = [], ?callable $searchFunc = null)
+    protected function applySearch($query, string $search): void
     {
-        $searchFunc = function ($query) use ($request) {
-            if (empty($request['search']))
-                return;
-
-            $search = "%{$request['search']}%";
-
-            $query->where(function ($q) use ($search) {
-                $q
-                    ->where('name', 'like', $search)
-                    ->orWhere('short_name', 'like', $search)
-                    ->orWhere('year', 'like', $search)
-                    ->orWhere('contract_number', 'like', $search)
-                    ->orWhere('contract_value', 'like', $search)
-                    ->orWhere('vat_rate', 'like', $search)
-                    ->orWhere('vat_amount', 'like', $search)
-                    ->orWhereHas('scopes', function ($scopeQuery) use ($search) {
-                        $scopeQuery->whereHas('province', function ($provinceQuery) use ($search) {
-                            $provinceQuery->where('name', 'like', $search);
-                        });
-                    })
-                    ->orWhereHas('type', function ($q) use ($search) {
-                        $q->where('name', 'like', $search);
-                    })
-                    ->orWhereHas('investor', function ($q) use ($search) {
-                        $q->where('name', 'like', $search);
-                    })
-                    ->orWhereRaw("DATE_FORMAT(signed_date, '%d/%m/%Y') LIKE ?", [$search])
-                    ->orWhereRaw("DATE_FORMAT(end_date, '%d/%m/%Y') LIKE ?", [$search]);
-            });
-        };
-
-        return parent::list($request, $searchFunc);
+        $query->where(function ($q) use ($search) {
+            $q
+                ->where('name', 'like', $search)
+                ->orWhere('short_name', 'like', $search)
+                ->orWhere('year', 'like', $search)
+                ->orWhere('contract_number', 'like', $search)
+                ->orWhere('contract_value', 'like', $search)
+                ->orWhere('vat_rate', 'like', $search)
+                ->orWhere('vat_amount', 'like', $search)
+                ->orWhereHas('scopes', function ($scopeQuery) use ($search) {
+                    $scopeQuery->whereHas('province', function ($provinceQuery) use ($search) {
+                        $provinceQuery->where('name', 'like', $search);
+                    });
+                })
+                ->orWhereHas('type', function ($q) use ($search) {
+                    $q->where('name', 'like', $search);
+                })
+                ->orWhereHas('investor', function ($q) use ($search) {
+                    $q->where('name', 'like', $search);
+                })
+                ->orWhereRaw("DATE_FORMAT(signed_date, '%d/%m/%Y') LIKE ?", [$search])
+                ->orWhereRaw("DATE_FORMAT(end_date, '%d/%m/%Y') LIKE ?", [$search]);
+        });
     }
 
     public function isJointVentureContract(int $id)

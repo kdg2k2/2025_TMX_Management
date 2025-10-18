@@ -10,20 +10,13 @@ class ContractInvestorRepository extends BaseRepository
         $this->model = new ContractInvestor();
     }
 
-    public function list(array $request = [], callable|null $searchFunc = null)
+    protected function applySearch($query, string $search): void
     {
-        $searchFunc = function ($query) use ($request) {
-            if (empty($request['search']))
-                return;
-
-            $search = "%{$request['search']}%";
-            $query->where(function ($q) use ($search) {
-                $q
-                    ->where('name', 'like', $search)
-                    ->orWhere('address', 'like', $search);
-            });
-        };
-
-        return parent::list($request, $searchFunc);
+        $query->where(function ($q) use ($search) {
+            $q
+                ->where('name_vi', 'like', $search)
+                ->orWhere('name_en', 'like', $search)
+                ->orWhere('address', 'like', $search);
+        });
     }
 }

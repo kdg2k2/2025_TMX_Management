@@ -68,7 +68,7 @@ abstract class BaseRepository
         return $query->first();
     }
 
-    public function list(array $request = [], ?callable $searchFunc = null)
+    public function list(array $request = [])
     {
         $query = $this->model->query();
 
@@ -83,8 +83,8 @@ abstract class BaseRepository
 
         $this->applyListFilters($query, $request);
 
-        if (isset($request['search']) && $searchFunc)
-            $query->where($searchFunc);
+        if (isset($request['search']))
+            $this->applySearch($query, "%{$request['search']}%");
 
         if (!isset($request['load_relations']))
             $request['load_relations'] = true;
@@ -99,7 +99,9 @@ abstract class BaseRepository
         return $query->get();
     }
 
-    protected function applyListFilters($query, array $request) {}
+    protected function applySearch($query, string $search){}
+
+    protected function applyListFilters($query, array $request){}
 
     public function maxId()
     {

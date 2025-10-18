@@ -23,25 +23,16 @@ class ContractScanFileRepository extends BaseRepository
             $query->where('type_id', $request['type_id']);
     }
 
-    public function list(array $request = [], ?callable $searchFunc = null)
+    protected function applySearch($query, string $search): void
     {
-        $searchFunc = function ($query) use ($request) {
-            if (empty($request['search']))
-                return;
-
-            $search = "%{$request['search']}%";
-
-            $query->where(function ($q) use ($search) {
-                $q
-                    ->whereHas('createdBy', function ($q) use ($search) {
-                        $q->where('name', 'like', $search);
-                    })
-                    ->orWhereHas('type', function ($q) use ($search) {
-                        $q->where('name', 'like', $search);
-                    });
-            });
-        };
-
-        return parent::list($request, $searchFunc);
+        $query->where(function ($q) use ($search) {
+            $q
+                ->whereHas('createdBy', function ($q) use ($search) {
+                    $q->where('name', 'like', $search);
+                })
+                ->orWhereHas('type', function ($q) use ($search) {
+                    $q->where('name', 'like', $search);
+                });
+        });
     }
 }

@@ -11,20 +11,12 @@ class ContractTypeRepository extends BaseRepository
         $this->model = new ContractType();
     }
 
-    public function list(array $request = [], callable|null $searchFunc = null)
+    protected function applySearch($query, string $search): void
     {
-        $searchFunc = function ($query) use ($request) {
-            if (empty($request['search']))
-                return;
-
-            $search = "%{$request['search']}%";
-            $query->where(function ($q) use ($search) {
-                $q
-                    ->where('name', 'like', $search)
-                    ->orWhere('description', 'like', $search);
-            });
-        };
-
-        return parent::list($request, $searchFunc);
+        $query->where(function ($q) use ($search) {
+            $q
+                ->where('name', 'like', $search)
+                ->orWhere('description', 'like', $search);
+        });
     }
 }
