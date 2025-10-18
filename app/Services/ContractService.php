@@ -14,7 +14,8 @@ class ContractService extends BaseService
         private HandlerUploadFileService $handlerUploadFileService,
         private ContractFileTypeService $contractFileTypeService,
         private ContractUnitService $contractUnitService,
-        private ContractFinanceService $contractFinanceService
+        private ContractFinanceService $contractFinanceService,
+        private ContractAppendixService $contractAppendixService
     ) {
         $this->repository = app(ContractRepository::class);
     }
@@ -94,9 +95,29 @@ class ContractService extends BaseService
 
         $array['is_contract_many_year'] = (isset($array['many_years']) && count($array['many_years']) > 0) ? 1 : 0;
 
-        $array['acceptance_value'] = array_sum(array_column($this->contractFinanceService->list(['contract_id' => $array['id']]), 'acceptance_value'));
+        $array['acceptance_value'] = $this->getAcceptanceValue($array['id']);
 
         return $array;
+    }
+
+    // 18/10/2025 a Huân yc ưu tiên lấy con số điều chỉnh trong phụ lục hiển thị làm giá trị nghiệm thu
+    private function getAcceptanceValue(int $contractId)
+    {
+        $data = $this->contractAppendixService->list([
+            'contract_id' => $contractId,
+        ]);
+        $adjustedValues = array_filter(array_column($data, 'adjusted_value'));
+        // Ưu tiên lấy con số điều chỉnh trong phụ lục mới nhất
+        if (isset($adjustedValues[0]))
+            return $adjustedValues[0];
+
+        // nếu ko có số điều chỉnh trong phụ lục thì trả về con số nghiệm thu được nhập trong tài chính
+        $acceptanceValue = array_sum(array_column($this->contractFinanceService->list(['contract_id' => $contractId]), 'acceptance_value'));
+        if (isset($acceptanceValue))
+            return $acceptanceValue;
+
+        // nếu ko có con số nghiệm thu nhập trong tài chính thì hiển thị luôn tổng giá trị hợp đồng
+        return $data['contract']['contract_value'] ?? '';
     }
 
     public function store(array $request)
