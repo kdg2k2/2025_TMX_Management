@@ -117,8 +117,7 @@ class UserService extends BaseService
     public function formatRecord(array $array)
     {
         $array = parent::formatRecord($array);
-        if (isset($array['path']))
-            $array['path'] = $this->getAssetImage($array['path']);
+        $array['path'] = $this->getAssetImage($array['path']);
         if (isset($array['path_signature']))
             $array['path_signature'] = $this->getAssetUrl($array['path_signature']);
         return $array;
