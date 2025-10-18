@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="transparent"
-    data-width="fullwidth" data-menu-styles="transparent" data-page-style="flat" data-vertical-style="default" loader="true">
+    data-width="fullwidth" data-menu-styles="transparent" data-page-style="flat" data-vertical-style="default"
+    loader="true">
 
 <head>
     <base href="{{ asset('') }}">
@@ -8,6 +9,10 @@
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="{{ config('custom.DEFAULT_DESCRIPTION') }}" />
+    <meta property="og:description" content="{{ config('custom.DEFAULT_DESCRIPTION') }}" />
+    <meta property="og:title" content="{{ config('custom.DEFAULT_TITLE') }}" />
+    <meta property="og:image" content="{{ asset(config('custom.DEFAULT_LOGO')) }}" />
     <link rel="icon" type="image/*" href="\assets\images\brand-logos\favicon.ico">
     <title>{{ config('app.name') }}</title>
 
