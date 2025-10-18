@@ -28,6 +28,7 @@ class ContractService extends BaseService
             'columns' => [
                 'id',
                 'name',
+                'path',
             ]
         ]);
         $res['contractUnits'] = $this->contractUnitService->list();
@@ -46,6 +47,7 @@ class ContractService extends BaseService
             'columns' => [
                 'id',
                 'name',
+                'path',
             ]
         ]);
         $res['types'] = $this->contractTypeService->list();
