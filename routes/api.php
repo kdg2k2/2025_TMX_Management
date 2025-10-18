@@ -23,7 +23,7 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('force-logout-user/{user_id}', 'api.auth.forceLogoutUser')->middleware('auth.any');  // Ngắt token của user
 });
 
-Route::middleware(['web', 'auth.any'])->group(function () {
+Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
     Route::prefix('contract')->group(function () {
         Route::prefix('type')->controller(ContractTypeController::class)->group(function () {
             Route::get('list', 'list')->name('api.contract.type.list');

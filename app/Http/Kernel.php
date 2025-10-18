@@ -52,6 +52,7 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $middlewareAliases = [
+        'LogAccess' => \App\Http\Middleware\LogAccess::class,
         'isLogin' => \App\Http\Middleware\isLogin::class,
         'auth.any' => \App\Http\Middleware\AuthAny::class,
         'auth.api' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,

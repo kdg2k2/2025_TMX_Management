@@ -22,7 +22,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('logout', 'logout')->name('logout');
 });
 
-Route::middleware(['isLogin'])->group(function () {
+Route::middleware(['isLogin', 'LogAccess'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('contract')->group(function () {
