@@ -6,12 +6,9 @@ use Carbon\Carbon;
 
 class SearchService
 {
-    protected $stringHandler;
-
-    public function __construct(StringHandlerService $stringHandler)
-    {
-        $this->stringHandler = $stringHandler;
-    }
+    public function __construct(
+        private StringHandlerService $stringHandlerService
+    ) {}
 
     public function applySearch($query, string $searchTerm, array $config = [])
     {
@@ -22,7 +19,7 @@ class SearchService
         }
 
         // Prepare các biến cần thiết
-        $searchTermNoAccent = $this->stringHandler->stringToSlug($searchTerm, 0);
+        $searchTermNoAccent = $this->stringHandlerService->removeAccents($searchTerm);
         $parsedDate = $this->parseDate($searchTerm);
         $parsedDateTime = $this->parseDateTime($searchTerm);
 
@@ -124,15 +121,9 @@ class SearchService
      */
     protected function applyTextSearch($query, array $columns, string $searchTerm)
     {
-        $term = mb_strtolower($searchTerm, 'UTF-8');
-
         foreach ($columns as $column) {
-            // tìm chính xác có dấu (bình thường)
-            $query->orWhere($column, 'LIKE', "%{$term}%");
-
-            // tìm không dấu bằng collation accent-insensitive (MySQL 8+)
-            // Nếu server không hỗ trợ utf8mb4_0900_ai_ci thì thay bằng utf8mb4_unicode_ci hoặc utf8_general_ci
-            $query->orWhereRaw("LOWER($column) COLLATE utf8mb4_0900_ai_ci LIKE ?", ["%{$term}%"]);
+            $sqlExpr = $this->stringHandlerService->buildSqlUnaccentExpression($column);
+            $query->orWhereRaw("LOWER($sqlExpr) LIKE ?", ["%{$searchTerm}%"]);
         }
     }
 

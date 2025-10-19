@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
             $item['created_at'] = now();
             $item['updated_at'] = now();
             if (!isset($item['email']))
-                $item['email'] = strtolower(str_replace(' ', '', app(\App\Services\StringHandlerService::class)->stringToSlug($item['name'])) . '@tanmaixanh.vn');
+                $item['email'] = strtolower(str_replace(' ', '', app(\App\Services\StringHandlerService::class)->removeAccents($item['name'])) . '@tanmaixanh.vn');
             if (!isset($item['password']))
                 $item['password'] = bcrypt('123456');
             return $item;
