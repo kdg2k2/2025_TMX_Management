@@ -8,6 +8,7 @@ const loadContractDetail = async () => {
 
     renderGerenaInfo();
     renderDocumentsInfo();
+    renderScanDocumentsInfo();
     renderBillsInfo();
     renderAppendixesInfo();
     renderFinancesInfo();

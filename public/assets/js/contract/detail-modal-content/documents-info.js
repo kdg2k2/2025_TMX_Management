@@ -67,14 +67,9 @@ const renderDocumentsInfoColumns = () => {
         },
         {
             data: null,
-            title: "Thời gian tạo/cập nhật",
+            title: "Thời gian tạo",
             render: (data, type, row) => {
-                return `
-                    <ul class="m-0">
-                        <li>${row.created_at}</li>
-                        <li>${row.updated_at}</li>
-                    </ul>
-                `;
+                return row.created_at;
             },
         },
         {
@@ -90,11 +85,6 @@ const renderDocumentsInfoColumns = () => {
     ];
 };
 
-const viewFileHandler = async (id) => {
-    const res = await http.post(`${viewFileUrl}?id=${id}`);
-    if (res.data) window.open(`${res.data}`, "_blank");
-};
-
 const renderDocumentsInfoActionButtons = (row) => {
     return `
         ${
@@ -104,7 +94,7 @@ const renderDocumentsInfoActionButtons = (row) => {
                 false,
                 {},
                 "ti ti-eye-search",
-                `viewFileHandler(${row.id})`
+                `viewFileHandler('${row.path}')`
             )?.outerHTML
         }
         ${

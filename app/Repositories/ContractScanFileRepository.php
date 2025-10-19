@@ -10,7 +10,7 @@ class ContractScanFileRepository extends BaseRepository
     {
         $this->model = new ContractScanFile();
         $this->relations = [
-            'type',
+            'type.extensions.extension',
             'createdBy',
         ];
     }

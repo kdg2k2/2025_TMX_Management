@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\ContractFileTypeController;
 use App\Http\Controllers\Api\ContractFinanceController;
 use App\Http\Controllers\Api\ContractInvestorController;
 use App\Http\Controllers\Api\ContractPaymentController;
+use App\Http\Controllers\Api\ContractScanFileController;
+use App\Http\Controllers\Api\ContractScanFileTypeController;
 use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\UserController;
@@ -57,6 +59,23 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
                 Route::post('store', 'store')->name('api.contract.file.type.store');
                 Route::patch('update', 'update')->name('api.contract.file.type.update');
                 Route::delete('delete', 'delete')->name('api.contract.file.type.delete');
+            });
+        });
+
+        Route::prefix('scan-file')->group(function () {
+            Route::controller(ContractScanFileController::class)->group(function () {
+                Route::get('list', 'list')->name('api.contract.scan-file.list');
+                Route::post('view-scan-file', 'viewFile')->name('api.contract.scan-file.view-file');
+                Route::post('store', 'store')->name('api.contract.scan-file.store');
+                Route::patch('update', 'update')->name('api.contract.scan-file.update');
+                Route::delete('delete', 'delete')->name('api.contract.scan-file.delete');
+            });
+
+            Route::prefix('type')->controller(ContractScanFileTypeController::class)->group(function () {
+                Route::get('list', 'list')->name('api.contract.scan-file.type.list');
+                Route::post('store', 'store')->name('api.contract.scan-file.type.store');
+                Route::patch('update', 'update')->name('api.contract.scan-file.type.update');
+                Route::delete('delete', 'delete')->name('api.contract.scan-file.type.delete');
             });
         });
 

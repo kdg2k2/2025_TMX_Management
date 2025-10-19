@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             ContractTypeSeeder::class,
             ContractInvestorySeeder::class,
             ContractFileTypeSeeder::class,
+            ContractScanFileTypeSeeder::class,
             ContractUnitSeeder::class,
             UserSeeder::class,
         ]);

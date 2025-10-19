@@ -27,6 +27,7 @@
 <script src="assets/js/http-request/auto-fill-form-patch.js"></script>
 <script src="assets/js/http-request/create-action-button.js"></script>
 <script src="assets/js/http-request/delete.js"></script>
+<script src="assets/js/http-request/view-file.js"></script>
 
 <script src="assets/js/bootstrap-tooltip/script.js"></script>
 <script src="assets/js/bootsrap-modal/script.js"></script>

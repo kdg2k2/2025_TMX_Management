@@ -20,14 +20,14 @@
             <div id="contract-detail-content">
                 <x-nav-tab id="contract-detail-tab" style="pills" :tabs="[
                     [
-                        'title' => 'Thông tin chung',
+                        'title' => 'Thông Tin Chung',
                         'icon' => 'ti ti-info-circle',
                         'content' => view('admin.pages.contract.partials.general-info')->render(),
                         'onclick' => 'loadContractDetail()',
                     ],
                     [
                         'class' => 'border-0',
-                        'title' => 'Tài liệu',
+                        'title' => 'Tài Liệu',
                         'icon' => 'ti ti-files',
                         'badge' => ['text' => '', 'color' => 'info', 'id' => 'document-count'],
                         'content' => view('admin.pages.contract.partials.documents-info', [
@@ -37,7 +37,17 @@
                     ],
                     [
                         'class' => 'border-0',
-                        'title' => 'Hóa đơn',
+                        'title' => 'Scan File',
+                        'icon' => 'ti ti-file-type-pdf',
+                        'badge' => ['text' => '', 'color' => 'info', 'id' => 'scan-document-count'],
+                        'content' => view('admin.pages.contract.partials.scan-documents-info', [
+                            'scanFileTypes' => $scanFileTypes,
+                        ])->render(),
+                        'onclick' => 'renderScanDocumentsInfo()',
+                    ],
+                    [
+                        'class' => 'border-0',
+                        'title' => 'Hóa Đơn',
                         'icon' => 'ti ti-receipt-2',
                         'badge' => ['text' => '', 'color' => 'info', 'id' => 'bill-count'],
                         'content' => view('admin.pages.contract.partials.bills-info', [
@@ -47,7 +57,7 @@
                     ],
                     [
                         'class' => 'border-0',
-                        'title' => 'Phụ lục hợp đồng',
+                        'title' => 'Phụ Lục Hợp Đồng',
                         'icon' => 'ti ti-file-plus',
                         'badge' => ['text' => '', 'color' => 'info', 'id' => 'appendix-count'],
                         'content' => view('admin.pages.contract.partials.appendixes-info', [
@@ -57,7 +67,7 @@
                     ],
                     [
                         'class' => 'border-0',
-                        'title' => 'Tài chính',
+                        'title' => 'Tài Chính',
                         'icon' => 'ti ti-brand-cashapp',
                         'badge' => ['text' => '', 'color' => 'info', 'id' => 'finance-count'],
                         'content' => view('admin.pages.contract.partials.finances-info', [
@@ -99,6 +109,27 @@
                     Ghi chú
                 </label>
                 <input class="form-control" type="text" name="note">
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button-submit />
+        </x-slot:footer>
+    </x-modal>
+
+    <x-modal id="create-contract-scan-file-modal" title="Thêm mới file scan hợp đồng" size="md" nested="true"
+        action="{{ route('api.contract.scan-file.store') }}" method="post">
+        <x-slot:body>
+            <div class="form-group my-1">
+                <label>
+                    Loại file
+                </label>
+                <select name="type_id" id="contract-scan-file-type" required>
+                    <x-select-options :items="$scanFileTypes" recordAttribute="data-record"></x-select-options>
+                </select>
+            </div>
+            <div class="form-group my-1">
+                <label id="contract-scan-file-label"></label>
+                <input class="form-control" type="" name="path" id="contract-scan-file-input" required>
             </div>
         </x-slot:body>
         <x-slot:footer>
@@ -334,6 +365,12 @@
         const viewFileUrl = @json(route('api.contract.file.view-file'));
         const deleteFileUrl = @json(route('contract.file.delete'));
 
+        const listScanFileUrl = @json(route('api.contract.scan-file.list'));
+        const storeScanFileUrl = @json(route('api.contract.scan-file.store'));
+        const updateScanFileUrl = @json(route('api.contract.scan-file.update'));
+        const viewScanFileUrl = @json(route('api.contract.scan-file.view-file'));
+        const deleteScanFileUrl = @json(route('contract.scan-file.delete'));
+
         const listBillUrl = @json(route('api.contract.bill.list'));
         const storeBillUrl = @json(route('api.contract.bill.store'));
         const updateBillUrl = @json(route('api.contract.bill.update'));
@@ -365,6 +402,7 @@
     <script src="assets/js/contract/detail-modal-content/script.js"></script>
     <script src="assets/js/contract/detail-modal-content/general-info.js"></script>
     <script src="assets/js/contract/detail-modal-content/documents-info.js"></script>
+    <script src="assets/js/contract/detail-modal-content/scan-documents-info.js"></script>
     <script src="assets/js/contract/detail-modal-content/bills-info.js"></script>
     <script src="assets/js/contract/detail-modal-content/appendixes-info.js"></script>
     <script src="assets/js/contract/detail-modal-content/finances-info.js"></script>

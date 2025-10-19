@@ -65,4 +65,12 @@ class ContractScanFileService extends BaseService
     {
         $this->handlerUploadFileService->removeFiles($entity['path'] ?? null);
     }
+
+    public function formatRecord(array $array)
+    {
+        $array = parent::formatRecord($array);
+        if (isset($array['path']))
+            $array['path'] = $this->getAssetUrl($array['path']);
+        return $array;
+    }
 }

@@ -1,13 +1,14 @@
 <?php
+
 namespace App\Repositories;
 
-use App\Models\ContractFileType;
+use App\Models\ContractScanFileType;
 
-class ContractFileTypeRepository extends BaseRepository
+class ContractScanFileTypeRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new ContractFileType();
+        $this->model = new ContractScanFileType();
         $this->relations = [
             'extensions.extension',
         ];

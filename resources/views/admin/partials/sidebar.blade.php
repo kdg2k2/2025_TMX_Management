@@ -106,6 +106,12 @@
                                         Loại file
                                     </a>
                                 </li>
+                                <li class="slide">
+                                    <a href="{{ route('contract.scan-file.type.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-file-code-2"></i>
+                                        Loại scan file
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li class="slide">

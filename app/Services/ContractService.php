@@ -13,6 +13,7 @@ class ContractService extends BaseService
         private ProvinceService $provinceService,
         private HandlerUploadFileService $handlerUploadFileService,
         private ContractFileTypeService $contractFileTypeService,
+        private ContractScanFileTypeService $contractScanFileTypeService,
         private ContractUnitService $contractUnitService,
         private ContractFinanceService $contractFinanceService,
         private ContractAppendixService $contractAppendixService
@@ -24,6 +25,7 @@ class ContractService extends BaseService
     {
         $res = [];
         $res['fileTypes'] = $this->contractFileTypeService->list();
+        $res['scanFileTypes'] = $this->contractScanFileTypeService->list();
         $res['users'] = $this->userService->list([
             'load_relations' => false,
             'columns' => [

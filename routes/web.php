@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\ContractFileTypeController;
 use App\Http\Controllers\Admin\ContractFinanceController;
 use App\Http\Controllers\Admin\ContractInvestorController;
 use App\Http\Controllers\Admin\ContractPaymentController;
+use App\Http\Controllers\Admin\ContractScanFileController;
+use App\Http\Controllers\Admin\ContractScanFileTypeController;
 use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\ContractUnitController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -57,6 +59,19 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
                 Route::get('create', 'create')->name('contract.file.type.create');
                 Route::get('edit', 'edit')->name('contract.file.type.edit');
                 Route::delete('delete', 'delete')->name('contract.file.type.delete');
+            });
+        });
+
+        Route::prefix('scan-file')->group(function () {
+            Route::controller(ContractScanFileController::class)->group(function () {
+                Route::delete('delete', 'delete')->name('contract.scan-file.delete');
+            });
+
+            Route::prefix('type')->controller(ContractScanFileTypeController::class)->group(function () {
+                Route::get('index', 'index')->name('contract.scan-file.type.index');
+                Route::get('create', 'create')->name('contract.scan-file.type.create');
+                Route::get('edit', 'edit')->name('contract.scan-file.type.edit');
+                Route::delete('delete', 'delete')->name('contract.scan-file.type.delete');
             });
         });
 
