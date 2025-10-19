@@ -49,7 +49,6 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::prefix('file')->group(function () {
             Route::controller(ContractFileController::class)->group(function () {
                 Route::get('list', 'list')->name('api.contract.file.list');
-                Route::post('view-file', 'viewFile')->name('api.contract.file.view-file');
                 Route::post('store', 'store')->name('api.contract.file.store');
                 Route::delete('delete', 'delete')->name('api.contract.file.delete');
             });
@@ -65,7 +64,6 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::prefix('scan-file')->group(function () {
             Route::controller(ContractScanFileController::class)->group(function () {
                 Route::get('list', 'list')->name('api.contract.scan-file.list');
-                Route::post('view-scan-file', 'viewFile')->name('api.contract.scan-file.view-file');
                 Route::post('store', 'store')->name('api.contract.scan-file.store');
                 Route::patch('update', 'update')->name('api.contract.scan-file.update');
                 Route::delete('delete', 'delete')->name('api.contract.scan-file.delete');

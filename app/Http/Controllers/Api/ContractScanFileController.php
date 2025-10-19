@@ -25,15 +25,6 @@ class ContractScanFileController extends Controller
         });
     }
 
-    public function viewFile(FindByIdRequest $request)
-    {
-        return $this->catchAPI(function () use ($request) {
-            return response()->json([
-                'data' => $this->service->viewFile($request->validated()['id']),
-            ]);
-        });
-    }
-
     public function store(StoreRequest $request)
     {
         return $this->catchAPI(function () use ($request) {

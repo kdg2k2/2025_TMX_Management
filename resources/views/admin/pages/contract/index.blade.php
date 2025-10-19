@@ -362,13 +362,11 @@
         const deleteUrl = @json(route('contract.delete'));
 
         const listFileUrl = @json(route('api.contract.file.list'));
-        const viewFileUrl = @json(route('api.contract.file.view-file'));
         const deleteFileUrl = @json(route('contract.file.delete'));
 
         const listScanFileUrl = @json(route('api.contract.scan-file.list'));
         const storeScanFileUrl = @json(route('api.contract.scan-file.store'));
         const updateScanFileUrl = @json(route('api.contract.scan-file.update'));
-        const viewScanFileUrl = @json(route('api.contract.scan-file.view-file'));
         const deleteScanFileUrl = @json(route('contract.scan-file.delete'));
 
         const listBillUrl = @json(route('api.contract.bill.list'));

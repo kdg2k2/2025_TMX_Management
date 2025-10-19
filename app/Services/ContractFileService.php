@@ -54,12 +54,6 @@ class ContractFileService extends BaseService
         }
     }
 
-    public function viewFile(int $id)
-    {
-        $data = $this->repository->findById($id, false);
-        return $this->getAssetUrl($data['path']);
-    }
-
     public function afterDelete($entity)
     {
         $this->handlerUploadFileService->removeFiles($entity['path'] ?? null);
