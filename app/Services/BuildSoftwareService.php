@@ -1,0 +1,196 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\BuildSoftware;
+use App\Repositories\BuildSoftwareRepository;
+
+class BuildSoftwareService extends BaseService
+{
+    public function __construct(
+        private HandlerUploadFileService $handlerUploadFileService,
+        private ContractService $contractService,
+        private UserService $userService
+    ) {
+        $this->repository = app(BuildSoftwareRepository::class);
+    }
+
+    public function getListBaseData()
+    {
+        return [
+            'status' => $this->repository->getStatus(),
+            'state' => $this->repository->getState(),
+            'developmentCases' => $this->repository->getDevelopmentCase(),
+        ];
+    }
+
+    public function getCreateOrUpdateBaseData(int $id = null)
+    {
+        $res = [];
+        if ($id)
+            $res['data'] = $this->findById($id);
+
+        $res['users'] = $this->userService->list([
+            'columns' => [
+                'id',
+                'name',
+            ],
+            'load_relations' => false,
+        ]);
+        $res['contracts'] = $this->contractService->list([
+            'columns' => [
+                'id',
+                'name',
+            ],
+            'load_relations' => false,
+        ]);
+
+        return array_merge($res, $this->getListBaseData());
+    }
+
+    public function store(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $extracted = $this->extractFields($request);
+            $data = $this->repository->store($request);
+            $this->handleFileAndRelation($data, $extracted);
+        }, true);
+    }
+
+    public function update(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $extracted = $this->extractFields($request);
+            $data = $this->repository->update($request);
+            $this->handleFileAndRelation($data, $extracted, true);
+        }, true);
+    }
+
+    private function extractFields(array &$request): array
+    {
+        $fields = [
+            'attachment',
+            'business_analysts',
+            'members',
+        ];
+
+        $extracted = [];
+        foreach ($fields as $field) {
+            $extracted[$field] = $request[$field] ?? null;
+            unset($request[$field]);
+        }
+
+        return $extracted;
+    }
+
+    private function handleFileAndRelation(BuildSoftware $data, array $extracted, bool $isUpdate = false)
+    {
+        if ($extracted['attachment']) {
+            $oldFile = $isUpdate ? $data['attachment'] : null;
+            $data['attachment'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['attachment'], 'contract', 'bills', $oldFile);
+            $data->save();
+        }
+
+        $this->businessAnalysts($data, $extracted['business_analysts'] ?? []);
+        $this->contractMembers($data, $extracted['members'] ?? []);
+    }
+
+    private function businessAnalysts(BuildSoftware $data, array $ids)
+    {
+        $this->syncRelationship($data, 'build_software_id', 'businessAnalysts', $ids, 'user_id');
+    }
+
+    private function contractMembers(BuildSoftware $data, array $ids)
+    {
+        $this->syncRelationship($data, 'build_software_id', 'members', $ids, 'user_id');
+    }
+
+    protected function afterDelete($entity)
+    {
+        $this->handlerUploadFileService->removeFiles($entity['attachment'] ?? null);
+    }
+
+    public function formatRecord(array $array)
+    {
+        $array = parent::formatRecord($array);
+        $array['state'] = $this->repository->getState($array['state']);
+        $array['status'] = $this->repository->getStatus($array['status']);
+        $array['development_case'] = $this->repository->getDevelopmentCase($array['development_case']);
+        if (isset($array['attachment']))
+            $array['attachment'] = $this->getAssetUrl($array['attachment']);
+        if (isset($array['rejected_at']))
+            $array['rejected_at'] = $this->formatDateTimeForPreview($array['rejected_at']);
+        if (isset($array['accepted_at']))
+            $array['accepted_at'] = $this->formatDateTimeForPreview($array['accepted_at']);
+        if (isset($array['completed_at']))
+            $array['completed_at'] = $this->formatDateTimeForPreview($array['completed_at']);
+        if (isset($array['deadline']))
+            $array['deadline'] = $this->formatDateForPreview($array['deadline']);
+        if (isset($array['start_date']))
+            $array['start_date'] = $this->formatDateForPreview($array['start_date']);
+        return $array;
+    }
+
+    public function accept(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $data = $this->repository->update($request);
+            $this->sendMail($data['id'], 'accept', 'Phê duyệt yêu cầu');
+        }, true);
+    }
+
+    public function reject(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $data = $this->repository->update($request);
+            $this->sendMail($data['id'], 'reject', 'Tư chối yêu cầu');
+        }, true);
+    }
+
+    public function updateState(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $request['start_date'] = null;
+            if ($request['state'] != 'pending')
+                $request['start_date'] = date('Y-m-d');
+            if ($request['state'] == 'completed')
+                $request['completed_at'] = date('Y-m-d H:i:s');
+
+            $data = $this->repository->update($request);
+            $this->sendMail($data['id'], 'update_state', 'Cập nhật tiến trình');
+        }, true);
+    }
+
+    private function getEmails(BuildSoftware $data)
+    {
+        $contractEmails = [];
+        if ($data['contract_id'])
+            $contractEmails = $this->contractService->getMemberEmails($data['contract_id'], [
+                'executor_user',
+                'instructors',
+                'professionals',
+            ]);
+
+        return array_merge($contractEmails, [
+            $data['verifyBy']['email'] ?? null,
+            $data['createdBy']['email'] ?? null,
+            $this->userService->getUserDepartmentManagerEmail($data['createdBy']['id'] ?? null)
+        ]);
+    }
+
+    private function sendMail(int $id, string $type, string $subject)
+    {
+        $record = $this->repository->findById($id);
+        $emails = $this->getEmails($record);
+        $files = $record['attachment'] ? [public_path($record['attachment'])] : [];
+        $data = [
+            'data' => $this->formatRecord($record->toArray()),
+            'type' => $type,
+        ];
+        dd([
+            'emails' => $emails,
+            'data' => $data,
+        ]);
+        dispatch(new \App\Jobs\SendMailJob('admin.pages.emails.build-software', $subject . ' xây dựng phần mềm', $emails, $data, $files));
+    }
+}

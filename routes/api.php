@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BuildSoftwareController;
 use App\Http\Controllers\Api\ContractAdvancePaymentController;
 use App\Http\Controllers\Api\ContractAppendixController;
 use App\Http\Controllers\Api\ContractBillController;
@@ -120,5 +121,11 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::get('list', 'list')->name('api.user.list');
         Route::post('store', 'store')->name('api.user.store');
         Route::patch('update', 'update')->name('api.user.update');
+    });
+
+    Route::prefix('build-software')->controller(BuildSoftwareController::class)->group(function () {
+        Route::get('list', 'list')->name('api.build-software.list');
+        Route::post('store', 'store')->name('api.build-software.store');
+        Route::patch('update', 'update')->name('api.build-software.update');
     });
 });

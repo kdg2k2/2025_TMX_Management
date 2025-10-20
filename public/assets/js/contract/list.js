@@ -142,7 +142,7 @@ const renderActionButtons = (row) => {
                       false,
                       {},
                       "ti ti-file-type-pdf",
-                      `window.open('${row.path_file_full}', '_blank')`
+                      `viewFileHandler('${row.path_file_full}')`
                   )?.outerHTML
                 : ""
         }
@@ -154,7 +154,7 @@ const renderActionButtons = (row) => {
                       false,
                       {},
                       "ti ti-file-type-pdf",
-                      `window.open('${row.path_file_short}', '_blank')`
+                      `viewFileHandler('${row.path_file_short}')`
                   )?.outerHTML
                 : ""
         }

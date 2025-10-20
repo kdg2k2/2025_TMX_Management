@@ -109,7 +109,7 @@ const renderBillsInfoActionButtons = (row) => {
                       false,
                       {},
                       "ti ti-eye-search",
-                      `window.open('${row.path}', "_blank")`
+                      `viewFileHandler('${row.path}')`
                   )?.outerHTML
                 : ""
         }

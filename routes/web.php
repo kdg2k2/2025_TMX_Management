@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BuildSoftwareController;
 use App\Http\Controllers\Admin\ContractAdvancePaymentController;
 use App\Http\Controllers\Admin\ContractAppendixController;
 use App\Http\Controllers\Admin\ContractBillController;
@@ -110,5 +111,15 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::get('create', 'create')->name('user.create');
         Route::get('edit', 'edit')->name('user.edit');
         Route::delete('delete', 'delete')->name('user.delete');
+    });
+
+    Route::prefix('build-software')->controller(BuildSoftwareController::class)->group(function () {
+        Route::get('index', 'index')->name('build-software.index');
+        Route::get('create', 'create')->name('build-software.create');
+        Route::get('edit', 'edit')->name('build-software.edit');
+        Route::delete('delete', 'delete')->name('build-software.delete');
+        Route::post('accept', 'accept')->name('build-software.accept');
+        Route::post('reject', 'reject')->name('build-software.reject');
+        Route::post('update-state', 'updateState')->name('build-software.update-state');
     });
 });

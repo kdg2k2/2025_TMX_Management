@@ -73,8 +73,12 @@ abstract class BaseRepository
     {
         $query = $this->model->query();
 
-        if (isset($request['order_by']) && isset($request['sort_by']))
-            $query->orderBy($request['order_by'], $request['sort_by']);
+        if (!isset($request['order_by']))
+            $request['order_by'] = 'id';
+        if (!isset($request['sort_by']))
+            $request['sort_by'] = 'desc';
+
+        $query->orderBy($request['order_by'], $request['sort_by']);
 
         if (isset($request['columns']))
             $query->select($request['columns']);

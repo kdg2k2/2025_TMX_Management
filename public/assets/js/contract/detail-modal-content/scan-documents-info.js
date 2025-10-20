@@ -100,7 +100,7 @@ const renderScanDocumentsInfoActionButtons = (row) => {
                 false,
                 {},
                 "ti ti-download",
-                `window.open('${row.path}', "_blank")`
+                `downloadFileHandler('${row.path}')`
             )?.outerHTML
         }
         ${

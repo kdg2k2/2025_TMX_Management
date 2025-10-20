@@ -31,7 +31,6 @@ class ContractService extends BaseService
             'columns' => [
                 'id',
                 'name',
-                'path',
             ]
         ]);
         $res['contractUnits'] = $this->contractUnitService->list();
@@ -39,7 +38,7 @@ class ContractService extends BaseService
         return $res;
     }
 
-    public function getCreateOrUpdateData(int $id = null)
+    public function getCreateOrUpdateBaseData(int $id = null)
     {
         $res = [];
         if ($id)
@@ -50,7 +49,6 @@ class ContractService extends BaseService
             'columns' => [
                 'id',
                 'name',
-                'path',
             ]
         ]);
         $res['types'] = $this->contractTypeService->list();
@@ -217,5 +215,32 @@ class ContractService extends BaseService
     protected function afterDelete($entity)
     {
         $this->handlerUploadFileService->removeFiles([$entity['path_file_short'], $entity['path_file_full']]);
+    }
+
+    public function getMembers(int $id)
+    {
+        $data = $this->repository->findById($id);
+        return [
+            'accounting_contact' => $data['accountingContact'] ?? [],
+            'inspector_user' => $data['inspectorUser'] ?? [],
+            'executor_user' => $data['executorUser'] ?? [],
+            'instructors' => $data['instructors'] ?? [],
+            'professionals' => $data['professionals'] ?? [],
+            'disbursements' => $data['disbursements'] ?? [],
+            'intermediate_collaborators' => $data['intermediateCollaborators'] ?? [],
+        ];
+    }
+
+    public function getMemberEmails(int $id, array $types = [])
+    {
+        $members = $this->getMembers($id);
+        $users = collect($types)
+            ->flatMap(fn($type) => $members[$type] ?? [])
+            ->unique('id')
+            ->filter()
+            ->values()
+            ->toArray();
+
+        return $this->userService->getEmails($users);
     }
 }

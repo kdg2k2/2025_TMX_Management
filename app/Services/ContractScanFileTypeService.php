@@ -12,7 +12,7 @@ class ContractScanFileTypeService extends BaseService
         $this->repository = app(ContractScanFileTypeRepository::class);
     }
 
-    public function getCreateOrUpdateData(int $id = null)
+    public function getCreateOrUpdateBaseData(int $id = null)
     {
         $res = [];
         if ($id)

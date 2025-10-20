@@ -12,7 +12,7 @@ class ContractUnitService extends BaseService
         $this->repository = app(ContractUnitRepository::class);
     }
 
-    public function getCreateOrUpdateData(int $id = null)
+    public function getCreateOrUpdateBaseData(int $id = null)
     {
         $res = [];
         if ($id)

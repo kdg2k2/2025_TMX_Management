@@ -117,6 +117,8 @@ class UserService extends BaseService
     public function formatRecord(array $array)
     {
         $array = parent::formatRecord($array);
+        if (!isset($array['path']))
+            $array['path'] = null;
         $array['path'] = $this->getAssetImage($array['path']);
         if (isset($array['path_signature']))
             $array['path_signature'] = $this->getAssetUrl($array['path_signature']);
@@ -133,5 +135,22 @@ class UserService extends BaseService
     protected function afterDelete($entity)
     {
         $this->handlerUploadFileService->removeFiles([$entity['path'], $entity['path_signature']]);
+    }
+
+    public function getEmails(array $users = [])
+    {
+        return array_unique(array_filter(array_map(function ($item) {
+            return $item['email'] ?? null;
+        }, $users), function ($item) {
+            return !empty($item);
+        }));
+    }
+
+    public function getUserDepartmentManagerEmail(int $id = null)
+    {
+        if (!$id)
+            return null;
+        $data = $this->repository->findById($id);
+        return $data['department']['manager']['email'] ?? null;
     }
 }

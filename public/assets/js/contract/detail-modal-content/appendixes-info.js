@@ -62,7 +62,7 @@ const renderAppendixesInfoColumns = () => {
                                   false,
                                   {},
                                   "ti ti-eye-search",
-                                  `window.open('${row.renewal_letter}', "_blank")`
+                                  `viewFileHandler('${row.renewal_letter}')`
                               )?.outerHTML
                             : ""
                     }
@@ -82,7 +82,7 @@ const renderAppendixesInfoColumns = () => {
                                   false,
                                   {},
                                   "ti ti-eye-search",
-                                  `window.open('${row.renewal_approval_letter}', "_blank")`
+                                  `viewFileHandler('${row.renewal_approval_letter}')`
                               )?.outerHTML
                             : ""
                     }
@@ -102,7 +102,7 @@ const renderAppendixesInfoColumns = () => {
                                   false,
                                   {},
                                   "ti ti-eye-search",
-                                  `window.open('${row.renewal_appendix}', "_blank")`
+                                  `viewFileHandler('${row.renewal_appendix}')`
                               )?.outerHTML
                             : ""
                     }
@@ -122,7 +122,7 @@ const renderAppendixesInfoColumns = () => {
                                   false,
                                   {},
                                   "ti ti-eye-search",
-                                  `window.open('${row.other_documents}', "_blank")`
+                                  `viewFileHandler('${row.other_documents}')`
                               )?.outerHTML
                             : ""
                     }

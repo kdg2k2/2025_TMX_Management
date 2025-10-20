@@ -10,7 +10,9 @@ const createBtn = (
     const btn = document.createElement("button");
 
     // classes
-    btn.classList.add("mb-1", "btn", "btn-sm", `btn-${color}`);
+    btn.classList.add("mb-1", "btn", "btn-sm");
+    if (Array.isArray(color)) color.forEach((item) => btn.classList.add(item));
+    if (typeof color == "string") btn.classList.add(`btn-${color}`);
 
     // common attributes
     btn.type = "button";

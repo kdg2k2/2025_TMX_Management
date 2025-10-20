@@ -24,14 +24,14 @@ class ContractUnitController extends Controller
     public function create()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.contract.unit.create', $this->service->getCreateOrUpdateData());
+            return view('admin.pages.contract.unit.create', $this->service->getCreateOrUpdateBaseData());
         });
     }
 
     public function edit(EditRequest $request)
     {
         return $this->catchWeb(function () use ($request) {
-            return view('admin.pages.contract.unit.edit', $this->service->getCreateOrUpdateData($request->validated()['id']));
+            return view('admin.pages.contract.unit.edit', $this->service->getCreateOrUpdateBaseData($request->validated()['id']));
         });
     }
 
