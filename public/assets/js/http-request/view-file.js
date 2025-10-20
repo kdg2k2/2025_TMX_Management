@@ -9,14 +9,6 @@ async function viewFileHandler(url) {
             return;
         }
 
-        // Kiểm tra URL có thể truy cập được bằng http.get
-        try {
-            await http.get(url, {}, null, true);
-        } catch (e) {
-            console.error('Không thể truy cập URL:', e);
-            return;
-        }
-
         // Lấy phần mở rộng file
         const pathname = validUrl.pathname;
         const extension = pathname.split('.').pop().toLowerCase();
