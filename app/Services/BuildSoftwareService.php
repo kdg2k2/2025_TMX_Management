@@ -87,7 +87,7 @@ class BuildSoftwareService extends BaseService
     {
         if ($extracted['attachment']) {
             $oldFile = $isUpdate ? $data['attachment'] : null;
-            $data['attachment'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['attachment'], 'contract', 'bills', $oldFile);
+            $data['attachment'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['attachment'], 'contract', 'attachment', $oldFile);
             $data->save();
         }
 
@@ -135,7 +135,7 @@ class BuildSoftwareService extends BaseService
     {
         return $this->tryThrow(function () use ($request) {
             $data = $this->repository->update($request);
-            $this->sendMail($data['id'], 'accept', 'Phê duyệt yêu cầu');
+            $this->sendMail($data['id'], 'Phê duyệt yêu cầu');
         }, true);
     }
 
@@ -143,7 +143,9 @@ class BuildSoftwareService extends BaseService
     {
         return $this->tryThrow(function () use ($request) {
             $data = $this->repository->update($request);
-            $this->sendMail($data['id'], 'reject', 'Tư chối yêu cầu');
+            $this->sendMail($data['id'], 'Tư chối yêu cầu', [
+                'rejectionReason' => $request['rejection_reason'] ?? '',
+            ]);
         }, true);
     }
 
@@ -157,7 +159,7 @@ class BuildSoftwareService extends BaseService
                 $request['completed_at'] = date('Y-m-d H:i:s');
 
             $data = $this->repository->update($request);
-            $this->sendMail($data['id'], 'update_state', 'Cập nhật tiến trình');
+            $this->sendMail($data['id'], 'Cập nhật tiến trình');
         }, true);
     }
 
@@ -178,19 +180,14 @@ class BuildSoftwareService extends BaseService
         ]);
     }
 
-    private function sendMail(int $id, string $type, string $subject)
+    private function sendMail(int $id, string $subject, array $params = [])
     {
         $record = $this->repository->findById($id);
         $emails = $this->getEmails($record);
         $files = $record['attachment'] ? [public_path($record['attachment'])] : [];
-        $data = [
+        $data = array_merge([
             'data' => $this->formatRecord($record->toArray()),
-            'type' => $type,
-        ];
-        dd([
-            'emails' => $emails,
-            'data' => $data,
-        ]);
-        dispatch(new \App\Jobs\SendMailJob('admin.pages.emails.build-software', $subject . ' xây dựng phần mềm', $emails, $data, $files));
+        ], $params);
+        dispatch(new \App\Jobs\SendMailJob('emails.build-software', $subject . ' xây dựng phần mềm', $emails, $data, $files));
     }
 }

@@ -1,6 +1,6 @@
 @extends('admin.layout.master')
 @section('content')
-    <x-breadcrumb :items="[['label' => 'Trang chủ', 'url' => route('dashboard')], ['label' => 'Tài khoản', 'url' => null]]">
+    <x-breadcrumb :items="[['label' => 'Trang chủ', 'url' => route('dashboard')], ['label' => 'ĐXXD Phần mềm', 'url' => null]]">
         <x-button variant="success" size="sm" icon="ti ti-plus" tooltip="Thêm mới" :href="route('build-software.create')" />
     </x-breadcrumb>
 

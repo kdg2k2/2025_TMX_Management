@@ -20,6 +20,7 @@ const openUpdateStateModal = (url, data) => {
     selectValueMapping = {
         state: (item) => item.original,
     };
+    inputValueFormatter = {};
     autoMatchFieldAndFillPatchForm(updateStateModalFrom, "patch", data);
     showModal(updateStateModal);
 };
