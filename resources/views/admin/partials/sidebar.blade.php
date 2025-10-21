@@ -22,7 +22,7 @@
                     <a href="{{ route('dashboard') }}" class="side-menu__item">
                         <i class="side-menu__icon ti ti-dashboard"></i>
                         <span class="side-menu__label">
-                            Dashboard
+                            Trang chủ
                         </span>
                     </a>
                 </li>
@@ -33,7 +33,7 @@
                     </span>
                 </li>
                 <li class="slide">
-                    <a href="javascript:void(0);" class="side-menu__item">
+                    <a href="{{ route('bidding.index') }}" class="side-menu__item">
                         <i class="side-menu__icon ti ti-building"></i>
                         <span class="side-menu__label">Xây dựng gói thầu</span>
                     </a>
@@ -139,28 +139,24 @@
                         <li class="slide">
                             <a href="javascript:void(0);" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon fs-6 ti ti-progress-check"></i>
-
                                 Kiểm tra tiến độ
                             </a>
                         </li>
                         <li class="slide">
                             <a href="javascript:void(0);" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon fs-6 ti ti-file-plus"></i>
-
                                 Tạo biên bản bàn giao
                             </a>
                         </li>
                         <li class="slide">
                             <a href="javascript:void(0);" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon fs-6 ti ti-clipboard-check"></i>
-
                                 Phê duyệt biên bản
                             </a>
                         </li>
                         <li class="slide">
                             <a href="javascript:void(0);" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon fs-6 ti ti-history"></i>
-
                                 Lịch sử phê duyệt
                             </a>
                         </li>

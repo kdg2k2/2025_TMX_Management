@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\ContractType;
+namespace App\Http\Requests\Bidding;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\BaseFindByIdRequest;
 
-class FindByIdRequest extends BaseRequest
+class FindByIdRequest extends BaseFindByIdRequest
 {
     public function prepareForValidation()
     {
@@ -14,7 +14,7 @@ class FindByIdRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|exists:contract_types,id',
+            'id' => 'required|exists:biddings,id',
         ];
     }
 }

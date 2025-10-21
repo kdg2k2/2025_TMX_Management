@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BiddingController;
 use App\Http\Controllers\Admin\BuildSoftwareController;
 use App\Http\Controllers\Admin\ContractAdvancePaymentController;
 use App\Http\Controllers\Admin\ContractAppendixController;
@@ -121,5 +122,14 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::post('accept', 'accept')->name('build-software.accept');
         Route::post('reject', 'reject')->name('build-software.reject');
         Route::post('update-state', 'updateState')->name('build-software.update-state');
+    });
+
+    Route::prefix('bidding')->group(function () {
+        Route::controller(BiddingController::class)->group(function () {
+            Route::get('index', 'index')->name('bidding.index');
+            Route::get('create', 'create')->name('bidding.create');
+            Route::get('edit', 'edit')->name('bidding.edit');
+            Route::delete('delete', 'delete')->name('bidding.delete');
+        });
     });
 });

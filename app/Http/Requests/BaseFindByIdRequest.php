@@ -6,9 +6,9 @@ class BaseFindByIdRequest extends BaseRequest
 {
     public function prepareForValidation()
     {
-        return [
+        $this->merge([
             'id' => $this->query('id'),
-        ];
+        ]);
     }
 
     public function rules(): array

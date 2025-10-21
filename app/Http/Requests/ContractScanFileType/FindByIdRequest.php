@@ -8,7 +8,7 @@ class FindByIdRequest extends BaseFindByIdRequest
 {
     public function prepareForValidation()
     {
-        $this->merge(parent::prepareForValidation());
+        parent::prepareForValidation();
     }
 
     public function rules(): array

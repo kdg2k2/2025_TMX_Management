@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BiddingController;
 use App\Http\Controllers\Api\BuildSoftwareController;
 use App\Http\Controllers\Api\ContractAdvancePaymentController;
 use App\Http\Controllers\Api\ContractAppendixController;
@@ -127,5 +128,13 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::get('list', 'list')->name('api.build-software.list');
         Route::post('store', 'store')->name('api.build-software.store');
         Route::patch('update', 'update')->name('api.build-software.update');
+    });
+
+    Route::prefix('bidding')->group(function () {
+        Route::controller(BiddingController::class)->group(function () {
+            Route::get('list', 'list')->name('api.bidding.list');
+            Route::post('store', 'store')->name('api.bidding.store');
+            Route::patch('update', 'update')->name('api.bidding.update');
+        });
     });
 });
