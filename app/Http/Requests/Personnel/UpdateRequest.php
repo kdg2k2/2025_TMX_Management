@@ -2,26 +2,16 @@
 
 namespace App\Http\Requests\Personnel;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdateRequest extends FormRequest
+class UpdateRequest extends StoreRequest
 {
-    public function prepareForValidation()
-    {
-        $this->merge([
-            //
-        ]);
-    }
-
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
-        return [
-            //
-        ];
+        return array_merge(
+            parent::rules(),
+            [
+                'id' => app(FindByIdRequest::class)->rules()['id'],
+                'name' => 'required|max:255|unique:personnels,name,' . $this->id,
+            ]
+        );
     }
 }

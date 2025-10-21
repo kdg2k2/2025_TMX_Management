@@ -2,7 +2,7 @@
 @section('content')
     <x-breadcrumb :items="[
         ['label' => 'Trang chủ', 'url' => route('dashboard')],
-        ['label' => 'Bằng cấp trình độ', 'url' => route('personnels.index')],
+        ['label' => 'Nhân sự', 'url' => route('personnels.index')],
         ['label' => 'Đơn vị', 'url' => null],
     ]">
         <x-button variant="success" size="sm" icon="ti ti-plus" tooltip="Thêm mới" :href="route('personnels.units.create')" />

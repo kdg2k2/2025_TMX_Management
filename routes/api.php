@@ -162,7 +162,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
     });
 
     Route::prefix('personnels')->group(function () {
-        Route::prefix('units')->controller(PersonnelController::class)->group(function () {
+        Route::controller(PersonnelController::class)->group(function () {
             Route::get('list', 'list')->name('api.personnels.list');
             Route::post('store', 'store')->name('api.personnels.store');
             Route::patch('update', 'update')->name('api.personnels.update');

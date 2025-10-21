@@ -3,17 +3,19 @@
     <x-breadcrumb :items="[
         ['label' => 'Trang chủ', 'url' => route('dashboard')],
         ['label' => 'Nhân sự', 'url' => route('personnels.index')],
-        ['label' => 'Đơn vị', 'url' => route('personnels.units.index')],
-        ['label' => 'Thêm mới', 'url' => null],
+        ['label' => 'Cập nhật', 'url' => null],
     ]">
-        <x-button variant="primary" size="sm" icon="ti ti-list" tooltip="Danh sách" :href="route('personnels.units.index')" />
+        <x-button variant="primary" size="sm" icon="ti ti-list" tooltip="Danh sách" :href="route('personnels.index')" />
     </x-breadcrumb>
 
     <div class="card custom-card">
         <div class="card-body">
-            <form id="submit-form" class="row" action="{{ route('api.personnels.units.store') }}">
-                @method('post')
-                @include('admin.pages.personnels.units.create-edit-form-content')
+            <form id="submit-form" class="row"
+                action="{{ route('api.personnels.update', [
+                    'id' => $data['id'],
+                ]) }}">
+                @method('patch')
+                @include('admin.pages.personnels.create-edit-form-content')
                 <div class="my-1 col-12 text-center">
                     <x-button-submit />
                 </div>

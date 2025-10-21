@@ -176,16 +176,16 @@
                 </li>
                 <li class="slide has-sub">
                     <a href="javascript:void(0);" class="side-menu__item">
-                        <i class="side-menu__icon ti ti-school"></i>
+                        <i class="side-menu__icon ti ti-user-scan"></i>
                         <span class="side-menu__label">
-                            Bằng cấp trình độ
+                            Dữ liệu nhân sự
                         </span>
                         <i class="ri-arrow-right-s-line side-menu__angle"></i>
                     </a>
                     <ul class="slide-menu child1">
                         <li class="slide side-menu__label1">
                             <a href="javascript:void(0)">
-                                Bằng cấp trình độ
+                                Dữ liệu nhân sự
                             </a>
                         </li>
                         <li class="slide">
@@ -195,20 +195,24 @@
                             </a>
                         </li>
                         <li class="slide">
+                            <a href="{{ route('personnels.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon ti ti-id-badge-2"></i>
+                                Thông tin nhân sự
+                            </a>
+                        </li>
+                        <li class="slide">
                             <a href="javascript:void(0);" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon ti ti-id-badge-2"></i>
-                                Nhân sự
+                                Bằng cấp trình độ
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon ti ti-id"></i>
+                                Tổng hợp nhân sự
                             </a>
                         </li>
                     </ul>
-                </li>
-                <li class="slide">
-                    <a href="javascript:void(0);" class="side-menu__item">
-                        <i class="side-menu__icon ti ti-id"></i>
-                        <span class="side-menu__label">
-                            Thông tin nhân sự
-                        </span>
-                    </a>
                 </li>
 
                 <li class="slide__category">

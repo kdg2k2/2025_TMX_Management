@@ -2,26 +2,19 @@
 
 namespace App\Http\Requests\Personnel;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFindByIdRequest;
 
-class FindByIdRequest extends FormRequest
+class FindByIdRequest extends BaseFindByIdRequest
 {
     public function prepareForValidation()
     {
-        $this->merge([
-            //
-        ]);
-    }
-
-    public function authorize(): bool
-    {
-        return true;
+        parent::prepareForValidation();
     }
 
     public function rules(): array
     {
         return [
-            //
+            'id' => 'required|exists:personnels,id',
         ];
     }
 }

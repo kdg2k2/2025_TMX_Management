@@ -10,13 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // nhân sự
         Schema::create('personnels', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('created_by')->comment('khóa ngoại người tạo')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name')->comment('họ và tên');
             $table->foreignId('personnel_unit_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('educational_level')->comment('trình độ học vấn');
-            $table->boolean('is_it_displayed_in_summary')->default(true)->comment('hiển thị trong tổng hợp');
         });
     }
 

@@ -2,26 +2,6 @@
 
 namespace App\Http\Requests\Personnel;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseListRequest;
 
-class ListRequest extends FormRequest
-{
-    public function prepareForValidation()
-    {
-        $this->merge([
-            //
-        ]);
-    }
-
-    public function authorize(): bool
-    {
-        return true;
-    }
-
-    public function rules(): array
-    {
-        return [
-            //
-        ];
-    }
-}
+class ListRequest extends BaseListRequest {}

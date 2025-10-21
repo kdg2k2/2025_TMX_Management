@@ -2,7 +2,7 @@
 @section('content')
     <x-breadcrumb :items="[
         ['label' => 'Trang chủ', 'url' => route('dashboard')],
-        ['label' => 'Bằng cấp trình độ', 'url' => route('personnels.index')],
+        ['label' => 'Nhân sự', 'url' => route('personnels.index')],
         ['label' => 'Đơn vị', 'url' => route('personnels.units.index')],
         ['label' => 'Cập nhật', 'url' => null],
     ]">
