@@ -130,6 +130,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::get('create', 'create')->name('bidding.create');
             Route::get('edit', 'edit')->name('bidding.edit');
             Route::delete('delete', 'delete')->name('bidding.delete');
+            Route::get('show', 'show')->name('bidding.show');
         });
     });
 });

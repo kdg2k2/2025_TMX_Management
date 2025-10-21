@@ -16,6 +16,7 @@
         const listUrl = @json(route('api.bidding.list'));
         const editUrl = @json(route('bidding.edit'));
         const deleteUrl = @json(route('bidding.delete'));
+        const showUrl = @json(route('bidding.show'));
     </script>
     <script src="assets/js/bidding/list.js"></script>
 @endsection

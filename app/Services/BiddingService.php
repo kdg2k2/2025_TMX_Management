@@ -10,13 +10,4 @@ class BiddingService extends BaseService
     {
         $this->repository = app(BiddingRepository::class);
     }
-
-    public function getCreateOrUpdateBaseData(int $id = null)
-    {
-        $res = [];
-        if ($id)
-            $res['data'] = $this->repository->findById($id);
-
-        return $res;
-    }
 }

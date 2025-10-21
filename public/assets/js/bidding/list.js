@@ -38,6 +38,14 @@ const renderColumns = () => {
             render: (data, type, row) => {
                 return `
                     ${
+                        createBtn(
+                            "info",
+                            "Chi tiết",
+                            false,
+                            {},
+                            "ti ti-list-details",
+                            `window.location.href="${showUrl}?id=${row.id}"`
+                        ).outerHTML +
                         createEditBtn(`${editUrl}?id=${row.id}`) +
                         createDeleteBtn(`${deleteUrl}?id=${row.id}`)
                     }

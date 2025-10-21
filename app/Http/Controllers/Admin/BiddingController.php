@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Bidding\DeleteRequest;
 use App\Http\Requests\Bidding\EditRequest;
+use App\Http\Requests\Bidding\FindByIdRequest;
 use App\Services\BiddingService;
 
 class BiddingController extends Controller
@@ -24,14 +25,16 @@ class BiddingController extends Controller
     public function create()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.bidding.create', $this->service->getCreateOrUpdateBaseData());
+            return view('admin.pages.bidding.create');
         });
     }
 
     public function edit(EditRequest $request)
     {
         return $this->catchWeb(function () use ($request) {
-            return view('admin.pages.bidding.edit', $this->service->getCreateOrUpdateBaseData($request->validated()['id']));
+            return view('admin.pages.bidding.edit', [
+                'data' => $this->service->findById($request->validated()['id'])
+            ]);
         });
     }
 
@@ -41,6 +44,15 @@ class BiddingController extends Controller
             return response()->json([
                 'data' => $this->service->delete($request->validated()['id']),
                 'message' => config('message.delete'),
+            ]);
+        });
+    }
+
+    public function show(FindByIdRequest $request)
+    {
+        return $this->catchWeb(function () use ($request) {
+            return view('admin.pages.bidding.show', [
+                'data' => $this->service->findById($request->validated()['id'])
             ]);
         });
     }
