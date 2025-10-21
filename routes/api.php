@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\ContractScanFileTypeController;
 use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\EligibilityController;
+use App\Http\Controllers\Api\ProofContractController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -143,5 +144,11 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::get('list', 'list')->name('api.eligibilities.list');
         Route::post('store', 'store')->name('api.eligibilities.store');
         Route::patch('update', 'update')->name('api.eligibilities.update');
+    });
+
+    Route::prefix('proof_contracts')->controller(ProofContractController::class)->group(function () {
+        Route::get('list', 'list')->name('api.proof_contracts.list');
+        Route::post('store', 'store')->name('api.proof_contracts.store');
+        Route::patch('update', 'update')->name('api.proof_contracts.update');
     });
 });

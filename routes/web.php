@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\ContractUnitController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EligibilityController;
+use App\Http\Controllers\Admin\ProofContractController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -140,5 +141,12 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::get('create', 'create')->name('eligibilities.create');
         Route::get('edit', 'edit')->name('eligibilities.edit');
         Route::delete('delete', 'delete')->name('eligibilities.delete');
+    });
+
+        Route::prefix('proof_contracts')->controller(ProofContractController::class)->group(function () {
+        Route::get('index', 'index')->name('proof_contracts.index');
+        Route::get('create', 'create')->name('proof_contracts.create');
+        Route::get('edit', 'edit')->name('proof_contracts.edit');
+        Route::delete('delete', 'delete')->name('proof_contracts.delete');
     });
 });
