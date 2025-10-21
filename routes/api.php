@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\EligibilityController;
 use App\Http\Controllers\Api\ProofContractController;
+use App\Http\Controllers\Api\SoftwareOwnershipController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -150,5 +151,11 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::get('list', 'list')->name('api.proof_contracts.list');
         Route::post('store', 'store')->name('api.proof_contracts.store');
         Route::patch('update', 'update')->name('api.proof_contracts.update');
+    });
+
+    Route::prefix('software_ownerships')->controller(SoftwareOwnershipController::class)->group(function () {
+        Route::get('list', 'list')->name('api.software_ownerships.list');
+        Route::post('store', 'store')->name('api.software_ownerships.store');
+        Route::patch('update', 'update')->name('api.software_ownerships.update');
     });
 });

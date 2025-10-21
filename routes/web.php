@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\ContractUnitController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EligibilityController;
 use App\Http\Controllers\Admin\ProofContractController;
+use App\Http\Controllers\Admin\SoftwareOwnershipController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -143,10 +144,17 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::delete('delete', 'delete')->name('eligibilities.delete');
     });
 
-        Route::prefix('proof_contracts')->controller(ProofContractController::class)->group(function () {
+    Route::prefix('proof_contracts')->controller(ProofContractController::class)->group(function () {
         Route::get('index', 'index')->name('proof_contracts.index');
         Route::get('create', 'create')->name('proof_contracts.create');
         Route::get('edit', 'edit')->name('proof_contracts.edit');
         Route::delete('delete', 'delete')->name('proof_contracts.delete');
+    });
+
+    Route::prefix('software_ownerships')->controller(SoftwareOwnershipController::class)->group(function () {
+        Route::get('index', 'index')->name('software_ownerships.index');
+        Route::get('create', 'create')->name('software_ownerships.create');
+        Route::get('edit', 'edit')->name('software_ownerships.edit');
+        Route::delete('delete', 'delete')->name('software_ownerships.delete');
     });
 });
