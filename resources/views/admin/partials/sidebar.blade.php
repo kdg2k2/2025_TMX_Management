@@ -96,7 +96,7 @@
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('contract.unit.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-handshake"></i>
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-heart-handshake"></i>
                                         Đơn vị liên danh
                                     </a>
                                 </li>
@@ -189,14 +189,12 @@
                         <li class="slide">
                             <a href="javascript:void(0);" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon fs-6 ti ti-building"></i>
-
                                 Quản lý đơn vị
                             </a>
                         </li>
                         <li class="slide">
                             <a href="javascript:void(0);" class="side-menu__item">
-                                <i class="side-menu__icon ti ti-id-badge-2"></i>
-
+                                <i class="side-menu-doublemenu__icon ti ti-id-badge-2"></i>
                                 Quản lý nhân sự
                             </a>
                         </li>
