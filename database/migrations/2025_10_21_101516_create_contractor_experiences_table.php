@@ -10,13 +10,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        // đấu thầu
-        Schema::create('biddings', function (Blueprint $table) {
+        // tư cách hợp lệ
+        Schema::create('contractor_experiences', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->softDeletes();
             $table->foreignId('created_by')->comment('khóa ngoại người tạo')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('name')->unique()->comment('tên gói thầu');
+            $table->string('name')->unique()->comment('tên tài liệu');
+            $table->string('path')->nullable()->comment('đường dẫn lưu file');
         });
     }
 
@@ -25,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('biddings');
+        Schema::dropIfExists('contractor_experiences');
     }
 };

@@ -217,7 +217,3 @@ const renderColumns = () => {
         loadList();
     });
 });
-
-document.addEventListener("DOMContentLoaded", () => {
-    loadList();
-});

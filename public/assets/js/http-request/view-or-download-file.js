@@ -39,8 +39,6 @@ const validateUrl = (url) => {
 const viewFileHandler = (url) => {
     try {
         const validUrl = validateUrl(url);
-
-        // Lấy phần mở rộng file
         const pathname = validUrl.pathname;
         const extension = pathname.split(".").pop().toLowerCase();
 
@@ -61,9 +59,10 @@ const viewFileHandler = (url) => {
 };
 
 const downloadFileHandler = (url) => {
-    validateUrl(url);
-
+    const validUrl = validateUrl(url);
+    const pathname = validUrl.pathname;
     const a = document.createElement("a");
+
     a.href = url;
     a.download = pathname.split("/").pop() || "download";
     document.body.appendChild(a);

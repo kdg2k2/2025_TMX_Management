@@ -8,13 +8,13 @@ const renderColumns = () => {
     return [
         {
             data: "name",
-            title: "Tên gói thầu",
+            title: "Tên văn bản",
         },
         {
             data: null,
             title: "Người tạo",
             render: (data, type, row) => {
-                return row?.created_by?.name || "";
+                return row?.created_by?.name;
             },
         },
         {
@@ -40,12 +40,20 @@ const renderColumns = () => {
                     ${
                         createBtn(
                             "info",
-                            "Chi tiết",
+                            "Xem file",
                             false,
                             {},
-                            "ti ti-list-details",
-                            `window.location.href="${showUrl}?id=${row.id}"`
-                        ).outerHTML +
+                            "ti ti-file-type-pdf",
+                            `viewFileHandler('${row.path}')`
+                        )?.outerHTML +
+                        createBtn(
+                            "success",
+                            "Tải",
+                            false,
+                            {},
+                            "ti ti-download",
+                            `downloadFileHandler('${row.path}')`
+                        )?.outerHTML +
                         createEditBtn(`${editUrl}?id=${row.id}`) +
                         createDeleteBtn(`${deleteUrl}?id=${row.id}`)
                     }

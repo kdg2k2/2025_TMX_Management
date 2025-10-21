@@ -87,7 +87,7 @@ class BuildSoftwareService extends BaseService
     {
         if ($extracted['attachment']) {
             $oldFile = $isUpdate ? $data['attachment'] : null;
-            $data['attachment'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['attachment'], 'contract', 'attachment', $oldFile);
+            $data['attachment'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['attachment'], $this->repository->model->getTable(), 'attachment', $oldFile);
             $data->save();
         }
 

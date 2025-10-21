@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ContractFileController;
 use App\Http\Controllers\Admin\ContractFileTypeController;
 use App\Http\Controllers\Admin\ContractFinanceController;
 use App\Http\Controllers\Admin\ContractInvestorController;
+use App\Http\Controllers\Admin\ContractorExperienceController;
 use App\Http\Controllers\Admin\ContractPaymentController;
 use App\Http\Controllers\Admin\ContractScanFileController;
 use App\Http\Controllers\Admin\ContractScanFileTypeController;
@@ -132,5 +133,12 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::delete('delete', 'delete')->name('bidding.delete');
             Route::get('show', 'show')->name('bidding.show');
         });
+    });
+
+    Route::prefix('contractor_experiences')->controller(ContractorExperienceController::class)->group(function () {
+        Route::get('index', 'index')->name('contractor_experiences.index');
+        Route::get('create', 'create')->name('contractor_experiences.create');
+        Route::get('edit', 'edit')->name('contractor_experiences.edit');
+        Route::delete('delete', 'delete')->name('contractor_experiences.delete');
     });
 });

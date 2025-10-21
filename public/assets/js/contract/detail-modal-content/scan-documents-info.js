@@ -51,7 +51,7 @@ const renderScanDocumentsInfoColumns = () => {
         },
         {
             data: null,
-            title: "Người đăng tải",
+            title: "Người tạo",
             render: (data, type, row) => {
                 return row?.created_by?.name;
             },
