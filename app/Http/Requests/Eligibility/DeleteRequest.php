@@ -1,5 +1,5 @@
 <?php
 
-namespace App\Http\Requests\ContractorExperience;
+namespace App\Http\Requests\Eligibility;
 
 class DeleteRequest extends FindByIdRequest {}

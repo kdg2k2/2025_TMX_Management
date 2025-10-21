@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use App\Repositories\ContractorExperienceRepository;
+use App\Repositories\EligibilityRepository;
 
-class ContractorExperienceService extends BaseService
+class EligibilityService extends BaseService
 {
     public function __construct(
         private HandlerUploadFileService $handlerUploadFileService
     ) {
-        $this->repository = app(ContractorExperienceRepository::class);
+        $this->repository = app(EligibilityRepository::class);
     }
 
     public function store(array $request)

@@ -10,13 +10,13 @@ use App\Http\Controllers\Admin\ContractFileController;
 use App\Http\Controllers\Admin\ContractFileTypeController;
 use App\Http\Controllers\Admin\ContractFinanceController;
 use App\Http\Controllers\Admin\ContractInvestorController;
-use App\Http\Controllers\Admin\ContractorExperienceController;
 use App\Http\Controllers\Admin\ContractPaymentController;
 use App\Http\Controllers\Admin\ContractScanFileController;
 use App\Http\Controllers\Admin\ContractScanFileTypeController;
 use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\ContractUnitController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EligibilityController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -135,10 +135,10 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         });
     });
 
-    Route::prefix('contractor_experiences')->controller(ContractorExperienceController::class)->group(function () {
-        Route::get('index', 'index')->name('contractor_experiences.index');
-        Route::get('create', 'create')->name('contractor_experiences.create');
-        Route::get('edit', 'edit')->name('contractor_experiences.edit');
-        Route::delete('delete', 'delete')->name('contractor_experiences.delete');
+    Route::prefix('eligibilities')->controller(EligibilityController::class)->group(function () {
+        Route::get('index', 'index')->name('eligibilities.index');
+        Route::get('create', 'create')->name('eligibilities.create');
+        Route::get('edit', 'edit')->name('eligibilities.edit');
+        Route::delete('delete', 'delete')->name('eligibilities.delete');
     });
 });

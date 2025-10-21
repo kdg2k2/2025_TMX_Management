@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\ContractorExperience;
+namespace App\Http\Requests\Eligibility;
 
 use App\Http\Requests\BaseRequest;
 
@@ -17,7 +17,7 @@ class StoreRequest extends BaseRequest
     {
         return [
             'created_by' => 'required|exists:users,id',
-            'name' => 'required|max:255|unique:contractor_experiences,name',
+            'name' => 'required|max:255|unique:eligibilities,name',
             'path' => 'required|file|mimes:pdf',
         ];
     }

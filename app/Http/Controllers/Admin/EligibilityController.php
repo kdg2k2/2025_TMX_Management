@@ -3,35 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ContractorExperience\DeleteRequest;
-use App\Http\Requests\ContractorExperience\EditRequest;
-use App\Services\ContractorExperienceService;
+use App\Http\Requests\Eligibility\DeleteRequest;
+use App\Http\Requests\Eligibility\EditRequest;
+use App\Services\EligibilityService;
 
-class ContractorExperienceController extends Controller
+class EligibilityController extends Controller
 {
     public function __construct()
     {
-        $this->service = app(ContractorExperienceService::class);
+        $this->service = app(EligibilityService::class);
     }
 
     public function index()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.contractor_experiences.index');
+            return view('admin.pages.eligibilities.index');
         });
     }
 
     public function create()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.contractor_experiences.create');
+            return view('admin.pages.eligibilities.create');
         });
     }
 
     public function edit(EditRequest $request)
     {
         return $this->catchWeb(function () use ($request) {
-            return view('admin.pages.contractor_experiences.edit', [
+            return view('admin.pages.eligibilities.edit', [
                 'data' => $this->service->findById($request->validated()['id'])
             ]);
         });

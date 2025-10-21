@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\ContractorExperience;
+namespace App\Http\Requests\Eligibility;
 
 class UpdateRequest extends StoreRequest
 {
@@ -10,7 +10,7 @@ class UpdateRequest extends StoreRequest
             parent::rules(),
             [
                 'id' => app(FindByIdRequest::class)->rules()['id'],
-                'name' => 'required|max:255|unique:contractor_experiences,name,' . $this->id,
+                'name' => 'required|max:255|unique:eligibilities,name,' . $this->id,
                 'path' => 'nullable|file|mimes:pdf',
             ]
         );

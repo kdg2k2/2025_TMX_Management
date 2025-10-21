@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Services\ContractorExperienceService;
-use App\Http\Requests\ContractorExperience\ListRequest;
-use App\Http\Requests\ContractorExperience\StoreRequest;
-use App\Http\Requests\ContractorExperience\UpdateRequest;
+use App\Http\Requests\Eligibility\ListRequest;
+use App\Http\Requests\Eligibility\StoreRequest;
+use App\Http\Requests\Eligibility\UpdateRequest;
+use App\Services\EligibilityService;
 
-class ContractorExperienceController extends Controller
+class EligibilityController extends Controller
 {
     public function __construct()
     {
-        $this->service = app(ContractorExperienceService::class);
+        $this->service = app(EligibilityService::class);
     }
 
     public function list(ListRequest $request)

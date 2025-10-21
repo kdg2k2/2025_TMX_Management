@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\ContractorExperience;
+namespace App\Http\Requests\Eligibility;
 
 use App\Http\Requests\BaseFindByIdRequest;
 
@@ -14,7 +14,7 @@ class FindByIdRequest extends BaseFindByIdRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:contractor_experiences,id',
+            'id' => 'required|exists:eligibilities,id',
         ];
     }
 }

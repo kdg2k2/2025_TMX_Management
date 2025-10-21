@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\ContractorExperience;
+use App\Models\Eligibility;
 
-class ContractorExperienceRepository extends BaseRepository
+class EligibilityRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new ContractorExperience();
+        $this->model = new Eligibility();
         $this->relations = [
             'createdBy',
         ];

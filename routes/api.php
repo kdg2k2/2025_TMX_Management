@@ -11,12 +11,12 @@ use App\Http\Controllers\Api\ContractFileController;
 use App\Http\Controllers\Api\ContractFileTypeController;
 use App\Http\Controllers\Api\ContractFinanceController;
 use App\Http\Controllers\Api\ContractInvestorController;
-use App\Http\Controllers\Api\ContractorExperienceController;
 use App\Http\Controllers\Api\ContractPaymentController;
 use App\Http\Controllers\Api\ContractScanFileController;
 use App\Http\Controllers\Api\ContractScanFileTypeController;
 use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
+use App\Http\Controllers\Api\EligibilityController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -139,9 +139,9 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         });
     });
 
-    Route::prefix('contractor_experiences')->controller(ContractorExperienceController::class)->group(function () {
-        Route::get('list', 'list')->name('api.contractor_experiences.list');
-        Route::post('store', 'store')->name('api.contractor_experiences.store');
-        Route::patch('update', 'update')->name('api.contractor_experiences.update');
+    Route::prefix('eligibilities')->controller(EligibilityController::class)->group(function () {
+        Route::get('list', 'list')->name('api.eligibilities.list');
+        Route::post('store', 'store')->name('api.eligibilities.store');
+        Route::patch('update', 'update')->name('api.eligibilities.update');
     });
 });

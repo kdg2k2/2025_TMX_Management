@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         // tư cách hợp lệ
-        Schema::create('contractor_experiences', function (Blueprint $table) {
+        Schema::create('eligibilities', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId('created_by')->comment('khóa ngoại người tạo')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
@@ -25,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('contractor_experiences');
+        Schema::dropIfExists('eligibilities');
     }
 };
