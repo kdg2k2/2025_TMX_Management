@@ -1,5 +1,5 @@
 <?php
 
-namespace App\Http\Requests\PersonnelFile;
+namespace App\Http\Requests\PersonnelFileType;
 
 class EditRequest extends FindByIdRequest {}

@@ -9,6 +9,9 @@ class PersonnelFileRepository extends BaseRepository
     public function __construct()
     {
         $this->model = new PersonnelFile();
-        $this->relations = [];
+        $this->relations = [
+            'createdBy',
+            'type',
+        ];
     }
 }

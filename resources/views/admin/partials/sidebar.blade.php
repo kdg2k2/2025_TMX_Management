@@ -86,7 +86,8 @@
                             <a href="javascript:void(0);" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon fs-6 ti ti-settings-2"></i>
                                 Thiết lập
-                                <i class="ri-arrow-right-s-line side-menu__angle"></i></a>
+                                <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                            </a>
                             <ul class="slide-menu child2">
                                 <li class="slide">
                                     <a href="{{ route('contract.type.index') }}" class="side-menu__item">
@@ -188,11 +189,32 @@
                                 Dữ liệu nhân sự
                             </a>
                         </li>
-                        <li class="slide">
-                            <a href="{{ route('personnels.units.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon fs-6 ti ti-building"></i>
-                                Đơn vị
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon fs-6 ti ti-settings-2"></i>
+                                Thiết lập
+                                <i class="ri-arrow-right-s-line side-menu__angle"></i>
                             </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="{{ route('personnels.units.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-building"></i>
+                                        Đơn vị
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="javascript:void(0);" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Cột thông tin nhân sự bổ sung
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('personnels.file.type.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-file-code-2"></i>
+                                        Loại file bằng cấp
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="slide">
                             <a href="{{ route('personnels.index') }}" class="side-menu__item">
@@ -204,12 +226,6 @@
                             <a href="javascript:void(0);" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon ti ti-id-badge-2"></i>
                                 Bằng cấp trình độ
-                            </a>
-                        </li>
-                        <li class="slide">
-                            <a href="javascript:void(0);" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon ti ti-id"></i>
-                                Tổng hợp nhân sự
                             </a>
                         </li>
                     </ul>

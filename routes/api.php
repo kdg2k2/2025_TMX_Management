@@ -18,6 +18,8 @@ use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\EligibilityController;
 use App\Http\Controllers\Api\PersonnelController;
+use App\Http\Controllers\Api\PersonnelFileController;
+use App\Http\Controllers\Api\PersonnelFileTypeController;
 use App\Http\Controllers\Api\PersonnelUnitController;
 use App\Http\Controllers\Api\ProofContractController;
 use App\Http\Controllers\Api\SoftwareOwnershipController;
@@ -167,10 +169,26 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::post('store', 'store')->name('api.personnels.store');
             Route::patch('update', 'update')->name('api.personnels.update');
         });
+
         Route::prefix('units')->controller(PersonnelUnitController::class)->group(function () {
             Route::get('list', 'list')->name('api.personnels.units.list');
             Route::post('store', 'store')->name('api.personnels.units.store');
             Route::patch('update', 'update')->name('api.personnels.units.update');
+        });
+
+        Route::prefix('file')->group(function () {
+            Route::controller(PersonnelFileController::class)->group(function () {
+                Route::get('list', 'list')->name('api.personnels.file.list');
+                Route::post('store', 'store')->name('api.personnels.file.store');
+                Route::delete('delete', 'delete')->name('api.personnels.file.delete');
+            });
+
+            Route::prefix('type')->controller(PersonnelFileTypeController::class)->group(function () {
+                Route::get('list', 'list')->name('api.personnels.file.type.list');
+                Route::post('store', 'store')->name('api.personnels.file.type.store');
+                Route::patch('update', 'update')->name('api.personnels.file.type.update');
+                Route::delete('delete', 'delete')->name('api.personnels.file.type.delete');
+            });
         });
     });
 });

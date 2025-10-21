@@ -18,6 +18,8 @@ use App\Http\Controllers\Admin\ContractUnitController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EligibilityController;
 use App\Http\Controllers\Admin\PersonnelController;
+use App\Http\Controllers\Admin\PersonnelFileController;
+use App\Http\Controllers\Admin\PersonnelFileTypeController;
 use App\Http\Controllers\Admin\PersonnelUnitController;
 use App\Http\Controllers\Admin\ProofContractController;
 use App\Http\Controllers\Admin\SoftwareOwnershipController;
@@ -167,11 +169,25 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::get('edit', 'edit')->name('personnels.edit');
             Route::delete('delete', 'delete')->name('personnels.delete');
         });
+
         Route::prefix('units')->controller(PersonnelUnitController::class)->group(function () {
             Route::get('index', 'index')->name('personnels.units.index');
             Route::get('create', 'create')->name('personnels.units.create');
             Route::get('edit', 'edit')->name('personnels.units.edit');
             Route::delete('delete', 'delete')->name('personnels.units.delete');
+        });
+
+        Route::prefix('file')->group(function () {
+            Route::controller(PersonnelFileController::class)->group(function () {
+                Route::delete('delete', 'delete')->name('personnels.file.delete');
+            });
+
+            Route::prefix('type')->controller(PersonnelFileTypeController::class)->group(function () {
+                Route::get('index', 'index')->name('personnels.file.type.index');
+                Route::get('create', 'create')->name('personnels.file.type.create');
+                Route::get('edit', 'edit')->name('personnels.file.type.edit');
+                Route::delete('delete', 'delete')->name('personnels.file.type.delete');
+            });
         });
     });
 });

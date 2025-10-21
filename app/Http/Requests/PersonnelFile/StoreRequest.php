@@ -2,26 +2,30 @@
 
 namespace App\Http\Requests\PersonnelFile;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class StoreRequest extends FormRequest
+class StoreRequest extends BaseRequest
 {
     public function prepareForValidation()
     {
         $this->merge([
-            //
+            'created_by' => $this->user()->id,
         ]);
-    }
-
-    public function authorize(): bool
-    {
-        return true;
     }
 
     public function rules(): array
     {
-        return [
-            //
+        $rules = [
+            'contract_id' => 'required|exists:contracts,id',
+            'type_id' => 'required|exists:contract_scan_file_types,id',
+            'created_by' => 'required|exists:users,id',
         ];
+        $extensions = implode(',', app(\App\Services\PersonnelFileTypeService::class)->getExtensions($this->type_id) ?? []);
+        if (empty($extensions))
+            throw new \Exception('Loại file này chưa dược định nghĩa các loại định dạng');
+
+        $rules['path'] = "required|file|mimes:$extensions";
+
+        return $rules;
     }
 }

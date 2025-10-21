@@ -16,7 +16,7 @@ class StoreRequest extends BaseRequest
     public function rules(): array
     {
         $rules = [
-            'name' => 'required|max:255|unique:contract_file_types,id',
+            'name' => 'required|max:255|unique:contract_file_types,name',
             'description' => 'nullable|max:255',
             'type' => 'required|in:file,url',
         ];
