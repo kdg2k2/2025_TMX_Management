@@ -42,3 +42,4 @@
 
 <script src="assets/js/format/format-number.js"></script>
 <script src="assets/js/format/format-date.js"></script>
+<script src="assets/js/format/span-formatter.js"></script>

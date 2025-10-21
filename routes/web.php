@@ -179,6 +179,9 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
 
         Route::prefix('file')->group(function () {
             Route::controller(PersonnelFileController::class)->group(function () {
+                Route::get('index', 'index')->name('personnels.file.index');
+                Route::get('create', 'create')->name('personnels.file.create');
+                Route::get('edit', 'edit')->name('personnels.file.edit');
                 Route::delete('delete', 'delete')->name('personnels.file.delete');
             });
 

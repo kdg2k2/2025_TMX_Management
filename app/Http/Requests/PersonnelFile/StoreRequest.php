@@ -16,8 +16,8 @@ class StoreRequest extends BaseRequest
     public function rules(): array
     {
         $rules = [
-            'contract_id' => 'required|exists:contracts,id',
-            'type_id' => 'required|exists:contract_scan_file_types,id',
+            'personnel_id' => 'required|exists:personnels,id',
+            'type_id' => 'required|exists:personnel_file_types,id',
             'created_by' => 'required|exists:users,id',
         ];
         $extensions = implode(',', app(\App\Services\PersonnelFileTypeService::class)->getExtensions($this->type_id) ?? []);

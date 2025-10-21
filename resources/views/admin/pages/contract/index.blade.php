@@ -395,7 +395,6 @@
     <script src="assets/js/http-request/base-list.js"></script>
     <script src="assets/js/http-request/base-store-and-update.js"></script>
     <script src="assets/js/contract/list.js"></script>
-    <script src="assets/js/format/span-formatter.js"></script>
     <script src="assets/js/contract/vat-calculator.js"></script>
     <script src="assets/js/contract/detail-modal-content/script.js"></script>
     <script src="assets/js/contract/detail-modal-content/general-info.js"></script>

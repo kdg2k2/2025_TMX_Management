@@ -12,6 +12,7 @@ class PersonnelFileRepository extends BaseRepository
         $this->relations = [
             'createdBy',
             'type',
+            'personnel',
         ];
     }
 }

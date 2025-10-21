@@ -180,7 +180,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::controller(PersonnelFileController::class)->group(function () {
                 Route::get('list', 'list')->name('api.personnels.file.list');
                 Route::post('store', 'store')->name('api.personnels.file.store');
-                Route::delete('delete', 'delete')->name('api.personnels.file.delete');
+                Route::patch('update', 'update')->name('api.personnels.file.update');
             });
 
             Route::prefix('type')->controller(PersonnelFileTypeController::class)->group(function () {

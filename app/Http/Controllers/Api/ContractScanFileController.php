@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ContractScanFile\FindByIdRequest;
 use App\Http\Requests\ContractScanFile\ListRequest;
 use App\Http\Requests\ContractScanFile\StoreRequest;
 use App\Http\Requests\ContractScanFile\UpdateRequest;

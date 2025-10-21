@@ -7,9 +7,20 @@ use App\Repositories\PersonnelFileRepository;
 class PersonnelFileService extends BaseService
 {
     public function __construct(
-        private HandlerUploadFileService $handlerUploadFileService
+        private HandlerUploadFileService $handlerUploadFileService,
+        private PersonnelFileTypeService $personnelFileTypeService
     ) {
         $this->repository = app(PersonnelFileRepository::class);
+    }
+
+    public function baseDataForLCEView(int $id = null)
+    {
+        $res = [];
+        if ($id)
+            $res['data'] = $this->repository->findById($id);
+        $res['personnels'] = app(\App\Services\PersonnelService::class)->list();
+        $res['personnelFileTypes'] = $this->personnelFileTypeService->list();
+        return $res;
     }
 
     public function store(array $request)
