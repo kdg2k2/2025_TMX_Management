@@ -17,6 +17,8 @@ use App\Http\Controllers\Api\ContractScanFileTypeController;
 use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\EligibilityController;
+use App\Http\Controllers\Api\PersonnelController;
+use App\Http\Controllers\Api\PersonnelUnitController;
 use App\Http\Controllers\Api\ProofContractController;
 use App\Http\Controllers\Api\SoftwareOwnershipController;
 use App\Http\Controllers\Api\UserController;
@@ -157,5 +159,18 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::get('list', 'list')->name('api.software_ownerships.list');
         Route::post('store', 'store')->name('api.software_ownerships.store');
         Route::patch('update', 'update')->name('api.software_ownerships.update');
+    });
+
+    Route::prefix('personnels')->group(function () {
+        Route::prefix('units')->controller(PersonnelController::class)->group(function () {
+            Route::get('list', 'list')->name('api.personnels.list');
+            Route::post('store', 'store')->name('api.personnels.store');
+            Route::patch('update', 'update')->name('api.personnels.update');
+        });
+        Route::prefix('units')->controller(PersonnelUnitController::class)->group(function () {
+            Route::get('list', 'list')->name('api.personnels.units.list');
+            Route::post('store', 'store')->name('api.personnels.units.store');
+            Route::patch('update', 'update')->name('api.personnels.units.update');
+        });
     });
 });

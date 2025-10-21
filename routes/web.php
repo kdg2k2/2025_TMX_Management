@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\ContractUnitController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EligibilityController;
+use App\Http\Controllers\Admin\PersonnelController;
+use App\Http\Controllers\Admin\PersonnelUnitController;
 use App\Http\Controllers\Admin\ProofContractController;
 use App\Http\Controllers\Admin\SoftwareOwnershipController;
 use App\Http\Controllers\Admin\UserController;
@@ -156,5 +158,20 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::get('create', 'create')->name('software_ownerships.create');
         Route::get('edit', 'edit')->name('software_ownerships.edit');
         Route::delete('delete', 'delete')->name('software_ownerships.delete');
+    });
+
+    Route::prefix('personnels')->group(function () {
+        Route::controller(PersonnelController::class)->group(function () {
+            Route::get('index', 'index')->name('personnels.index');
+            Route::get('create', 'create')->name('personnels.create');
+            Route::get('edit', 'edit')->name('personnels.edit');
+            Route::delete('delete', 'delete')->name('personnels.delete');
+        });
+        Route::prefix('units')->controller(PersonnelUnitController::class)->group(function () {
+            Route::get('index', 'index')->name('personnels.units.index');
+            Route::get('create', 'create')->name('personnels.units.create');
+            Route::get('edit', 'edit')->name('personnels.units.edit');
+            Route::delete('delete', 'delete')->name('personnels.units.delete');
+        });
     });
 });
