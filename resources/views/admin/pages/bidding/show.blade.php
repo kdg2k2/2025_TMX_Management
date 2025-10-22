@@ -38,9 +38,7 @@
                 [
                     'title' => 'Hợp đồng minh chứng / Quyết định giao nhiệm vụ',
                     'icon' => 'ti ti-file-certificate',
-                    'content' => view(
-                        'admin.pages.bidding.partials.proof-contracts',
-                    )->render(),
+                    'content' => view('admin.pages.bidding.partials.proof-contracts')->render(),
                     'onclick' => '()=>{}',
                 ],
                 [
@@ -63,6 +61,15 @@
 @section('scripts')
     <script>
         const $data = @json($data ?? null);
+        const listContractUrl = @json(route('api.contract.list'));
     </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
     <script src="assets/js/http-request/base-store-and-update.js"></script>
+    <script src="assets/js/bidding/show/script.js"></script>
+    <script src="assets/js/bidding/show/contractor-experience.js"></script>
+    <script src="assets/js/bidding/show/eligibility.js"></script>
+    <script src="assets/js/bidding/show/software-ownership.js"></script>
+    <script src="assets/js/bidding/show/implementation-personnel.js"></script>
+    <script src="assets/js/bidding/show/proof-contracts.js"></script>
+    <script src="assets/js/bidding/show/other-files.js"></script>
 @endsection

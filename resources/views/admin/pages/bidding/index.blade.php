@@ -18,5 +18,6 @@
         const deleteUrl = @json(route('bidding.delete'));
         const showUrl = @json(route('bidding.show'));
     </script>
+    <script src="assets/js/http-request/base-list.js"></script>
     <script src="assets/js/bidding/list.js"></script>
 @endsection

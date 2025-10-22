@@ -15,7 +15,7 @@
                 [
                     'class' => 'border-0',
                     'title' => 'Tổng hợp',
-                    'icon' => 'ti ti-files',
+                    'icon' => 'ti ti-chart-bar',
                     'content' => view('admin.pages.personnels.synthetic-excel')->render(),
                 ],
             ]" />
