@@ -3,7 +3,7 @@
     <x-breadcrumb :items="[
         ['label' => 'Trang chủ', 'url' => route('dashboard')],
         ['label' => 'Nhân sự', 'url' => route('personnels.index')],
-        ['label' => 'Files', 'url' => null],
+        ['label' => 'Bằng cấp trình độ', 'url' => null],
     ]">
         <x-button variant="success" size="sm" icon="ti ti-plus" tooltip="Thêm mới" :href="route('personnels.file.create')" />
     </x-breadcrumb>
@@ -15,7 +15,7 @@
             </select>
         </div>
         <div class="col-lg-2 col-md-4">
-            <select id="type_id">
+            <select id="personnel_id">
                 <x-select-options :items="$personnels" emptyText="Nhân sự"></x-select-options>
             </select>
         </div>
@@ -33,6 +33,5 @@
         const editUrl = @json(route('personnels.file.edit'));
         const deleteUrl = @json(route('personnels.file.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
     <script src="assets/js/personnels/file/list.js"></script>
 @endsection

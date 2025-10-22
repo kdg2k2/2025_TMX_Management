@@ -1,3 +1,6 @@
+const typeFilter = document.getElementById("type_id");
+const personnelFilter = document.getElementById("personnel_id");
+
 const renderColumns = () => {
     return [
         {
@@ -61,3 +64,32 @@ const renderColumns = () => {
         },
     ];
 };
+
+const getListParams = () => {
+    const params = {
+        paginate: 1,
+    };
+
+    if (typeFilter.value) params["type_id"] = typeFilter.value;
+    if (personnelFilter.value) params["personnel_id"] = personnelFilter.value;
+
+    return params;
+};
+
+window.loadList = () => {
+    createDataTableServerSide(
+        table,
+        listUrl,
+        renderColumns(),
+        (item) => item,
+        getListParams()
+    );
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadList();
+
+    [typeFilter, personnelFilter].forEach((item) =>
+        item.addEventListener("change", loadList)
+    );
+});

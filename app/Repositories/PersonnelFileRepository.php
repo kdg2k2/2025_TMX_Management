@@ -15,4 +15,32 @@ class PersonnelFileRepository extends BaseRepository
             'personnel',
         ];
     }
+
+    protected function applyListFilters($query, array $request)
+    {
+        if (isset($request['personnel_id']))
+            $query->where('personnel_id', $request['personnel_id']);
+        if (isset($request['type_id']))
+            $query->where('type_id', $request['type_id']);
+    }
+
+    protected function getSearchConfig(): array
+    {
+        return [
+            'text' => [],
+            'date' => [],
+            'datetime' => [],
+            'relations' => [
+                'createdBy' => [
+                    'name',
+                ],
+                'type' => [
+                    'name',
+                ],
+                'personnel' => [
+                    'name',
+                ],
+            ]
+        ];
+    }
 }

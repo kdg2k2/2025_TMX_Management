@@ -13,4 +13,20 @@ class PersonnelFileTypeRepository extends BaseRepository
             'extensions.extension',
         ];
     }
+
+    protected function getSearchConfig(): array
+    {
+        return [
+            'text' => [
+                'name',
+            ],
+            'date' => [],
+            'datetime' => [],
+            'relations' => [
+                'extensions.extension' => [
+                    'name',
+                ],
+            ]
+        ];
+    }
 }

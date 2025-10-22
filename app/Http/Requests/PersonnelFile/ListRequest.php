@@ -9,8 +9,8 @@ class ListRequest extends BaseListRequest
     public function rules(): array
     {
         return array_merge(parent::rules(), [
-            'contract_id' => 'nullable|exists:contracts,id',
-            'type_id' => 'nullable|exists:contract_scan_file_types,id',
+            'personnel_id' => 'nullable|exists:personnels,id',
+            'type_id' => 'nullable|exists:personnel_file_types,id',
         ]);
     }
 }

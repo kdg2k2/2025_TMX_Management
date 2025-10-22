@@ -1,8 +1,3 @@
-window.loadList = () => {
-    createDataTableServerSide(table, listUrl, renderColumns(), (item) => item, {
-        paginate: 1,
-    });
-};
 
 const renderColumns = () => {
     return [
