@@ -28,4 +28,18 @@ class PersonnelCustomFieldService extends BaseService
         $array['type'] = $this->repository->getType($array['type']);
         return $array;
     }
+
+    public function getFields()
+    {
+        return $this->tryThrow(function () {
+            return $this->repository->getFields();
+        });
+    }
+
+    public function findByField(string $field)
+    {
+        return $this->tryThrow(function () use ($field) {
+            return $this->findByKey($field, 'field');
+        });
+    }
 }

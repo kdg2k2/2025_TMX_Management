@@ -44,11 +44,11 @@ abstract class BaseRepository
             if (is_array($value)) {
                 $query->where(function ($subQuery) use ($field, $value) {
                     foreach ($value as $val) {
-                        $subQuery->orWhereRaw("BINARY $field = ?", [$val]);
+                        $subQuery->orWhere($field, $val);
                     }
                 });
             } else {
-                $query->whereRaw("BINARY $field = ?", [$value]);
+                $query->orWhere($field, $value);
             }
         }
         return $query->first();
@@ -58,7 +58,7 @@ abstract class BaseRepository
     {
         return $this->model->where(function ($query) use ($column, $keys) {
             foreach ($keys as $key) {
-                $query->orWhereRaw("BINARY $column = ?", [$key]);
+                $query->orWhere($column, $key);
             }
         })->get();
     }

@@ -6,7 +6,7 @@ const renderColumns = () => {
         },
         {
             data: null,
-            title: "Người tạo",
+            title: "Người tạo - Cập nhật",
             render: (data, type, row) => {
                 return row?.created_by?.name || "";
             },

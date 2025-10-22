@@ -28,4 +28,5 @@
         const $data = @json($data ?? null);
     </script>
     <script src="assets/js/http-request/base-store-and-update.js"></script>
+    <script src="assets/js/personnels/update.js"></script>
 @endsection

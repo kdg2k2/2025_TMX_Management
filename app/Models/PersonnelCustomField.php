@@ -21,8 +21,8 @@ class PersonnelCustomField extends Model
             'original' => 'date',
             'converted' => 'Date',
         ],
-        'datetime' => [
-            'original' => 'datetime',
+        'datetime-local' => [
+            'original' => 'datetime-local',
             'converted' => 'Datetime',
         ],
         'number' => [
@@ -39,15 +39,5 @@ class PersonnelCustomField extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
-    }
-
-    public function personnels()
-    {
-        return $this->belongsToMany(
-            Personnel::class,
-            (new PersonnelPivotPersonnelCustomField())->getTable(),
-            'personnel_custom_field_id',
-            'personnel_id'
-        );
     }
 }

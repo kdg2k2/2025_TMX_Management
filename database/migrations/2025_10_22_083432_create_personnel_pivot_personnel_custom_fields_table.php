@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('personnel_pivot_personnel_custom_fields', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('value')->nullable()->comment('dữ liệu nhập pivot');
             $table->foreignId('personnel_id')->comment('khóa ngoại nhân sự')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table
                 ->foreignId('personnel_custom_field_id')

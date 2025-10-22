@@ -11,7 +11,7 @@ class StoreRequest extends BaseRequest
     {
         $this->merge([
             'created_by' => $this->user()->id,
-            'field' => app(StringHandlerService::class)->createSlug($this->name ?? ''),
+            'field' => app(StringHandlerService::class)->createSlug($this->name ?? '', '_'),
         ]);
     }
 
@@ -21,7 +21,7 @@ class StoreRequest extends BaseRequest
             'created_by' => 'required|exists:users,id',
             'name' => 'required|max:255|unique:personnel_custom_fields,name',
             'field' => 'required|max:255|unique:personnel_custom_fields,field',
-            'type' => 'required|in:text,date,datetime,number',
+            'type' => 'required|in:text,date,datetime-local,number',
         ];
     }
 }

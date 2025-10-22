@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('name')->unique()->comment('tên cột hiển thị');
             $table->string('field')->unique()->comment('tên cột lưu db');
-            $table->enum('type', ['text', 'date', 'datetime', 'number']);
+            $table->enum('type', ['text', 'date', 'datetime-local', 'number']);
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('người tạo-cập nhật');
         });
     }

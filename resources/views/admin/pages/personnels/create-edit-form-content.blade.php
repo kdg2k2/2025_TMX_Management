@@ -24,3 +24,13 @@
         <input class="form-control" type="text" name="educational_level" required>
     </div>
 </div>
+@foreach ($fields as $field)
+    <div class="my-1 col-md-4">
+        <div class="form-group">
+            <label>
+                {{ $field['name'] }}
+            </label>
+            <input class="form-control" type="{{ $field['type']['original'] }}" name="{{ $field['field'] }}">
+        </div>
+    </div>
+@endforeach

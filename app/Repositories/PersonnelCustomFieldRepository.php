@@ -34,4 +34,8 @@ class PersonnelCustomFieldRepository extends BaseRepository
     {
         return $this->model->getType($key);
     }
+
+    public function getFields(){
+        return $this->model->pluck('field')->toArray();
+    }
 }

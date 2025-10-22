@@ -8,7 +8,14 @@ const renderColumns = () => {
             data: null,
             title: "Đơn vị",
             render: (data, type, row) => {
-                return [row?.personnel_unit?.short_name||null, row?.personnel_unit?.name||null].filter(item=>item!=null).join(" - ");
+                console.log({ row });
+
+                return [
+                    row?.personnel_unit?.short_name || null,
+                    row?.personnel_unit?.name || null,
+                ]
+                    .filter((item) => item != null)
+                    .join(" - ");
             },
         },
         {
@@ -17,7 +24,7 @@ const renderColumns = () => {
         },
         {
             data: null,
-            title: "Người tạo",
+            title: "Người tạo - Cập nhật",
             render: (data, type, row) => {
                 return row?.created_by?.name;
             },
