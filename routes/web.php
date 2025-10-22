@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\ContractUnitController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EligibilityController;
 use App\Http\Controllers\Admin\PersonnelController;
+use App\Http\Controllers\Admin\PersonnelCustomFieldController;
 use App\Http\Controllers\Admin\PersonnelFileController;
 use App\Http\Controllers\Admin\PersonnelFileTypeController;
 use App\Http\Controllers\Admin\PersonnelUnitController;
@@ -168,6 +169,13 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::get('create', 'create')->name('personnels.create');
             Route::get('edit', 'edit')->name('personnels.edit');
             Route::delete('delete', 'delete')->name('personnels.delete');
+        });
+
+        Route::prefix('custom-field')->controller(PersonnelCustomFieldController::class)->group(function () {
+            Route::get('index', 'index')->name('personnels.custom-field.index');
+            Route::get('create', 'create')->name('personnels.custom-field.create');
+            Route::get('edit', 'edit')->name('personnels.custom-field.edit');
+            Route::delete('delete', 'delete')->name('personnels.custom-field.delete');
         });
 
         Route::prefix('units')->controller(PersonnelUnitController::class)->group(function () {

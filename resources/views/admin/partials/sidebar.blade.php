@@ -197,15 +197,15 @@
                             </a>
                             <ul class="slide-menu child2">
                                 <li class="slide">
-                                    <a href="{{ route('personnels.units.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-building"></i>
-                                        Đơn vị
+                                    <a href="{{ route('personnels.custom-field.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Cột thông tin nhân sự bổ sung
                                     </a>
                                 </li>
                                 <li class="slide">
-                                    <a href="javascript:void(0);" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
-                                        Cột thông tin nhân sự bổ sung
+                                    <a href="{{ route('personnels.units.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-building"></i>
+                                        Đơn vị
                                     </a>
                                 </li>
                                 <li class="slide">

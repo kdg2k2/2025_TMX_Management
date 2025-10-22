@@ -2,17 +2,15 @@
 
 namespace App\Repositories;
 
-use App\Models\Personnel;
+use App\Models\PersonnelCustomField;
 
-class PersonnelRepository extends BaseRepository
+class PersonnelCustomFieldRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Personnel();
+        $this->model = new PersonnelCustomField();
         $this->relations = [
             'createdBy',
-            'personnelUnit',
-            'personnelCustomFields',
         ];
     }
 
@@ -28,10 +26,12 @@ class PersonnelRepository extends BaseRepository
                 'createdBy' => [
                     'name',
                 ],
-                'personnelUnit' => [
-                    'name',
-                ],
             ]
         ];
+    }
+
+    public function getType($key = null)
+    {
+        return $this->model->getType($key);
     }
 }

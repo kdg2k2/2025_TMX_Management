@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\EligibilityController;
 use App\Http\Controllers\Api\PersonnelController;
+use App\Http\Controllers\Api\PersonnelCustomFieldController;
 use App\Http\Controllers\Api\PersonnelFileController;
 use App\Http\Controllers\Api\PersonnelFileTypeController;
 use App\Http\Controllers\Api\PersonnelUnitController;
@@ -168,6 +169,12 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::get('list', 'list')->name('api.personnels.list');
             Route::post('store', 'store')->name('api.personnels.store');
             Route::patch('update', 'update')->name('api.personnels.update');
+        });
+
+        Route::prefix('custom-field')->controller(PersonnelCustomFieldController::class)->group(function () {
+            Route::get('list', 'list')->name('api.personnels.custom-field.list');
+            Route::post('store', 'store')->name('api.personnels.custom-field.store');
+            Route::patch('update', 'update')->name('api.personnels.custom-field.update');
         });
 
         Route::prefix('units')->controller(PersonnelUnitController::class)->group(function () {

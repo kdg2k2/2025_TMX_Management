@@ -20,4 +20,14 @@ class Personnel extends Model
     {
         return $this->belongsTo(PersonnelUnit::class);
     }
+
+    public function personnelCustomFields()
+    {
+        return $this->belongsToMany(
+            PersonnelCustomField::class,
+            (new PersonnelPivotPersonnelCustomField())->getTable(),
+            'personnel_id',
+            'personnel_custom_field_id'
+        );
+    }
 }
