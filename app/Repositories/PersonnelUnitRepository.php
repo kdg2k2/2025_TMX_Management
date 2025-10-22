@@ -19,6 +19,7 @@ class PersonnelUnitRepository extends BaseRepository
         return [
             'text' => [
                 'name',
+                'short_name',
             ],
             'date' => [],
             'datetime' => [],
