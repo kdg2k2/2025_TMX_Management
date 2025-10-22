@@ -39,5 +39,6 @@
         const editUrl = @json(route('user.edit'));
         const deleteUrl = @json(route('user.delete'));
     </script>
+    <script src="assets/js/http-request/base-list.js"></script>
     <script src="assets/js/user/list.js"></script>
 @endsection

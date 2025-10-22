@@ -10,7 +10,8 @@ class PersonnelService extends BaseService
 {
     public function __construct(
         private PersonnelUnitService $personnelUnitService,
-        private PersonnelCustomFieldService $personnelCustomFieldService
+        private PersonnelCustomFieldService $personnelCustomFieldService,
+        private ExcelService $excelService
     ) {
         $this->repository = app(PersonnelRepository::class);
     }
@@ -89,5 +90,75 @@ class PersonnelService extends BaseService
             return;
 
         $data->personnelPivotPersonnelCustomField()->insert($pivot);
+    }
+
+    public function synctheticExcel(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $records = $this->list($request);
+
+            $header = $this->createHeaderSynctheticExcel();
+            $data = $this->createDataSynctheticExcel($records ?? []);
+
+            $sheets = [
+                (object) [
+                    'name' => 'personnels',
+                    'header' => $header,
+                    'data' => $data,
+                    'boldRows' => [1],
+                    'boldItalicRows' => [],
+                    'italicRows' => [],
+                    'centerColumns' => [],
+                    'centerRows' => [],
+                    'filterStartRow' => 1,
+                    'freezePane' => 'freezeTopRow',
+                ],
+            ];
+
+            return $this->getAssetUrl($this->excelService->createExcel($sheets, 'uploads/render', 'PersonnelSyncthetic_' . date('d-m-Y-H-i-s') . '.xlsx'));
+        });
+    }
+
+    private function createHeaderSynctheticExcel()
+    {
+        $customNames = $this->personnelCustomFieldService->getNames();
+        $titles = array_merge(
+            [
+                'Tên nhân sự',
+                'Đơn vị',
+                'Trình độ học vấn',
+            ],
+            $customNames
+        );
+
+        $headerExcel = [
+            array_map(fn($item) => [
+                'name' => $item,
+                'rowspan' => 1,
+                'colspan' => 1,
+            ], $titles),
+        ];
+        return $headerExcel;
+    }
+
+    private function createDataSynctheticExcel(array $records)
+    {
+        $data = array_map(function ($item) {
+            return array_merge(
+                [
+                    $item['name'],
+                    implode(' - ', array_filter([
+                        $item['personnel_unit']['short_name'] ?? null,
+                        $item['personnel_unit']['name'] ?? null,
+                    ], fn($item) => !empty($item))),
+                    $item['educational_level'],
+                ],
+                array_map(function ($subItem) {
+                    return $subItem['value'];
+                }, $item['personnel_pivot_personnel_custom_field'] ?? []),
+            );
+        }, $records);
+
+        return $data;
     }
 }

@@ -12,7 +12,7 @@ class PersonnelRepository extends BaseRepository
         $this->relations = [
             'createdBy',
             'personnelUnit',
-            'personnelPivotPersonnelCustomField.personnelCustomField',
+            'personnelPivotPersonnelCustomField.personnelCustomField' => fn($q) => $q->orderBy('z_index', 'desc'),
         ];
     }
 

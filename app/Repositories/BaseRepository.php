@@ -12,6 +12,11 @@ abstract class BaseRepository
     public $model;
     public $relations = [];
 
+    public function getUniqueColumn(string $column, string $sortBy = 'id', string $orderBy = 'desc')
+    {
+        return $this->model->orderBy($sortBy, $orderBy)->pluck($column)->unique()->toArray();
+    }
+
     public function getColumns()
     {
         return \Schema::getColumnListing($this->model->getTable());

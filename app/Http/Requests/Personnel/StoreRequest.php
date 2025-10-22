@@ -32,9 +32,6 @@ class StoreRequest extends BaseRequest
                 case 'date':
                     $rules[$field['field']][] = 'date_format:Y-m-d';
                     break;
-                case 'datetime-local':
-                    $rules[$field['field']][] = 'date_format:Y-m-d\TH:i';
-                    break;
                 case 'text':
                     $rules[$field['field']][] = 'max:255';
                     break;

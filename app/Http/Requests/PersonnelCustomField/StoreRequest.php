@@ -19,6 +19,7 @@ class StoreRequest extends BaseRequest
     {
         return [
             'created_by' => 'required|exists:users,id',
+            'z_index' => 'required|integer',
             'name' => 'required|max:255|unique:personnel_custom_fields,name',
             'field' => 'required|max:255|unique:personnel_custom_fields,field',
             'type' => 'required|in:text,date,datetime-local,number',

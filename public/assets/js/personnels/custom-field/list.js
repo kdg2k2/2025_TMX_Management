@@ -1,6 +1,10 @@
 const renderColumns = () => {
     return [
         {
+            data: "z_index",
+            title: "Độ ưu tiên",
+        },
+        {
             data: "name",
             title: "Tên hiển thị",
         },

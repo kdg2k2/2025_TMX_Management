@@ -13,9 +13,6 @@ class HandlerUploadFileService extends BaseService
         $folderSave = "uploads/$rootFolder/$folder";
         $destinationPath = $this->getAbsolutePublicPath($folderSave);
 
-        if (!is_dir($destinationPath))
-            mkdir($destinationPath, 0777, true);
-
         // Nếu là file dạng UploadedFile (từ request upload)
         if ($file instanceof \Illuminate\Http\UploadedFile) {
             $imageName = uniqid($folder) . '.' . $file->getClientOriginalExtension();
@@ -40,11 +37,17 @@ class HandlerUploadFileService extends BaseService
 
     public function getAbsolutePublicPath(string $filePath)
     {
+        $destinationPath = null;
         if (\Illuminate\Support\Str::startsWith($filePath, public_path())) {
-            return $filePath;
+            $destinationPath = $filePath;
         } else {
-            return public_path($filePath);
+            $destinationPath = public_path($filePath);
         }
+
+        if (!is_dir($destinationPath))
+            mkdir($destinationPath, 0777, true);
+
+        return $destinationPath;
     }
 
     public function removeFiles(array|string $paths = null)
@@ -148,8 +151,6 @@ class HandlerUploadFileService extends BaseService
 
         $folder = $folder . '/' . auth()->id() . '/' . date('d-m-Y');
         $uploadsDir = $this->getAbsolutePublicPath($folder);
-        if (!is_dir($uploadsDir))
-            mkdir($uploadsDir, 0777, true);
 
         try {
             $fileTmpLoc = $file->getPathname();

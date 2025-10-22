@@ -21,10 +21,6 @@ class PersonnelCustomField extends Model
             'original' => 'date',
             'converted' => 'Date',
         ],
-        'datetime-local' => [
-            'original' => 'datetime-local',
-            'converted' => 'Datetime',
-        ],
         'number' => [
             'original' => 'number',
             'converted' => 'Integer',

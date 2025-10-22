@@ -82,6 +82,7 @@
         const rejectUrl = @json(route('build-software.reject'));
         const updateStateUrl = @json(route('build-software.update-state'));
     </script>
+    <script src="assets/js/http-request/base-list.js"></script>
     <script src="assets/js/build-software/list.js"></script>
     <script src="assets/js/build-software/modals.js"></script>
 @endsection

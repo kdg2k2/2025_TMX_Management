@@ -25,14 +25,26 @@ const officeFormats = [
 ];
 
 const validateUrl = (url) => {
-    // Kiểm tra URL hợp lệ
-    let validUrl;
     try {
         return new URL(url);
     } catch (e) {
         const mess = "URL không hợp lệ";
         alertErr(mess);
         throw new Error(mess);
+    }
+};
+
+const createLinkPreviewFileOnline = (url, type) => {
+    if (!url) return null;
+
+    const encodedUrl = encodeURIComponent(url);
+    switch (type) {
+        case 1:
+            return `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}&embedded=true`;
+        case 2:
+            return `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodedUrl}`;
+        default:
+            return null;
     }
 };
 
@@ -43,13 +55,9 @@ const viewFileHandler = (url) => {
         const extension = pathname.split(".").pop().toLowerCase();
 
         if (officeFormats.includes(extension)) {
-            const encodedUrl = encodeURIComponent(url);
-            const previewUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}&embedded=true`;
-            window.open(previewUrl, "_blank");
+            window.open(createLinkPreviewFileOnline(url, 1), "_blank");
         } else if (extension === "pdf") {
-            const encodedUrl = encodeURIComponent(url);
-            const previewUrl = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodedUrl}`;
-            window.open(previewUrl, "_blank");
+            window.open(createLinkPreviewFileOnline(url, 2), "_blank");
         } else {
             downloadFile(url);
         }

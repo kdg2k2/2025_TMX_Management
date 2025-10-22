@@ -167,6 +167,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
     Route::prefix('personnels')->group(function () {
         Route::controller(PersonnelController::class)->group(function () {
             Route::get('list', 'list')->name('api.personnels.list');
+            Route::get('syncthetic-excel', 'synctheticExcel')->name('api.personnels.syncthetic-excel');
             Route::post('store', 'store')->name('api.personnels.store');
             Route::patch('update', 'update')->name('api.personnels.update');
         });

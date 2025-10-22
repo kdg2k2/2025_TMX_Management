@@ -11,6 +11,13 @@ class PersonnelCustomFieldService extends BaseService
         $this->repository = app(PersonnelCustomFieldRepository::class);
     }
 
+    public function beforeListQuery(array $request)
+    {
+        $request = parent::beforeListQuery($request);
+        $request['order_by'] = 'z_index';
+        return $request;
+    }
+
     public function getCreateOrUpdateBaseData(int $id = null)
     {
         $res = [];
@@ -32,7 +39,14 @@ class PersonnelCustomFieldService extends BaseService
     public function getFields()
     {
         return $this->tryThrow(function () {
-            return $this->repository->getFields();
+            return $this->repository->getUniqueColumn('field', 'z_index');
+        });
+    }
+
+    public function getNames()
+    {
+        return $this->tryThrow(function () {
+            return $this->repository->getUniqueColumn('name', 'z_index');
         });
     }
 

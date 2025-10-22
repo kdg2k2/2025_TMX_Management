@@ -8,8 +8,6 @@ const renderColumns = () => {
             data: null,
             title: "Đơn vị",
             render: (data, type, row) => {
-                console.log({ row });
-
                 return [
                     row?.personnel_unit?.short_name || null,
                     row?.personnel_unit?.name || null,
