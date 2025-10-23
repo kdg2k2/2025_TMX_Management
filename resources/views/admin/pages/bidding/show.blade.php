@@ -23,7 +23,7 @@
                     'title' => 'Tư cách hợp lệ',
                     'icon' => 'ti ti-certificate',
                     'content' => view('admin.pages.bidding.partials.eligibility')->render(),
-                    'onclick' => '()=>{}',
+                    'onclick' => 'tabBiddingEligibility()',
                 ],
                 [
                     'title' => 'Sở hữu phần mềm',
@@ -69,14 +69,19 @@
         const deleteBiddingContractorExperienceUrl = @json(route('api.bidding.contractor-experience.delete'));
         const deleteByContractIdBiddingContractorExperienceUrl = @json(route('api.bidding.contractor-experience.delete-by-contract-id'));
 
-        const listEligibilitiesUrl = @json(route('api.eligibilities.list'));
+        const listEligibilityUrl = @json(route('api.eligibilities.list'));
+        const listBiddingEligibilityUrl = @json(route('api.bidding.eligibility.list'));
+        const storeBiddingEligibilityUrl = @json(route('api.bidding.eligibility.store'));
+        const deleteBiddingEligibilityUrl = @json(route('api.bidding.eligibility.delete'));
+        const deleteByEligibilityIdBiddingEligibilityUrl = @json(route('api.bidding.eligibility.delete-by-eligibility-id'));
+
         const listProofContractsUrl = @json(route('api.proof_contracts.list'));
         const listSoftwareOwnershipsUrl = @json(route('api.software_ownerships.list'));
         const listPersonnelsUrl = @json(route('api.personnels.list'));
     </script>
     <script src="assets/js/bidding/show/script.js"></script>
     <script type="module" src="assets/js/bidding/show/contractor-experience.js"></script>
-    {{-- <script src="assets/js/bidding/show/eligibility.js"></script> --}}
+    <script src="assets/js/bidding/show/eligibility.js"></script>
     {{-- <script src="assets/js/bidding/show/software-ownership.js"></script> --}}
     {{-- <script src="assets/js/bidding/show/implementation-personnel.js"></script> --}}
     {{-- <script src="assets/js/bidding/show/proof-contract.js"></script> --}}

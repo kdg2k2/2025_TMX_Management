@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BiddingContractorExperienceController;
 use App\Http\Controllers\Api\BiddingController;
+use App\Http\Controllers\Api\BiddingEligibilityController;
 use App\Http\Controllers\Api\BuildSoftwareController;
 use App\Http\Controllers\Api\ContractAdvancePaymentController;
 use App\Http\Controllers\Api\ContractAppendixController;
@@ -151,6 +152,13 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::post('store', 'store')->name('api.bidding.contractor-experience.store');
             Route::delete('delete', 'delete')->name('api.bidding.contractor-experience.delete');
             Route::delete('delete-by-contract-id', 'deleteByContractId')->name('api.bidding.contractor-experience.delete-by-contract-id');
+        });
+
+        Route::prefix('eligibility')->controller(BiddingEligibilityController::class)->group(function () {
+            Route::get('list', 'list')->name('api.bidding.eligibility.list');
+            Route::post('store', 'store')->name('api.bidding.eligibility.store');
+            Route::delete('delete', 'delete')->name('api.bidding.eligibility.delete');
+            Route::delete('delete-by-eligibility-id', 'deleteByEligibilityIdRequest')->name('api.bidding.eligibility.delete-by-eligibility-id');
         });
     });
 

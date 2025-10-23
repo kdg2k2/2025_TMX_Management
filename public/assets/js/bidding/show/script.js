@@ -82,6 +82,9 @@ const getParamsByType = (id, type) => {
             params["contract_id"] = id;
             params["file_type"] = $("select[name='file_type']").val();
             break;
+        case "bidding_eligibility":
+            params["eligibility_id"] = id;
+            break;
 
         default:
             break;
