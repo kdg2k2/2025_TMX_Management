@@ -1,33 +1,34 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\BiddingContractorExperienceController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\BiddingController;
-use App\Http\Controllers\Api\BiddingEligibilityController;
-use App\Http\Controllers\Api\BuildSoftwareController;
-use App\Http\Controllers\Api\ContractAdvancePaymentController;
-use App\Http\Controllers\Api\ContractAppendixController;
-use App\Http\Controllers\Api\ContractBillController;
 use App\Http\Controllers\Api\ContractController;
+use App\Http\Controllers\Api\PersonnelController;
+use App\Http\Controllers\Api\EligibilityController;
+use App\Http\Controllers\Api\ContractBillController;
 use App\Http\Controllers\Api\ContractFileController;
-use App\Http\Controllers\Api\ContractFileTypeController;
-use App\Http\Controllers\Api\ContractFinanceController;
-use App\Http\Controllers\Api\ContractInvestorController;
-use App\Http\Controllers\Api\ContractPaymentController;
-use App\Http\Controllers\Api\ContractScanFileController;
-use App\Http\Controllers\Api\ContractScanFileTypeController;
 use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
-use App\Http\Controllers\Api\EligibilityController;
-use App\Http\Controllers\Api\PersonnelController;
-use App\Http\Controllers\Api\PersonnelCustomFieldController;
+use App\Http\Controllers\Api\BuildSoftwareController;
 use App\Http\Controllers\Api\PersonnelFileController;
-use App\Http\Controllers\Api\PersonnelFileTypeController;
 use App\Http\Controllers\Api\PersonnelUnitController;
 use App\Http\Controllers\Api\ProofContractController;
+use App\Http\Controllers\Api\ContractFinanceController;
+use App\Http\Controllers\Api\ContractPaymentController;
+use App\Http\Controllers\Api\ContractAppendixController;
+use App\Http\Controllers\Api\ContractFileTypeController;
+use App\Http\Controllers\Api\ContractInvestorController;
+use App\Http\Controllers\Api\ContractScanFileController;
+use App\Http\Controllers\Api\PersonnelFileTypeController;
 use App\Http\Controllers\Api\SoftwareOwnershipController;
-use App\Http\Controllers\Api\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\BiddingEligibilityController;
+use App\Http\Controllers\Api\ContractScanFileTypeController;
+use App\Http\Controllers\Api\PersonnelCustomFieldController;
+use App\Http\Controllers\Api\ContractAdvancePaymentController;
+use App\Http\Controllers\Api\BinddingSoftwareOwnershipController;
+use App\Http\Controllers\Api\BiddingContractorExperienceController;
 
 // Auth routes
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
@@ -159,6 +160,13 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::post('store', 'store')->name('api.bidding.eligibility.store');
             Route::delete('delete', 'delete')->name('api.bidding.eligibility.delete');
             Route::delete('delete-by-eligibility-id', 'deleteByEligibilityIdRequest')->name('api.bidding.eligibility.delete-by-eligibility-id');
+        });
+
+        Route::prefix('software-ownership')->controller(BinddingSoftwareOwnershipController::class)->group(function () {
+            Route::get('list', 'list')->name('api.bidding.software-ownership.list');
+            Route::post('store', 'store')->name('api.bidding.software-ownership.store');
+            Route::delete('delete', 'delete')->name('api.bidding.software-ownership.delete');
+            Route::delete('delete-by-software-ownership-id', 'deleteBySoftwareOwnershipId')->name('api.bidding.software-ownership.delete-by-software-ownership-id');
         });
     });
 

@@ -29,7 +29,7 @@
                     'title' => 'Sở hữu phần mềm',
                     'icon' => 'ti ti-device-desktop',
                     'content' => view('admin.pages.bidding.partials.software-ownership')->render(),
-                    'onclick' => '()=>{}',
+                    'onclick' => 'tabBiddingSoftwareOwnership()',
                 ],
                 [
                     'title' => 'Nhân sự thực hiện',
@@ -75,14 +75,19 @@
         const deleteBiddingEligibilityUrl = @json(route('api.bidding.eligibility.delete'));
         const deleteByEligibilityIdBiddingEligibilityUrl = @json(route('api.bidding.eligibility.delete-by-eligibility-id'));
 
-        const listProofContractsUrl = @json(route('api.proof_contracts.list'));
         const listSoftwareOwnershipsUrl = @json(route('api.software_ownerships.list'));
+        const listBiddingSoftwareOwnershipUrl = @json(route('api.bidding.software-ownership.list'));
+        const storeBiddingSoftwareOwnershipUrl = @json(route('api.bidding.software-ownership.store'));
+        const deleteBiddingSoftwareOwnershipUrl = @json(route('api.bidding.software-ownership.delete'));
+        const deleteBySoftwareOwnershipIdBiddingSoftwareOwnershipUrl = @json(route('api.bidding.software-ownership.delete-by-software-ownership-id'));
+
+        const listProofContractsUrl = @json(route('api.proof_contracts.list'));
         const listPersonnelsUrl = @json(route('api.personnels.list'));
     </script>
     <script src="assets/js/bidding/show/script.js"></script>
     <script type="module" src="assets/js/bidding/show/contractor-experience.js"></script>
     <script src="assets/js/bidding/show/eligibility.js"></script>
-    {{-- <script src="assets/js/bidding/show/software-ownership.js"></script> --}}
+    <script src="assets/js/bidding/show/software-ownership.js"></script>
     {{-- <script src="assets/js/bidding/show/implementation-personnel.js"></script> --}}
     {{-- <script src="assets/js/bidding/show/proof-contract.js"></script> --}}
     {{-- <script src="assets/js/bidding/show/other-files.js"></script> --}}

@@ -2,23 +2,23 @@
 
 namespace App\Repositories;
 
-use App\Models\BiddingEligibility;
+use App\Models\BinddingSoftwareOwnership;
 
-class BiddingEligibilityRepository extends BaseRepository
+class BinddingSoftwareOwnershipRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new BiddingEligibility();
+        $this->model = new BinddingSoftwareOwnership();
         $this->relations = [
             'createdBy',
-            'eligibility',
+            'softwareOwnership',
         ];
     }
 
     public function updateOrCreate(array $request)
     {
         return $this->model->updateOrCreate([
-            'eligibility_id' => $request['eligibility_id'],
+            'software_ownership_id' => $request['software_ownership_id'],
             'bidding_id' => $request['bidding_id'],
         ], $request);
     }
@@ -36,7 +36,7 @@ class BiddingEligibilityRepository extends BaseRepository
             'date' => [],
             'datetime' => [],
             'relations' => [
-                'eligibility' => ['name'],
+                'softwareOwnership' => ['name'],
             ]
         ];
     }

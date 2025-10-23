@@ -30,9 +30,6 @@ class BiddingEligibilityService extends BaseService
     {
         $array = parent::formatRecord($array);
 
-        if (isset($array['file_type']))
-            $array['file_type'] = $this->repository->getFileType($array['file_type']);
-
         if (isset($array['eligibility']))
             $array['eligibility'] = $this->eligibilityService->formatRecord($array['eligibility']);
 

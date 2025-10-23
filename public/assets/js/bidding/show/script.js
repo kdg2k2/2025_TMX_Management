@@ -33,15 +33,16 @@ const initOriginalTable = (
         callbackAfterRender,
         true,
         (isChecked, rowData, checkbox) => {
-            handleCheckeChange(
-                resultSummary[selectedArrayKey],
-                isChecked,
-                rowData?.id,
-                callbackAfterCheckedChange,
-                storeUrl,
-                type,
-                deleteUrl
-            );
+            if (rowData)
+                handleCheckeChange(
+                    resultSummary[selectedArrayKey],
+                    isChecked,
+                    rowData.id,
+                    callbackAfterCheckedChange,
+                    storeUrl,
+                    type,
+                    deleteUrl
+                );
         }
     );
 };
@@ -65,6 +66,8 @@ const initSelectedTable = (
 };
 
 const storeSelected = async (url, id, type) => {
+    console.log({ url, id, type });
+
     await http.post(url, getParamsByType(id, type));
 };
 
@@ -84,6 +87,9 @@ const getParamsByType = (id, type) => {
             break;
         case "bidding_eligibility":
             params["eligibility_id"] = id;
+            break;
+        case "bindding_software_ownerships":
+            params["software_ownership_id"] = id;
             break;
 
         default:
