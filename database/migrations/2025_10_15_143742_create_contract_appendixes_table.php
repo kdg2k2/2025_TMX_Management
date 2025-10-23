@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('contract_appendixes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('người tạo-cập nhật');
+            $table->foreignId('created_by')->comment('người tạo-cập nhật')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('contract_id')->comment('khóa ngoại hợp đồng')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->integer('times')->default(1)->comment('số lần gia hạn hợp đồng');
             $table->string('content')->nullable()->comment('nội dung');

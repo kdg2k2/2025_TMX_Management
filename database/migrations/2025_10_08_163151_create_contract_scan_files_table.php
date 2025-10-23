@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->foreignId('contract_id')->comment('khóa ngoại hợp đồng')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('type_id')->constrained('contract_scan_file_types')->cascadeOnDelete()->cascadeOnUpdate();
             $table->text('path')->nullable()->comment('đường dẫn lưu file');
-            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('người tạo-cập nhật');
+            $table->foreignId('created_by')->comment('người tạo-cập nhật')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

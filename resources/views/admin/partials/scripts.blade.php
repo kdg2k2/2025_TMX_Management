@@ -12,7 +12,6 @@
 
 <script src="assets/js/components/button.js"></script>
 <script src="assets/js/components/badge.js"></script>
-<script src="assets/js/components/pagination.js"></script>
 
 <script src="assets/js/auth/logout.js"></script>
 

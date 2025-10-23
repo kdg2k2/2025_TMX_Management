@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BiddingContractorExperienceController;
 use App\Http\Controllers\Api\BiddingController;
 use App\Http\Controllers\Api\BuildSoftwareController;
 use App\Http\Controllers\Api\ContractAdvancePaymentController;
@@ -143,6 +144,12 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::get('list', 'list')->name('api.bidding.list');
             Route::post('store', 'store')->name('api.bidding.store');
             Route::patch('update', 'update')->name('api.bidding.update');
+        });
+
+        Route::prefix('contractor-experience')->controller(BiddingContractorExperienceController::class)->group(function () {
+            Route::get('list', 'list')->name('api.bidding.contractor-experience.list');
+            Route::post('store', 'store')->name('api.bidding.contractor-experience.store');
+            Route::delete('delete', 'delete')->name('api.bidding.contractor-experience.delete');
         });
     });
 

@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('name')->unique()->comment('tên cột hiển thị');
             $table->string('field')->unique()->comment('tên cột lưu db');
             $table->enum('type', ['text', 'date', 'number']);
-            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('người tạo-cập nhật');
+            $table->foreignId('created_by')->comment('người tạo-cập nhật')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

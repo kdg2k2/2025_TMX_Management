@@ -1,146 +1,175 @@
-var contractData = [];
-var selectedItems = [];
-var currentPage = 1;
-var selectedPage = 1;
-var perPage = 10;
-var searchTerm = '';
-var selectedSearchTerm = '';
+const originalContractorExperience = document.getElementById(
+    "original-contractor-experience"
+);
+const selectedContractorExperience = document.getElementById(
+    "selected-contractor-experience"
+);
 
-const loadContractData = async (page = 1, search = '') => {
-    const res = await http.get(listContractUrl, {
-        paginate: 1,
-        page: page,
-        per_page: perPage,
-        search: search,
-    });
-
-    if (res.data) {
-        contractData = res.data;
-        renderOriginalList();
-        createPagination(res.data, 'original', changePage);
-    }
-};
-
-const renderOriginalList = () => {
-    const list = document.getElementById('original-list-contractor-experience');
-    list.innerHTML = '';
-
-    if (contractData.data && contractData.data.length > 0) {
-        contractData.data.forEach(item => {
-            const isChecked = selectedItems.some(selected => selected.id === item.id);
-            const li = document.createElement('li');
-            li.className = 'list-group-item';
-            li.innerHTML = `
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox"
-                           value="${item.id}"
-                           id="check-${item.id}"
-                           ${isChecked ? 'checked' : ''}>
-                    <label class="form-check-label" for="check-${item.id}">
-                        ${item.name}
-                    </label>
-                </div>
-            `;
-
-            // Add event listener
-            const checkbox = li.querySelector(`#check-${item.id}`);
-            checkbox.addEventListener('change', (e) => {
-                handleCheckbox(item.id, e.target.checked);
-            });
-
-            list.appendChild(li);
-        });
-    } else {
-        list.innerHTML = '<li class="list-group-item text-center text-muted">Không có dữ liệu</li>';
-    }
-};
-
-const renderSelectedList = () => {
-    const list = document.getElementById('selected-list-contractor-experience');
-    list.innerHTML = '';
-
-    const start = (selectedPage - 1) * perPage;
-    const end = start + perPage;
-    const filteredItems = selectedItems.filter(item =>
-        item.name.toLowerCase().includes(selectedSearchTerm.toLowerCase())
-    );
-    const paginatedItems = filteredItems.slice(start, end);
-
-    if (paginatedItems.length > 0) {
-        paginatedItems.forEach(item => {
-            const li = document.createElement('li');
-            li.className = 'list-group-item d-flex justify-content-between align-items-center';
-
-            const span = document.createElement('span');
-            span.textContent = item.name;
-            li.appendChild(span);
-
-            const deleteBtn = createBtn(
-                'danger',
-                'Xóa',
-                false,
-                {},
-                'ri-close-line',
-                null
+window.loadListContract = () => {
+    initOriginalTable(
+        $(originalContractorExperience),
+        listContractUrl,
+        [
+            {
+                data: "year",
+                title: "Năm",
+            },
+            {
+                data: "name",
+                title: "Tên HĐ",
+            },
+            {
+                data: null,
+                title: "Chủ đầu tư",
+                render: (data, type, row) => {
+                    return [
+                        row?.investor?.name_vi || "",
+                        row?.investor?.name_en || "",
+                    ]
+                        .filter((v) => v != null && v !== "")
+                        .join(" - ");
+                },
+            },
+            {
+                data: "signed_date",
+                title: "Ngày ký",
+            },
+            {
+                data: null,
+                title: "Giá trị HĐ",
+                render: (data, type, row) => {
+                    return row?.contract_value
+                        ? fmNumber(row?.contract_value) + " vnđ"
+                        : "";
+                },
+            },
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                title: "Hành động",
+                className: "text-center",
+                render: (data, type, row) => {
+                    return `
+                        ${
+                            row.path_file_full
+                                ? createBtn(
+                                      "info",
+                                      "Xem file full",
+                                      false,
+                                      {},
+                                      "ti ti-file-type-pdf",
+                                      `viewFileHandler('${row.path_file_full}')`
+                                  )?.outerHTML
+                                : ""
+                        }
+                        ${
+                            row.path_file_short
+                                ? createBtn(
+                                      "info",
+                                      "Xem file short",
+                                      false,
+                                      {},
+                                      "ti ti-file-type-pdf",
+                                      `viewFileHandler('${row.path_file_short}')`
+                                  )?.outerHTML
+                                : ""
+                        }
+                `;
+                },
+            },
+        ],
+        (res) => {
+            handleOriginalTableChangePage(
+                originalContractorExperience,
+                "contractorExperience"
             );
-            deleteBtn.addEventListener('click', () => removeItem(item.id));
-
-            li.appendChild(deleteBtn);
-            list.appendChild(li);
-        });
-    } else {
-        list.innerHTML = '<li class="list-group-item text-center text-muted">Chưa có mục nào được chọn</li>';
-    }
-
-    createPagination({
-        current_page: selectedPage,
-        last_page: Math.ceil(filteredItems.length / perPage),
-        total: filteredItems.length
-    }, 'selected', changeSelectedPage);
+        },
+        resultSummary["contractorExperience"],
+        storeBiddingContractorExperienceUrl,
+        "bidding_contractor_experiences",
+        deleteBiddingContractorExperienceUrl,
+        "loadListBiddingContractorExperience"
+    );
 };
 
-const changePage = (page) => {
-    currentPage = page;
-    loadContractData(page, searchTerm);
-};
-
-const changeSelectedPage = (page) => {
-    selectedPage = page;
-    renderSelectedList();
-};
-
-const handleCheckbox = (id, checked) => {
-    if (checked) {
-        const item = contractData.data.find(item => item.id === id);
-        if (item && !selectedItems.some(selected => selected.id === id)) {
-            selectedItems.push(item);
+window.loadListBiddingContractorExperience = () => {
+    initSelectedTable(
+        $(selectedContractorExperience),
+        listBiddingContractorExperienceUrl,
+        [
+            {
+                data: null,
+                title: "Năm",
+                render: (data, type, row) => {
+                    return row?.contract?.year || "";
+                },
+            },
+            {
+                data: null,
+                title: "Tên HĐ",
+                render: (data, type, row) => {
+                    return row?.contract?.name || "";
+                },
+            },
+            {
+                data: null,
+                title: "Bản HĐ",
+                render: (data, type, row) => {
+                    return row?.file_type?.converted || "";
+                },
+            },
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                title: "Hành động",
+                className: "text-center",
+                render: (data, type, row) => {
+                    return `
+                        ${
+                            row?.contract?.path_file_full &&
+                            row?.file_type?.original == "path_file_full"
+                                ? createBtn(
+                                      "info",
+                                      "Xem file full",
+                                      false,
+                                      {},
+                                      "ti ti-file-type-pdf",
+                                      `viewFileHandler('${row?.contract?.path_file_full}')`
+                                  )?.outerHTML
+                                : ""
+                        }
+                        ${
+                            row?.contract?.path_file_short &&
+                            row?.file_type?.original == "path_file_short"
+                                ? createBtn(
+                                      "info",
+                                      "Xem file short",
+                                      false,
+                                      {},
+                                      "ti ti-file-type-pdf",
+                                      `viewFileHandler('${row?.contract?.path_file_short}')`
+                                  )?.outerHTML
+                                : ""
+                        }
+                        ${createDeleteBtn(
+                            `${deleteBiddingContractorExperienceUrl}?id=${row.id}`,
+                            "loadListBiddingContractorExperience"
+                        )}
+                `;
+                },
+            },
+        ],
+        (res) => {
+            const ids = (resultSummary["contractorExperience"] =
+                res?.data?.data?.map((item) => item?.contract_id) || []);
+            findAndChecked(originalContractorExperience, ids);
         }
-    } else {
-        selectedItems = selectedItems.filter(item => item.id !== id);
-    }
-    renderSelectedList();
-};
-
-const removeItem = (id) => {
-    selectedItems = selectedItems.filter(item => item.id !== id);
-    renderSelectedList();
-    renderOriginalList();
+    );
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    loadContractData();
-
-    // Search left
-    document.querySelector('.search-left').addEventListener('input', (e) => {
-        searchTerm = e.target.value;
-        currentPage = 1;
-        loadContractData(currentPage, searchTerm);
-    });
-
-    // Search right
-    document.querySelector('.search-right').addEventListener('input', (e) => {
-        selectedSearchTerm = e.target.value;
-        selectedPage = 1;
-        renderSelectedList();
-    });
+    loadListContract();
+    loadListBiddingContractorExperience();
 });

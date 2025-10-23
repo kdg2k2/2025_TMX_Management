@@ -60,6 +60,19 @@ const initializeBaseDataTable = (element, additionalConfig = {}) => {
     // Khởi tạo các event cho tooltip
     initializeTooltipEvents(dataTable);
 
+    // Gắn event checkbox SAU KHI khởi tạo DataTable
+    if (
+        additionalConfig.onCheckboxChange &&
+        typeof additionalConfig.onCheckboxChange === "function"
+    ) {
+        // Sử dụng event delegation để tránh mất event sau khi redraw
+        element.on("change", ".row-checkbox", function () {
+            const row = $(this).closest("tr");
+            const data = dataTable.row(row).data();
+            additionalConfig.onCheckboxChange(this.checked, data, this);
+        });
+    }
+
     return dataTable;
 };
 
@@ -122,12 +135,35 @@ const createDataTableServerSide = (
     columns,
     mapFn,
     extraParams = {},
-    func = () => {}
+    callbackAfterRender = () => {},
+    enableCheckbox = false,
+    onCheckboxChange = null
 ) => {
     var serverResponse = null;
+
+    // Thêm cột checkbox vào đầu nếu enableCheckbox = true
+    const finalColumns = enableCheckbox
+        ? [
+              {
+                  data: null,
+                  orderable: false,
+                  searchable: false,
+                  className: "text-center",
+                  width: "50px",
+                  render: (data, type, row) => {
+                      return `<input type="checkbox" class="row-checkbox" data-id="${
+                          row.id || ""
+                      }">`;
+                  },
+              },
+              ...columns,
+          ]
+        : columns;
+
     const serverSideConfig = {
         serverSide: true,
-        columns,
+        columns: finalColumns,
+        onCheckboxChange: onCheckboxChange,
         ajax: (data, callback) => {
             const page = Math.floor(data.start / data.length) + 1;
             const perPage = data.length;
@@ -154,9 +190,9 @@ const createDataTableServerSide = (
             });
         },
         drawCallback: function () {
-            // Gọi func SAU KHI data đã được load
-            if (typeof func === "function" && serverResponse)
-                func(serverResponse);
+            // Gọi callbackAfterRender SAU KHI data đã được load
+            if (typeof callbackAfterRender === "function" && serverResponse)
+                callbackAfterRender(serverResponse);
         },
     };
 

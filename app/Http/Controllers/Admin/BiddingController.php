@@ -51,9 +51,7 @@ class BiddingController extends Controller
     public function show(FindByIdRequest $request)
     {
         return $this->catchWeb(function () use ($request) {
-            return view('admin.pages.bidding.show', [
-                'data' => $this->service->findById($request->validated()['id'])
-            ]);
+            return view('admin.pages.bidding.show', $this->service->getShowBaseData($request->validated()['id']));
         });
     }
 }

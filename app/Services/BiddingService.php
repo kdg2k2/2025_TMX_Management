@@ -10,4 +10,11 @@ class BiddingService extends BaseService
     {
         $this->repository = app(BiddingRepository::class);
     }
+
+    public function getShowBaseData(int $id){
+        return [
+            'data' => $this->repository->findById($id, false),
+            'biddingContractorExperienceFileTypes' => app(BiddingContractorExperienceService::class)->getFileType(),
+        ];
+    }
 }

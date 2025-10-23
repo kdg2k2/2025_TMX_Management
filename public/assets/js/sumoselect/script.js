@@ -97,7 +97,7 @@ const initSumoSelect = (selector, placeholder = "Chọn...") => {
 };
 
 const getSelects = () => {
-    return $("select");
+    return $("select").not('.un-sumo');
 };
 
 const refreshSumoSelect = (selects = null) => {

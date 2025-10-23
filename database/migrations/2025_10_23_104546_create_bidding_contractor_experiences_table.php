@@ -10,18 +10,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        // hóa đơn
-        Schema::create('contract_bills', function (Blueprint $table) {
+        // kinh nghiệm nhà thầu - đấu thầu
+        Schema::create('bidding_contractor_experiences', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId('created_by')->comment('người tạo-cập nhật')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('bill_collector')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate()->comment('người phụ trách lấy');
+            $table->foreignId('bidding_id')->comment('khóa ngoại gói thầu')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('contract_id')->comment('khóa ngoại hợp đồng')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->text('path')->nullable()->comment('đường dẫn lưu file');
-            $table->bigInteger('amount')->comment('số tiền');
-            $table->date('duration')->comment('thời hạn');
-            $table->text('content_in_the_estimate')->comment('Nội dung trong dự toán');
-            $table->string('note')->nullable()->comment('ghi chú');
+            $table->enum('file_type', ['path_file_full', 'path_file_short'])->default('path_file_full')->comment('bản hợp đồng');
+            $table->unique(['bidding_id', 'contract_id']);
         });
     }
 
@@ -30,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('contract_bills');
+        Schema::dropIfExists('bidding_contractor_experiences');
     }
 };
