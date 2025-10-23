@@ -150,6 +150,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::get('list', 'list')->name('api.bidding.contractor-experience.list');
             Route::post('store', 'store')->name('api.bidding.contractor-experience.store');
             Route::delete('delete', 'delete')->name('api.bidding.contractor-experience.delete');
+            Route::delete('delete-by-contract-id', 'deleteByContractId')->name('api.bidding.contractor-experience.delete-by-contract-id');
         });
     });
 

@@ -26,6 +26,13 @@ class BiddingContractorExperienceService extends BaseService
         });
     }
 
+    public function deleteByContractId(int $id)
+    {
+        return $this->tryThrow(function () use ($id) {
+            return $this->repository->findByKey($id, 'contract_id', false)->delete();
+        }, true);
+    }
+
     public function formatRecord(array $array)
     {
         $array = parent::formatRecord($array);

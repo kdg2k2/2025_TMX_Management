@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BiddingContractorExperience\DeleteByContractIdRequest;
 use App\Http\Requests\BiddingContractorExperience\DeleteRequest;
 use App\Http\Requests\BiddingContractorExperience\ListRequest;
 use App\Http\Requests\BiddingContractorExperience\StoreRequest;
@@ -43,4 +44,15 @@ class BiddingContractorExperienceController extends Controller
             ]);
         });
     }
+
+    public function deleteByContractId(DeleteByContractIdRequest $request)
+    {
+        return $this->catchAPI(function () use ($request) {
+            return response()->json([
+                'data' => $this->service->deleteByContractId($request->validated()['id']),
+                'message' => config('message.delete'),
+            ]);
+        });
+    }
+
 }

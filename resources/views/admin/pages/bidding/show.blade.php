@@ -17,7 +17,7 @@
                     'content' => view('admin.pages.bidding.partials.contractor-experience', [
                         'biddingContractorExperienceFileTypes' => $biddingContractorExperienceFileTypes,
                     ])->render(),
-                    'onclick' => '()=>{}',
+                    'onclick' => 'tabBiddingContractorExperience()',
                 ],
                 [
                     'title' => 'Tư cách hợp lệ',
@@ -60,30 +60,6 @@
         </div>
     </div>
 @endsection
-@section('modals')
-    <x-modal id="confirm-delete-modal" title="Xác nhận xóa" size="sm" :nested="true">
-        <x-slot:body>
-            <p class="mb-0">Bạn có chắc chắn muốn xóa mục này không?</p>
-            <div id="delete-item-info" class="mt-2 text-muted small"></div>
-        </x-slot:body>
-
-        <x-slot:footer>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-            <button type="button" class="btn btn-danger" id="confirm-delete-btn">Xóa</button>
-        </x-slot:footer>
-    </x-modal>
-
-    <x-modal id="file-selection-modal" title="Chọn file" size="md" :nested="true">
-        <x-slot:body>
-            <p class="mb-3">Chọn file bạn muốn sử dụng:</p>
-            <div id="file-selection-list" class="list-group"></div>
-        </x-slot:body>
-
-        <x-slot:footer>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-        </x-slot:footer>
-    </x-modal>
-@endsection
 @section('scripts')
     <script>
         const $data = @json($data ?? null);
@@ -91,6 +67,7 @@
         const listBiddingContractorExperienceUrl = @json(route('api.bidding.contractor-experience.list'));
         const storeBiddingContractorExperienceUrl = @json(route('api.bidding.contractor-experience.store'));
         const deleteBiddingContractorExperienceUrl = @json(route('api.bidding.contractor-experience.delete'));
+        const deleteByContractIdBiddingContractorExperienceUrl = @json(route('api.bidding.contractor-experience.delete-by-contract-id'));
 
         const listEligibilitiesUrl = @json(route('api.eligibilities.list'));
         const listProofContractsUrl = @json(route('api.proof_contracts.list'));

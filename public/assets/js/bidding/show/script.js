@@ -16,7 +16,7 @@ const initOriginalTable = (
     listUrl,
     columns = [],
     callbackAfterRender = () => {},
-    selectedArray = [],
+    selectedArrayKey,
     storeUrl,
     type,
     deleteUrl,
@@ -34,7 +34,7 @@ const initOriginalTable = (
         true,
         (isChecked, rowData, checkbox) => {
             handleCheckeChange(
-                selectedArray,
+                resultSummary[selectedArrayKey],
                 isChecked,
                 rowData?.id,
                 callbackAfterCheckedChange,

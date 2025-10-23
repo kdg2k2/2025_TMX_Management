@@ -68,9 +68,12 @@ abstract class BaseRepository
         })->get();
     }
 
-    public function findByKey(string $key, $column)
+    public function findByKey(string $key, $column, bool $useBinarySearch = true)
     {
-        $query = $this->model->whereRaw("BINARY $column = ?", [$key]);
+        if ($useBinarySearch)
+            $query = $this->model->whereRaw("BINARY $column = ?", [$key]);
+        else
+            $query = $this->model->where($column, $key);
         return $query->first();
     }
 

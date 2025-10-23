@@ -85,10 +85,10 @@ window.loadListContract = () => {
                 "contractorExperience"
             );
         },
-        resultSummary["contractorExperience"],
+        "contractorExperience",
         storeBiddingContractorExperienceUrl,
         "bidding_contractor_experiences",
-        deleteBiddingContractorExperienceUrl,
+        deleteByContractIdBiddingContractorExperienceUrl,
         "loadListBiddingContractorExperience"
     );
 };
@@ -169,7 +169,11 @@ window.loadListBiddingContractorExperience = () => {
     );
 };
 
-document.addEventListener("DOMContentLoaded", () => {
+window.tabBiddingContractorExperience = () => {
     loadListContract();
     loadListBiddingContractorExperience();
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    tabBiddingContractorExperience();
 });
