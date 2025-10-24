@@ -37,13 +37,15 @@ window.loadListSoftwareOwnership = () => {
         storeBiddingSoftwareOwnershipUrl,
         "bidding_software_ownerships",
         deleteBySoftwareOwnershipIdBiddingSoftwareOwnershipUrl,
-        "loadListBiddingSoftwareOwnership"
+        () => loadListBiddingSoftwareOwnership()
     );
 };
 
-window.loadListBiddingSoftwareOwnership = () => {
+window.loadListBiddingSoftwareOwnership = (
+    table = selectedSoftwareOwnership
+) => {
     initSelectedTable(
-        $(selectedSoftwareOwnership),
+        $(table),
         listBiddingSoftwareOwnershipUrl,
         [
             {
@@ -87,7 +89,3 @@ window.tabBiddingSoftwareOwnership = () => {
     loadListSoftwareOwnership();
     loadListBiddingSoftwareOwnership();
 };
-
-document.addEventListener("DOMContentLoaded", () => {
-    tabBiddingSoftwareOwnership();
-});

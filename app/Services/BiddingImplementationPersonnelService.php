@@ -7,7 +7,8 @@ use App\Repositories\BiddingImplementationPersonnelRepository;
 class BiddingImplementationPersonnelService extends BaseService
 {
     public function __construct(
-        private PersonnelService $proofContractService
+        private PersonnelService $proofContractService,
+        private BiddingImplementationPersonnelFileService $biddingImplementationPersonnelFileService
     ) {
         $this->repository = app(BiddingImplementationPersonnelRepository::class);
     }
@@ -41,6 +42,9 @@ class BiddingImplementationPersonnelService extends BaseService
 
         if (isset($array['implementation_personnel']))
             $array['implementation_personnel'] = $this->proofContractService->formatRecord($array['implementation_personnel']);
+
+        if (isset($array['files']))
+            $array['files'] = $this->biddingImplementationPersonnelFileService->formatRecords($array['files']);
 
         if (isset($array['job_title']))
             $array['job_title'] = $this->repository->getJobtitle($array['job_title']);

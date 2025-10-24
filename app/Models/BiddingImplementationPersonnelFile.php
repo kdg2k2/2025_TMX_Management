@@ -15,4 +15,9 @@ class BiddingImplementationPersonnelFile extends Model
     {
         return $this->belongsTo(BiddingImplementationPersonnel::class, 'bidding_implementation_personnel_id');
     }
+
+    public function personelFile()
+    {
+        return $this->belongsTo(PersonnelFile::class, 'personnel_file_id');
+    }
 }

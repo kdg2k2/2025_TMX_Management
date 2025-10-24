@@ -55,3 +55,11 @@
         </form>
     </div>
 </div>
+<div class="card">
+    <div class="card-header fw-bold text-success">
+        Nhân sự thực hiện
+    </div>
+    <div class="card-body">
+        <table class="display w-100" id="table-implementation-personnel"></table>
+    </div>
+</div>

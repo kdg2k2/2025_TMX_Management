@@ -75,13 +75,15 @@ window.loadListContract = () => {
         storeBiddingContractorExperienceUrl,
         "bidding_contractor_experiences",
         deleteByContractIdBiddingContractorExperienceUrl,
-        "loadListBiddingContractorExperience"
+        () => loadListBiddingContractorExperience()
     );
 };
 
-window.loadListBiddingContractorExperience = () => {
+window.loadListBiddingContractorExperience = (
+    table = selectedContractorExperience
+) => {
     initSelectedTable(
-        $(selectedContractorExperience),
+        $(table),
         listBiddingContractorExperienceUrl,
         [
             {

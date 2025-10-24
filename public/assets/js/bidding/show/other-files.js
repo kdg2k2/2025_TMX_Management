@@ -26,9 +26,9 @@ const renderRowOrtherFile = () => {
     );
 };
 
-window.loadTableOrtherFile = () => {
+window.loadTableOrtherFile = (table = tableOrtherFile) => {
     createDataTableServerSide(
-        $(tableOrtherFile),
+        $(table),
         listBiddingOrtherFileUrl,
         [
             {
@@ -86,13 +86,7 @@ btnAddRowOrtherFile.addEventListener("click", () => {
 
 ortherFileForm.addEventListener("submit", async (e) => {
     await handleSubmitForm(e, ortherFileForm, () => {
-        console.log("runned");
-
         resetFormRows(ortherFileForm, ortherFileCloneRow);
         loadTableOrtherFile();
     });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    loadTableOrtherFile();
 });

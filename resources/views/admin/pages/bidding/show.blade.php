@@ -17,16 +17,22 @@
                     'content' => view('admin.pages.bidding.partials.contractor-experience', [
                         'biddingContractorExperienceFileTypes' => $biddingContractorExperienceFileTypes,
                     ])->render(),
+            
+                    'onclick' => 'tabBiddingContractorExperience()',
                 ],
                 [
                     'title' => 'Tư cách hợp lệ',
                     'icon' => 'ti ti-certificate',
                     'content' => view('admin.pages.bidding.partials.eligibility')->render(),
+            
+                    'onclick' => 'tabBiddingEligibility()',
                 ],
                 [
                     'title' => 'Sở hữu phần mềm',
                     'icon' => 'ti ti-device-desktop',
                     'content' => view('admin.pages.bidding.partials.software-ownership')->render(),
+            
+                    'onclick' => 'tabBiddingSoftwareOwnership()',
                 ],
                 [
                     'title' => 'Nhân sự thực hiện',
@@ -35,11 +41,15 @@
                         'data' => $data,
                         'biddingimplementationPersonnelJobtitles' => $biddingimplementationPersonnelJobtitles,
                     ])->render(),
+            
+                    'onclick' => 'tabImplementationPersonnel()',
                 ],
                 [
                     'title' => 'Hợp đồng minh chứng / Quyết định giao nhiệm vụ',
                     'icon' => 'ti ti-file-certificate',
                     'content' => view('admin.pages.bidding.partials.proof-contract')->render(),
+            
+                    'onclick' => 'tabBiddingProofContract()',
                 ],
                 [
                     'title' => 'Tệp tin khác',
@@ -47,11 +57,14 @@
                     'content' => view('admin.pages.bidding.partials.other-files', [
                         'data' => $data,
                     ])->render(),
+            
+                    'onclick' => 'loadTableOrtherFile()',
                 ],
                 [
                     'title' => 'Tổng hợp kết quả',
                     'icon' => 'ti ti-chart-bar',
-                    'content' => view('admin.pages.bidding.partials.result-summary')->render(),
+                    'content' => view('admin.pages.bidding.partials.syncthetic')->render(),
+                    'onclick' => 'synctheticTab()',
                 ],
             ]" />
 
@@ -85,6 +98,8 @@
         const deleteBiddingProofContractUrl = @json(route('api.bidding.proof-contract.delete'));
         const deleteByProofContractIdBiddingProofContractUrl = @json(route('api.bidding.proof-contract.delete-by-proof-contract-id'));
 
+        const listBiddingImplementationPersonnel = @json(route('api.bidding.implementation-personnel.list'));
+        const deleteBiddingImplementationPersonnel = @json(route('api.bidding.implementation-personnel.delete'));
         const listPersonnelUnitsUrl = @json(route('api.personnels.units.list'));
         const listPersonnelsUrl = @json(route('api.personnels.list'));
         const listPersonnelFilesUrl = @json(route('api.personnels.file.list'));
@@ -100,4 +115,5 @@
     <script src="assets/js/bidding/show/proof-contract.js"></script>
     <script src="assets/js/bidding/show/implementation-personnel.js"></script>
     <script src="assets/js/bidding/show/other-files.js"></script>
+    <script src="assets/js/bidding/show/syncthetic.js"></script>
 @endsection

@@ -37,13 +37,13 @@ window.loadListProofContract = () => {
         storeBiddingProofContractUrl,
         "bidding_proof_contracts",
         deleteByProofContractIdBiddingProofContractUrl,
-        "loadListBiddingProofContract"
+        () => loadListBiddingProofContract()
     );
 };
 
-window.loadListBiddingProofContract = () => {
+window.loadListBiddingProofContract = (table = selectedProofContract) => {
     initSelectedTable(
-        $(selectedProofContract),
+        $(table),
         listBiddingProofContractUrl,
         [
             {
@@ -86,7 +86,3 @@ window.tabBiddingProofContract = () => {
     loadListProofContract();
     loadListBiddingProofContract();
 };
-
-document.addEventListener("DOMContentLoaded", () => {
-    tabBiddingProofContract();
-});

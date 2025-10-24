@@ -30,13 +30,13 @@ window.loadListEligibility = () => {
         storeBiddingEligibilityUrl,
         "bidding_eligibility",
         deleteByEligibilityIdBiddingEligibilityUrl,
-        "loadListBiddingEligibility"
+        () => loadListBiddingEligibility()
     );
 };
 
-window.loadListBiddingEligibility = () => {
+window.loadListBiddingEligibility = (table = selectedEligibility) => {
     initSelectedTable(
-        $(selectedEligibility),
+        $(table),
         listBiddingEligibilityUrl,
         [
             {
@@ -79,7 +79,3 @@ window.tabBiddingEligibility = () => {
     loadListEligibility();
     loadListBiddingEligibility();
 };
-
-document.addEventListener("DOMContentLoaded", () => {
-    tabBiddingEligibility();
-});

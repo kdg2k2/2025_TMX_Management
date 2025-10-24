@@ -11,7 +11,8 @@ class BiddingImplementationPersonnelRepository extends BaseRepository
         $this->model = new BiddingImplementationPersonnel();
         $this->relations = [
             'createdBy',
-            'personnel',
+            'files.personelFile.type',
+            'personnel.personnelUnit',
         ];
     }
 

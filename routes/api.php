@@ -182,6 +182,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::prefix('implementation-personnel')->controller(BiddingImplementationPersonnelController::class)->group(function () {
             Route::get('list', 'list')->name('api.bidding.implementation-personnel.list');
             Route::post('store', 'store')->name('api.bidding.implementation-personnel.store');
+            Route::delete('delete', 'delete')->name('api.bidding.implementation-personnel.delete');
         });
 
         Route::prefix('orther-file')->controller(BiddingOrtherFileController::class)->group(function () {

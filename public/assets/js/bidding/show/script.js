@@ -20,7 +20,7 @@ const initOriginalTable = (
     storeUrl,
     type,
     deleteUrl,
-    callbackAfterCheckedChange
+    callbackAfterCheckedChange = () => {}
 ) => {
     createDataTableServerSide(
         table,
@@ -104,7 +104,7 @@ const handleCheckeChange = async (
     array,
     isChecked,
     id,
-    callbackAfterCheckedChange,
+    callbackAfterCheckedChange = () => {},
     storeUrl,
     type,
     deleteUrl
@@ -123,8 +123,8 @@ const handleCheckeChange = async (
         }
     }
 
-    if (typeof window[callbackAfterCheckedChange] == "function")
-        window[callbackAfterCheckedChange]();
+    if (typeof callbackAfterCheckedChange == "function")
+        callbackAfterCheckedChange();
 };
 
 const findAndChecked = (table, ids = []) => {
@@ -166,7 +166,7 @@ const handleOriginalTableChangePage = (table, key) => {
 
 const getFormInputsAndSelects = (form, jquery = false) => {
     const elements = form.querySelectorAll(
-        "select[name], input[name]:not([type='hidden'])"
+        "select, input:not([type='hidden'])"
     );
     return jquery ? $(elements) : elements;
 };

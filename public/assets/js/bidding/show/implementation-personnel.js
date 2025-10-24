@@ -7,6 +7,10 @@ const implementationPersonnelCloneRow = document.getElementById(
 const btnAddRowImplementationPersonnel =
     implementationPersonnelCloneRow.querySelector("button");
 
+const tableImplementationPersonnel = document.getElementById(
+    "table-implementation-personnel"
+);
+
 const loadAndFillSelectPersonnelUnits = async () => {
     const res = await http.get(listPersonnelUnitsUrl, {}, null, false);
     if (res.data) {
@@ -88,107 +92,14 @@ const getMaxPersonnelIndex = () => {
     return getMaxRowIndex(selects);
 };
 
-const renderRowImplementationPersonnel = () => {
-    return cloneRow(
+btnAddRowImplementationPersonnel.addEventListener("click", () => {
+    cloneRow(
         implementationPersonnelCloneRow,
         implementationPersonnelForm,
         () => reindexPersonnelRows(),
         () => getImplementationPersonnelSelects(true),
         () => getMaxPersonnelIndex()
     );
-};
-
-const waitForOptionsLoaded = (select, expectedValue, timeout = 5000) => {
-    return new Promise((resolve, reject) => {
-        const start = performance.now();
-
-        const check = () => {
-            const found = [...select.options].some(
-                (opt) => opt.value == expectedValue
-            );
-            if (found) return resolve();
-
-            if (performance.now() - start > timeout)
-                return reject(
-                    new Error(`Timeout waiting for options of ${select.name}`)
-                );
-
-            requestAnimationFrame(check);
-        };
-
-        check();
-    });
-};
-
-const restoreImplementationPersonnelSelectedSaved = async () => {
-    if (!$data?.bidding_implementation_personnel?.length) return;
-
-    for (const [
-        index,
-        value,
-    ] of $data.bidding_implementation_personnel.entries()) {
-        // Tạo dòng container
-        const container =
-            index === 0
-                ? implementationPersonnelCloneRow
-                : renderRowImplementationPersonnel();
-
-        const unitSelect = container.querySelector(
-            ".implementation-personnel-unit"
-        );
-        const personnelSelect = container.querySelector(
-            ".implementation-personnel"
-        );
-        const fileSelect = container.querySelector(
-            ".implementation-personnel-file"
-        );
-        const jobTitleSelect = container.querySelector(
-            ".implementation-personnel-jobtitle"
-        );
-
-        // Chọn Unit
-        if (value?.personnel?.personnel_unit_id) {
-            unitSelect.value = String(value.personnel.personnel_unit_id);
-            unitSelect.dispatchEvent(new Event("change", { bubbles: true }));
-            await waitForOptionsLoaded(personnelSelect, value.personnel_id);
-        }
-
-        // Chọn Personnel
-        if (value?.personnel_id) {
-            personnelSelect.value = String(value.personnel_id);
-            personnelSelect.dispatchEvent(
-                new Event("change", { bubbles: true })
-            );
-            const firstFileId = value?.files?.[0]?.personnel_file_id;
-            if (firstFileId) {
-                await waitForOptionsLoaded(fileSelect, firstFileId);
-            }
-        }
-
-        // Chọn Files (đa lựa chọn)
-        if (value?.files?.length) {
-            const fileIds = value.files.map((f) => String(f.personnel_file_id));
-            fileIds.forEach((id) => {
-                const opt = fileSelect.querySelector(`option[value="${id}"]`);
-                if (opt) opt.selected = true;
-            });
-            fileSelect.dispatchEvent(new Event("change", { bubbles: true }));
-        }
-
-        // Chọn Job Title (không cần chờ gì)
-        if (value?.job_title) {
-            jobTitleSelect.value = value.job_title;
-            jobTitleSelect.dispatchEvent(
-                new Event("change", { bubbles: true })
-            );
-        }
-    }
-
-    refreshSumoSelect(getImplementationPersonnelSelects(true));
-};
-
-btnAddRowImplementationPersonnel.addEventListener("click", () => {
-    renderRowImplementationPersonnel();
 });
 
 implementationPersonnelForm.addEventListener("change", (e) => {
@@ -207,15 +118,108 @@ implementationPersonnelForm.addEventListener("change", (e) => {
         );
 });
 
+window.loadTableImplementationPersonnel = (
+    table = tableImplementationPersonnel
+) => {
+    createDataTableServerSide(
+        $(table),
+        listBiddingImplementationPersonnel,
+        [
+            {
+                data: null,
+                title: "Đơn vị",
+                render: (data, type, row) => {
+                    return row?.personnel?.personnel_unit?.name || "";
+                },
+            },
+            {
+                data: null,
+                title: "Nhân sự",
+                render: (data, type, row) => {
+                    return row?.personnel?.name || "";
+                },
+            },
+            {
+                data: null,
+                title: "Bằng cấp",
+                render: (data, type, row) => {
+                    return `<ul class="m-0">${row?.files
+                        ?.map(
+                            (value, index) =>
+                                `<li role="button" class="link-primary" onclick="viewFileHandler(
+                                        '${value?.personel_file?.path}'
+                                    )">
+                                    ${value?.personel_file?.type?.name}
+                                        - ${formatDateTime(
+                                            value?.personel_file?.type
+                                                ?.updated_at
+                                        )}
+                                </li>`
+                        )
+                        .join("")}</ul>`;
+                },
+            },
+            {
+                data: null,
+                title: "Chức danh",
+                render: (data, type, row) => {
+                    return row?.job_title?.converted || "";
+                },
+            },
+            {
+                data: null,
+                title: "Người tạo - Cập nhật",
+                render: (data, type, row) => {
+                    return row?.created_by?.name || "";
+                },
+            },
+            {
+                data: null,
+                title: "Thời gian tạo/cập nhật",
+                render: (data, type, row) => {
+                    return `
+                    <ul class="m-0">
+                        <li>${row.created_at}</li>
+                        <li>${row.updated_at}</li>
+                    </ul>
+                `;
+                },
+            },
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                title: "Hành động",
+                className: "text-center",
+                render: (data, type, row) => {
+                    return `
+                    ${createDeleteBtn(
+                        `${deleteBiddingImplementationPersonnel}?id=${row.id}`,
+                        "loadTableImplementationPersonnel"
+                    )}
+                `;
+                },
+            },
+        ],
+        (item) => item,
+        {
+            paginate: 1,
+        }
+    );
+};
+
 implementationPersonnelForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, implementationPersonnelForm);
+    await handleSubmitForm(e, implementationPersonnelForm, () => {
+        resetFormRows(
+            implementationPersonnelForm,
+            implementationPersonnelCloneRow
+        );
+        loadTableImplementationPersonnel();
+    });
 });
 
 window.tabImplementationPersonnel = async () => {
+    resetFormRows(implementationPersonnelForm, implementationPersonnelCloneRow);
     await loadAndFillSelectPersonnelUnits();
-    restoreImplementationPersonnelSelectedSaved();
+    loadTableImplementationPersonnel();
 };
-
-document.addEventListener("DOMContentLoaded", () => {
-    tabImplementationPersonnel();
-});
