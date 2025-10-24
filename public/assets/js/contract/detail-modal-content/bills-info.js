@@ -101,18 +101,7 @@ const renderBillsInfoColumns = () => {
 
 const renderBillsInfoActionButtons = (row) => {
     return `
-        ${
-            row.path
-                ? createBtn(
-                      "info",
-                      "Xem",
-                      false,
-                      {},
-                      "ti ti-eye-search",
-                      `viewFileHandler('${row.path}')`
-                  )?.outerHTML
-                : ""
-        }
+        ${row.path ? createViewBtn(row.path) : ""}
         ${
             createBtn(
                 "warning",

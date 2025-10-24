@@ -18,27 +18,13 @@ window.loadListEligibility = () => {
                 className: "text-center",
                 render: (data, type, row) => {
                     return `
-                        ${
-                            row.path
-                                ? createBtn(
-                                      "info",
-                                      "Xem file full",
-                                      false,
-                                      {},
-                                      "ti ti-file-type-pdf",
-                                      `viewFileHandler('${row.path}')`
-                                  )?.outerHTML
-                                : ""
-                        }
+                        ${row.path ? createViewBtn(row.path) : ""}
                 `;
                 },
             },
         ],
         (res) => {
-            handleOriginalTableChangePage(
-                originalEligibility,
-                "eligibility"
-            );
+            handleOriginalTableChangePage(originalEligibility, "eligibility");
         },
         "eligibility",
         storeBiddingEligibilityUrl,
@@ -70,14 +56,7 @@ window.loadListBiddingEligibility = () => {
                     return `
                         ${
                             row?.eligibility?.path
-                                ? createBtn(
-                                      "info",
-                                      "Xem file full",
-                                      false,
-                                      {},
-                                      "ti ti-file-type-pdf",
-                                      `viewFileHandler('${row?.eligibility?.path}')`
-                                  )?.outerHTML
+                                ? createViewBtn(row?.eligibility?.path)
                                 : ""
                         }
                         ${createDeleteBtn(
@@ -100,7 +79,6 @@ window.tabBiddingEligibility = () => {
     loadListEligibility();
     loadListBiddingEligibility();
 };
-
 
 document.addEventListener("DOMContentLoaded", () => {
     tabBiddingEligibility();

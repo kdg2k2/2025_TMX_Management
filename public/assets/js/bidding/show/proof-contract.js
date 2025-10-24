@@ -22,18 +22,7 @@ window.loadListProofContract = () => {
                 className: "text-center",
                 render: (data, type, row) => {
                     return `
-                        ${
-                            row.path
-                                ? createBtn(
-                                      "info",
-                                      "Xem file full",
-                                      false,
-                                      {},
-                                      "ti ti-file-type-pdf",
-                                      `viewFileHandler('${row.path}')`
-                                  )?.outerHTML
-                                : ""
-                        }
+                        ${row.path ? createViewBtn(row.path) : ""}
                 `;
                 },
             },
@@ -74,14 +63,7 @@ window.loadListBiddingProofContract = () => {
                     return `
                         ${
                             row?.proof_contract?.path
-                                ? createBtn(
-                                      "info",
-                                      "Xem file full",
-                                      false,
-                                      {},
-                                      "ti ti-file-type-pdf",
-                                      `viewFileHandler('${row?.proof_contract?.path}')`
-                                  )?.outerHTML
+                                ? createViewBtn(row?.proof_contract?.path)
                                 : ""
                         }
                         ${createDeleteBtn(

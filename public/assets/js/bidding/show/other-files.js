@@ -63,14 +63,7 @@ window.loadTableOrtherFile = () => {
                 render: (data, type, row) => {
                     return `
                     ${
-                        createBtn(
-                            "info",
-                            "Xem",
-                            false,
-                            {},
-                            "ti ti-eye-search",
-                            `viewFileHandler('${row.path}')`
-                        )?.outerHTML +
+                        createViewBtn(row.path) +
                         createDeleteBtn(
                             `${deleteBiddingOrtherFileUrl}?id=${row.id}`,
                             "loadTableOrtherFile"
@@ -93,7 +86,7 @@ btnAddRowOrtherFile.addEventListener("click", () => {
 
 ortherFileForm.addEventListener("submit", async (e) => {
     await handleSubmitForm(e, ortherFileForm, () => {
-        console.log('runned');
+        console.log("runned");
 
         resetFormRows(ortherFileForm, ortherFileCloneRow);
         loadTableOrtherFile();

@@ -56,14 +56,7 @@ const renderAppendixesInfoColumns = () => {
                 return `
                     ${
                         row.renewal_letter
-                            ? createBtn(
-                                  "info",
-                                  "Xem",
-                                  false,
-                                  {},
-                                  "ti ti-eye-search",
-                                  `viewFileHandler('${row.renewal_letter}')`
-                              )?.outerHTML
+                            ? createViewBtn(row.renewal_letter)
                             : ""
                     }
                 `;
@@ -76,14 +69,7 @@ const renderAppendixesInfoColumns = () => {
                 return `
                     ${
                         row.renewal_approval_letter
-                            ? createBtn(
-                                  "info",
-                                  "Xem",
-                                  false,
-                                  {},
-                                  "ti ti-eye-search",
-                                  `viewFileHandler('${row.renewal_approval_letter}')`
-                              )?.outerHTML
+                            ? createViewBtn(row.renewal_approval_letter)
                             : ""
                     }
                 `;
@@ -96,14 +82,7 @@ const renderAppendixesInfoColumns = () => {
                 return `
                     ${
                         row.renewal_appendix
-                            ? createBtn(
-                                  "info",
-                                  "Xem",
-                                  false,
-                                  {},
-                                  "ti ti-eye-search",
-                                  `viewFileHandler('${row.renewal_appendix}')`
-                              )?.outerHTML
+                            ? createViewBtn(row.renewal_appendix)
                             : ""
                     }
                 `;
@@ -116,14 +95,7 @@ const renderAppendixesInfoColumns = () => {
                 return `
                     ${
                         row.other_documents
-                            ? createBtn(
-                                  "info",
-                                  "Xem",
-                                  false,
-                                  {},
-                                  "ti ti-eye-search",
-                                  `viewFileHandler('${row.other_documents}')`
-                              )?.outerHTML
+                            ? createViewBtn(row.other_documents)
                             : ""
                     }
                 `;

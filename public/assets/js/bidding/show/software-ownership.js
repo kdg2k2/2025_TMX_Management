@@ -22,18 +22,7 @@ window.loadListSoftwareOwnership = () => {
                 className: "text-center",
                 render: (data, type, row) => {
                     return `
-                        ${
-                            row.path
-                                ? createBtn(
-                                      "info",
-                                      "Xem file full",
-                                      false,
-                                      {},
-                                      "ti ti-file-type-pdf",
-                                      `viewFileHandler('${row.path}')`
-                                  )?.outerHTML
-                                : ""
-                        }
+                        ${row.path ? createViewBtn(row.path) : ""}
                 `;
                 },
             },
@@ -74,14 +63,7 @@ window.loadListBiddingSoftwareOwnership = () => {
                     return `
                         ${
                             row?.software_ownership?.path
-                                ? createBtn(
-                                      "info",
-                                      "Xem file full",
-                                      false,
-                                      {},
-                                      "ti ti-file-type-pdf",
-                                      `viewFileHandler('${row?.software_ownership?.path}')`
-                                  )?.outerHTML
+                                ? createViewBtn(row?.software_ownership?.path)
                                 : ""
                         }
                         ${createDeleteBtn(

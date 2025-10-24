@@ -87,28 +87,8 @@ const renderDocumentsInfoColumns = () => {
 
 const renderDocumentsInfoActionButtons = (row) => {
     return `
-        ${
-            createBtn(
-                "info",
-                "Xem",
-                false,
-                {},
-                "ti ti-eye-search",
-                `viewFileHandler('${row.path}')`
-            )?.outerHTML
-        }
-        ${
-            row?.type?.type == "file"
-                ? createBtn(
-                      "success",
-                      "Tải",
-                      false,
-                      {},
-                      "ti ti-download",
-                      `downloadFileHandler('${row.path}')`
-                  )?.outerHTML
-                : ""
-        }
+        ${createViewBtn(row.path)}
+        ${row?.type?.type == "file" ? createDownloadBtn(row.path) : ""}
         ${createDeleteBtn(
             `${deleteFileUrl}?id=${row.id}`,
             "renderDocumentsInfo"

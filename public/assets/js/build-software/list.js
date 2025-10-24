@@ -53,16 +53,7 @@ const renderColumns = () => {
             data: null,
             title: "File mô tả phần mềm",
             render: (data, type, row) => {
-                return row?.attachment
-                    ? createBtn(
-                          "info",
-                          "Xem file",
-                          false,
-                          {},
-                          "ti ti-file-type-pdf",
-                          `viewFileHandler('${row?.attachment}')`
-                      )?.outerHTML
-                    : "";
+                return row?.attachment ? createViewBtn(row?.attachment) : "";
             },
         },
         {

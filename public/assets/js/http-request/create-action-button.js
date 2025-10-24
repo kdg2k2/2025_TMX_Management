@@ -22,3 +22,25 @@ const createDeleteBtn = (url, onSuccess = "loadList") => {
         "openDeleteModal(this)"
     )?.outerHTML;
 };
+
+const createViewBtn = (url) => {
+    return createBtn(
+        "info",
+        "Xem",
+        false,
+        {},
+        "ti ti-eye-search",
+        `viewFileHandler('${url}')`
+    )?.outerHTML;
+};
+
+const createDownloadBtn = (url) => {
+    return createBtn(
+        "success",
+        "Tải",
+        false,
+        {},
+        "ti ti-download",
+        `downloadFileHandler('${url}')`
+    )?.outerHTML;
+};

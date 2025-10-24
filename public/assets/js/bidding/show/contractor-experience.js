@@ -53,26 +53,12 @@ window.loadListContract = () => {
                     return `
                         ${
                             row.path_file_full
-                                ? createBtn(
-                                      "info",
-                                      "Xem file full",
-                                      false,
-                                      {},
-                                      "ti ti-file-type-pdf",
-                                      `viewFileHandler('${row.path_file_full}')`
-                                  )?.outerHTML
+                                ? createViewBtn(row.path_file_full)
                                 : ""
                         }
                         ${
                             row.path_file_short
-                                ? createBtn(
-                                      "info",
-                                      "Xem file short",
-                                      false,
-                                      {},
-                                      "ti ti-file-type-pdf",
-                                      `viewFileHandler('${row.path_file_short}')`
-                                  )?.outerHTML
+                                ? createViewBtn(row.path_file_short)
                                 : ""
                         }
                 `;
@@ -130,27 +116,13 @@ window.loadListBiddingContractorExperience = () => {
                         ${
                             row?.contract?.path_file_full &&
                             row?.file_type?.original == "path_file_full"
-                                ? createBtn(
-                                      "info",
-                                      "Xem file full",
-                                      false,
-                                      {},
-                                      "ti ti-file-type-pdf",
-                                      `viewFileHandler('${row?.contract?.path_file_full}')`
-                                  )?.outerHTML
+                                ? createViewBtn(row?.contract?.path_file_full)
                                 : ""
                         }
                         ${
                             row?.contract?.path_file_short &&
                             row?.file_type?.original == "path_file_short"
-                                ? createBtn(
-                                      "info",
-                                      "Xem file short",
-                                      false,
-                                      {},
-                                      "ti ti-file-type-pdf",
-                                      `viewFileHandler('${row?.contract?.path_file_short}')`
-                                  )?.outerHTML
+                                ? createViewBtn(row?.contract?.path_file_short)
                                 : ""
                         }
                         ${createDeleteBtn(

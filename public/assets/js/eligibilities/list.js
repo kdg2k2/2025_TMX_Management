@@ -32,22 +32,8 @@ const renderColumns = () => {
             render: (data, type, row) => {
                 return `
                     ${
-                        createBtn(
-                            "info",
-                            "Xem file",
-                            false,
-                            {},
-                            "ti ti-file-type-pdf",
-                            `viewFileHandler('${row.path}')`
-                        )?.outerHTML +
-                        createBtn(
-                            "success",
-                            "Tải",
-                            false,
-                            {},
-                            "ti ti-download",
-                            `downloadFileHandler('${row.path}')`
-                        )?.outerHTML +
+                        createViewBtn(row.path) +
+                        createDownloadBtn(row.path) +
                         createEditBtn(`${editUrl}?id=${row.id}`) +
                         createDeleteBtn(`${deleteUrl}?id=${row.id}`)
                     }

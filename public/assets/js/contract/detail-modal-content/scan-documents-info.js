@@ -84,26 +84,8 @@ const renderScanDocumentsInfoColumns = () => {
 const renderScanDocumentsInfoActionButtons = (row) => {
     return `
         ${
-            createBtn(
-                "info",
-                "Xem",
-                false,
-                {},
-                "ti ti-eye-search",
-                `viewFileHandler('${row.path}')`
-            )?.outerHTML
-        }
-        ${
-            createBtn(
-                "success",
-                "Tải",
-                false,
-                {},
-                "ti ti-download",
-                `downloadFileHandler('${row.path}')`
-            )?.outerHTML
-        }
-        ${
+            createViewBtn(row.path) +
+            createDownloadBtn(row.path) +
             createBtn(
                 "warning",
                 "Cập nhật",
