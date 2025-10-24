@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BinddingSoftwareOwnership\DeleteBySoftwareOwnershipIdRequest;
-use App\Http\Requests\BinddingSoftwareOwnership\DeleteRequest;
-use App\Http\Requests\BinddingSoftwareOwnership\ListRequest;
-use App\Http\Requests\BinddingSoftwareOwnership\StoreRequest;
-use App\Services\BinddingSoftwareOwnershipService;
+use App\Http\Requests\BiddingSoftwareOwnership\DeleteBySoftwareOwnershipIdRequest;
+use App\Http\Requests\BiddingSoftwareOwnership\DeleteRequest;
+use App\Http\Requests\BiddingSoftwareOwnership\ListRequest;
+use App\Http\Requests\BiddingSoftwareOwnership\StoreRequest;
+use App\Services\BiddingSoftwareOwnershipService;
 
-class BinddingSoftwareOwnershipController extends Controller
+class BiddingSoftwareOwnershipController extends Controller
 {
     public function __construct()
     {
-        $this->service = app(BinddingSoftwareOwnershipService::class);
+        $this->service = app(BiddingSoftwareOwnershipService::class);
     }
 
     public function list(ListRequest $request)

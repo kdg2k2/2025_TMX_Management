@@ -46,7 +46,7 @@ window.loadListProofContract = () => {
         },
         "proofContract",
         storeBiddingProofContractUrl,
-        "bindding_proof_contracts",
+        "bidding_proof_contracts",
         deleteByProofContractIdBiddingProofContractUrl,
         "loadListBiddingProofContract"
     );

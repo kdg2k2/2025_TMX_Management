@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use App\Repositories\BinddingSoftwareOwnershipRepository;
+use App\Repositories\BiddingSoftwareOwnershipRepository;
 
-class BinddingSoftwareOwnershipService extends BaseService
+class BiddingSoftwareOwnershipService extends BaseService
 {
     public function __construct(
         private SoftwareOwnershipService $softwareOwnershipService
     ) {
-        $this->repository = app(BinddingSoftwareOwnershipRepository::class);
+        $this->repository = app(BiddingSoftwareOwnershipRepository::class);
     }
 
     public function updateOrCreate(array $request)

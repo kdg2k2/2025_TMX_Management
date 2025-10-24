@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\BinddingSoftwareOwnership;
+use App\Models\BiddingSoftwareOwnership;
 
-class BinddingSoftwareOwnershipRepository extends BaseRepository
+class BiddingSoftwareOwnershipRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new BinddingSoftwareOwnership();
+        $this->model = new BiddingSoftwareOwnership();
         $this->relations = [
             'createdBy',
             'softwareOwnership',

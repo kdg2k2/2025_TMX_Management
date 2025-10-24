@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\BiddingController;
 use App\Http\Controllers\Api\BiddingEligibilityController;
 use App\Http\Controllers\Api\BiddingImplementationPersonnelController;
 use App\Http\Controllers\Api\BiddingProofContractController;
-use App\Http\Controllers\Api\BinddingSoftwareOwnershipController;
+use App\Http\Controllers\Api\BiddingSoftwareOwnershipController;
 use App\Http\Controllers\Api\BuildSoftwareController;
 use App\Http\Controllers\Api\ContractAdvancePaymentController;
 use App\Http\Controllers\Api\ContractAppendixController;
@@ -164,7 +164,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::delete('delete-by-eligibility-id', 'deleteByEligibilityIdRequest')->name('api.bidding.eligibility.delete-by-eligibility-id');
         });
 
-        Route::prefix('software-ownership')->controller(BinddingSoftwareOwnershipController::class)->group(function () {
+        Route::prefix('software-ownership')->controller(BiddingSoftwareOwnershipController::class)->group(function () {
             Route::get('list', 'list')->name('api.bidding.software-ownership.list');
             Route::post('store', 'store')->name('api.bidding.software-ownership.store');
             Route::delete('delete', 'delete')->name('api.bidding.software-ownership.delete');

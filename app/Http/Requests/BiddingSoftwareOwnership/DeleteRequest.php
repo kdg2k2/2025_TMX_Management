@@ -1,5 +1,5 @@
 <?php
 
-namespace App\Http\Requests\BinddingSoftwareOwnership;
+namespace App\Http\Requests\BiddingSoftwareOwnership;
 
 class DeleteRequest extends FindByIdRequest {}

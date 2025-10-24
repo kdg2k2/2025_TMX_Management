@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('bindding_software_ownerships', function (Blueprint $table) {
+        Schema::create('bidding_software_ownerships', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId('created_by')->comment('người tạo-cập nhật')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
@@ -25,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('bindding_software_ownerships');
+        Schema::dropIfExists('bidding_software_ownerships');
     }
 };

@@ -86,10 +86,10 @@ const getParamsByType = (id, type) => {
         case "bidding_eligibility":
             params["eligibility_id"] = id;
             break;
-        case "bindding_software_ownerships":
+        case "bidding_software_ownerships":
             params["software_ownership_id"] = id;
             break;
-        case "bindding_proof_contracts":
+        case "bidding_proof_contracts":
             params["proof_contract_id"] = id;
             break;
 

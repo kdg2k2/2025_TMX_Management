@@ -46,7 +46,7 @@ window.loadListSoftwareOwnership = () => {
         },
         "softwareOwnership",
         storeBiddingSoftwareOwnershipUrl,
-        "bindding_software_ownerships",
+        "bidding_software_ownerships",
         deleteBySoftwareOwnershipIdBiddingSoftwareOwnershipUrl,
         "loadListBiddingSoftwareOwnership"
     );
