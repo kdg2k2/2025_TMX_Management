@@ -17,7 +17,27 @@ class Bidding extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function biddingContractorExperience(){
+        return $this->hasMany(BiddingContractorExperience::class);
+    }
+
+    public function biddingEligibility(){
+        return $this->hasMany(BiddingEligibility::class);
+    }
+
     public function biddingImplementationPersonnel(){
-        return $this->hasMany(BiddingImplementationPersonnel::class, 'bidding_id');
+        return $this->hasMany(BiddingImplementationPersonnel::class);
+    }
+
+    public function biddingOrtherFile(){
+        return $this->hasMany(BiddingOrtherFile::class);
+    }
+
+    public function biddingProofContract(){
+        return $this->hasMany(BiddingProofContract::class, 'bidding_id');
+    }
+
+    public function biddingSoftwareOwnership(){
+        return $this->hasMany(BiddingSoftwareOwnership::class, 'bidding_id');
     }
 }

@@ -5,4 +5,5 @@ return [
     'delete' => 'Xóa thành công',
     'accept' => 'Phê duyệt thành công',
     'reject' => 'Phê duyệt thành công',
+    'render_file' => 'Tạo file thành công',
 ];

@@ -13,6 +13,17 @@ const synctheticProofContract = document.getElementById(
 );
 const synctheticOrtherFile = document.getElementById("syncthetic-orther-file");
 
+const synctheticDownloadBtn = document.getElementById(
+    "syncthetic-download-btn"
+);
+
+synctheticDownloadBtn.addEventListener("click", async () => {
+    const res = await http.get(biddingDownloadBuiltResultUrl, {
+        id: $data["id"],
+    });
+    if (res.data) downloadFileHandler(res.data);
+});
+
 window.synctheticTab = () => {
     loadListBiddingContractorExperience(synctheticContractorExperience);
     loadListBiddingEligibility(synctheticEligibility);

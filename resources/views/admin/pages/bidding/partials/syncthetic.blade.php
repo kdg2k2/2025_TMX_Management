@@ -1,3 +1,9 @@
+<div class="mb-2">
+    <x-button id="syncthetic-download-btn" variant="success" :outline="true" icon="ti ti-download" size="sm">
+        Tải file nén tổng hợp kết quả
+    </x-button>
+</div>
+
 <div class="row g-1">
     <div class="col-md-6">
         <div class="card">

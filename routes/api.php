@@ -149,6 +149,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::get('list', 'list')->name('api.bidding.list');
             Route::post('store', 'store')->name('api.bidding.store');
             Route::patch('update', 'update')->name('api.bidding.update');
+            Route::get('download-built-result', 'downloadBuiltResult')->name('api.bidding.download-built-result');
         });
 
         Route::prefix('contractor-experience')->controller(BiddingContractorExperienceController::class)->group(function () {

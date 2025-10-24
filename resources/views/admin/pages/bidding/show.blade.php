@@ -17,21 +17,21 @@
                     'content' => view('admin.pages.bidding.partials.contractor-experience', [
                         'biddingContractorExperienceFileTypes' => $biddingContractorExperienceFileTypes,
                     ])->render(),
-            
+
                     'onclick' => 'tabBiddingContractorExperience()',
                 ],
                 [
                     'title' => 'Tư cách hợp lệ',
                     'icon' => 'ti ti-certificate',
                     'content' => view('admin.pages.bidding.partials.eligibility')->render(),
-            
+
                     'onclick' => 'tabBiddingEligibility()',
                 ],
                 [
                     'title' => 'Sở hữu phần mềm',
                     'icon' => 'ti ti-device-desktop',
                     'content' => view('admin.pages.bidding.partials.software-ownership')->render(),
-            
+
                     'onclick' => 'tabBiddingSoftwareOwnership()',
                 ],
                 [
@@ -41,14 +41,14 @@
                         'data' => $data,
                         'biddingimplementationPersonnelJobtitles' => $biddingimplementationPersonnelJobtitles,
                     ])->render(),
-            
+
                     'onclick' => 'tabImplementationPersonnel()',
                 ],
                 [
                     'title' => 'Hợp đồng minh chứng / Quyết định giao nhiệm vụ',
                     'icon' => 'ti ti-file-certificate',
                     'content' => view('admin.pages.bidding.partials.proof-contract')->render(),
-            
+
                     'onclick' => 'tabBiddingProofContract()',
                 ],
                 [
@@ -57,7 +57,7 @@
                     'content' => view('admin.pages.bidding.partials.other-files', [
                         'data' => $data,
                     ])->render(),
-            
+
                     'onclick' => 'loadTableOrtherFile()',
                 ],
                 [
@@ -107,6 +107,7 @@
         const listBiddingOrtherFileUrl = @json(route('api.bidding.orther-file.list'));
         const storeBiddingOrtherFileUrl = @json(route('api.bidding.orther-file.store'));
         const deleteBiddingOrtherFileUrl = @json(route('api.bidding.orther-file.delete'));
+        const biddingDownloadBuiltResultUrl = @json(route('api.bidding.download-built-result'));
     </script>
     <script src="assets/js/bidding/show/script.js"></script>
     <script src="assets/js/bidding/show/contractor-experience.js"></script>

@@ -15,13 +15,13 @@ class HandlerUploadFileService extends BaseService
 
         // Nếu là file dạng UploadedFile (từ request upload)
         if ($file instanceof \Illuminate\Http\UploadedFile) {
-            $imageName = uniqid($folder) . '.' . $file->getClientOriginalExtension();
-            $file->move($destinationPath, $imageName);
+            $fileName = app(StringHandlerService::class)->createSlug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '__' . date('d-m-Y_H-i-s') . '__.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $fileName);
         }
         // Nếu là file dạng đường dẫn thực tế (Seeder)
         elseif (is_string($file) && file_exists($file)) {
-            $imageName = uniqid($folder) . '.' . pathinfo($file, PATHINFO_EXTENSION);
-            copy($file, $destinationPath . '/' . $imageName);
+            $fileName = uniqid($folder) . '.' . pathinfo($file, PATHINFO_EXTENSION);
+            copy($file, $destinationPath . '/' . $fileName);
         } elseif (filter_var($file, FILTER_VALIDATE_URL)) {
             return $file;
         } else {
@@ -32,20 +32,28 @@ class HandlerUploadFileService extends BaseService
         if ($oldPath && file_exists($this->getAbsolutePublicPath($oldPath)))
             $this->removeFiles($oldPath);
 
-        return "$folderSave/$imageName";
+        return "$folderSave/$fileName";
     }
 
     public function getAbsolutePublicPath(string $filePath)
     {
-        $destinationPath = null;
-        if (\Illuminate\Support\Str::startsWith($filePath, public_path())) {
+        // Kiểm tra nếu đã là đường dẫn tuyệt đối (Windows hoặc Linux)
+        if (
+            \Illuminate\Support\Str::startsWith($filePath, public_path()) ||
+            preg_match('/^[A-Z]:\\\\/i', $filePath) ||  // Windows: C:\, D:\
+            \Illuminate\Support\Str::startsWith($filePath, '/')  // Linux: /home/...
+        ) {
             $destinationPath = $filePath;
         } else {
             $destinationPath = public_path($filePath);
         }
 
-        if (!is_dir($destinationPath))
-            mkdir($destinationPath, 0777, true);
+        // Chỉ tạo thư mục nếu path không có extension (là folder)
+        if (!str_contains(basename($destinationPath), '.')) {
+            if (!is_dir($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+        }
 
         return $destinationPath;
     }

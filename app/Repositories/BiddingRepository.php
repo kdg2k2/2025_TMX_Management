@@ -13,8 +13,13 @@ class BiddingRepository extends BaseRepository
             'createdBy',
             'biddingImplementationPersonnel' => [
                 'personnel',
-                'files',
+                'files.personelFile',
             ],
+            'biddingContractorExperience.contract',
+            'biddingEligibility.eligibility',
+            'biddingOrtherFile',
+            'biddingProofContract.proofContract',
+            'biddingSoftwareOwnership.softwareOwnership',
         ];
     }
 
