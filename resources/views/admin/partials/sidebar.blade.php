@@ -29,7 +29,7 @@
 
                 <li class="slide__category">
                     <span class="category-name">
-                        Thầu Bè
+                        Quản Lý Đấu Thầu
                     </span>
                 </li>
                 <li class="slide">
