@@ -41,7 +41,7 @@
                     'title' => 'Hợp đồng minh chứng / Quyết định giao nhiệm vụ',
                     'icon' => 'ti ti-file-certificate',
                     'content' => view('admin.pages.bidding.partials.proof-contract')->render(),
-                    'onclick' => '()=>{}',
+                    'onclick' => 'tabBiddingProofContract()',
                 ],
                 [
                     'title' => 'Tệp tin khác',
@@ -82,13 +82,18 @@
         const deleteBySoftwareOwnershipIdBiddingSoftwareOwnershipUrl = @json(route('api.bidding.software-ownership.delete-by-software-ownership-id'));
 
         const listProofContractsUrl = @json(route('api.proof_contracts.list'));
+        const listBiddingProofContractUrl = @json(route('api.bidding.proof-contract.list'));
+        const storeBiddingProofContractUrl = @json(route('api.bidding.proof-contract.store'));
+        const deleteBiddingProofContractUrl = @json(route('api.bidding.proof-contract.delete'));
+        const deleteByProofContractIdBiddingProofContractUrl = @json(route('api.bidding.proof-contract.delete-by-proof-contract-id'));
+
         const listPersonnelsUrl = @json(route('api.personnels.list'));
     </script>
     <script src="assets/js/bidding/show/script.js"></script>
     <script type="module" src="assets/js/bidding/show/contractor-experience.js"></script>
     <script src="assets/js/bidding/show/eligibility.js"></script>
     <script src="assets/js/bidding/show/software-ownership.js"></script>
+    <script src="assets/js/bidding/show/proof-contract.js"></script>
     {{-- <script src="assets/js/bidding/show/implementation-personnel.js"></script> --}}
-    {{-- <script src="assets/js/bidding/show/proof-contract.js"></script> --}}
     {{-- <script src="assets/js/bidding/show/other-files.js"></script> --}}
 @endsection

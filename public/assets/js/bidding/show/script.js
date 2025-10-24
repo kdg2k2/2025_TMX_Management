@@ -91,6 +91,9 @@ const getParamsByType = (id, type) => {
         case "bindding_software_ownerships":
             params["software_ownership_id"] = id;
             break;
+        case "bindding_proof_contracts":
+            params["proof_contract_id"] = id;
+            break;
 
         default:
             break;
@@ -126,7 +129,9 @@ const handleCheckeChange = async (
         window[callbackAfterCheckedChange]();
 };
 
-const findAndChecked = (table, ids) => {
+const findAndChecked = (table, ids = []) => {
+    if (ids.length == 0) return;
+
     table
         .querySelectorAll('tbody input[type="checkbox"]')
         .forEach((element) => {
