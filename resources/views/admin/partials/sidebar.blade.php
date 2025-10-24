@@ -56,12 +56,6 @@
                         <span class="side-menu__label">Hợp đồng minh chứng</span>
                     </a>
                 </li>
-                <li class="slide">
-                    <a href="javascript:void(0);" class="side-menu__item">
-                        <i class="side-menu__icon ti ti-file-certificate"></i>
-                        <span class="side-menu__label">Tài liệu công chứng</span>
-                    </a>
-                </li>
 
                 <li class="slide__category">
                     <span class="category-name">
