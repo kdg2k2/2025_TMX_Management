@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Personnel;
+namespace App\Http\Requests\BiddingImplementationPersonnel;
 
 use App\Http\Requests\BaseListRequest;
 
@@ -11,7 +11,7 @@ class ListRequest extends BaseListRequest
         return array_merge(
             parent::rules(),
             [
-                'personnel_unit_id' => 'nullable|exists:personnel_units,id',
+                'bidding_id' => 'nullable|exists:biddings,id',
             ]
         );
     }

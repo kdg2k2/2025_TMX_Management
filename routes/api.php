@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BiddingContractorExperienceController;
 use App\Http\Controllers\Api\BiddingController;
 use App\Http\Controllers\Api\BiddingEligibilityController;
+use App\Http\Controllers\Api\BiddingImplementationPersonnelController;
 use App\Http\Controllers\Api\BiddingProofContractController;
 use App\Http\Controllers\Api\BinddingSoftwareOwnershipController;
 use App\Http\Controllers\Api\BuildSoftwareController;
@@ -175,6 +176,12 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::post('store', 'store')->name('api.bidding.proof-contract.store');
             Route::delete('delete', 'delete')->name('api.bidding.proof-contract.delete');
             Route::delete('delete-by-proof-contract-id', 'deleteByProofContractId')->name('api.bidding.proof-contract.delete-by-proof-contract-id');
+        });
+
+        Route::prefix('implementation-personnel')->controller(BiddingImplementationPersonnelController::class)->group(function () {
+            Route::get('list', 'list')->name('api.bidding.implementation-personnel.list');
+            Route::post('store', 'store')->name('api.bidding.implementation-personnel.store');
+            Route::delete('delete', 'delete')->name('api.bidding.implementation-personnel.delete');
         });
     });
 

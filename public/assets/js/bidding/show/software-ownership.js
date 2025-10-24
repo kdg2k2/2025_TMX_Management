@@ -94,7 +94,8 @@ window.loadListBiddingSoftwareOwnership = () => {
         ],
         (res) => {
             const ids = (resultSummary["softwareOwnership"] =
-                res?.data?.data?.map((item) => item?.software_ownership_id) || []);
+                res?.data?.data?.map((item) => item?.software_ownership_id) ||
+                []);
             findAndChecked(originalSoftwareOwnership, ids);
         }
     );
@@ -104,3 +105,7 @@ window.tabBiddingSoftwareOwnership = () => {
     loadListSoftwareOwnership();
     loadListBiddingSoftwareOwnership();
 };
+
+document.addEventListener("DOMContentLoaded", () => {
+    tabBiddingSoftwareOwnership();
+});

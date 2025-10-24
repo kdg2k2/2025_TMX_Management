@@ -66,8 +66,6 @@ const initSelectedTable = (
 };
 
 const storeSelected = async (url, id, type) => {
-    console.log({ url, id, type });
-
     await http.post(url, getParamsByType(id, type));
 };
 

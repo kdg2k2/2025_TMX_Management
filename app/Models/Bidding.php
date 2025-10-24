@@ -17,8 +17,7 @@ class Bidding extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function contractorExperience()
-    {
-        return $this->hasMany(BiddingContractorExperience::class);
+    public function biddingImplementationPersonnel(){
+        return $this->hasMany(BiddingImplementationPersonnel::class, 'bidding_id');
     }
 }

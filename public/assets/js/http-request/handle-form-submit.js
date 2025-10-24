@@ -1,4 +1,9 @@
-const handleSubmitForm = async (e, form, callbackAfterSubmit = () => {}) => {
+const handleSubmitForm = async (
+    e,
+    form,
+    callbackAfterSubmit = () => {},
+    resetForm = true
+) => {
     e.preventDefault();
     const btnSubmit = form.querySelector('button[type="submit"]');
     const method = getFormMethod(form);
@@ -10,7 +15,7 @@ const handleSubmitForm = async (e, form, callbackAfterSubmit = () => {}) => {
         btnSubmit?.setAttribute("disabled", true);
 
         const res = await http[method](action, formData);
-        if (res.message && method === "post") {
+        if (resetForm && method === "post") {
             form.reset();
             refreshSumoSelect();
         }

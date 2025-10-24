@@ -104,3 +104,7 @@ window.tabBiddingProofContract = () => {
     loadListProofContract();
     loadListBiddingProofContract();
 };
+
+document.addEventListener("DOMContentLoaded", () => {
+    tabBiddingProofContract();
+});

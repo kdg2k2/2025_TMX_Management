@@ -15,4 +15,8 @@ class PersonnelUnit extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function personnels(){
+        return $this->hasMany(Personnel::class);
+    }
 }

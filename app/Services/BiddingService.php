@@ -13,8 +13,9 @@ class BiddingService extends BaseService
 
     public function getShowBaseData(int $id){
         return [
-            'data' => $this->repository->findById($id, false),
+            'data' => $this->repository->findById($id),
             'biddingContractorExperienceFileTypes' => app(BiddingContractorExperienceService::class)->getFileType(),
+            'biddingimplementationPersonnelJobtitles' => app(BiddingimplementationPersonnelService::class)->getJobTitle(),
         ];
     }
 }

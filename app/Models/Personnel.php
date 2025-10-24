@@ -25,4 +25,8 @@ class Personnel extends Model
     {
         return $this->hasMany(PersonnelPivotPersonnelCustomField::class);
     }
+
+    public function files(){
+        return $this->hasMany(PersonnelFile::class);
+    }
 }

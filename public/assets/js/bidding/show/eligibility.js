@@ -100,3 +100,8 @@ window.tabBiddingEligibility = () => {
     loadListEligibility();
     loadListBiddingEligibility();
 };
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    tabBiddingEligibility();
+});

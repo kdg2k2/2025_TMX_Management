@@ -11,7 +11,10 @@ class BiddingRepository extends BaseRepository
         $this->model = new Bidding();
         $this->relations = [
             'createdBy',
-            'contractorExperience',
+            'biddingImplementationPersonnel' => [
+                'personnel',
+                'files',
+            ],
         ];
     }
 
