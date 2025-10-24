@@ -6,11 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 class FindByIdRequest extends BaseRequest
 {
-    public function prepareForValidation()
-    {
-        parent::prepareForValidation();
-    }
-
     public function rules(): array
     {
         return [

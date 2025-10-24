@@ -44,7 +44,9 @@
                 [
                     'title' => 'Tệp tin khác',
                     'icon' => 'ti ti-folder',
-                    'content' => view('admin.pages.bidding.partials.other-files')->render(),
+                    'content' => view('admin.pages.bidding.partials.other-files', [
+                        'data' => $data,
+                    ])->render(),
                 ],
                 [
                     'title' => 'Tổng hợp kết quả',
@@ -86,6 +88,10 @@
         const listPersonnelUnitsUrl = @json(route('api.personnels.units.list'));
         const listPersonnelsUrl = @json(route('api.personnels.list'));
         const listPersonnelFilesUrl = @json(route('api.personnels.file.list'));
+
+        const listBiddingOrtherFileUrl = @json(route('api.bidding.orther-file.list'));
+        const storeBiddingOrtherFileUrl = @json(route('api.bidding.orther-file.store'));
+        const deleteBiddingOrtherFileUrl = @json(route('api.bidding.orther-file.delete'));
     </script>
     <script src="assets/js/bidding/show/script.js"></script>
     <script src="assets/js/bidding/show/contractor-experience.js"></script>
@@ -93,5 +99,5 @@
     <script src="assets/js/bidding/show/software-ownership.js"></script>
     <script src="assets/js/bidding/show/proof-contract.js"></script>
     <script src="assets/js/bidding/show/implementation-personnel.js"></script>
-    {{-- <script src="assets/js/bidding/show/other-files.js"></script> --}}
+    <script src="assets/js/bidding/show/other-files.js"></script>
 @endsection

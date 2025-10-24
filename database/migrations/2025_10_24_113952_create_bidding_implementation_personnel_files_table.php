@@ -10,6 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // files nhân sự thực hiện - đấu thầu
         Schema::create('bidding_implementation_personnel_files', function (Blueprint $table) {
             $table->id();
             $table->timestamps();

@@ -74,81 +74,28 @@ const loadAndFillSelectPersonelFiles = async (value, select) => {
 
 // lấy tất cả select
 const getImplementationPersonnelSelects = (jquery = false) => {
-    const selector = "select";
-    if (jquery) return $(implementationPersonnelForm).find(selector);
-    return implementationPersonnelForm.querySelectorAll(selector);
+    return getFormInputsAndSelects(implementationPersonnelForm, jquery);
 };
 
 // reindex toàn bộ dòng trước khi thêm dòng mới
 const reindexPersonnelRows = () => {
-    const rows = implementationPersonnelForm.querySelectorAll(".col-12.row");
-
-    rows.forEach((row, i) => {
-        row.querySelectorAll("select[name], input[name]").forEach((sel) => {
-            sel.name = sel.name.replace(/\[\d+\]/, `[${i}]`);
-        });
-    });
+    reindexRow(implementationPersonnelForm);
 };
 
 // lấy index cao nhất hiện có
 const getMaxPersonnelIndex = () => {
     const selects = getImplementationPersonnelSelects();
-    const indexes = [];
-
-    selects.forEach((select) => {
-        const match = select.name.match(/\[(\d+)\]/);
-        if (match) indexes.push(Number(match[1]));
-    });
-
-    return indexes.length ? Math.max(...indexes) : -1;
+    return getMaxRowIndex(selects);
 };
 
 const renderRowImplementationPersonnel = () => {
-    destroySumoSelect(getImplementationPersonnelSelects(true));
-
-    // Reindex trước khi clone
-    reindexPersonnelRows();
-
-    const clone = implementationPersonnelCloneRow.cloneNode(true);
-    clone.removeAttribute("id");
-
-    // Lấy index mới (sau khi reindex thì max luôn là dòng cuối)
-    const newIndex = getMaxPersonnelIndex() + 1;
-
-    // Cập nhật name
-    clone.querySelectorAll("select[name], input[name]").forEach((el) => {
-        el.name = el.name.replace(/\[\d+\]/, `[${newIndex}]`);
-
-        // Reset value trừ khi là input hidden
-        if (!(el.tagName === "INPUT" && el.type === "hidden")) {
-            el.value = "";
-        }
-    });
-
-    // Cấu hình nút xóa
-    const btn = clone.querySelector("button");
-    btn.classList.remove("btn-success");
-    btn.classList.add("btn-danger", "implementation-personnel-remove-row");
-    btn.setAttribute("title", "Xóa dòng");
-    btn.onclick = (ev) => {
-        ev.preventDefault();
-        clone.remove();
-        // sau khi xóa, reindex lại luôn
-        reindexPersonnelRows();
-    };
-
-    const icon = btn.querySelector("i");
-    icon.classList.remove("ti-plus");
-    icon.classList.add("ti-trash");
-
-    // Gắn clone trước nút submit
-    const submitRow =
-        implementationPersonnelForm.querySelector(".btn-submit-row");
-    implementationPersonnelForm.insertBefore(clone, submitRow);
-
-    initSumoSelect(getImplementationPersonnelSelects(true));
-
-    return clone;
+    return cloneRow(
+        implementationPersonnelCloneRow,
+        implementationPersonnelForm,
+        () => reindexPersonnelRows(),
+        () => getImplementationPersonnelSelects(true),
+        () => getMaxPersonnelIndex()
+    );
 };
 
 const waitForOptionsLoaded = (select, expectedValue, timeout = 5000) => {
@@ -173,7 +120,7 @@ const waitForOptionsLoaded = (select, expectedValue, timeout = 5000) => {
     });
 };
 
-const restoreSelectedSaved = async () => {
+const restoreImplementationPersonnelSelectedSaved = async () => {
     if (!$data?.bidding_implementation_personnel?.length) return;
 
     for (const [
@@ -199,14 +146,14 @@ const restoreSelectedSaved = async () => {
             ".implementation-personnel-jobtitle"
         );
 
-        // 1️⃣ Chọn Unit
+        // Chọn Unit
         if (value?.personnel?.personnel_unit_id) {
             unitSelect.value = String(value.personnel.personnel_unit_id);
             unitSelect.dispatchEvent(new Event("change", { bubbles: true }));
             await waitForOptionsLoaded(personnelSelect, value.personnel_id);
         }
 
-        // 2️⃣ Chọn Personnel
+        // Chọn Personnel
         if (value?.personnel_id) {
             personnelSelect.value = String(value.personnel_id);
             personnelSelect.dispatchEvent(
@@ -218,7 +165,7 @@ const restoreSelectedSaved = async () => {
             }
         }
 
-        // 3️⃣ Chọn Files (đa lựa chọn)
+        // Chọn Files (đa lựa chọn)
         if (value?.files?.length) {
             const fileIds = value.files.map((f) => String(f.personnel_file_id));
             fileIds.forEach((id) => {
@@ -228,7 +175,7 @@ const restoreSelectedSaved = async () => {
             fileSelect.dispatchEvent(new Event("change", { bubbles: true }));
         }
 
-        // 4️⃣ Chọn Job Title (không cần chờ gì)
+        // Chọn Job Title (không cần chờ gì)
         if (value?.job_title) {
             jobTitleSelect.value = value.job_title;
             jobTitleSelect.dispatchEvent(
@@ -261,12 +208,12 @@ implementationPersonnelForm.addEventListener("change", (e) => {
 });
 
 implementationPersonnelForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, implementationPersonnelForm, () => {}, false);
+    await handleSubmitForm(e, implementationPersonnelForm);
 });
 
 window.tabImplementationPersonnel = async () => {
     await loadAndFillSelectPersonnelUnits();
-    restoreSelectedSaved();
+    restoreImplementationPersonnelSelectedSaved();
 };
 
 document.addEventListener("DOMContentLoaded", () => {

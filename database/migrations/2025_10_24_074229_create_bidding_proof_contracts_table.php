@@ -10,6 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // hợp đồng minh chứng - đấu thầu
         Schema::create('bidding_proof_contracts', function (Blueprint $table) {
             $table->id();
             $table->timestamps();

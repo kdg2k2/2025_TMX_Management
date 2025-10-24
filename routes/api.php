@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\BiddingContractorExperienceController;
 use App\Http\Controllers\Api\BiddingController;
 use App\Http\Controllers\Api\BiddingEligibilityController;
 use App\Http\Controllers\Api\BiddingImplementationPersonnelController;
+use App\Http\Controllers\Api\BiddingOrtherFileController;
 use App\Http\Controllers\Api\BiddingProofContractController;
 use App\Http\Controllers\Api\BiddingSoftwareOwnershipController;
 use App\Http\Controllers\Api\BuildSoftwareController;
@@ -181,7 +182,12 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::prefix('implementation-personnel')->controller(BiddingImplementationPersonnelController::class)->group(function () {
             Route::get('list', 'list')->name('api.bidding.implementation-personnel.list');
             Route::post('store', 'store')->name('api.bidding.implementation-personnel.store');
-            Route::delete('delete', 'delete')->name('api.bidding.implementation-personnel.delete');
+        });
+
+        Route::prefix('orther-file')->controller(BiddingOrtherFileController::class)->group(function () {
+            Route::get('list', 'list')->name('api.bidding.orther-file.list');
+            Route::post('store', 'store')->name('api.bidding.orther-file.store');
+            Route::delete('delete', 'delete')->name('api.bidding.orther-file.delete');
         });
     });
 

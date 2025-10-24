@@ -10,6 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // sở hữu phần mềm - đấu thầu
         Schema::create('bidding_software_ownerships', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
