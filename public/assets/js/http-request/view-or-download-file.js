@@ -59,7 +59,7 @@ const viewFileHandler = (url) => {
         } else if (extension === "pdf") {
             window.open(createLinkPreviewFileOnline(url, 2), "_blank");
         } else {
-            downloadFile(url);
+            downloadFileHandler(url);
         }
     } catch (error) {
         console.error("Lỗi xử lý file:", error);

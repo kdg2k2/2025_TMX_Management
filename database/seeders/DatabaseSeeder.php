@@ -2,12 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Traits\CheckLocalTraits;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use DB;
 
 class DatabaseSeeder extends Seeder
 {
+    use CheckLocalTraits;
+
     /**
      * Seed the application's database.
      */
@@ -23,12 +26,17 @@ class DatabaseSeeder extends Seeder
             ProvinceSeeder::class,
             CommuneSeeder::class,
             ContractTypeSeeder::class,
-            ContractInvestorySeeder::class,
             ContractFileTypeSeeder::class,
             ContractScanFileTypeSeeder::class,
-            ContractUnitSeeder::class,
             UserSeeder::class,
         ]);
+
+        if ($this->isLocal())
+            $this->call([
+                ContractInvestorySeeder::class,
+                ContractUnitSeeder::class,
+                PersonnelSeeder::class,
+            ]);
 
         Artisan::call('db:fix-auto-increment');
 
