@@ -49,6 +49,108 @@ class GoogleDriveService
         return $accessToken;
     }
 
+    public function initFolders(array $folders = [])
+    {
+        foreach ($folders as $item) {
+            $this->createFolderByPath($item);
+        }
+    }
+
+    /**
+     * Tạo folder theo path, tự động tạo parent nếu chưa có
+     * @param string $path - Ví dụ: "Folder A/Folder B/Folder C"
+     * @param string|null $rootParentId - ID folder gốc (null = root Drive)
+     * @return array
+     */
+    public function createFolderByPath(string $path, string $rootParentId = null)
+    {
+        // Loại bỏ dấu / ở đầu và cuối
+        $path = trim($path, '/');
+
+        // Tách path thành mảng folders
+        $folders = explode('/', $path);
+
+        $currentParentId = $rootParentId;
+        $createdFolders = [];
+
+        foreach ($folders as $folderName) {
+            // Tìm folder trong parent hiện tại
+            $existingFolder = $this->findFolderInParent($folderName, $currentParentId);
+
+            if ($existingFolder) {
+                // Folder đã tồn tại
+                $currentParentId = $existingFolder['id'];
+                $createdFolders[] = [
+                    'name' => $folderName,
+                    'id' => $existingFolder['id'],
+                    'status' => 'existing'
+                ];
+            } else {
+                // Tạo folder mới
+                $newFolder = $this->createFolder($folderName, $currentParentId);
+                $currentParentId = $newFolder['folder_id'];
+                $createdFolders[] = [
+                    'name' => $folderName,
+                    'id' => $newFolder['folder_id'],
+                    'status' => 'created'
+                ];
+            }
+        }
+
+        return [
+            'success' => true,
+            'path' => $path,
+            'final_folder_id' => $currentParentId,
+            'folders' => $createdFolders
+        ];
+    }
+
+    /**
+     * Tìm folder chính xác trong parent (cải tiến từ searchFolder)
+     * @param string $folderName
+     * @param string|null $parentId
+     * @return array|null
+     */
+    private function findFolderInParent(string $folderName, string $parentId = null)
+    {
+        $query = "mimeType='application/vnd.google-apps.folder' and name='{$folderName}' and trashed=false";
+
+        if ($parentId) {
+            $query .= " and '{$parentId}' in parents";
+        } else {
+            $query .= " and 'root' in parents";
+        }
+
+        $response = $this->service->files->listFiles([
+            'q' => $query,
+            'fields' => 'files(id, name)',
+            'pageSize' => 1
+        ]);
+
+        $files = $response->getFiles();
+
+        if (count($files) > 0) {
+            return [
+                'id' => $files[0]->id,
+                'name' => $files[0]->name
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Lấy hoặc tạo folder theo path
+     * @param string $path
+     * @param string|null $rootParentId
+     * @return string - Trả về folder ID cuối cùng
+     */
+    public function getOrCreateFolderByPath(string $path, string $rootParentId = null): string
+    {
+        $result = $this->createFolderByPath($path, $rootParentId);
+        return $result['final_folder_id'];
+    }
+
     /**
      * Tạo folder mới
      */

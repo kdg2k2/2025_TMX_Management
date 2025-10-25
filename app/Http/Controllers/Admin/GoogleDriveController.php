@@ -36,6 +36,20 @@ class GoogleDriveController extends Controller
         }
     }
 
+    public function initFolders()
+    {
+        $this->service->initFolders([
+            'DL_HOPDONG',
+            'Finance',
+            'BIDDING',
+            'CV_QD',
+            'OTO',
+            'BBHOP',
+        ]);
+        
+        return 'done';
+    }
+
     public function createFolder(CreateFolderRequest $request)
     {
         $result = $this->service->createFolder(

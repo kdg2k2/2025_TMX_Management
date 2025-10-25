@@ -207,6 +207,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::prefix('drive')->controller(GoogleDriveController::class)->group(function () {
             Route::get('auth', 'auth')->name('google.drive.auth');
             Route::get('callback', 'callback')->name('google.drive.callback');
+            Route::get('init-folders', 'initFolders')->name('google.drive.init-folders');
 
             // Route::post('create-folder', 'createFolder')->name('google.drive.create-folder');
             // Route::post('upload-file', 'uploadFile')->name('google.drive.upload-file');
