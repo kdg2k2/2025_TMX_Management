@@ -42,8 +42,8 @@
             alertSuccess(success);
         @endif
 
-        @if (session('err'))
-            var fail = @json(session('err'));
+        @if (session('error'))
+            var fail = @json(session('error'));
             alertErr(fail);
         @endif
 

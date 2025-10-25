@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\ContractUnitController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EligibilityController;
+use App\Http\Controllers\Admin\GoogleDriveController;
 use App\Http\Controllers\Admin\PersonnelController;
 use App\Http\Controllers\Admin\PersonnelCustomFieldController;
 use App\Http\Controllers\Admin\PersonnelFileController;
@@ -201,4 +202,21 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             });
         });
     });
+
+    Route::prefix('google')->group(function () {
+        Route::prefix('drive')->controller(GoogleDriveController::class)->group(function () {
+            Route::get('auth', 'auth')->name('google.drive.auth');
+            Route::get('callback', 'callback')->name('google.drive.callback');
+
+            // Route::post('create-folder', 'createFolder')->name('google.drive.create-folder');
+            // Route::post('upload-file', 'uploadFile')->name('google.drive.upload-file');
+            // Route::get('list-folders', 'listFolders')->name('google.drive.list-folders');
+            // Route::get('get-folder', 'getFolder')->name('google.drive.get-folder');
+            // Route::put('update-folder', 'updateFolder')->name('google.drive.update-folder');
+            // Route::put('move-folder', 'moveFolder')->name('google.drive.move-folder');
+            // Route::delete('delete-folder', 'deleteFolder')->name('google.drive.delete-folder');
+            // Route::get('search-folder', 'searchFolder')->name('google.drive.search-folder');
+        });
+    });
 });
+
