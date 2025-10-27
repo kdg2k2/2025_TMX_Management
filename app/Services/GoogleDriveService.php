@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Google\Service\Drive;
 use Google\Client;
-use Illuminate\Http\UploadedFile;
 
 class GoogleDriveService
 {

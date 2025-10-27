@@ -30,6 +30,15 @@ class Kernel extends ConsoleKernel
                 logger('[Schedule] Processed DRIVE-UPLOADS queue (10s interval)');
             });
 
+    // Queue DRIVE FOLDERS mỗi 30 giây
+    $schedule
+        ->command('queue:run-drive-folders')
+        ->everyThirtySeconds()
+        ->withoutOverlapping(10)
+        ->after(function () {
+            logger('[Schedule] Processed DRIVE-FOLDERS queue (30s interval)');
+        });
+
         // Queue DEFAULT mỗi 10 giây
         $schedule
             ->command('queue:work --stop-when-empty --queue=default')

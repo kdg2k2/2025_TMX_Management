@@ -17,7 +17,8 @@ class ContractService extends BaseService
         private ContractUnitService $contractUnitService,
         private ContractFinanceService $contractFinanceService,
         private ContractAppendixService $contractAppendixService,
-        private GoogleDriveService $googleDriveService
+        private GoogleDriveService $googleDriveService,
+        private StringHandlerService $stringHandlerService
     ) {
         $this->repository = app(ContractRepository::class);
     }
@@ -161,12 +162,38 @@ class ContractService extends BaseService
         return $extracted;
     }
 
+    private function initGoogleDriveFolders(int $id)
+    {
+        $data = $this->repository->findById($id);
+        $structure = [
+            'Project' => [
+                $data['year'] => [
+                    $this->stringHandlerService->createPascalSlug($data['short_name']) => [
+                        'Contracts',
+                        'ProposalEstimateBudget',
+                        'Disbursement',
+                        'Products' => [
+                            '1.MainProducts',
+                            '2.IntermediaProducts',
+                            '3.Documentary_Decisions',
+                            '4.DataReferences',
+                        ],
+                    ]
+                ]
+            ]
+        ];
+
+        \App\Jobs\InitFoldersOnDriveJob::dispatch($structure);
+    }
+
     private function handleFilesAndRelations($data, array $extracted, bool $isUpdate = false): void
     {
         $fields = [
             'path_file_full',
             'path_file_short',
         ];
+
+        $this->initGoogleDriveFolders($data['id']);
         foreach ($fields as $field) {
             if ($extracted[$field]) {
                 $oldFile = $isUpdate ? $data[$field] : null;
@@ -175,7 +202,7 @@ class ContractService extends BaseService
 
                 \App\Jobs\UploadFileToDriveJob::dispatch(
                     $this->handlerUploadFileService->getAbsolutePublicPath($data[$field]),
-                    "Project/Year{$data['year']}/{$data['short_name']}/$field",
+                    "Project/{$data['year']}/{$this->stringHandlerService->createPascalSlug($data['short_name'])}"
                 );
             }
         }

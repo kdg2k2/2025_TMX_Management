@@ -2,50 +2,50 @@
 
 namespace App\Console\Commands;
 
-use App\Services\GoogleDriveService;
 use Illuminate\Console\Command;
 
 class InitFolderOnGoogleDrive extends Command
 {
-    protected $signature = 'app:init-folder-on-google-drive';
+    protected $signature = 'app:init-folder-on-google-drive {--sync : Chạy đồng bộ không dùng queue}';
     protected $description = 'Khởi tạo cấu trúc folder trên Google Drive';
 
     public function handle()
     {
-        $this->info('🚀 Bắt đầu khởi tạo cấu trúc folder trên Google Drive...');
-        $this->newLine();
-
         // Cấu trúc folder cần tạo
         $structure = config('google-drive.init_folder');
 
-        try {
-            // Gọi service
-            $service = app(GoogleDriveService::class);
-            $result = $service->initFolders($structure);
+        if ($this->option('sync')) {
+            // Chạy đồng bộ
+            $this->info('🚀 Chạy đồng bộ...');
 
-            // Hiển thị kết quả dạng bảng
-            $tableData = collect($result)->map(function ($item, $path) {
-                return [
-                    'Path' => $path,
-                    'Folder ID' => $item['id'],
-                ];
-            })->values()->toArray();
+            try {
+                $service = app(\App\Services\GoogleDriveService::class);
+                $results = $service->initFolders($structure);
 
-            $this->table(
-                ['Path', 'Folder ID'],
-                $tableData
-            );
+                $this->newLine();
+                $this->table(
+                    ['Path', 'Folder ID'],
+                    collect($results)->map(fn($item, $path) => [$path, $item['id']])->values()
+                );
 
-            $this->newLine();
-            $this->info('✅ Hoàn thành! Đã tạo ' . count($result) . ' folder.');
+                $this->newLine();
+                $this->info('✅ Hoàn thành! Đã tạo ' . count($results) . ' folder.');
+
+                return Command::SUCCESS;
+            } catch (\Exception $e) {
+                $this->error('❌ Lỗi: ' . $e->getMessage());
+                return Command::FAILURE;
+            }
+        } else {
+            // Đưa vào queue
+            $this->info('🚀 Đã đưa job vào queue...');
+
+            \App\Jobs\InitFoldersOnDriveJob::dispatch($structure, null, 'InitFolders-Manual');
+
+            $this->info('✅ Job đã được thêm vào queue "drive-folders"');
+            $this->info('💡 Xem log để theo dõi tiến trình: tail -f storage/logs/laravel.log');
 
             return Command::SUCCESS;
-        } catch (\Exception $e) {
-            $this->newLine();
-            $this->error('❌ Lỗi: ' . $e->getMessage());
-            $this->error('File: ' . $e->getFile() . ':' . $e->getLine());
-
-            return Command::FAILURE;
         }
     }
 }

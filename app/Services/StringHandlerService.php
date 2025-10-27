@@ -41,20 +41,135 @@ class StringHandlerService
         return strtr($str, $map);
     }
 
-    public function removeSpecialCharacters(string $str, string $separator = '-')
+    public function removeSpecialCharacters(string $str, string $separator = '-', bool $lower = true)
     {
-        $str = mb_strtolower($str, 'UTF-8');
+        if ($lower)
+            $str = mb_strtolower($str, 'UTF-8');
         $str = preg_replace('/[^a-z0-9ăâêôơưđ]+/u', $separator, $str);
         $str = preg_replace('/' . preg_quote($separator, '/') . '+/', $separator, $str);
         $str = trim($str, $separator);
         return $str;
     }
 
-    public function createSlug(string $str = null, string $separator = '-')
+    /**
+     * Chuyển đổi chuỗi sang định dạng được chỉ định
+     */
+    public function formatCase(string $str, string $case = 'kebab'): string
+    {
+        // Tách chuỗi thành các từ
+        $words = $this->splitIntoWords($str);
+
+        switch (strtolower($case)) {
+            case 'pascal':
+                return $this->toPascalCase($words);
+            case 'title':
+                return $this->toTitleCase($words);
+            case 'kebab':
+                return $this->toKebabCase($words);
+            case 'camel':
+                return $this->toCamelCase($words);
+            case 'snake':
+                return $this->toSnakeCase($words);
+            case 'lower':
+            case 'lowercase':
+                return $this->toLowerCase($words);
+            case 'upper':
+            case 'uppercase':
+                return $this->toUpperCase($words);
+            default:
+                return $this->toKebabCase($words);
+        }
+    }
+
+    /**
+     * Tách chuỗi thành mảng các từ
+     */
+    protected function splitIntoWords(string $str): array
+    {
+        // Loại bỏ dấu
+        $str = $this->removeAccents($str);
+
+        // Tách theo các ký tự đặc biệt, khoảng trắng, hoặc chuyển đổi từ hoa sang thường
+        $str = preg_replace('/([a-z])([A-Z])/', '$1 $2', $str);  // camelCase -> camel Case
+        $str = preg_replace('/[^a-zA-Z0-9]+/', ' ', $str);  // Thay ký tự đặc biệt bằng space
+
+        // Tách thành mảng và loại bỏ phần tử rỗng
+        return array_filter(array_map('trim', explode(' ', $str)));
+    }
+
+    /**
+     * PascalCase: MoTaHopDong
+     */
+    protected function toPascalCase(array $words): string
+    {
+        return implode('', array_map('ucfirst', array_map('strtolower', $words)));
+    }
+
+    /**
+     * Title Case: Mo Ta Hop Dong
+     */
+    protected function toTitleCase(array $words): string
+    {
+        return implode(' ', array_map('ucfirst', array_map('strtolower', $words)));
+    }
+
+    /**
+     * kebab-case: mo-ta-hop-dong
+     */
+    protected function toKebabCase(array $words): string
+    {
+        return implode('-', array_map('strtolower', $words));
+    }
+
+    /**
+     * camelCase: moTaHopDong
+     */
+    protected function toCamelCase(array $words): string
+    {
+        $result = array_map('ucfirst', array_map('strtolower', $words));
+        $result[0] = strtolower($result[0]);
+        return implode('', $result);
+    }
+
+    /**
+     * snake_case: mo_ta_hop_dong
+     */
+    protected function toSnakeCase(array $words): string
+    {
+        return implode('_', array_map('strtolower', $words));
+    }
+
+    /**
+     * lowercase: motahopdong
+     */
+    protected function toLowerCase(array $words): string
+    {
+        return strtolower(implode('', $words));
+    }
+
+    /**
+     * UPPERCASE: MOTAHOPDONG
+     */
+    protected function toUpperCase(array $words): string
+    {
+        return strtoupper(implode('', $words));
+    }
+
+    /**
+     * Cập nhật hàm createSlug để hỗ trợ format case
+     */
+    public function createSlug(string $str = null, string $separator = '-', string $format = null)
     {
         if ($str === null) {
             return '';
         }
+
+        // Nếu có format, áp dụng format trước
+        if ($format !== null) {
+            return $this->formatCase($str, $format);
+        }
+
+        // Nếu không có format, giữ nguyên logic cũ
         $str = $this->removeAccents($str);
         return $this->removeSpecialCharacters($str, $separator);
     }
@@ -91,5 +206,10 @@ class StringHandlerService
         }
         $timestamp = substr(str_replace('.', '', microtime(true)), -6);
         return $prefix . '_' . $timestamp . '_' . $randomString;
+    }
+
+    public function createPascalSlug(string $string)
+    {
+        return $this->createSlug($string, '', 'pascal');
     }
 }
