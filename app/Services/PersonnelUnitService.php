@@ -11,4 +11,21 @@ class PersonnelUnitService extends BaseService
     ) {
         $this->repository = app(PersonnelUnitRepository::class);
     }
+
+    private function formatShortName(string $string)
+    {
+        return app(StringHandlerService::class)->createUpperSnakeCase($string);
+    }
+
+    public function beforeStore(array $request)
+    {
+        $request['short_name'] = $this->formatShortName($request['short_name']);
+        return $request;
+    }
+
+    public function beforeUpdate(array $request)
+    {
+        $request['short_name'] = $this->formatShortName($request['short_name']);
+        return $request;
+    }
 }

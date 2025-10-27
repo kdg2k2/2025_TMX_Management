@@ -8,7 +8,8 @@ class PersonnelFileService extends BaseService
 {
     public function __construct(
         private HandlerUploadFileService $handlerUploadFileService,
-        private PersonnelFileTypeService $personnelFileTypeService
+        private PersonnelFileTypeService $personnelFileTypeService,
+        private StringHandlerService $stringHandlerService
     ) {
         $this->repository = app(PersonnelFileRepository::class);
     }
@@ -58,10 +59,17 @@ class PersonnelFileService extends BaseService
 
     private function handleFile(PersonnelFile $data, array $extracted, bool $isUpdate = false)
     {
+        $data->load($this->repository->relations);
+
         if ($extracted['path']) {
             $oldFile = $isUpdate ? $data['path'] : null;
             $data['path'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path'], 'personnels', 'files', $oldFile);
             $data->save();
+
+            \App\Jobs\UploadFileToDriveJob::dispatch(
+                $this->handlerUploadFileService->getAbsolutePublicPath($data['path']),
+                "NhanSu/{$data['personnel']['personnelUnit']['short_name']}/{$this->stringHandlerService->createPascalSlug($data['personnel']['name'])}"
+            );
         }
     }
 

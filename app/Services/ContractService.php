@@ -17,7 +17,6 @@ class ContractService extends BaseService
         private ContractUnitService $contractUnitService,
         private ContractFinanceService $contractFinanceService,
         private ContractAppendixService $contractAppendixService,
-        private GoogleDriveService $googleDriveService,
         private StringHandlerService $stringHandlerService
     ) {
         $this->repository = app(ContractRepository::class);

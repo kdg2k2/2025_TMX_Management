@@ -70,6 +70,10 @@ class StringHandlerService
                 return $this->toCamelCase($words);
             case 'snake':
                 return $this->toSnakeCase($words);
+            case 'upper_snake':
+            case 'uppersnake':
+            case 'constant':
+                return $this->toUpperSnakeCase($words);
             case 'lower':
             case 'lowercase':
                 return $this->toLowerCase($words);
@@ -155,6 +159,12 @@ class StringHandlerService
         return strtoupper(implode('', $words));
     }
 
+    protected function toUpperSnakeCase(array $words): string
+    {
+        $snakeCase = $this->toSnakeCase($words);
+        return strtoupper($snakeCase);
+    }
+
     /**
      * Cập nhật hàm createSlug để hỗ trợ format case
      */
@@ -211,5 +221,10 @@ class StringHandlerService
     public function createPascalSlug(string $string)
     {
         return $this->createSlug($string, '', 'pascal');
+    }
+
+    public function createUpperSnakeCase(string $string)
+    {
+        return $this->createSlug($string, '', 'uppersnake');
     }
 }

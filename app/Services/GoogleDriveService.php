@@ -260,7 +260,7 @@ class GoogleDriveService
     /**
      * Chuyển mảng thành danh sách paths
      */
-    private function arrayToFolderPaths(array $structure, string $prefix = ''): array
+    public function arrayToFolderPaths(array $structure, string $prefix = ''): array
     {
         $paths = [];
 

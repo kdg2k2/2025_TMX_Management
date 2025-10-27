@@ -23,6 +23,6 @@ class PersonnelFile extends Model
 
     public function personnel()
     {
-        return $this->belongsTo(personnel::class);
+        return $this->belongsTo(Personnel::class);
     }
 }
