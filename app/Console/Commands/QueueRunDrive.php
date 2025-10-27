@@ -4,20 +4,18 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class RunMailQueue extends Command
+class QueueRunDrive extends Command
 {
-    protected $signature = 'queue:run-mail';
-    protected $description = 'Run mail queue jobs';
+    protected $signature = 'queue:run-drive';
+    protected $description = 'Process Drive upload queue';
 
     public function handle()
     {
         $this->call('queue:work', [
-            '--queue' => 'emails',
+            '--queue' => 'drive-uploads',
             '--stop-when-empty' => true,
             '--tries' => 0,
         ]);
-
-        $this->info('Email queue processed.');
 
         return Command::SUCCESS;
     }

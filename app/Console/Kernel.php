@@ -12,22 +12,31 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // Xử lý queue EMAILS mỗi 10 giây
+        // Queue EMAILS mỗi 5 giây
         $schedule
             ->command('queue:run-mail')
             ->everyFiveSeconds()
-            ->withoutOverlapping(2)  // 2 phút timeout
+            ->withoutOverlapping(2)
             ->after(function () {
-                logger('[Schedule] Processed EMAILS queue - SendMailJob only (5s interval)');
+                logger('[Schedule] Processed EMAILS queue (5s interval)');
             });
 
-        // Xử lý queue DEFAULT mỗi phút - Xử lý các job khác (không phải mail)
+        // Queue DRIVE UPLOADS mỗi 10 giây
+        $schedule
+            ->command('queue:run-drive')
+            ->everyTenSeconds()
+            ->withoutOverlapping(5)
+            ->after(function () {
+                logger('[Schedule] Processed DRIVE-UPLOADS queue (10s interval)');
+            });
+
+        // Queue DEFAULT mỗi 10 giây
         $schedule
             ->command('queue:work --stop-when-empty --queue=default')
             ->everyTenSeconds()
-            ->withoutOverlapping(2)  // 2 phút timeout
+            ->withoutOverlapping(2)
             ->after(function () {
-                logger('[Schedule] Processed DEFAULT queue - non-mail jobs (10s interval)');
+                logger('[Schedule] Processed DEFAULT queue (10s interval)');
             });
 
         // Retry failed jobs mỗi 6 giờ
@@ -36,7 +45,7 @@ class Kernel extends ConsoleKernel
             ->everySixHours()
             ->withoutOverlapping(10)
             ->before(function () {
-                logger('[Schedule] Manual retry of truly failed jobs (every 6h)');
+                logger('[Schedule] Manual retry of failed jobs (every 6h)');
             });
 
         // Dọn dẹp failed jobs cũ hơn 2 tuần
@@ -47,7 +56,7 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping(30)
             ->before(function () {
                 logger('[Schedule] Cleaning up failed jobs older than 2 weeks');
-            });  // 336h = 2 tuần
+            });
     }
 
     /**
@@ -55,7 +64,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

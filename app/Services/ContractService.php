@@ -172,6 +172,11 @@ class ContractService extends BaseService
                 $oldFile = $isUpdate ? $data[$field] : null;
                 $data[$field] = $this->handlerUploadFileService->storeAndRemoveOld($extracted[$field], $this->repository->model->getTable(), $field, $oldFile);
                 $data->save();
+
+                \App\Jobs\UploadFileToDriveJob::dispatch(
+                    $this->handlerUploadFileService->getAbsolutePublicPath($data[$field]),
+                    "Project/Year{$data['year']}/{$data['short_name']}/$field",
+                );
             }
         }
 

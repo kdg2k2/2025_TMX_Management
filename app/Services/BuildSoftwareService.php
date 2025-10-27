@@ -54,6 +54,7 @@ class BuildSoftwareService extends BaseService
             $extracted = $this->extractFields($request);
             $data = $this->repository->store($request);
             $this->handleFileAndRelation($data, $extracted);
+            $this->sendMail($data['id'], 'Yêu cầu xây dựng phần mềm');
         }, true);
     }
 
@@ -63,6 +64,7 @@ class BuildSoftwareService extends BaseService
             $extracted = $this->extractFields($request);
             $data = $this->repository->update($request);
             $this->handleFileAndRelation($data, $extracted, true);
+            $this->sendMail($data['id'], 'Cập nhật yêu cầu xây dựng phần mềm');
         }, true);
     }
 
@@ -103,6 +105,13 @@ class BuildSoftwareService extends BaseService
     private function contractMembers(BuildSoftware $data, array $ids)
     {
         $this->syncRelationship($data, 'build_software_id', 'members', $ids, 'user_id');
+    }
+
+    protected function beforeDelete(int $id)
+    {
+        $data = parent::beforeDelete($id);
+        $this->sendMail($data['id'], 'Hủy yêu cầu xây dựng phần mềm');
+        return $data;
     }
 
     protected function afterDelete($entity)

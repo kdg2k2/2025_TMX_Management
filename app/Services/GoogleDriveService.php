@@ -100,9 +100,10 @@ class GoogleDriveService
      * @param string $fileName - Tên file trên Drive
      * @param string|null $folderId - ID folder đích
      * @param string|null $mimeType - MIME type
+     * @param bool $overwrite - Ghi đè nếu file đã tồn tại
      * @return array
      */
-    public function uploadFile(string $filePath, string $fileName, string $folderId = null, string $mimeType = null)
+    public function uploadFile(string $filePath, string $fileName, string $folderId = null, string $mimeType = null, bool $overwrite = false)
     {
         if (!file_exists($filePath)) {
             return [
@@ -111,30 +112,67 @@ class GoogleDriveService
             ];
         }
 
-        $fileMetadata = new Drive\DriveFile([
-            'name' => $fileName,
-            'parents' => $folderId ? [$folderId] : []
-        ]);
+        // Kiểm tra file đã tồn tại chưa
+        $existingFile = null;
+        if ($overwrite && $folderId) {
+            $existingFile = $this->findFileInFolder($fileName, $folderId);
+        }
 
         $content = file_get_contents($filePath);
         $mimeType = $mimeType ?? mime_content_type($filePath);
 
-        $uploadedFile = $this->service->files->create($fileMetadata, [
-            'data' => $content,
-            'mimeType' => $mimeType,
-            'uploadType' => 'multipart',
-            'fields' => 'id, name, mimeType, size, webViewLink, createdTime'
-        ]);
+        if ($existingFile) {
+            // GHI ĐÈ file cũ
+            $fileMetadata = new Drive\DriveFile([
+                'name' => $fileName
+            ]);
 
-        return [
-            'success' => true,
-            'file_id' => $uploadedFile->id,
-            'file_name' => $uploadedFile->name,
-            'mime_type' => $uploadedFile->mimeType,
-            'size' => $uploadedFile->size,
-            'web_view_link' => $uploadedFile->webViewLink,
-            'created_time' => $uploadedFile->createdTime
-        ];
+            $uploadedFile = $this->service->files->update(
+                $existingFile['id'],
+                $fileMetadata,
+                [
+                    'data' => $content,
+                    'mimeType' => $mimeType,
+                    'uploadType' => 'multipart',
+                    'fields' => 'id, name, mimeType, size, webViewLink, modifiedTime'
+                ]
+            );
+
+            return [
+                'success' => true,
+                'action' => 'overwritten',
+                'file_id' => $uploadedFile->id,
+                'file_name' => $uploadedFile->name,
+                'mime_type' => $uploadedFile->mimeType,
+                'size' => $uploadedFile->size,
+                'web_view_link' => $uploadedFile->webViewLink,
+                'modified_time' => $uploadedFile->modifiedTime
+            ];
+        } else {
+            // TẠO MỚI
+            $fileMetadata = new Drive\DriveFile([
+                'name' => $fileName,
+                'parents' => $folderId ? [$folderId] : []
+            ]);
+
+            $uploadedFile = $this->service->files->create($fileMetadata, [
+                'data' => $content,
+                'mimeType' => $mimeType,
+                'uploadType' => 'multipart',
+                'fields' => 'id, name, mimeType, size, webViewLink, createdTime'
+            ]);
+
+            return [
+                'success' => true,
+                'action' => 'created',
+                'file_id' => $uploadedFile->id,
+                'file_name' => $uploadedFile->name,
+                'mime_type' => $uploadedFile->mimeType,
+                'size' => $uploadedFile->size,
+                'web_view_link' => $uploadedFile->webViewLink,
+                'created_time' => $uploadedFile->createdTime
+            ];
+        }
     }
 
     /**
@@ -185,16 +223,17 @@ class GoogleDriveService
      * @param string $localFilePath - Đường dẫn file local
      * @param string $driveFolderPath - Path folder trên Drive (VD: "A/01/11")
      * @param string|null $customFileName - Tên file tùy chỉnh
+     * @param bool $overwrite - Ghi đè nếu file đã tồn tại
      * @return array
      */
-    public function uploadFileByPath(string $localFilePath, string $driveFolderPath, string $customFileName = null)
+    public function uploadFileByPath(string $localFilePath, string $driveFolderPath, string $customFileName = null, bool $overwrite = false)
     {
         // Tạo folder theo path
         $folderId = $this->createFolderByPath($driveFolderPath);
 
-        // Upload file bằng hàm gốc
+        // Upload file với option overwrite
         $fileName = $customFileName ?? basename($localFilePath);
-        return $this->uploadFile($localFilePath, $fileName, $folderId);
+        return $this->uploadFile($localFilePath, $fileName, $folderId, null, $overwrite);
     }
 
     /**
@@ -240,6 +279,31 @@ class GoogleDriveService
         }
 
         return $paths;
+    }
+
+    /**
+     * Tìm file theo tên trong folder
+     */
+    private function findFileInFolder(string $fileName, string $folderId): ?array
+    {
+        $query = "name='{$fileName}' and '{$folderId}' in parents and trashed=false";
+
+        $response = $this->service->files->listFiles([
+            'q' => $query,
+            'fields' => 'files(id, name)',
+            'pageSize' => 1
+        ]);
+
+        $files = $response->getFiles();
+
+        if (count($files) > 0) {
+            return [
+                'id' => $files[0]->id,
+                'name' => $files[0]->name
+            ];
+        }
+
+        return null;
     }
 
     /**
