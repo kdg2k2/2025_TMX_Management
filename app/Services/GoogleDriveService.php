@@ -14,22 +14,22 @@ class GoogleDriveService
     public function __construct()
     {
         $this->client = new Client();
-        $this->client->setAuthConfig(storage_path('app/google/credentials.json'));
+        $this->client->setAuthConfig(storage_path(config('google-drive.storage.credentials')));
         $this->client->addScope(Drive::DRIVE);
-        $this->client->setRedirectUri(route('google.drive.callback'));
+        $this->client->setRedirectUri(config('app.url') . '/google/drive/callback');
         $this->client->setAccessType('offline');
         $this->client->setPrompt('consent');
 
         // Load token nếu đã có
-        if (file_exists(storage_path('app/google/token.json'))) {
-            $accessToken = json_decode(file_get_contents(storage_path('app/google/token.json')), true);
+        if (file_exists(storage_path(config('google-drive.storage.token')))) {
+            $accessToken = json_decode(file_get_contents(storage_path(config('google-drive.storage.token'))), true);
             $this->client->setAccessToken($accessToken);
 
             // Refresh token nếu hết hạn
             if ($this->client->isAccessTokenExpired()) {
                 if ($this->client->getRefreshToken()) {
                     $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
-                    file_put_contents(storage_path('app/google/token.json'), json_encode($this->client->getAccessToken()));
+                    file_put_contents(storage_path(config('google-drive.storage.token')), json_encode($this->client->getAccessToken()));
                 }
             }
         }
@@ -45,73 +45,207 @@ class GoogleDriveService
     public function authenticate($code)
     {
         $accessToken = $this->client->fetchAccessTokenWithAuthCode($code);
-        file_put_contents(storage_path('app/google/token.json'), json_encode($accessToken));
+        file_put_contents(storage_path(config('google-drive.storage.token')), json_encode($accessToken));
         return $accessToken;
     }
 
-    public function initFolders(array $folders = [])
-    {
-        foreach ($folders as $item) {
-            $this->createFolderByPath($item);
-        }
-    }
-
     /**
-     * Tạo folder theo path, tự động tạo parent nếu chưa có
-     * @param string $path - Ví dụ: "Folder A/Folder B/Folder C"
-     * @param string|null $rootParentId - ID folder gốc (null = root Drive)
+     * Tạo folder đơn
+     * @param string $folderName
+     * @param string|null $parentId
      * @return array
      */
-    public function createFolderByPath(string $path, string $rootParentId = null)
+    public function createFolder(string $folderName, string $parentId = null)
     {
-        // Loại bỏ dấu / ở đầu và cuối
-        $path = trim($path, '/');
+        $fileMetadata = new Drive\DriveFile([
+            'name' => $folderName,
+            'mimeType' => 'application/vnd.google-apps.folder'
+        ]);
 
-        // Tách path thành mảng folders
-        $folders = explode('/', $path);
-
-        $currentParentId = $rootParentId;
-        $createdFolders = [];
-
-        foreach ($folders as $folderName) {
-            // Tìm folder trong parent hiện tại
-            $existingFolder = $this->findFolderInParent($folderName, $currentParentId);
-
-            if ($existingFolder) {
-                // Folder đã tồn tại
-                $currentParentId = $existingFolder['id'];
-                $createdFolders[] = [
-                    'name' => $folderName,
-                    'id' => $existingFolder['id'],
-                    'status' => 'existing'
-                ];
-            } else {
-                // Tạo folder mới
-                $newFolder = $this->createFolder($folderName, $currentParentId);
-                $currentParentId = $newFolder['folder_id'];
-                $createdFolders[] = [
-                    'name' => $folderName,
-                    'id' => $newFolder['folder_id'],
-                    'status' => 'created'
-                ];
-            }
+        if ($parentId) {
+            $fileMetadata->setParents([$parentId]);
         }
+
+        $folder = $this->service->files->create($fileMetadata, [
+            'fields' => 'id, name, createdTime, modifiedTime'
+        ]);
 
         return [
             'success' => true,
-            'path' => $path,
-            'final_folder_id' => $currentParentId,
-            'folders' => $createdFolders
+            'folder_id' => $folder->id,
+            'folder_name' => $folder->name,
+            'created_time' => $folder->createdTime,
+            'modified_time' => $folder->modifiedTime
         ];
     }
 
     /**
-     * Tìm folder chính xác trong parent (cải tiến từ searchFolder)
-     * @param string $folderName
-     * @param string|null $parentId
-     * @return array|null
+     * Xóa folder
+     * @param string $folderId
+     * @return array
      */
-    private function findFolderInParent(string $folderName, string $parentId = null)
+    public function deleteFolder(string $folderId)
+    {
+        $this->service->files->delete($folderId);
+
+        return [
+            'success' => true,
+            'message' => 'Folder deleted successfully'
+        ];
+    }
+
+    /**
+     * Upload file đơn
+     * @param string $filePath - Đường dẫn file local
+     * @param string $fileName - Tên file trên Drive
+     * @param string|null $folderId - ID folder đích
+     * @param string|null $mimeType - MIME type
+     * @return array
+     */
+    public function uploadFile(string $filePath, string $fileName, string $folderId = null, string $mimeType = null)
+    {
+        if (!file_exists($filePath)) {
+            return [
+                'success' => false,
+                'message' => 'File không tồn tại: ' . $filePath
+            ];
+        }
+
+        $fileMetadata = new Drive\DriveFile([
+            'name' => $fileName,
+            'parents' => $folderId ? [$folderId] : []
+        ]);
+
+        $content = file_get_contents($filePath);
+        $mimeType = $mimeType ?? mime_content_type($filePath);
+
+        $uploadedFile = $this->service->files->create($fileMetadata, [
+            'data' => $content,
+            'mimeType' => $mimeType,
+            'uploadType' => 'multipart',
+            'fields' => 'id, name, mimeType, size, webViewLink, createdTime'
+        ]);
+
+        return [
+            'success' => true,
+            'file_id' => $uploadedFile->id,
+            'file_name' => $uploadedFile->name,
+            'mime_type' => $uploadedFile->mimeType,
+            'size' => $uploadedFile->size,
+            'web_view_link' => $uploadedFile->webViewLink,
+            'created_time' => $uploadedFile->createdTime
+        ];
+    }
+
+    /**
+     * Xóa file
+     * @param string $fileId
+     * @return array
+     */
+    public function deleteFile(string $fileId)
+    {
+        $this->service->files->delete($fileId);
+
+        return [
+            'success' => true,
+            'message' => 'File deleted successfully'
+        ];
+    }
+
+    /**
+     * Tạo folder theo path (tái sử dụng createFolder)
+     * @param string $path - VD: "A/01/11"
+     * @param string|null $rootParentId
+     * @return string - Trả về folder ID cuối cùng
+     */
+    public function createFolderByPath(string $path, string $rootParentId = null): string
+    {
+        $path = trim($path, '/');
+        $folders = explode('/', $path);
+        $currentParentId = $rootParentId;
+
+        foreach ($folders as $folderName) {
+            // Tìm folder hiện có
+            $existingFolder = $this->findFolder($folderName, $currentParentId);
+
+            if ($existingFolder) {
+                $currentParentId = $existingFolder['id'];
+            } else {
+                // Tạo mới bằng hàm gốc
+                $result = $this->createFolder($folderName, $currentParentId);
+                $currentParentId = $result['folder_id'];
+            }
+        }
+
+        return $currentParentId;
+    }
+
+    /**
+     * Upload file theo path (tái sử dụng createFolderByPath + uploadFile)
+     * @param string $localFilePath - Đường dẫn file local
+     * @param string $driveFolderPath - Path folder trên Drive (VD: "A/01/11")
+     * @param string|null $customFileName - Tên file tùy chỉnh
+     * @return array
+     */
+    public function uploadFileByPath(string $localFilePath, string $driveFolderPath, string $customFileName = null)
+    {
+        // Tạo folder theo path
+        $folderId = $this->createFolderByPath($driveFolderPath);
+
+        // Upload file bằng hàm gốc
+        $fileName = $customFileName ?? basename($localFilePath);
+        return $this->uploadFile($localFilePath, $fileName, $folderId);
+    }
+
+    /**
+     * Khởi tạo folders từ mảng (tái sử dụng createFolderByPath)
+     * @param array $structure
+     * @param string|null $rootParentId
+     * @return array
+     */
+    public function initFolders(array $structure, string $rootParentId = null)
+    {
+        $paths = $this->arrayToFolderPaths($structure);
+        $results = [];
+
+        foreach ($paths as $path) {
+            $folderId = $this->createFolderByPath($path, $rootParentId);
+            $results[$path] = [
+                'id' => $folderId,
+                'path' => $path
+            ];
+        }
+
+        return $results;
+    }
+
+    /**
+     * Chuyển mảng thành danh sách paths
+     */
+    private function arrayToFolderPaths(array $structure, string $prefix = ''): array
+    {
+        $paths = [];
+
+        foreach ($structure as $key => $value) {
+            if (is_array($value)) {
+                // Key là tên folder, value là children
+                $currentPath = $prefix ? $prefix . '/' . $key : $key;
+                $paths[] = $currentPath;
+                $paths = array_merge($paths, $this->arrayToFolderPaths($value, $currentPath));
+            } else {
+                // Value là tên folder
+                $currentPath = $prefix ? $prefix . '/' . $value : $value;
+                $paths[] = $currentPath;
+            }
+        }
+
+        return $paths;
+    }
+
+    /**
+     * Tìm folder theo tên trong parent
+     */
+    private function findFolder(string $folderName, string $parentId = null): ?array
     {
         $query = "mimeType='application/vnd.google-apps.folder' and name='{$folderName}' and trashed=false";
 
@@ -140,75 +274,7 @@ class GoogleDriveService
     }
 
     /**
-     * Lấy hoặc tạo folder theo path
-     * @param string $path
-     * @param string|null $rootParentId
-     * @return string - Trả về folder ID cuối cùng
-     */
-    public function getOrCreateFolderByPath(string $path, string $rootParentId = null): string
-    {
-        $result = $this->createFolderByPath($path, $rootParentId);
-        return $result['final_folder_id'];
-    }
-
-    /**
-     * Tạo folder mới
-     */
-    public function createFolder(string $folderName, string $parentId = null)
-    {
-        $fileMetadata = new Drive\DriveFile([
-            'name' => $folderName,
-            'mimeType' => 'application/vnd.google-apps.folder'
-        ]);
-
-        if ($parentId) {
-            $fileMetadata->setParents([$parentId]);
-        }
-
-        $folder = $this->service->files->create($fileMetadata, [
-            'fields' => 'id, name, createdTime, modifiedTime'
-        ]);
-
-        return [
-            'success' => true,
-            'folder_id' => $folder->id,
-            'folder_name' => $folder->name,
-            'created_time' => $folder->createdTime,
-            'modified_time' => $folder->modifiedTime
-        ];
-    }
-
-    /**
-     * Upload file
-     */
-    public function uploadFile(UploadedFile $file, string $folderId = null)
-    {
-        $fileMetadata = new Drive\DriveFile([
-            'name' => $file->getClientOriginalName(),
-            'parents' => $folderId ? [$folderId] : []
-        ]);
-
-        $content = file_get_contents($file->getRealPath());
-
-        $uploadedFile = $this->service->files->create($fileMetadata, [
-            'data' => $content,
-            'mimeType' => $file->getMimeType(),
-            'uploadType' => 'multipart',
-            'fields' => 'id, name, mimeType, size, webViewLink'
-        ]);
-
-        return [
-            'success' => true,
-            'file_id' => $uploadedFile->id,
-            'file_name' => $uploadedFile->name,
-            'mime_type' => $uploadedFile->mimeType,
-            'size' => $uploadedFile->size,
-            'web_view_link' => $uploadedFile->webViewLink
-        ];
-    }
-
-    /**
-     * Lấy danh sách folder
+     * Lấy danh sách folders
      */
     public function listFolders(string $parentId = null)
     {
@@ -288,20 +354,7 @@ class GoogleDriveService
     }
 
     /**
-     * Xóa folder
-     */
-    public function deleteFolder(string $folderId)
-    {
-        $this->service->files->delete($folderId);
-
-        return [
-            'success' => true,
-            'message' => 'Folder deleted successfully'
-        ];
-    }
-
-    /**
-     * Tìm kiếm folder theo tên
+     * Tìm kiếm folder
      */
     public function searchFolder(string $folderName)
     {
