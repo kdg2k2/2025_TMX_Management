@@ -30,6 +30,7 @@ return new class extends Migration {
             $table->boolean('is_banned')->default(false)->comment('khóa tài khoản');
             $table->boolean('retired')->default(false)->comment('nghỉ việc');
             $table->integer('jwt_version')->default(1)->comment('phiên bản token đăng nhập - dựa vào đây để ép logout user mobile');
+            $table->boolean('payroll')->default(true)->comment('tính lương');
 
             $table->unique(['email', 'phone'], 'unique_not_deleted')->whereNull('deleted_at');
         });
