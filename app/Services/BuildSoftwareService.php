@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\BuildSoftware;
 use App\Repositories\BuildSoftwareRepository;
+use Illuminate\Support\Arr;
 
 class BuildSoftwareService extends BaseService
 {
@@ -182,11 +183,15 @@ class BuildSoftwareService extends BaseService
                 'professionals',
             ]);
 
-        return array_merge($contractEmails, [
-            $data['verifyBy']['email'] ?? null,
-            $data['createdBy']['email'] ?? null,
-            $this->userService->getUserDepartmentManagerEmail($data['createdBy']['id'] ?? null)
-        ]);
+        $recordMemberEmails = $this->userService->getEmails(array_merge(
+            $this->userService->getUserDepartmentManagerEmail($data['createdBy']['id'] ?? null), [
+                $data['verifyBy']['id'] ?? null,
+                $data['createdBy']['id'] ?? null,
+            ]
+        ));
+
+        return Arr::flatten(array_merge($contractEmails,
+            $recordMemberEmails));
     }
 
     private function sendMail(int $id, string $subject, array $params = [])

@@ -59,16 +59,20 @@ abstract class BaseRepository
         return $query->first();
     }
 
-    public function findByKeys(array $keys, $column)
+    public function findByKeys(array $keys, string $column, bool $loadRelation = false)
     {
-        return $this->model->where(function ($query) use ($column, $keys) {
+        $query = $this->model->query();
+        if ($loadRelation)
+            $query->with($this->relations);
+
+        return $query->where(function ($query) use ($column, $keys) {
             foreach ($keys as $key) {
                 $query->orWhere($column, $key);
             }
         })->get();
     }
 
-    public function findByKey(string $key, $column, bool $useBinarySearch = true)
+    public function findByKey(string $key, string $column, bool $useBinarySearch = true)
     {
         if ($useBinarySearch)
             $query = $this->model->whereRaw("BINARY $column = ?", [$key]);

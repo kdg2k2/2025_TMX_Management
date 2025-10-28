@@ -279,13 +279,14 @@ class ContractService extends BaseService
     public function getMemberEmails(int $id, array $types = [])
     {
         $members = $this->getMembers($id);
-        $users = collect($types)
+        $userIds = collect($types)
             ->flatMap(fn($type) => $members[$type] ?? [])
             ->unique('id')
+            ->map(fn($item) => $item['user']['id'] ?? null)
             ->filter()
             ->values()
             ->toArray();
 
-        return $this->userService->getEmails($users);
+        return $this->userService->getEmails($userIds);
     }
 }

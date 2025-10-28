@@ -11,9 +11,10 @@ class UserRepository extends BaseRepository
         $this->model = new User();
         $this->relations = [
             'role',
-            'department',
+            'department.manager',
             'position',
             'jobTitle',
+            'subEmails',
         ];
     }
 

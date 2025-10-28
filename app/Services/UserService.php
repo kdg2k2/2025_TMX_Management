@@ -137,10 +137,15 @@ class UserService extends BaseService
         $this->handlerUploadFileService->removeFiles([$entity['path'], $entity['path_signature']]);
     }
 
-    public function getEmails(array $users = [])
+    public function getEmails(array $userIds = [])
     {
+        $users = $this->repository->findByKeys(array_filter($userIds, fn($i) => !empty($i)), 'id', true)->toArray();
+        
         return array_unique(array_filter(array_map(function ($item) {
-            return $item['email'] ?? null;
+            return array_merge(
+                [$item['email']],
+                array_column($item['sub_emails'], 'email'),
+            );
         }, $users), function ($item) {
             return !empty($item);
         }));
@@ -150,7 +155,11 @@ class UserService extends BaseService
     {
         if (!$id)
             return null;
+
         $data = $this->repository->findById($id);
-        return $data['department']['manager']['email'] ?? null;
+        if (!isset($data['department']['manager']['id']))
+            return [];
+
+        return $this->getEmails([$data['department']['manager']['id']]);
     }
 }
