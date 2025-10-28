@@ -13,7 +13,7 @@ class PersonnelUnitFactory extends Factory
         return [
             'created_by' => User::inRandomOrder()->first()->id,
             'name' => $name,
-            'short_name' => strtoupper(substr($name, 0, 3)),
+            'short_name' => strtoupper(substr($name, 0, 3) . '_' . uniqid()),
         ];
     }
 }

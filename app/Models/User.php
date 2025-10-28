@@ -14,6 +14,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, AssetPathTraits, SoftDeletes;
+
     protected $guarded = [];
 
     protected $hidden = [
@@ -58,5 +59,10 @@ class User extends Authenticatable implements JWTSubject
     public function jobTitle()
     {
         return $this->belongsTo(JobTitle::class, 'job_title_id');
+    }
+
+    public function subEmails()
+    {
+        return $this->hasMany(UserSubEmail::class);
     }
 }
