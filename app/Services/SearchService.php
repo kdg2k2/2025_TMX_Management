@@ -7,7 +7,8 @@ use Carbon\Carbon;
 class SearchService
 {
     public function __construct(
-        private StringHandlerService $stringHandlerService
+        private StringHandlerService $stringHandlerService,
+        private DateService $dateService
     ) {}
 
     public function applySearch($query, string $searchTerm, array $config = [])
@@ -20,8 +21,8 @@ class SearchService
 
         // Prepare các biến cần thiết
         $searchTermNoAccent = $this->stringHandlerService->removeAccents($searchTerm);
-        $parsedDate = $this->parseDate($searchTerm);
-        $parsedDateTime = $this->parseDateTime($searchTerm);
+        $parsedDate = $this->dateService->parseDate($searchTerm);
+        $parsedDateTime = $this->dateService->parseDateTime($searchTerm);
 
         $query->where(function ($q) use ($config, $searchTerm, $searchTermNoAccent, $parsedDate, $parsedDateTime) {
             // Search trong các columns của model chính
@@ -238,138 +239,5 @@ class SearchService
             // Fallback: search text trong datetime string (nếu user nhập dạng text)
             $query->orWhere($column, 'LIKE', "%{$searchTerm}%");
         }
-    }
-
-    /**
-     * Parse datetime với nhiều format, mở rộng nhận diện time-only và day/month + time
-     */
-    protected function parseDateTime($dateString)
-    {
-        $dateString = trim($dateString);
-
-        // Check nếu chỉ là năm (4 số)
-        if (preg_match('/^\d{4}$/', $dateString)) {
-            return [
-                'type' => 'year',
-                'year' => $dateString
-            ];
-        }
-
-        // Check nếu là time-only: HH:mm hoặc HH:mm:ss
-        if (preg_match('/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/', $dateString, $m)) {
-            $h = str_pad($m[1], 2, '0', STR_PAD_LEFT);
-            $i = $m[2];
-            $s = isset($m[3]) ? str_pad($m[3], 2, '0', STR_PAD_LEFT) : '00';
-
-            return [
-                'type' => 'time',
-                'time_start' => "{$h}:{$i}:{$s}",
-                'time_end' => "{$h}:{$i}:" . ($s === '00' ? '59' : $s)  // nếu có giây, match chính xác giây; nếu không, match tới :59
-            ];
-        }
-
-        // Check nếu là day/month + time (ví dụ "18/10 09:16" hoặc "18-10 09:16:30" hoặc "18.10 09:16")
-        if (preg_match('/^(\d{1,2})[\/\.\-](\d{1,2})[\sT]+(\d{1,2}:\d{2}(?::\d{2})?)$/', $dateString, $m)) {
-            $day = str_pad($m[1], 2, '0', STR_PAD_LEFT);
-            $month = str_pad($m[2], 2, '0', STR_PAD_LEFT);
-
-            // parse time part
-            if (preg_match('/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/', $m[3], $t)) {
-                $h = str_pad($t[1], 2, '0', STR_PAD_LEFT);
-                $i = $t[2];
-                $s = isset($t[3]) ? str_pad($t[3], 2, '0', STR_PAD_LEFT) : '00';
-                return [
-                    'type' => 'day_month_time',
-                    'day' => $day,
-                    'month' => $month,
-                    'time_start' => "{$h}:{$i}:{$s}",
-                    'time_end' => "{$h}:{$i}:" . ($s === '00' ? '59' : $s)
-                ];
-            }
-        }
-
-        // Check nếu là day/month (ví dụ "18/10" hoặc "18-10" hoặc "18.10")
-        if (preg_match('/^(\d{1,2})[\/\.\-](\d{1,2})$/', $dateString, $matches)) {
-            return [
-                'type' => 'day_month',
-                'day' => str_pad($matches[1], 2, '0', STR_PAD_LEFT),
-                'month' => str_pad($matches[2], 2, '0', STR_PAD_LEFT)
-            ];
-        }
-
-        // Check nếu là tháng/năm (ví dụ "10/2025" hoặc "10-2025")
-        if (preg_match('/^(\d{1,2})[\/\-](\d{4})$/', $dateString, $matches)) {
-            return [
-                'type' => 'month',
-                'month' => str_pad($matches[1], 2, '0', STR_PAD_LEFT),
-                'year' => $matches[2]
-            ];
-        }
-
-        // Parse full datetime bằng các format phổ biến
-        $formats = [
-            'Y-m-d H:i:s',
-            'Y-m-d H:i',
-            'd-m-Y H:i:s',
-            'd-m-Y H:i',
-            'd/m/Y H:i:s',
-            'd/m/Y H:i',
-        ];
-
-        foreach ($formats as $format) {
-            try {
-                $date = Carbon::createFromFormat($format, $dateString);
-                if ($date) {
-                    return [
-                        'type' => 'full',
-                        'start' => $date->copy()->startOfMinute()->format('Y-m-d H:i:s'),
-                        'end' => $date->copy()->endOfMinute()->format('Y-m-d H:i:s')
-                    ];
-                }
-            } catch (\Exception $e) {
-                continue;
-            }
-        }
-
-        // Nếu chỉ parse được date
-        $parsedDate = $this->parseDate($dateString);
-        if ($parsedDate) {
-            return [
-                'type' => 'date',
-                'date' => $parsedDate
-            ];
-        }
-
-        return null;
-    }
-
-    /**
-     * Parse date
-     */
-    protected function parseDate($dateString)
-    {
-        $dateString = trim($dateString);
-
-        $formats = [
-            'Y-m-d',
-            'd-m-Y',
-            'd/m/Y',
-            'Y/m/d',
-            'd.m.Y',
-            'Y.m.d'
-        ];
-
-        foreach ($formats as $format) {
-            try {
-                $date = Carbon::createFromFormat($format, $dateString);
-                if ($date && $date->format($format) === $dateString) {
-                    return $date->format('Y-m-d');
-                }
-            } catch (\Exception $e) {
-                continue;
-            }
-        }
-
-        return null;
     }
 }
