@@ -31,6 +31,7 @@ use App\Http\Controllers\Api\PersonnelUnitController;
 use App\Http\Controllers\Api\ProofContractController;
 use App\Http\Controllers\Api\SoftwareOwnershipController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UserSubEmailController;
 use Illuminate\Support\Facades\Route;
 
 // Auth routes
@@ -132,10 +133,19 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         });
     });
 
-    Route::prefix('user')->controller(UserController::class)->group(function () {
-        Route::get('list', 'list')->name('api.user.list');
-        Route::post('store', 'store')->name('api.user.store');
-        Route::patch('update', 'update')->name('api.user.update');
+    Route::prefix('user')->group(function () {
+        Route::controller(UserController::class)->group(function () {
+            Route::get('list', 'list')->name('api.user.list');
+            Route::post('store', 'store')->name('api.user.store');
+            Route::patch('update', 'update')->name('api.user.update');
+        });
+
+        Route::prefix('sub-email')->controller(UserSubEmailController::class)->group(function () {
+            Route::get('list', 'list')->name('api.user.sub-email.list');
+            Route::post('store', 'store')->name('api.user.sub-email.store');
+            Route::patch('update', 'update')->name('api.user.sub-email.update');
+            Route::delete('delete', 'delete')->name('api.user.sub-email.delete');
+        });
     });
 
     Route::prefix('build-software')->controller(BuildSoftwareController::class)->group(function () {

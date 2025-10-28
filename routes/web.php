@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\PersonnelUnitController;
 use App\Http\Controllers\Admin\ProofContractController;
 use App\Http\Controllers\Admin\SoftwareOwnershipController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\UserSubEmailController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -116,11 +117,20 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         });
     });
 
-    Route::prefix('user')->controller(UserController::class)->group(function () {
-        Route::get('index', 'index')->name('user.index');
-        Route::get('create', 'create')->name('user.create');
-        Route::get('edit', 'edit')->name('user.edit');
-        Route::delete('delete', 'delete')->name('user.delete');
+    Route::prefix('user')->group(function () {
+        Route::controller(UserController::class)->group(function () {
+            Route::get('index', 'index')->name('user.index');
+            Route::get('create', 'create')->name('user.create');
+            Route::get('edit', 'edit')->name('user.edit');
+            Route::delete('delete', 'delete')->name('user.delete');
+        });
+
+        Route::prefix('sub-email')->controller(UserSubEmailController::class)->group(function () {
+            Route::get('index', 'index')->name('user.sub-email.index');
+            Route::get('create', 'create')->name('user.sub-email.create');
+            Route::get('edit', 'edit')->name('user.sub-email.edit');
+            Route::delete('delete', 'delete')->name('user.sub-email.delete');
+        });
     });
 
     Route::prefix('build-software')->controller(BuildSoftwareController::class)->group(function () {
@@ -219,4 +229,3 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         });
     });
 });
-

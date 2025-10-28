@@ -140,8 +140,18 @@ const renderColumns = () => {
             className: "text-center",
             render: (data, type, row) => {
                 return `
-                    ${createEditBtn(`${editUrl}?id=${row.id}`)}
-                    ${createDeleteBtn(`${deleteUrl}?id=${row.id}`)}
+                    ${
+                        createBtn(
+                            "success",
+                            "Email phụ",
+                            false,
+                            {},
+                            "ti ti-mail-code",
+                            `window.location.href='${listSubEmailUrl}?user_id=${row.id}'`
+                        )?.outerHTML +
+                        createEditBtn(`${editUrl}?id=${row.id}`) +
+                        createDeleteBtn(`${deleteUrl}?id=${row.id}`)
+                    }
                 `;
             },
         },
@@ -155,3 +165,7 @@ const renderColumns = () => {
         });
     }
 );
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadList();
+});
