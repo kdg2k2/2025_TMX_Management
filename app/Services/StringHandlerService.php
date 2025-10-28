@@ -223,8 +223,13 @@ class StringHandlerService
         return $this->createSlug($string, '', 'pascal');
     }
 
-    public function createUpperSnakeCase(string $string)
+    public function createUpperSnakeCaseSlug(string $string)
     {
         return $this->createSlug($string, '', 'uppersnake');
+    }
+
+    public function createKebabSlug(string $string)
+    {
+        return $this->createSlug($string, '', 'kebab');
     }
 }

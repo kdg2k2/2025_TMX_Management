@@ -37,7 +37,7 @@
                     ],
                     [
                         'class' => 'border-0',
-                        'title' => 'Scan File',
+                        'title' => 'Tài Liệu Scan',
                         'icon' => 'ti ti-file-type-pdf',
                         'badge' => ['text' => '', 'color' => 'info', 'id' => 'scan-document-count'],
                         'content' => view('admin.pages.contract.partials.scan-documents-info', [

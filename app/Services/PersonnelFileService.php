@@ -57,6 +57,11 @@ class PersonnelFileService extends BaseService
         return $extracted;
     }
 
+    public function getFolderOnGoogleDrive(PersonnelFile $data)
+    {
+        return "NhanSu/{$data['personnel']['personnelUnit']['short_name']}/{$this->stringHandlerService->createPascalSlug($data['personnel']['name'])}";
+    }
+
     private function handleFile(PersonnelFile $data, array $extracted, bool $isUpdate = false)
     {
         $data->load($this->repository->relations);
@@ -68,14 +73,22 @@ class PersonnelFileService extends BaseService
 
             \App\Jobs\UploadFileToDriveJob::dispatch(
                 $this->handlerUploadFileService->getAbsolutePublicPath($data['path']),
-                "NhanSu/{$data['personnel']['personnelUnit']['short_name']}/{$this->stringHandlerService->createPascalSlug($data['personnel']['name'])}"
+                $this->getFolderOnGoogleDrive($data),
+                null,
+                false,
+                false,
+                $oldFile ? $this->getFolderOnGoogleDrive($data) . '/' . basename($oldFile) : null
             );
         }
     }
 
     public function afterDelete($entity)
     {
-        $this->handlerUploadFileService->removeFiles($entity['path'] ?? null);
+        if ($entity['path']) {
+            $this->handlerUploadFileService->removeFiles($entity['path']);
+
+            \App\Jobs\DeleteFileFromDriveJob::dispatch($this->getFolderOnGoogleDrive($entity) . '/' . basename($entity['path']));
+        }
     }
 
     public function formatRecord(array $array)

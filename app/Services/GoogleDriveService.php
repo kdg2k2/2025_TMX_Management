@@ -433,4 +433,134 @@ class GoogleDriveService
             'folders' => $response->getFiles()
         ];
     }
+
+    /**
+     * Tìm file theo path đầy đủ
+     * @param string $filePath - VD: "A/01/11/document.pdf"
+     * @return array|null
+     */
+    public function findFileByPath(string $filePath): ?array
+    {
+        $filePath = trim($filePath, '/');
+        $parts = explode('/', $filePath);
+        $fileName = array_pop($parts);  // Lấy tên file
+        $folderPath = implode('/', $parts);  // Lấy path folder
+
+        // Nếu không có folder path, tìm ở root
+        if (empty($folderPath)) {
+            $query = "name='{$fileName}' and 'root' in parents and trashed=false";
+        } else {
+            // Tìm folder trước
+            try {
+                $folderId = $this->getFolderIdByPath($folderPath);
+                $query = "name='{$fileName}' and '{$folderId}' in parents and trashed=false";
+            } catch (\Exception $e) {
+                // Folder không tồn tại
+                return null;
+            }
+        }
+
+        $response = $this->service->files->listFiles([
+            'q' => $query,
+            'fields' => 'files(id, name, mimeType, size, webViewLink)',
+            'pageSize' => 1
+        ]);
+
+        $files = $response->getFiles();
+
+        if (count($files) > 0) {
+            $file = $files[0];
+            return [
+                'id' => $file->id,
+                'name' => $file->name,
+                'mime_type' => $file->mimeType,
+                'size' => $file->size,
+                'web_view_link' => $file->webViewLink
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Lấy folder ID theo path
+     * @param string $path - VD: "A/01/11"
+     * @return string
+     * @throws \Exception
+     */
+    public function getFolderIdByPath(string $path): string
+    {
+        $path = trim($path, '/');
+        $folders = explode('/', $path);
+        $currentParentId = null;
+
+        foreach ($folders as $folderName) {
+            $existingFolder = $this->findFolder($folderName, $currentParentId);
+
+            if ($existingFolder) {
+                $currentParentId = $existingFolder['id'];
+            } else {
+                throw new \Exception("Folder '{$folderName}' không tồn tại trong path: {$path}");
+            }
+        }
+
+        return $currentParentId;
+    }
+
+    /**
+     * Xóa file theo path
+     * @param string $filePath - VD: "A/01/11/document.pdf"
+     * @return array
+     */
+    public function deleteFileByPath(string $filePath): array
+    {
+        $file = $this->findFileByPath($filePath);
+
+        if (!$file) {
+            return [
+                'success' => false,
+                'message' => "File không tồn tại: {$filePath}"
+            ];
+        }
+
+        $this->service->files->delete($file['id']);
+
+        return [
+            'success' => true,
+            'message' => 'File đã được xóa',
+            'file_id' => $file['id'],
+            'file_name' => $file['name'],
+            'file_path' => $filePath
+        ];
+    }
+
+    /**
+     * Xóa nhiều file theo paths
+     * @param array $filePaths - Mảng các file paths
+     * @return array
+     */
+    public function deleteMultipleFilesByPath(array $filePaths): array
+    {
+        $results = [];
+
+        foreach ($filePaths as $filePath) {
+            try {
+                $results[] = $this->deleteFileByPath($filePath);
+            } catch (\Exception $e) {
+                $results[] = [
+                    'success' => false,
+                    'file_path' => $filePath,
+                    'message' => $e->getMessage()
+                ];
+            }
+        }
+
+        return [
+            'success' => true,
+            'total' => count($filePaths),
+            'deleted' => count(array_filter($results, fn($r) => $r['success'])),
+            'failed' => count(array_filter($results, fn($r) => !$r['success'])),
+            'results' => $results
+        ];
+    }
 }

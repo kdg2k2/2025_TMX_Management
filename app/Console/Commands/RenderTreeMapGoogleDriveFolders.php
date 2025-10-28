@@ -66,10 +66,10 @@ class RenderTreeMapGoogleDriveFolders extends Command
                                                 'note' => 'HSMT (Hồ sơ mời thầu), HSCB (Hồ sơ chào giá), HSNT (Hồ sơ nhà thầu)',
                                                 'children' => []
                                             ],
-                                            'Disbursement' => [
-                                                'description' => 'File excel phân bổ',
-                                                'children' => []
-                                            ],
+                                            // 'Disbursement' => [
+                                            //     'description' => 'File excel phân bổ',
+                                            //     'children' => []
+                                            // ],
                                             'Products' => [
                                                 'description' => 'Sản phẩm dự án',
                                                 'children' => [

@@ -15,7 +15,7 @@ class HandlerUploadFileService extends BaseService
 
         // Nếu là file dạng UploadedFile (từ request upload)
         if ($file instanceof \Illuminate\Http\UploadedFile) {
-            $fileName = app(StringHandlerService::class)->createSlug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '__' . date('d-m-Y_H-i-s') . '__.' . $file->getClientOriginalExtension();
+            $fileName = app(StringHandlerService::class)->createSlug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
             $file->move($destinationPath, $fileName);
         }
         // Nếu là file dạng đường dẫn thực tế (Seeder)

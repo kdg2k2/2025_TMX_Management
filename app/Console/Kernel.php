@@ -30,14 +30,23 @@ class Kernel extends ConsoleKernel
                 logger('[Schedule] Processed DRIVE-UPLOADS queue (10s interval)');
             });
 
-    // Queue DRIVE FOLDERS mỗi 30 giây
-    $schedule
-        ->command('queue:run-drive-folders')
-        ->everyThirtySeconds()
-        ->withoutOverlapping(10)
-        ->after(function () {
-            logger('[Schedule] Processed DRIVE-FOLDERS queue (30s interval)');
-        });
+        // Queue DRIVE FOLDERS mỗi 30 giây
+        $schedule
+            ->command('queue:run-drive-folders')
+            ->everyThirtySeconds()
+            ->withoutOverlapping(10)
+            ->after(function () {
+                logger('[Schedule] Processed DRIVE-FOLDERS queue (30s interval)');
+            });
+
+        // Queue DRIVE DELETES mỗi 1 phút
+        $schedule
+            ->command('queue:run-drive-deletes')
+            ->everyMinute()
+            ->withoutOverlapping(5)
+            ->after(function () {
+                logger('[Schedule] Processed DRIVE-DELETES queue (1min interval)');
+            });
 
         // Queue DEFAULT mỗi 10 giây
         $schedule

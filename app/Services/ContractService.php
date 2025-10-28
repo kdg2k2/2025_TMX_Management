@@ -170,7 +170,7 @@ class ContractService extends BaseService
                     $this->stringHandlerService->createPascalSlug($data['short_name']) => [
                         'Contracts',
                         'ProposalEstimateBudget',
-                        'Disbursement',
+                        // 'Disbursement', // file phân bổ đẫ là 1 trong trong loại file của hợp đồng rồi nên ko tạo folder riêng
                         'Products' => [
                             '1.MainProducts',
                             '2.IntermediaProducts',
@@ -185,7 +185,12 @@ class ContractService extends BaseService
         \App\Jobs\InitFoldersOnDriveJob::dispatch($structure);
     }
 
-    private function handleFilesAndRelations($data, array $extracted, bool $isUpdate = false): void
+    public function getFolderOnGoogleDrive(Contract $data)
+    {
+        return "Project/{$data['year']}/{$this->stringHandlerService->createPascalSlug($data['short_name'])}";
+    }
+
+    private function handleFilesAndRelations(Contract $data, array $extracted, bool $isUpdate = false): void
     {
         $fields = [
             'path_file_full',
@@ -201,7 +206,11 @@ class ContractService extends BaseService
 
                 \App\Jobs\UploadFileToDriveJob::dispatch(
                     $this->handlerUploadFileService->getAbsolutePublicPath($data[$field]),
-                    "Project/{$data['year']}/{$this->stringHandlerService->createPascalSlug($data['short_name'])}"
+                    $this->getFolderOnGoogleDrive($data),
+                    null,
+                    false,
+                    false,
+                    $oldFile ? $this->getFolderOnGoogleDrive($data) . '/' . basename($oldFile) : null
                 );
             }
         }
@@ -247,6 +256,10 @@ class ContractService extends BaseService
     protected function afterDelete($entity)
     {
         $this->handlerUploadFileService->removeFiles([$entity['path_file_short'], $entity['path_file_full']]);
+        if ($entity['path_file_short'])
+            \App\Jobs\DeleteFileFromDriveJob::dispatch($this->getFolderOnGoogleDrive($entity) . '/' . basename($entity['path_file_short']));
+        if ($entity['path_file_full'])
+            \App\Jobs\DeleteFileFromDriveJob::dispatch($this->getFolderOnGoogleDrive($entity) . '/' . basename($entity['path_file_full']));
     }
 
     public function getMembers(int $id)

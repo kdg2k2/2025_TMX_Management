@@ -8,7 +8,8 @@ use App\Repositories\ContractScanFileRepository;
 class ContractScanFileService extends BaseService
 {
     public function __construct(
-        private HandlerUploadFileService $handlerUploadFileService
+        private HandlerUploadFileService $handlerUploadFileService,
+        private StringHandlerService $stringHandlerService
     ) {
         $this->repository = app(ContractScanFileRepository::class);
     }
@@ -46,18 +47,36 @@ class ContractScanFileService extends BaseService
         return $extracted;
     }
 
+    public function getFolderOnGoogleDrive(ContractScanFile $data)
+    {
+        return app(ContractService::class)->getFolderOnGoogleDrive($data['contract_id']) . '/Contracts/ScanFiles/' . $this->stringHandlerService->createPascalSlug($data['type']['name']);
+    }
+
     private function handleFile(ContractScanFile $data, array $extracted, bool $isUpdate = false)
     {
         if ($extracted['path']) {
             $oldFile = $isUpdate ? $data['path'] : null;
-            $data['path'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path'], 'contract', 'scan_files', $oldFile);
+            $data['path'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path'], 'contracts/scan_files', $this->stringHandlerService->createPascalSlug($data['type']['name']), $oldFile);
             $data->save();
+
+            \App\Jobs\UploadFileToDriveJob::dispatch(
+                $this->handlerUploadFileService->getAbsolutePublicPath($data['path']),
+                $this->getFolderOnGoogleDrive($data),
+                null,
+                false,
+                false,
+                $oldFile ? $this->getFolderOnGoogleDrive($data) . '/' . basename($oldFile) : null
+            );
         }
     }
 
     public function afterDelete($entity)
     {
-        $this->handlerUploadFileService->removeFiles($entity['path'] ?? null);
+        if ($entity['path']) {
+            $this->handlerUploadFileService->removeFiles($entity['path']);
+
+            \App\Jobs\DeleteFileFromDriveJob::dispatch($this->getFolderOnGoogleDrive($entity) . '/' . basename($entity['path']));
+        }
     }
 
     public function formatRecord(array $array)

@@ -14,7 +14,7 @@ class PersonnelUnitService extends BaseService
 
     private function formatShortName(string $string)
     {
-        return app(StringHandlerService::class)->createUpperSnakeCase($string);
+        return app(StringHandlerService::class)->createUpperSnakeCaseSlug($string);
     }
 
     public function beforeStore(array $request)
