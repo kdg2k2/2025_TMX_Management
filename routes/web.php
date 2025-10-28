@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\ProofContractController;
 use App\Http\Controllers\Admin\SoftwareOwnershipController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserSubEmailController;
+use App\Http\Controllers\Admin\WorkScheduleController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -217,15 +218,11 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::prefix('drive')->controller(GoogleDriveController::class)->group(function () {
             Route::get('auth', 'auth')->name('google.drive.auth');
             Route::get('callback', 'callback')->name('google.drive.callback');
-
-            // Route::post('create-folder', 'createFolder')->name('google.drive.create-folder');
-            // Route::post('upload-file', 'uploadFile')->name('google.drive.upload-file');
-            // Route::get('list-folders', 'listFolders')->name('google.drive.list-folders');
-            // Route::get('get-folder', 'getFolder')->name('google.drive.get-folder');
-            // Route::put('update-folder', 'updateFolder')->name('google.drive.update-folder');
-            // Route::put('move-folder', 'moveFolder')->name('google.drive.move-folder');
-            // Route::delete('delete-folder', 'deleteFolder')->name('google.drive.delete-folder');
-            // Route::get('search-folder', 'searchFolder')->name('google.drive.search-folder');
         });
+    });
+
+    Route::prefix('work-schedule')->controller(WorkScheduleController::class)->group(function () {
+        Route::get('index', 'index')->name('work-schedule.index');
+        Route::get('create', 'create')->name('work-schedule.create');
     });
 });

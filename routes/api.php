@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\ProofContractController;
 use App\Http\Controllers\Api\SoftwareOwnershipController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserSubEmailController;
+use App\Http\Controllers\Api\WorkScheduleController;
 use Illuminate\Support\Facades\Route;
 
 // Auth routes
@@ -255,5 +256,15 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
                 Route::delete('delete', 'delete')->name('api.personnels.file.type.delete');
             });
         });
+    });
+
+    Route::prefix('work-schedule')->controller(WorkScheduleController::class)->group(function () {
+        Route::get('list', 'list')->name('api.work-schedule.list');
+        Route::post('store', 'store')->name('api.work-schedule.store');
+        Route::post('approve', 'approve')->name('api.work-schedule.approve');
+        Route::post('reject', 'reject')->name('api.work-schedule.reject');
+        Route::post('return', 'return')->name('api.work-schedule.return');
+        Route::post('return-approve', 'returnApprove')->name('api.work-schedule.return-approve');
+        Route::post('return-reject', 'returnReject')->name('api.work-schedule.return-reject');
     });
 });

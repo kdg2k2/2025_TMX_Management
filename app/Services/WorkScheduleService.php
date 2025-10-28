@@ -9,7 +9,9 @@ use Exception;
 class WorkScheduleService extends BaseService
 {
     public function __construct(
-        private DateService $dateService
+        private DateService $dateService,
+        private ContractService $contractService,
+        private UserService $userService
     ) {
         $this->repository = app(WorkScheduleRepository::class);
     }
@@ -20,7 +22,7 @@ class WorkScheduleService extends BaseService
 
         $array['type_program'] = $this->getTypeProgram($array['type_program']);
         $array['approval_status'] = $this->getApprovalStatus($array['approval_status']);
-        $array['return_approval_status'] = $this->getEndApprovalStatus($array['return_approval_status']);
+        $array['return_approval_status'] = $this->getReturnApprovalStatus($array['return_approval_status']);
 
         return $array;
     }
@@ -35,9 +37,9 @@ class WorkScheduleService extends BaseService
         return $this->repository->getApprovalStatus($key);
     }
 
-    public function getEndApprovalStatus($key = null)
+    public function getReturnApprovalStatus($key = null)
     {
-        return $this->repository->getEndApprovalStatus($key);
+        return $this->repository->getReturnApprovalStatus($key);
     }
 
     public function getTotalTripDays(string $from, string $to)
@@ -61,6 +63,31 @@ class WorkScheduleService extends BaseService
     {
         if ($data['return_approval_status'] != 'pending')
             throw new Exception('Bản ghi đang không ở trạng thái chờ duyệt');
+    }
+
+    public function baseDataList()
+    {
+        return [
+            'contracts' => $this->contractService->list([
+                'columns' => ['id', 'name'],
+            ]),
+            'users' => $this->userService->list([
+                'columns' => ['id', 'name'],
+            ]),
+            'typeProgram' => $this->getTypeProgram(),
+            'approvalStatus' => $this->getApprovalStatus(),
+            'returnApprovalStatus' => $this->getReturnApprovalStatus(),
+            'isCompleted' => $this->repository->getIsCompleted(),
+        ];
+    }
+
+    public function baseDataCreate()
+    {
+        return [
+            'contracts' => $this->contractService->list([
+                'columns' => ['id', 'name'],
+            ]),
+        ];
     }
 
     public function approvalRequest(array $request)

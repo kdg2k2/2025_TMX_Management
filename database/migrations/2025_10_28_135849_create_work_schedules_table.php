@@ -21,8 +21,8 @@ return new class extends Migration {
             $table->enum('type_program', ['contract', 'other'])->comment('kiểu chương trình');
             $table->foreignId('contract_id')->nullable()->comment('khóa ngoại hợp đồng')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('other_program')->nullable()->comment('tên chương trình khác');
-            $table->string('clue')->nullable()->comment('đàu mối');
-            $table->string('participants')->nullable()->comment('thành phần tham gia');
+            $table->string('clue')->nullable()->comment('đầu mối');
+            $table->string('participants')->nullable()->comment('thành phần');
             $table->string('note')->nullable()->comment('ghi chú');
 
             $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending')->comment('trạng thái phê duyệt');

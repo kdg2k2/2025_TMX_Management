@@ -25,6 +25,8 @@ class ListRequest extends BaseListRequest
                 'approval_status' => 'nullable|in:pending,approved,rejected',
                 'return_approval_status' => 'nullable|in:none,pending,approved,rejected',
                 'is_completed' => 'nullable|boolean',
+                'from_date' => 'nullable|date_format:Y-m-d',
+                'to_date' => 'nullable|date_format:Y-m-d',
             ]
         );
     }

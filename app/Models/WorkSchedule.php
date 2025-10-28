@@ -15,7 +15,7 @@ class WorkSchedule extends Model
     protected const TYPE_PROGRAM = [
         'contract' => [
             'original' => 'contract',
-            'converted' => 'Hợp đòng',
+            'converted' => 'Hợp đồng',
         ],
         'other' => [
             'original' => 'other',
@@ -41,16 +41,41 @@ class WorkSchedule extends Model
         ],
     ];
 
-    protected const END_APPROVAL_STATUS = array_merge(
-        [
-            'none' => [
-                'original' => 'none',
-                'converted' => 'Không',
-                'color' => 'light',
-            ],
+    protected const END_APPROVAL_STATUS = [
+        'none' => [
+            'original' => 'none',
+            'converted' => 'Không',
+            'color' => 'light',
         ],
-        self::APPROVAL_STATUS
-    );
+        'pending' => [
+            'original' => 'pending',
+            'converted' => 'Chờ duyệt',
+            'color' => 'warning',
+        ],
+        'approved' => [
+            'original' => 'approved',
+            'converted' => 'Đã duyệt',
+            'color' => 'success',
+        ],
+        'rejected' => [
+            'original' => 'rejected',
+            'converted' => 'Từ chối',
+            'color' => 'danger',
+        ],
+    ];
+
+    protected const IS_COMPLETED = [
+        '0' => [
+            'original' => 0,
+            'converted' => 'Đang thực hiện',
+            'color' => 'warning',
+        ],
+        '1' => [
+            'original' => 1,
+            'converted' => 'Đã kết thúc',
+            'color' => 'success',
+        ],
+    ];
 
     public function getTypeProgram($key = null)
     {
@@ -62,9 +87,14 @@ class WorkSchedule extends Model
         return $this->getValueFromArrayByKey(self::APPROVAL_STATUS, $key);
     }
 
-    public function getEndApprovalStatus($key = null)
+    public function getReturnApprovalStatus($key = null)
     {
         return $this->getValueFromArrayByKey(self::END_APPROVAL_STATUS, $key);
+    }
+
+    public function getIsCompleted($key = null)
+    {
+        return $this->getValueFromArrayByKey(self::IS_COMPLETED, $key);
     }
 
     public function createdBy()

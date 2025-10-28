@@ -166,6 +166,24 @@
 
                 <li class="slide__category">
                     <span class="category-name">
+                        Công tác & Nghỉ phép
+                    </span>
+                </li>
+                <li class="slide">
+                    <a href="{{ route('work-schedule.index') }}" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-calendar-event"></i>
+                        <span class="side-menu__label">Lịch công tác</span>
+                    </a>
+                </li>
+                <li class="slide">
+                    <a href="javascript::void(0);" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-calendar-pause"></i>
+                        <span class="side-menu__label">Nghỉ phép</span>
+                    </a>
+                </li>
+
+                <li class="slide__category">
+                    <span class="category-name">
                         Nhận sự & ABC
                     </span>
                 </li>

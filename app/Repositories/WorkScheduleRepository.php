@@ -27,9 +27,14 @@ class WorkScheduleRepository extends BaseRepository
         return $this->model->getApprovalStatus($key);
     }
 
-    public function getEndApprovalStatus($key = null)
+    public function getReturnApprovalStatus($key = null)
     {
-        return $this->model->getEndApprovalStatus($key);
+        return $this->model->getReturnApprovalStatus($key);
+    }
+
+    public function getIsCompleted($key = null)
+    {
+        return $this->model->getIsCompleted($key);
     }
 
     public function getSearchConfig(): array
@@ -78,5 +83,12 @@ class WorkScheduleRepository extends BaseRepository
             if (isset($request[$field]))
                 $query->where($field, $request[$field]);
         }
+
+        if (isset($request['from_date']) && isset($request['to_date']))
+            $query->where(function ($q) use ($request) {
+                $q
+                    ->whereBetween('from_date', [$request['from_date'], $request['to_date']])
+                    ->orWhereBetween('to_date', [$request['from_date'], $request['to_date']]);
+            });
     }
 }
