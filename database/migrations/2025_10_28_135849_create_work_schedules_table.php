@@ -26,14 +26,14 @@ return new class extends Migration {
             $table->string('note')->nullable()->comment('ghi chú');
 
             $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending')->comment('trạng thái phê duyệt');
-            $table->string('approval_note')->comment('ghi chú phê duyệt');
-            $table->date('approval_date')->comment('ngày phê duyệt');
+            $table->string('approval_note')->nullable()->comment('ghi chú phê duyệt');
+            $table->date('approval_date')->nullable()->comment('ngày phê duyệt');
             $table->foreignId('approved_by')->nullable()->comment('khóa ngoại người duyệt')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
 
             $table->dateTime('return_datetime')->nullable()->comment('thời gian về');
             $table->enum('return_approval_status', ['none', 'pending', 'approved', 'rejected'])->default('none')->comment('trạng thái duyệt kết thúc công tác');
             $table->text('return_approval_note')->nullable()->comment('ghi chú duyệt về');
-            $table->date('return_approval_date')->comment('ngày phê duyệt');
+            $table->date('return_approval_date')->nullable()->comment('ngày phê duyệt');
             $table->foreignId('return_approved_by')->nullable()->comment('khóa ngoại người duyệt về')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
 
             $table->boolean('is_completed')->default(false)->comment('đã kết thúc');

@@ -20,26 +20,32 @@ class WorkScheduleService extends BaseService
     {
         $array = parent::formatRecord($array);
 
-        $array['type_program'] = $this->getTypeProgram($array['type_program']);
-        $array['approval_status'] = $this->getApprovalStatus($array['approval_status']);
-        $array['return_approval_status'] = $this->getReturnApprovalStatus($array['return_approval_status']);
+        $array['type_program'] = $this->repository->getTypeProgram($array['type_program']);
+        $array['approval_status'] = $this->repository->getApprovalStatus($array['approval_status']);
+        $array['return_approval_status'] = $this->repository->getReturnApprovalStatus($array['return_approval_status']);
+        $array['is_completed'] = $this->repository->getIsCompleted($array['is_completed']);
+
+        if (isset($array['from_date']))
+            $array['from_date'] = $this->formatDateForPreview($array['from_date']);
+        if (isset($array['to_date']))
+            $array['to_date'] = $this->formatDateForPreview($array['to_date']);
+        if (isset($array['approval_date']))
+            $array['approval_date'] = $this->formatDateForPreview($array['approval_date']);
+        if (isset($array['return_datetime']))
+            $array['return_datetime'] = $this->formatDateTimeForPreview($array['return_datetime']);
+        if (isset($array['return_approval_date']))
+            $array['return_approval_date'] = $this->formatDateForPreview($array['return_approval_date']);
+
+        foreach ([
+            'createdBy',
+            'approvedBy',
+            'endApprovedBy',
+        ] as $item) {
+            if (isset($array[$item]))
+                $array[$item] = $this->userService->formatRecord($array[$item]);
+        }
 
         return $array;
-    }
-
-    public function getTypeProgram($key = null)
-    {
-        return $this->repository->getTypeProgram($key);
-    }
-
-    public function getApprovalStatus($key = null)
-    {
-        return $this->repository->getApprovalStatus($key);
-    }
-
-    public function getReturnApprovalStatus($key = null)
-    {
-        return $this->repository->getReturnApprovalStatus($key);
     }
 
     public function getTotalTripDays(string $from, string $to)
@@ -50,35 +56,34 @@ class WorkScheduleService extends BaseService
     public function isPendingApproval(WorkSchedule $data)
     {
         if ($data['approval_status'] != 'pending')
-            throw new Exception('Bản ghi đang không ở trạng thái chờ duyệt');
+            throw new Exception('Bản ghi đang không ở trạng thái chờ duyệt công tác');
     }
 
     public function isApproved(WorkSchedule $data)
     {
         if ($data['approval_status'] != 'approved')
-            throw new Exception('Bản ghi đang không ở trạng thái đã duyệt');
+            throw new Exception('Bản ghi đang không ở trạng thái đã duyệt công tác');
     }
 
     public function isPendingReturnApproval(WorkSchedule $data)
     {
         if ($data['return_approval_status'] != 'pending')
-            throw new Exception('Bản ghi đang không ở trạng thái chờ duyệt');
+            throw new Exception('Bản ghi đang không ở trạng thái chờ duyệt về');
     }
 
     public function baseDataList()
     {
-        return [
-            'contracts' => $this->contractService->list([
-                'columns' => ['id', 'name'],
-            ]),
-            'users' => $this->userService->list([
-                'columns' => ['id', 'name'],
-            ]),
-            'typeProgram' => $this->getTypeProgram(),
-            'approvalStatus' => $this->getApprovalStatus(),
-            'returnApprovalStatus' => $this->getReturnApprovalStatus(),
-            'isCompleted' => $this->repository->getIsCompleted(),
-        ];
+        return array_merge(
+            [
+                'users' => $this->userService->list([
+                    'columns' => ['id', 'name'],
+                ]),
+                'approvalStatus' => $this->repository->getApprovalStatus(),
+                'returnApprovalStatus' => $this->repository->getReturnApprovalStatus(),
+                'isCompleted' => $this->repository->getIsCompleted(),
+            ],
+            $this->baseDataCreate()
+        );
     }
 
     public function baseDataCreate()
@@ -87,7 +92,15 @@ class WorkScheduleService extends BaseService
             'contracts' => $this->contractService->list([
                 'columns' => ['id', 'name'],
             ]),
+            'typeProgram' => $this->repository->getTypeProgram(),
         ];
+    }
+
+    public function beforeStore(array $request)
+    {
+        $request['total_trip_days'] = $this->getTotalTripDays($request['from_date'], $request['to_date']);
+
+        return $request;
     }
 
     public function approvalRequest(array $request)
@@ -120,17 +133,19 @@ class WorkScheduleService extends BaseService
     {
         return $this->tryThrow(function () use ($request) {
             $data = $this->findById($request['id']);
-            $this->isPendingApproval($data);
+            $this->isApproved($data);
             $this->isPendingReturnApproval($data);
 
             $data->update($request);
+
+            if ($request['return_approval_status'] == 'approved')
+                $this->completeRequest($data);
         }, true);
     }
 
-    public function completeRequest(array $request)
+    public function completeRequest(WorkSchedule $data)
     {
-        return $this->tryThrow(function () use ($request) {
-            $data = $this->findById($request['id']);
+        return $this->tryThrow(function () use ($data) {
             $this->isApproved($data);
 
             $data->update([

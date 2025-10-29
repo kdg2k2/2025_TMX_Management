@@ -29,7 +29,9 @@ const renderColumns = () => {
             render: (data, type, row) => {
                 return `
                     <div class="text-center">
-                        ${row?.from_date} - ${row?.to_date}
+                        ${row?.from_date}
+                        <br>
+                        ${row?.to_date}
                         <br>
                         ${row?.total_trip_days} ngày
                     </div>
@@ -51,11 +53,13 @@ const renderColumns = () => {
                     <div class="text-center">
                         ${row?.type_program?.converted}
                         <br>
-                        ${
-                            row?.type_program?.original == "contract"
-                                ? row?.contract?.name
-                                : row.other_program
-                        }
+                        <i>
+                            ${
+                                row?.type_program?.original == "contract"
+                                    ? row?.contract?.name
+                                    : row.other_program
+                            }
+                        </i>
                     </div>
                 `;
             },
@@ -187,40 +191,42 @@ const renderColumns = () => {
                                   "Phê duyệt",
                                   false,
                                   {
-                                      "data-href": apiWorkScheduleApprove,
+                                      "data-href": `${apiWorkScheduleApprove}?id=${row?.id}`,
                                       "data-onsuccess": "loadList",
-                                      "data-approve-type": "approved",
+                                      "data-approve-status": "approved",
                                   },
                                   "ti ti-check",
-                                  "openDeleteModal(this)"
+                                  "openModalApproveRequest(this)"
                               )?.outerHTML +
                               createBtn(
                                   "danger",
                                   "Từ chối",
                                   false,
                                   {
-                                      "data-href": apiWorkScheduleApprove,
+                                      "data-href": `${apiWorkScheduleReject}?id=${row?.id}`,
                                       "data-onsuccess": "loadList",
-                                      "data-approve-type": "rejected",
+                                      "data-approve-status": "rejected",
                                   },
                                   "ti ti-x",
-                                  "openDeleteModal(this)"
+                                  "openModalApproveRequest(this)"
                               )?.outerHTML
                             : ""
                     }
                     ${
                         row?.approval_status?.original == "approved" &&
-                        row?.is_completed == true
+                        ["none", "rejected"].includes(
+                            row?.return_approval_status?.original
+                        )
                             ? createBtn(
                                   "primary",
                                   "Yêu cầu kết thúc công tác",
                                   false,
                                   {
-                                      "data-href": apiWorkScheduleReturn,
+                                      "data-href": `${apiWorkScheduleReturn}?id=${row?.id}`,
                                       "data-onsuccess": "loadList",
                                   },
-                                  "ti ti-check",
-                                  "openDeleteModal(this)"
+                                  "ti ti-flag-check",
+                                  "openModalReturnRequest(this)"
                               )?.outerHTML
                             : ""
                     }
@@ -231,24 +237,24 @@ const renderColumns = () => {
                                   "Phê duyệt",
                                   false,
                                   {
-                                      "data-href": apiWorkScheduleReturnApprove,
+                                      "data-href": `${apiWorkScheduleReturnApprove}?id=${row?.id}`,
                                       "data-onsuccess": "loadList",
-                                      "data-approve-type": "approved",
+                                      "data-approve-status": "approved",
                                   },
                                   "ti ti-check",
-                                  "openDeleteModal(this)"
+                                  "openModalReturnApproveRequest(this)"
                               )?.outerHTML +
                               createBtn(
                                   "danger",
                                   "Từ chối",
                                   false,
                                   {
-                                      "data-href": apiWorkScheduleReturnReject,
+                                      "data-href": `${apiWorkScheduleReturnReject}?id=${row?.id}`,
                                       "data-onsuccess": "loadList",
-                                      "data-approve-type": "rejected",
+                                      "data-approve-status": "rejected",
                                   },
                                   "ti ti-x",
-                                  "openDeleteModal(this)"
+                                  "openModalReturnApproveRequest(this)"
                               )?.outerHTML
                             : ""
                     }
@@ -260,7 +266,7 @@ const renderColumns = () => {
 
 const setFilterParams = () => {
     customDataTableFilterParams = {};
-    
+
     if (createdBy.value)
         customDataTableFilterParams["created_by"] = createdBy.value;
     if (typeProgram.value)

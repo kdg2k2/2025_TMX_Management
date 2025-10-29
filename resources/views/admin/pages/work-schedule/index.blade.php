@@ -50,7 +50,7 @@
                 Trạng thái kết thúc công tác
             </label>
             <select id="is-completed">
-                <x-select-options :items="$isCompleted" keyField="original" valueFields="converted" selected=""/>
+                <x-select-options :items="$isCompleted" keyField="original" valueFields="converted" selected="" />
             </select>
         </div>
         <div class="col-lg-3 col-md-4 mb-1">
@@ -72,6 +72,54 @@
         </div>
     </div>
 @endsection
+@section('modals')
+    <x-modal id="modal-approve-request" title="" size="md" method="POST" nested="true">
+        <x-slot:body>
+            <input type="hidden" name="approval_status">
+            <div>
+                <label>
+                    Ghi chú
+                </label>
+                <input class="form-control" type="text" name="approval_note" required>
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
+            <x-button-submit variant="primary" />
+        </x-slot:footer>
+    </x-modal>
+
+    <x-modal id="modal-return-request" title="Yêu cầu kết thúc công tác" size="md" method="POST" nested="true">
+        <x-slot:body>
+            <div>
+                <label>
+                    Thời gian về
+                </label>
+                <input class="form-control" type="datetime-local" name="return_datetime" required>
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
+            <x-button-submit variant="primary" />
+        </x-slot:footer>
+    </x-modal>
+
+    <x-modal id="modal-return-approve-request" title="" size="md" method="POST" nested="true">
+        <x-slot:body>
+            <input type="hidden" name="return_approval_status">
+            <div>
+                <label>
+                    Ghi chú
+                </label>
+                <input class="form-control" type="text" name="return_approval_note" required>
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
+            <x-button-submit variant="primary" />
+        </x-slot:footer>
+    </x-modal>
+@endsection
 @section('scripts')
     <script>
         const table = $('#datatable');
@@ -84,4 +132,5 @@
     </script>
     <script src="assets/js/http-request/base-list.js"></script>
     <script src="assets/js/work-schedule/list.js"></script>
+    <script src="assets/js/work-schedule/modals.js"></script>
 @endsection

@@ -12,6 +12,10 @@ class WorkSchedule extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'return_datetime' => 'datetime:Y-m-d H:i',
+    ];
+
     protected const TYPE_PROGRAM = [
         'contract' => [
             'original' => 'contract',
@@ -45,7 +49,7 @@ class WorkSchedule extends Model
         'none' => [
             'original' => 'none',
             'converted' => 'Không',
-            'color' => 'light',
+            'color' => 'outline-light border',
         ],
         'pending' => [
             'original' => 'pending',

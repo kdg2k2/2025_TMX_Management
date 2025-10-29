@@ -10,7 +10,7 @@ class ListRequest extends BaseListRequest
     {
         parent::prepareForValidation();
         $this->merge([
-            'is_completed' => $this->boolean('is_completed'),
+            'is_completed' => $this->is_completed ? $this->boolean('is_completed') : null,
         ]);
     }
 
