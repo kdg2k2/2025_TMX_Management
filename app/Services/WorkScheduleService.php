@@ -187,20 +187,25 @@ class WorkScheduleService extends BaseService
                 $request['return_approval_status'] == 'approved' ? 'Phê duyệt yêu cầu kết thúc' : 'Từ chối yêu cầu kết thúc');
 
             if ($request['return_approval_status'] == 'approved')
-                $this->completeRequest($data);
+                $this->setComplete($data);
         }, true);
     }
 
-    public function completeRequest(WorkSchedule $data)
+    public function setComplete(WorkSchedule $data)
     {
         return $this->tryThrow(function () use ($data) {
             $this->isApproved($data);
 
-            $data->update([
+            $params = [
                 'is_completed' => true,
                 'total_trip_days' => $this->getTotalTripDays($data['from_date'], $data['to_date']),
                 'total_work_days' => $this->dateService->getTotalDays($data['from_date'], $data['to_date'], [0]),
-            ]);
+            ];
+
+            if ($data['return_approval_status'] == 'pendding')
+                $params['return_approval_status'] = 'none';
+
+            $data->update($params);
 
             $this->sendMail($data['id'], 'Đã kết thúc');
         }, true);
@@ -235,5 +240,20 @@ class WorkScheduleService extends BaseService
         dispatch(new \App\Jobs\SendMailJob('emails.work-schedule', $subject . ' lịch công tác', $emails, [
             'data' => $this->formatRecord($record->toArray()),
         ]));
+    }
+
+    public function setCompletedWorkSchedules()
+    {
+        return $this->catchAPI(function () {
+            $list = $this->repository->list([
+                'is_completed' => false,
+                'approval_status' => 'approved',
+            ]);
+            $today = date('Y-m-d');
+            foreach ($list as $item) {
+                if ($item['to_date'] == $today)
+                    $this->setComplete($item);
+            }
+        });
     }
 }

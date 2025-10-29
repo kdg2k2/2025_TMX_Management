@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Services\WorkScheduleService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -11,6 +12,12 @@ class Kernel extends ConsoleKernel
      * Define the application's command schedule.
      */
     protected function schedule(Schedule $schedule): void
+    {
+        $this->tasks($schedule);
+        $this->queueJobs($schedule);
+    }
+
+    private function queueJobs(Schedule $schedule)
     {
         // Queue EMAILS mỗi 5 giây
         $schedule
@@ -75,6 +82,17 @@ class Kernel extends ConsoleKernel
             ->before(function () {
                 logger('[Schedule] Cleaning up failed jobs older than 2 weeks');
             });
+    }
+
+    private function tasks(Schedule $schedule)
+    {
+        $schedule
+            ->call(function () {
+                app(WorkScheduleService::class)->setCompletedWorkSchedules();
+            })
+            ->name('set-completed-work-schedules')
+            ->dailyAt('17:00')
+            ->withoutOverlapping();
     }
 
     /**
