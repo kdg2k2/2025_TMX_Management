@@ -35,6 +35,7 @@ const openModalAdjustRequest = (btn) => {
         modalAdjustRequestForm.setAttribute("data-onsuccess", onsuccess);
 
         showModal(modalAdjustRequest);
+        toggleToDateVisibility();
     }
 };
 
@@ -48,7 +49,7 @@ const openModalAdjustApproveRequest = (btn) => {
         modalAdjustApproveRequest.querySelector(".modal-title").innerHTML =
             title;
         modalAdjustApproveRequestForm.querySelector(
-            'input[name="return_approval_status"]'
+            'input[name="adjust_approval_status"]'
         ).value = status;
         modalAdjustApproveRequestForm.setAttribute("action", action);
         modalAdjustApproveRequestForm.setAttribute("data-onsuccess", onsuccess);

@@ -84,6 +84,7 @@ class LeaveRequestRepository extends BaseRepository
             $query->whereNot('id', $ignoreId);
 
         return $query
+            ->whereNot('approval_status', 'rejected')
             ->where('created_by', $userId)
             ->where(function ($q) use ($from, $to) {
                 $q

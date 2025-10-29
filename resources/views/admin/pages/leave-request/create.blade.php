@@ -12,7 +12,7 @@
         <div class="card-body">
             <form id="submit-form" class="row" action="{{ route('api.leave-request.store') }}">
                 @method('post')
-                @include('admin.pages.leave-request.create-edit-form-content')
+                @include('admin.pages.leave-request.create-form-content')
                 <div class="my-1 col-12 text-center">
                     <x-button-submit />
                 </div>

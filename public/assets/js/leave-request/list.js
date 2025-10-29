@@ -1,8 +1,8 @@
 const createdBy = document.getElementById("created-by");
 const approvalStatus = document.getElementById("approval-status");
 const adjustApprovalStatus = document.getElementById("adjust-approval-status");
-const fromDate = document.getElementById("from-date");
-const toDate = document.getElementById("to-date");
+const fromDateFilter = document.getElementById("from-date-filter");
+const toDateFilter = document.getElementById("to-date-filter");
 
 const renderColumns = () => {
     return [
@@ -17,7 +17,7 @@ const renderColumns = () => {
             data: null,
             title: "Lý do",
             render: (data, type, row) => {
-                return row?.address || "";
+                return row?.reason || "";
             },
         },
         {
@@ -33,13 +33,6 @@ const renderColumns = () => {
                         ${row?.total_leave_days} ngày
                     </div>
                 `;
-            },
-        },
-        {
-            data: null,
-            title: "Nội dung công tác",
-            render: (data, type, row) => {
-                return row?.content || "";
             },
         },
         {
@@ -78,8 +71,8 @@ const renderColumns = () => {
             title: "Trạng thái phê duyệt điều chỉnh",
             render: (data, type, row) => {
                 return createBadge(
-                    row?.return_approval_status?.converted,
-                    row?.return_approval_status?.color
+                    row?.adjust_approval_status?.converted,
+                    row?.adjust_approval_status?.color
                 );
             },
         },
@@ -87,28 +80,21 @@ const renderColumns = () => {
             data: null,
             title: "Ghi chú phê duyệt điều chỉnh",
             render: (data, type, row) => {
-                return row?.return_approval_note || "";
+                return row?.adjust_approval_note || "";
             },
         },
         {
             data: null,
             title: "Ngày phê duyệt điều chỉnh",
             render: (data, type, row) => {
-                return row?.return_approval_date || "";
+                return row?.adjust_approval_date || "";
             },
         },
         {
             data: null,
             title: "Người phê duyệt điều chỉnh",
             render: (data, type, row) => {
-                return row?.return_approved_by?.name || "";
-            },
-        },
-        {
-            data: null,
-            title: "Dữ liệu trước điều chỉnh",
-            render: (data, type, row) => {
-                return "";
+                return row?.adjust_approved_by?.name || "";
             },
         },
         {
@@ -161,48 +147,47 @@ const renderColumns = () => {
                     }
                     ${
                         row?.approval_status?.original == "approved" &&
-                        row?.is_completed?.original == 0 &&
                         ["none", "rejected"].includes(
-                            row?.return_approval_status?.original
+                            row?.adjust_approval_status?.original
                         )
                             ? createBtn(
                                   "primary",
                                   "Yêu cầu điều chỉnh",
                                   false,
                                   {
-                                      "data-href": `${apiLeaveRequestReturn}?id=${row?.id}`,
+                                      "data-href": `${apiLeaveRequestAdjust}?id=${row?.id}`,
                                       "data-onsuccess": "loadList",
                                   },
                                   "ti ti-flag-check",
-                                  "openModaAdjustRequest(this)"
+                                  "openModalAdjustRequest(this)"
                               )?.outerHTML
                             : ""
                     }
                     ${
-                        row?.return_approval_status?.original == "pending"
+                        row?.adjust_approval_status?.original == "pending"
                             ? createBtn(
                                   "primary",
                                   "Phê duyệt",
                                   false,
                                   {
-                                      "data-href": `${apiLeaveRequestReturnApprove}?id=${row?.id}`,
+                                      "data-href": `${apiLeaveRequestAdjustApprove}?id=${row?.id}`,
                                       "data-onsuccess": "loadList",
                                       "data-approve-status": "approved",
                                   },
                                   "ti ti-check",
-                                  "openModaAdjustApproveRequest(this)"
+                                  "openModalAdjustApproveRequest(this)"
                               )?.outerHTML +
                               createBtn(
                                   "danger",
                                   "Từ chối",
                                   false,
                                   {
-                                      "data-href": `${apiLeaveRequestReturnReject}?id=${row?.id}`,
+                                      "data-href": `${apiLeaveRequestAdjustReject}?id=${row?.id}`,
                                       "data-onsuccess": "loadList",
                                       "data-approve-status": "rejected",
                                   },
                                   "ti ti-x",
-                                  "openModaAdjustApproveRequest(this)"
+                                  "openModalAdjustApproveRequest(this)"
                               )?.outerHTML
                             : ""
                     }
@@ -220,19 +205,19 @@ const setFilterParams = () => {
     if (approvalStatus.value)
         customDataTableFilterParams["approval_status"] = approvalStatus.value;
     if (adjustApprovalStatus.value)
-        customDataTableFilterParams["return_approval_status"] =
+        customDataTableFilterParams["adjust_approval_status"] =
             adjustApprovalStatus.value;
-    if (fromDate.value)
-        customDataTableFilterParams["from_date"] = fromDate.value;
-    if (toDate.value) customDataTableFilterParams["to_date"] = toDate.value;
+    if (fromDateFilter.value)
+        customDataTableFilterParams["from_date"] = fromDateFilter.value;
+    if (toDateFilter.value) customDataTableFilterParams["to_date"] = toDateFilter.value;
 };
 
 [
     createdBy,
     approvalStatus,
     adjustApprovalStatus,
-    fromDate,
-    toDate,
+    fromDateFilter,
+    toDateFilter,
 ].forEach((value, index) => {
     value.addEventListener("change", () => {
         setFilterParams();

@@ -96,6 +96,7 @@ class WorkScheduleRepository extends BaseRepository
     {
         return $this
             ->model
+            ->whereNot('approval_status', 'rejected')
             ->where('created_by', $userId)
             ->where(function ($q) use ($from, $to) {
                 $q

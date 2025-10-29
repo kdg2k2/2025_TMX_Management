@@ -33,13 +33,13 @@
             <label>
                 Từ ngày
             </label>
-            <input type="date" class="form-control" id="from-date">
+            <input type="date" class="form-control" id="from-date-filter">
         </div>
         <div class="col-lg-2 col-md-4 mb-1">
             <label>
                 Đến ngày
             </label>
-            <input type="date" class="form-control" id="to-date">
+            <input type="date" class="form-control" id="to-date-filter">
         </div>
     </div>
     <div class="card custom-card">
@@ -65,36 +65,9 @@
         </x-slot:footer>
     </x-modal>
 
-    <x-modal id="modal-adjust-request" title="Yêu cầu kết thúc công tác" size="md" method="POST" nested="true">
+    <x-modal id="modal-adjust-request" title="Yêu cầu cập nhật nghỉ phép" size="md" method="POST" nested="true">
         <x-slot:body>
-            <div class="my-1">
-                <label>
-                    Thời gian bắt đầu
-                </label>
-                <input class="form-control" type="date" name="from_date" required>
-            </div>
-            <div class="my-1">
-                <label>
-                    Thời gian kết thúc
-                </label>
-                <input class="form-control" type="date" name="to_date" required>
-            </div>
-            <div class="my-1">
-                <div class="form-group">
-                    <label>
-                        Kiểu đăng ký
-                    </label>
-                    <select name="type" required>
-                        <x-select-options :items="$types" keyField="original" valueFields="converted" :emptyOption="false" />
-                    </select>
-                </div>
-            </div>
-            <div class="my-1">
-                <label>
-                    Tông số ngày nghỉ
-                </label>
-                <input class="form-control bg-light" type="text" name="total_leave_days" readonly required>
-            </div>
+            @include('admin.pages.leave-request.create-adjust-form-content', ['colClass' => ''])
         </x-slot:body>
         <x-slot:footer>
             <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
@@ -131,4 +104,5 @@
     <script src="assets/js/http-request/base-list.js"></script>
     <script src="assets/js/leave-request/list.js"></script>
     <script src="assets/js/leave-request/modals.js"></script>
+    <script src="assets/js/leave-request/get-total-leave-days.js"></script>
 @endsection

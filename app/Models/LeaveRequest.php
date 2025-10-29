@@ -17,9 +17,13 @@ class LeaveRequest extends Model
     ];
 
     protected const TYPE = [
-        'both' => [
-            'original' => 'both',
-            'converted' => 'Cả ngày',
+        'one_day' => [
+            'original' => 'one_day',
+            'converted' => '1 ngày',
+        ],
+        'many_days' => [
+            'original' => 'many_days',
+            'converted' => 'Nhiều ngày',
         ],
         'morning' => [
             'original' => 'morning',

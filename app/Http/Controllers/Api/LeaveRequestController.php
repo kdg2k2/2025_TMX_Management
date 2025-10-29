@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LeaveRequest\AdjustApprovalRequest;
+use App\Http\Requests\LeaveRequest\AdjustRequest;
 use App\Http\Requests\LeaveRequest\ApprovalRequest;
 use App\Http\Requests\LeaveRequest\GetTotalLeaveDaysRequest;
 use App\Http\Requests\LeaveRequest\ListRequest;
 use App\Http\Requests\LeaveRequest\StoreRequest;
-use App\Http\Requests\WorkSchedule\ReturnRequest;
 use App\Services\LeaveRequestService;
 
 class LeaveRequestController extends Controller
@@ -30,9 +30,13 @@ class LeaveRequestController extends Controller
     public function getTotalLeaveDays(GetTotalLeaveDaysRequest $request)
     {
         return $this->catchAPI(function () use ($request) {
-            $validated=$request->validated();
+            $validated = $request->validated();
             return response()->json([
-                'data' => $this->service->getTotalLeaveDays($validated['from_date'], $validated['to_date']),
+                'data' => $this->service->getTotalLeaveDays(
+                    $validated['from_date'],
+                    $validated['to_date'],
+                    $validated['type'] ?? 'one_day'
+                ),
             ]);
         });
     }
@@ -67,7 +71,7 @@ class LeaveRequestController extends Controller
         });
     }
 
-    public function adjust(ReturnRequest $request)
+    public function adjust(AdjustRequest $request)
     {
         return $this->tryThrow(function () use ($request) {
             return response()->json([

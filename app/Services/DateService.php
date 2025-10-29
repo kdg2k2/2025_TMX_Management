@@ -26,8 +26,8 @@ class DateService
         ?int $month = null,
         ?int $year = null
     ): Collection {
-        $startDate = $this->parseDate($from);
-        $endDate = $this->parseDate($to);
+        $startDate = $this->parseDate($from, false);  // false = return Carbon
+        $endDate = $this->parseDate($to, false);  // false = return Carbon
 
         $period = CarbonPeriod::create($startDate, $endDate);
         $dates = collect();
@@ -520,9 +520,22 @@ class DateService
     /**
      * Parse date
      */
-    public function parseDate($dateString)
+    public function parseDate(string|Carbon $dateString, bool $returnString = true): string|Carbon|null
     {
+        // Nếu đã là Carbon instance
+        if ($dateString instanceof Carbon) {
+            return $returnString ? $dateString->format('Y-m-d') : $dateString->copy();
+        }
+
         $dateString = trim($dateString);
+
+        // Thử parse với Carbon::parse() trước (linh hoạt và an toàn nhất)
+        try {
+            $parsed = Carbon::parse($dateString);
+            return $returnString ? $parsed->format('Y-m-d') : $parsed;
+        } catch (\Exception $e) {
+            // Nếu thất bại, thử các format cụ thể
+        }
 
         $formats = [
             'Y-m-d',
@@ -537,7 +550,7 @@ class DateService
             try {
                 $date = Carbon::createFromFormat($format, $dateString);
                 if ($date && $date->format($format) === $dateString) {
-                    return $date->format('Y-m-d');
+                    return $returnString ? $date->format('Y-m-d') : $date;
                 }
             } catch (\Exception $e) {
                 continue;

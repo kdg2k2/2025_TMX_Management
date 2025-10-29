@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->date('from_date')->comment('ngày bắt đầu');
             $table->date('to_date')->comment('ngày kết thúc');
             $table->string('reason')->comment('lý do');
-            $table->enum('type', ['both', 'morning', 'afternoon'])->comment('kiểu đăng ký');
+            $table->enum('type', ['one_day', 'many_days', 'morning', 'afternoon'])->comment('kiểu đăng ký');
             $table->double('total_leave_days')->comment('Tổng số ngày');
 
             $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending')->comment('trạng thái phê duyệt');

@@ -44,9 +44,34 @@ class LeaveRequestService extends BaseService
         return $array;
     }
 
-    public function getTotalLeaveDays(string $from, string $to)
+    public function getTotalLeaveDays(string $from, string $to, string $type = 'one_day')
     {
-        return $this->dateService->getTotalDaysDecimal($from, $to);
+        $ignoreDays = [0];  // Bỏ qua chủ nhật
+
+        return match ($type) {
+            'morning' => $this->dateService->getTotalDaysDecimal(
+                $from,
+                $to,
+                'morning',
+                'morning',
+                $ignoreDays
+            ),
+            'afternoon' => $this->dateService->getTotalDaysDecimal(
+                $from,
+                $to,
+                'afternoon',
+                'afternoon',
+                $ignoreDays
+            ),
+            'one_day', 'many_days' => $this->dateService->getTotalDaysDecimal(
+                $from,
+                $to,
+                'morning',
+                'afternoon',
+                $ignoreDays
+            ),
+            default => 0
+        };
     }
 
     public function isPendingApproval(LeaveRequest $data)
@@ -154,20 +179,22 @@ class LeaveRequestService extends BaseService
     public function adjustRequest(array $request)
     {
         return $this->tryThrow(function () use ($request) {
-            $data = $this->findById($request['id']);
+            $data = $this->findById($request['id'], false);
             $this->isApproved($data);
 
             if ($this->getGuard()->user()->id != $data['created_by'])
                 throw new Exception('Chỉ người đăng ký mới có thể điều chỉnh');
 
-            $this->checkOverLapDays($request);
+            $oldData = collect($data)->toArray();
+            $this->checkOverLapDays($oldData);
 
-            $data->update([
+            $data->update(array_merge($request, [
                 'adjust_approval_status' => 'pending',
                 'adjust_approval_note' => null,
                 'adjust_approval_date' => null,
                 'adjust_approved_by' => null,
-            ]);
+                'before_adjust' => json_encode($oldData, JSON_UNESCAPED_UNICODE)
+            ]));
 
             $this->sendMail($data['id'], 'Yêu cầu điều chỉnh');
         }, true);
@@ -180,10 +207,24 @@ class LeaveRequestService extends BaseService
             $this->isApproved($data);
             $this->isPendingAdjustApproval($data);
 
+            $subject = 'Phê duyệt yêu cầu điều chỉnh';
+            if ($request['adjust_approval_status'] == 'rejected') {
+                $subject = 'Từ chối yêu cầu điều chỉnh';
+
+                $oldData = json_decode($data['before_adjust'], true);
+                $ignoreKeys = array_merge(
+                    [
+                        'created_at',
+                        'updated_at',
+                    ],
+                    array_keys($request)
+                );
+                $oldData = array_diff_key($oldData, array_flip($ignoreKeys));
+                $request = array_merge($request, $oldData);
+            }
             $data->update($request);
 
-            $this->sendMail($data['id'],
-                $request['adjust_approval_status'] == 'approved' ? 'Phê duyệt yêu cầu điều chỉnh' : 'Từ chối yêu cầu điều chỉnh');
+            $this->sendMail($data['id'], $subject);
         }, true);
     }
 
