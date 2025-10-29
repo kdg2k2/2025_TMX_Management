@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\ContractScanFileTypeController;
 use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\EligibilityController;
+use App\Http\Controllers\Api\LeaveRequestController;
 use App\Http\Controllers\Api\PersonnelController;
 use App\Http\Controllers\Api\PersonnelCustomFieldController;
 use App\Http\Controllers\Api\PersonnelFileController;
@@ -266,5 +267,16 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::post('return', 'return')->name('api.work-schedule.return');
         Route::post('return-approve', 'returnApprove')->name('api.work-schedule.return-approve');
         Route::post('return-reject', 'returnReject')->name('api.work-schedule.return-reject');
+    });
+
+    Route::prefix('leave-request')->controller(LeaveRequestController::class)->group(function () {
+        Route::get('list', 'list')->name('api.leave-request.list');
+        Route::post('get-total-leave-days', 'getTotalLeaveDays')->name('api.leave-request.get-total-leave-days');
+        Route::post('store', 'store')->name('api.leave-request.store');
+        Route::post('approve', 'approve')->name('api.leave-request.approve');
+        Route::post('reject', 'reject')->name('api.leave-request.reject');
+        Route::post('adjust', 'adjust')->name('api.leave-request.adjust');
+        Route::post('adjust-approve', 'adjustApprove')->name('api.leave-request.adjust-approve');
+        Route::post('adjust-reject', 'adjustReject')->name('api.leave-request.adjust-reject');
     });
 });

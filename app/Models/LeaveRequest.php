@@ -6,24 +6,28 @@ use App\Traits\GetValueFromArrayByKeyTraits;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WorkSchedule extends Model
+class LeaveRequest extends Model
 {
     use HasFactory, GetValueFromArrayByKeyTraits;
 
     protected $guarded = [];
 
     protected $casts = [
-        'return_datetime' => 'datetime:Y-m-d H:i',
+        'before_adjust' => 'array',
     ];
 
-    protected const TYPE_PROGRAM = [
-        'contract' => [
-            'original' => 'contract',
-            'converted' => 'Hợp đồng',
+    protected const TYPE = [
+        'both' => [
+            'original' => 'both',
+            'converted' => 'Cả ngày',
         ],
-        'other' => [
-            'original' => 'other',
-            'converted' => 'Khác',
+        'morning' => [
+            'original' => 'morning',
+            'converted' => 'Sáng',
+        ],
+        'afternoon' => [
+            'original' => 'afternoon',
+            'converted' => 'Chiều',
         ],
     ];
 
@@ -45,7 +49,7 @@ class WorkSchedule extends Model
         ],
     ];
 
-    protected const END_APPROVAL_STATUS = [
+    protected const ADJUST_APPROVAL_STATUS = [
         'none' => [
             'original' => 'none',
             'converted' => 'Không',
@@ -68,22 +72,9 @@ class WorkSchedule extends Model
         ],
     ];
 
-    protected const IS_COMPLETED = [
-        '0' => [
-            'original' => 0,
-            'converted' => 'Đang thực hiện',
-            'color' => 'warning',
-        ],
-        '1' => [
-            'original' => 1,
-            'converted' => 'Đã kết thúc',
-            'color' => 'success',
-        ],
-    ];
-
-    public function getTypeProgram($key = null)
+    public function getType($key = null)
     {
-        return $this->getValueFromArrayByKey(self::TYPE_PROGRAM, $key);
+        return $this->getValueFromArrayByKey(self::TYPE, $key);
     }
 
     public function getApprovalStatus($key = null)
@@ -91,14 +82,9 @@ class WorkSchedule extends Model
         return $this->getValueFromArrayByKey(self::APPROVAL_STATUS, $key);
     }
 
-    public function getReturnApprovalStatus($key = null)
+    public function getAdjustApprovalStatus($key = null)
     {
-        return $this->getValueFromArrayByKey(self::END_APPROVAL_STATUS, $key);
-    }
-
-    public function getIsCompleted($key = null)
-    {
-        return $this->getValueFromArrayByKey(self::IS_COMPLETED, $key);
+        return $this->getValueFromArrayByKey(self::ADJUST_APPROVAL_STATUS, $key);
     }
 
     public function createdBy()
@@ -111,13 +97,8 @@ class WorkSchedule extends Model
         return $this->belongsTo(User::class, 'approved_by');
     }
 
-    public function returnApprovedBy()
+    public function adjustApprovedBy()
     {
-        return $this->belongsTo(User::class, 'return_approved_by');
-    }
-
-    public function contract()
-    {
-        return $this->belongsTo(Contract::class);
+        return $this->belongsTo(User::class, 'adjust_approved_by');
     }
 }

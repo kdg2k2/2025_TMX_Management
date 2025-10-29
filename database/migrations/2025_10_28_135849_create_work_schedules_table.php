@@ -32,9 +32,9 @@ return new class extends Migration {
 
             $table->dateTime('return_datetime')->nullable()->comment('thời gian về');
             $table->enum('return_approval_status', ['none', 'pending', 'approved', 'rejected'])->default('none')->comment('trạng thái duyệt kết thúc công tác');
-            $table->text('return_approval_note')->nullable()->comment('ghi chú duyệt về');
-            $table->date('return_approval_date')->nullable()->comment('ngày phê duyệt');
-            $table->foreignId('return_approved_by')->nullable()->comment('khóa ngoại người duyệt về')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->text('return_approval_note')->nullable()->comment('ghi chú duyệt kết thúc công tác');
+            $table->date('return_approval_date')->nullable()->comment('ngày phê duyệt kết thúc công tác');
+            $table->foreignId('return_approved_by')->nullable()->comment('khóa ngoại người duyệt kết thúc công tác')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
 
             $table->boolean('is_completed')->default(false)->comment('đã kết thúc');
             $table->integer('total_trip_days')->nullable()->comment('Tổng số ngày');

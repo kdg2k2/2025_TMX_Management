@@ -140,8 +140,8 @@ class DateService
         ?int $month = null,
         ?int $year = null
     ): float {
-        $startDate = $this->parseDate($from);
-        $endDate = $this->parseDate($to);
+        $startDate = $from instanceof Carbon ? $from->copy() : Carbon::parse($from);
+        $endDate = $to instanceof Carbon ? $to->copy() : Carbon::parse($to);
 
         // Nếu cùng ngày
         if ($startDate->isSameDay($endDate)) {

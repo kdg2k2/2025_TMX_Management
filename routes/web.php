@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\ContractUnitController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EligibilityController;
 use App\Http\Controllers\Admin\GoogleDriveController;
+use App\Http\Controllers\Admin\LeaveRequestController;
 use App\Http\Controllers\Admin\PersonnelController;
 use App\Http\Controllers\Admin\PersonnelCustomFieldController;
 use App\Http\Controllers\Admin\PersonnelFileController;
@@ -224,5 +225,10 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
     Route::prefix('work-schedule')->controller(WorkScheduleController::class)->group(function () {
         Route::get('index', 'index')->name('work-schedule.index');
         Route::get('create', 'create')->name('work-schedule.create');
+    });
+
+    Route::prefix('leave-request')->controller(LeaveRequestController::class)->group(function () {
+        Route::get('index', 'index')->name('leave-request.index');
+        Route::get('create', 'create')->name('leave-request.create');
     });
 });
