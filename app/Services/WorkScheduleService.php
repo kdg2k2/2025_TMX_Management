@@ -97,8 +97,39 @@ class WorkScheduleService extends BaseService
         ];
     }
 
+    public function getOverlappedDays(int $userId, string $from, string $to)
+    {
+        // Lấy các lịch có giao khoảng
+        $records = $this->repository->getUserWorkScheduleFromTo($userId, $from, $to);
+
+        $overlapped = collect();
+
+        // Duyệt qua từng lịch trùng
+        foreach ($records as $record) {
+            // Lấy danh sách ngày của lịch cũ
+            $existingDays = $this->dateService->getDatesInRange($record->from_date, $record->to_date);
+            // Lấy danh sách ngày của lịch mới
+            $newDays = $this->dateService->getDatesInRange($from, $to);
+
+            // Lấy giao giữa 2 danh sách
+            $intersection = $existingDays->intersect($newDays);
+
+            if ($intersection->isNotEmpty()) {
+                $overlapped = $overlapped->merge($intersection);
+            }
+        }
+
+        // Trả về các ngày trùng (bỏ trùng lặp)
+        return $overlapped->unique()->values()->toArray();
+    }
+
     public function beforeStore(array $request)
     {
+        $overlapDays = $this->getOverlappedDays($request['created_by'], $request['from_date'], $request['to_date']);
+        if (count($overlapDays) > 0)
+            throw new Exception('Bị trùng lịch công tác các ngày: ' . implode(' - ', array_map(fn($i) =>
+                $this->formatDateForPreview($i), $overlapDays)));
+
         $request['total_trip_days'] = $this->getTotalTripDays($request['from_date'], $request['to_date']);
 
         return $request;

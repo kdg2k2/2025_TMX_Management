@@ -91,4 +91,17 @@ class WorkScheduleRepository extends BaseRepository
                     ->orWhereBetween('to_date', [$request['from_date'], $request['to_date']]);
             });
     }
+
+    public function getUserWorkScheduleFromTo(int $userId, string $from, string $to)
+    {
+        return $this
+            ->model
+            ->where('created_by', $userId)
+            ->where(function ($q) use ($from, $to) {
+                $q
+                    ->where('from_date', '<=', $to)
+                    ->where('to_date', '>=', $from);
+            })
+            ->get(['from_date', 'to_date']);
+    }
 }

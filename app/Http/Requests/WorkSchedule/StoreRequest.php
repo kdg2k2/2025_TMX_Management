@@ -19,7 +19,7 @@ class StoreRequest extends BaseRequest
             'created_by' => 'required|exists:users,id',
             'address' => 'required|max:255',
             'from_date' => 'required|date_format:Y-m-d|after_or_equal:today',
-            'to_date' => 'required|date_format:Y-m-d|after_or_equal:today',
+            'to_date' => 'required|date_format:Y-m-d|after_or_equal:from_date',
             'content' => 'required|max:255',
             'type_program' => 'required|in:contract,other',
             'contract_id' => ($this->type_program === 'contract' ? 'required' : 'nullable') . '|exists:contracts,id',

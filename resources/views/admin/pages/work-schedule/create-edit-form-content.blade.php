@@ -9,7 +9,7 @@
 <div class="my-1 col-md-4">
     <div class="form-group">
         <label>
-            Từ ngày
+            Ngày bắt đầu
         </label>
         <input class="form-control" type="date" name="from_date" required>
     </div>
@@ -17,7 +17,7 @@
 <div class="my-1 col-md-4">
     <div class="form-group">
         <label>
-            Đến ngày
+            Ngày kết thúc
         </label>
         <input class="form-control" type="date" name="to_date" required>
     </div>
