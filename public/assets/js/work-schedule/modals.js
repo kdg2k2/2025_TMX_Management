@@ -57,9 +57,9 @@ const openModalReturnApproveRequest = (btn) => {
     }
 };
 
-modalReturnApproveRequestForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalReturnApproveRequestForm, () => {
-        hideModal(modalReturnApproveRequest);
+modalApproveRequestForm.addEventListener("submit", async (e) => {
+    await handleSubmitForm(e, modalApproveRequestForm, () => {
+        hideModal(modalApproveRequest);
     });
 });
 

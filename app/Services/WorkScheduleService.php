@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\WorkSchedule;
 use App\Repositories\WorkScheduleRepository;
+use Arr;
 use Exception;
 
 class WorkScheduleService extends BaseService
@@ -39,7 +40,7 @@ class WorkScheduleService extends BaseService
         foreach ([
             'createdBy',
             'approvedBy',
-            'endApprovedBy',
+            'returnApprovedBy',
         ] as $item) {
             if (isset($array[$item]))
                 $array[$item] = $this->userService->formatRecord($array[$item]);
@@ -103,6 +104,11 @@ class WorkScheduleService extends BaseService
         return $request;
     }
 
+    protected function afterStore($data, array $request)
+    {
+        $this->sendMail($data['id'], 'Yêu cầu phê duyệt');
+    }
+
     public function approvalRequest(array $request)
     {
         return $this->tryThrow(function () use ($request) {
@@ -110,6 +116,9 @@ class WorkScheduleService extends BaseService
             $this->isPendingApproval($data);
 
             $data->update($request);
+
+            $this->sendMail($data['id'],
+                $request['approval_status'] == 'approved' ? 'Phê duyệt' : 'Từ chối');
         }, true);
     }
 
@@ -119,6 +128,9 @@ class WorkScheduleService extends BaseService
             $data = $this->findById($request['id']);
             $this->isApproved($data);
 
+            if ($this->getGuard()->user()->id != $data['created_by'])
+                throw new Exception('Chỉ người đăng ký mới có thể yêu cầu kết thúc lịch công tác này');
+
             $data->update([
                 'return_datetime' => $request['return_datetime'],
                 'return_approval_status' => 'pending',
@@ -126,6 +138,8 @@ class WorkScheduleService extends BaseService
                 'return_approval_date' => null,
                 'return_approved_by' => null,
             ]);
+
+            $this->sendMail($data['id'], 'Yêu cầu kết thúc');
         }, true);
     }
 
@@ -137,6 +151,9 @@ class WorkScheduleService extends BaseService
             $this->isPendingReturnApproval($data);
 
             $data->update($request);
+
+            $this->sendMail($data['id'],
+                $request['return_approval_status'] == 'approved' ? 'Phê duyệt yêu cầu kết thúc' : 'Từ chối yêu cầu kết thúc');
 
             if ($request['return_approval_status'] == 'approved')
                 $this->completeRequest($data);
@@ -153,6 +170,39 @@ class WorkScheduleService extends BaseService
                 'total_trip_days' => $this->getTotalTripDays($data['from_date'], $data['to_date']),
                 'total_work_days' => $this->dateService->getTotalDays($data['from_date'], $data['to_date'], [0]),
             ]);
+
+            $this->sendMail($data['id'], 'Đã kết thúc');
         }, true);
+    }
+
+    private function getEmails(WorkSchedule $data)
+    {
+        $contractEmails = [];
+        if ($data['contract_id'])
+            $contractEmails = $this->contractService->getMemberEmails($data['contract_id'], [
+                'executor_user',
+                'instructors',
+                'professionals',
+            ]);
+
+        $recordMemberEmails = $this->userService->getEmails(array_merge(
+            $this->userService->getUserDepartmentManagerEmail($data['createdBy']['id'] ?? null), [
+                $data['createdBy']['id'] ?? null,
+                $data['approvedBy']['id'] ?? null,
+                $data['returnApprovedBy']['id'] ?? null,
+            ]
+        ));
+
+        return Arr::flatten(array_merge($contractEmails,
+            $recordMemberEmails));
+    }
+
+    private function sendMail(int $id, string $subject)
+    {
+        $record = $this->repository->findById($id);
+        $emails = $this->getEmails($record);
+        dispatch(new \App\Jobs\SendMailJob('emails.work-schedule', $subject . ' lịch công tác', $emails, [
+            'data' => $this->formatRecord($record->toArray()),
+        ]));
     }
 }

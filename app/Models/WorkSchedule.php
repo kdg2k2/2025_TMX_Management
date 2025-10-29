@@ -111,7 +111,7 @@ class WorkSchedule extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function endApprovedBy()
+    public function returnApprovedBy()
     {
         return $this->belongsTo(User::class, 'created_by');
     }

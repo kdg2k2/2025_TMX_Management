@@ -12,7 +12,7 @@ class WorkScheduleRepository extends BaseRepository
         $this->relations = [
             'createdBy',
             'approvedBy',
-            'endApprovedBy',
+            'returnApprovedBy',
             'contract:id,name',
         ];
     }
@@ -64,7 +64,7 @@ class WorkScheduleRepository extends BaseRepository
             'relations' => [
                 'createdBy' => ['name'],
                 'approvedBy' => ['name'],
-                'endApprovedBy' => ['name'],
+                'returnApprovedBy' => ['name'],
                 'contract' => ['name'],
             ]
         ];
