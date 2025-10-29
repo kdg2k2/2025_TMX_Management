@@ -214,6 +214,7 @@ const renderColumns = () => {
                     }
                     ${
                         row?.approval_status?.original == "approved" &&
+                        row?.is_completed?.original == 0 &&
                         ["none", "rejected"].includes(
                             row?.return_approval_status?.original
                         )
