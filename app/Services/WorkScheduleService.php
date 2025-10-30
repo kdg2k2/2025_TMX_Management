@@ -12,7 +12,7 @@ class WorkScheduleService extends BaseService
     public function __construct(
         private DateService $dateService,
         private ContractService $contractService,
-        private UserService $userService
+        private UserService $userService,
     ) {
         $this->repository = app(WorkScheduleRepository::class);
     }
@@ -123,12 +123,18 @@ class WorkScheduleService extends BaseService
         return $overlapped->unique()->values()->toArray();
     }
 
-    public function beforeStore(array $request)
+    public function checkOverLapDays(array $request)
     {
         $overlapDays = $this->getOverlappedDays($request['created_by'], $request['from_date'], $request['to_date']);
         if (count($overlapDays) > 0)
             throw new Exception('Bị trùng lịch công tác các ngày: ' . implode(' - ', array_map(fn($i) =>
                 $this->formatDateForPreview($i), $overlapDays)));
+    }
+
+    public function beforeStore(array $request)
+    {
+        $this->checkOverLapDays($request);
+        app(LeaveRequestService::class)->checkOverLapDays($request);
 
         $request['total_trip_days'] = $this->getTotalTripDays($request['from_date'], $request['to_date']);
 

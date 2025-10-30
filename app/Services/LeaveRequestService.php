@@ -11,7 +11,8 @@ class LeaveRequestService extends BaseService
 {
     public function __construct(
         private DateService $dateService,
-        private UserService $userService
+        private UserService $userService,
+        private WorkScheduleService $workScheduleService
     ) {
         $this->repository = app(LeaveRequestRepository::class);
     }
@@ -144,7 +145,7 @@ class LeaveRequestService extends BaseService
         return $overlapped->unique()->values()->toArray();
     }
 
-    private function checkOverLapDays(array $request)
+    public function checkOverLapDays(array $request)
     {
         $overlapDays = $this->getOverlappedDays($request['created_by'], $request['from_date'], $request['to_date'], $request['id'] ?? null);
         if (count($overlapDays) > 0)
@@ -155,6 +156,7 @@ class LeaveRequestService extends BaseService
     public function beforeStore(array $request)
     {
         $this->checkOverLapDays($request);
+        app(WorkScheduleService::class)->checkOverLapDays($request);
 
         return $request;
     }
