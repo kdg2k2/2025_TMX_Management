@@ -1,7 +1,14 @@
 // Cấu hình mặc định cho DataTables
 const DEFAULT_DATATABLE_CONFIG = {
     processing: true,
-    responsive: true,
+    responsive: {
+        details: {
+            type: "column",
+            target: 0,
+        },
+        // BẮT BUỘC ẨN các cột này vào responsive
+        orthogonal: "responsive",
+    },
     lengthChange: true,
     autoWidth: false,
     ordering: false,
@@ -11,6 +18,21 @@ const DEFAULT_DATATABLE_CONFIG = {
         [10, 30],
     ],
     bLengthChange: true,
+    columnDefs: [
+        {
+            className: "dtr-control",
+            orderable: false,
+            targets: 0,
+        },
+        {
+            className: "all", // luôn hiển thị
+            targets: [0, 1, 2, 3, 4, 5, 6, -1], // 8 cột cần hiển thị
+        },
+        {
+            className: "none", // luôn ẩn vào responsive
+            targets: [7, 8, 9, 10, 11, 12, 13], // các cột còn lại
+        },
+    ],
     language: {
         sLengthMenu: "Hiển thị _MENU_ bản ghi",
         searchPlaceholder: "Nhập từ khóa...",
@@ -42,9 +64,26 @@ const initializeBaseDataTable = (element, additionalConfig = {}) => {
     // Hủy DataTable cũ nếu tồn tại
     destroyDataTable(element);
 
+    // Đếm số cột trong table
+    let columnCount = 0;
+    if (additionalConfig.columns && Array.isArray(additionalConfig.columns)) {
+        columnCount = additionalConfig.columns.length;
+    } else {
+        columnCount = element.find("thead th").length;
+    }
+
+    // Chỉ áp dụng responsive config nếu có nhiều hơn 10 cột
+    let baseConfig = { ...DEFAULT_DATATABLE_CONFIG };
+
+    if (columnCount <= 10) {
+        // Xóa columnDefs và chuyển responsive về true
+        delete baseConfig.columnDefs;
+        baseConfig.responsive = true;
+    }
+
     // Merge config mặc định với config bổ sung
     const config = {
-        ...DEFAULT_DATATABLE_CONFIG,
+        ...baseConfig,
         drawCallback: function () {
             initializeTooltips();
         },
