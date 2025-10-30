@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\ProofContractController;
 use App\Http\Controllers\Admin\SoftwareOwnershipController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserSubEmailController;
+use App\Http\Controllers\Admin\UserTimeTableController;
 use App\Http\Controllers\Admin\WorkScheduleController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -132,6 +133,10 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::get('create', 'create')->name('user.sub-email.create');
             Route::get('edit', 'edit')->name('user.sub-email.edit');
             Route::delete('delete', 'delete')->name('user.sub-email.delete');
+        });
+
+        Route::prefix('timetable')->controller(UserTimeTableController::class)->group(function () {
+            Route::get('index', 'index')->name('user.timetable.index');
         });
     });
 

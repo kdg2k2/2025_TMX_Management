@@ -33,6 +33,10 @@ class UserRepository extends BaseRepository
             $query->where('job_title_id', $request['job_title_id']);
         if (isset($request['role_id']))
             $query->where('role_id', $request['role_id']);
+        if (isset($request['is_banned']))
+            $query->where('is_banned', $request['is_banned']);
+        if (isset($request['retired']))
+            $query->where('retired', $request['retired']);
     }
 
     protected function getSearchConfig(): array
@@ -52,5 +56,15 @@ class UserRepository extends BaseRepository
                 'jobTitle' => ['name'],
             ]
         ];
+    }
+
+    protected function customSort($query, array $request)
+    {
+        return $query
+            ->leftJoin('positions', 'users.position_id', '=', 'positions.id')
+            ->leftJoin('job_titles', 'users.job_title_id', '=', 'job_titles.id')
+            ->orderBy('positions.level', 'asc')
+            ->orderBy('job_titles.level', 'asc')
+            ->select('users.*');
     }
 }

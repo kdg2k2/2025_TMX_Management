@@ -54,10 +54,10 @@ class StringHandlerService
     /**
      * Chuyển đổi chuỗi sang định dạng được chỉ định
      */
-    public function formatCase(string $str, string $case = 'kebab'): string
+    public function formatCase(string $str, string $case = 'kebab', bool $removeSpecialAccent = true): string
     {
         // Tách chuỗi thành các từ
-        $words = $this->splitIntoWords($str);
+        $words = $this->splitIntoWords($str, $removeSpecialAccent);
 
         switch (strtolower($case)) {
             case 'pascal':
@@ -88,14 +88,16 @@ class StringHandlerService
     /**
      * Tách chuỗi thành mảng các từ
      */
-    protected function splitIntoWords(string $str): array
+    protected function splitIntoWords(string $str, bool $removeSpecialAccent = true): array
     {
-        // Loại bỏ dấu
-        $str = $this->removeAccents($str);
+        if ($removeSpecialAccent) {
+            // Loại bỏ dấu
+            $str = $this->removeAccents($str);
 
-        // Tách theo các ký tự đặc biệt, khoảng trắng, hoặc chuyển đổi từ hoa sang thường
-        $str = preg_replace('/([a-z])([A-Z])/', '$1 $2', $str);  // camelCase -> camel Case
-        $str = preg_replace('/[^a-zA-Z0-9]+/', ' ', $str);  // Thay ký tự đặc biệt bằng space
+            // Tách theo các ký tự đặc biệt, khoảng trắng, hoặc chuyển đổi từ hoa sang thường
+            $str = preg_replace('/([a-z])([A-Z])/', '$1 $2', $str);  // camelCase -> camel Case
+            $str = preg_replace('/[^a-zA-Z0-9]+/', ' ', $str);  // Thay ký tự đặc biệt bằng space
+        }
 
         // Tách thành mảng và loại bỏ phần tử rỗng
         return array_filter(array_map('trim', explode(' ', $str)));

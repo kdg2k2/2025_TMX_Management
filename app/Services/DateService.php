@@ -8,6 +8,10 @@ use Illuminate\Support\Collection;
 
 class DateService
 {
+    public function __construct(
+        private StringHandlerService $stringHandlerService
+    ) {}
+
     /**
      * Lấy danh sách các ngày trong khoảng from -> to
      * Method cơ bản - các method khác sẽ kế thừa logic từ đây
@@ -558,5 +562,74 @@ class DateService
         }
 
         return null;
+    }
+
+    /**
+     * Lấy danh sách các tuần trong năm kèm đánh dấu tuần hiện tại
+     * @param int $year Năm cần lấy danh sách tuần
+     * @return array Mảng các tuần với thông tin week_number, start_date, end_date, is_current
+     */
+    public function getWeeksOfYear(int $year): array
+    {
+        $currentWeek = Carbon::now()->weekOfYear;
+        $currentYear = (int) Carbon::now()->year;
+
+        // Lấy ngày đầu tiên của năm
+        $firstDay = Carbon::createFromDate($year, 1, 1);
+
+        // Tính số tuần trong năm (52 hoặc 53 tuần)
+        $totalWeeks = $firstDay->weeksInYear();
+
+        $weeks = [];
+        for ($weekNumber = 1; $weekNumber <= $totalWeeks; $weekNumber++) {
+            // Lấy ngày đầu tuần (Thứ 2) và cuối tuần (Chủ nhật)
+            $startOfWeek = Carbon::now()->setISODate($year, $weekNumber, 1);  // 1 = Thứ 2
+            $endOfWeek = Carbon::now()->setISODate($year, $weekNumber, 7);  // 7 = Chủ nhật
+
+            $weeks[] = [
+                'week_number' => $weekNumber,
+                'start_date' => $startOfWeek->format('Y-m-d'),
+                'end_date' => $endOfWeek->format('Y-m-d'),
+                'label' => "Tuần {$weekNumber} ({$startOfWeek->format('d/m/Y')} - {$endOfWeek->format('d/m/Y')})",
+                'is_current' => ($weekNumber === $currentWeek && $year === $currentYear),
+            ];
+        }
+
+        return $weeks;
+    }
+
+    /**
+     * Lấy tuần hiện tại từ string date
+     * @param string $date Format: 'Y-m-d' hoặc bất kỳ format hợp lệ
+     * @return int Số tuần trong năm (1-53)
+     */
+    public function getWeekFromDate(string $date): int
+    {
+        return (int) Carbon::parse($date)->weekOfYear;
+    }
+
+    /**
+     * Lấy các ngày trong tuần theo số tuần và năm
+     * @param int $week Số tuần (1-53)
+     * @param int $year Năm
+     * @return array Mảng các ngày với thông tin thứ, sorted từ T2->CN
+     */
+    public function getDaysInWeek(int $week, int $year): array
+    {
+        $firstDayOfWeek = Carbon::now()
+            ->setISODate($year, $week, 1);  // 1 = Thứ 2
+
+        $days = [];
+        for ($i = 0; $i < 7; $i++) {
+            $date = $firstDayOfWeek->copy()->addDays($i);
+            $days[] = [
+                'date' => $date->format('Y-m-d'),
+                'day_of_week' => $date->dayOfWeek,  // 0=CN, 1=T2, ..., 6=T7
+                'day_name' => $this->stringHandlerService->formatCase($date->locale('vi')->dayName, 'title', false),  // Tên tiếng Việt
+                'day_name_short' => $date->locale('vi')->shortDayName,  // Thứ 2, Thứ 3...
+            ];
+        }
+
+        return $days;
     }
 }

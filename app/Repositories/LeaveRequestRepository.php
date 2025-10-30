@@ -74,23 +74,25 @@ class LeaveRequestRepository extends BaseRepository
             });
     }
 
+    public function getBaseQueryForDateRange(string $from, string $to)
+    {
+        return $this
+            ->model
+            ->newQuery()
+            ->whereIn('approval_status', ['pending', 'approved'])
+            ->where('from_date', '<=', $to)
+            ->where('to_date', '>=', $from);
+    }
+
     public function getUserLeaveFromTo(int $userId, string $from, string $to, int $ignoreId = null)
     {
         $query = $this
-            ->model
-            ->query();
+            ->getBaseQueryForDateRange($from, $to)
+            ->where('created_by', $userId);
 
         if (isset($ignoreId))
             $query->whereNot('id', $ignoreId);
 
-        return $query
-            ->whereNot('approval_status', 'rejected')
-            ->where('created_by', $userId)
-            ->where(function ($q) use ($from, $to) {
-                $q
-                    ->where('from_date', '<=', $to)
-                    ->where('to_date', '>=', $from);
-            })
-            ->get(['from_date', 'to_date']);
+        return $query->get(['from_date', 'to_date']);
     }
 }

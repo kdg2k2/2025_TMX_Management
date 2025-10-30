@@ -5,20 +5,30 @@
     'valueFields' => 'name',
     'emptyOption' => true,
     'emptyText' => 'Chọn',
-    'optionAttributes' => [], // Custom: ['data-email' => 'email']
-    'recordAttribute' => null, // Tên attribute để chứa toàn bộ record: 'data-record', 'data-item', etc.
-    'recordFields' => null, // Chỉ lấy một số field: ['id', 'name', 'email'] hoặc null để lấy tất cả
+    'optionAttributes' => [],
+    'recordAttribute' => null,
+    'recordFields' => null,
 ])
 
 @php
     $valueFieldsArray = is_array($valueFields) ? $valueFields : [$valueFields];
 
     $getDisplayValue = function($item) use ($valueFieldsArray) {
+        // Nếu item là scalar (string, number), return luôn
+        if (!is_array($item)) {
+            return $item;
+        }
+
         $values = array_map(fn($field) => $item[$field] ?? '', $valueFieldsArray);
         return implode(' - ', array_filter($values));
     };
 
     $getKeyValue = function($item) use ($keyField) {
+        // Nếu item là scalar, return luôn
+        if (!is_array($item)) {
+            return $item;
+        }
+
         return is_array($keyField)
             ? ($item[$keyField[0]] ?? '')
             : ($item[$keyField] ?? '');
@@ -30,6 +40,11 @@
 
     // Function build attributes
     $getAllAttributes = function($item) use ($optionAttributes, $recordAttribute, $recordFields) {
+        // Nếu item là scalar, không có attributes
+        if (!is_array($item)) {
+            return '';
+        }
+
         $attributes = '';
 
         // Custom attributes từ optionAttributes

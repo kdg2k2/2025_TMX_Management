@@ -244,7 +244,7 @@ class WorkScheduleService extends BaseService
 
     public function setCompletedWorkSchedules()
     {
-        return $this->catchAPI(function () {
+        return $this->tryThrow(function () {
             $list = $this->repository->list([
                 'is_completed' => false,
                 'approval_status' => 'approved',
@@ -254,6 +254,13 @@ class WorkScheduleService extends BaseService
                 if ($item['to_date'] == $today)
                     $this->setComplete($item);
             }
+        });
+    }
+
+    public function getBaseQueryForDateRange(string $from, string $to)
+    {
+        return $this->tryThrow(function () use ($from, $to) {
+            return $this->repository->getBaseQueryForDateRange($from, $to);
         });
     }
 }

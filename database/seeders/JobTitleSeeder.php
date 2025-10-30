@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\JobTitle;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class JobTitleSeeder extends Seeder
@@ -21,23 +20,23 @@ class JobTitleSeeder extends Seeder
         }, [
             [
                 'name' => 'Chủ Tịch Hội Đồng Quản Trị',
-                'level' => 100,
+                'level' => 10,
             ],
             [
                 'name' => 'Giám Đốc',
-                'level' => 90,
+                'level' => 20,
             ],
             [
                 'name' => 'Phó Giám Đốc',
-                'level' => 80,
+                'level' => 30,
             ],
             [
                 'name' => 'Trưởng Phòng',
-                'level' => 70,
+                'level' => 40,
             ],
             [
                 'name' => 'Kế Toán Trưởng',
-                'level' => 65,
+                'level' => 50,
             ],
             [
                 'name' => 'Phó Trưởng Phòng',
@@ -45,43 +44,43 @@ class JobTitleSeeder extends Seeder
             ],
             [
                 'name' => 'Phó Trưởng Phòng Phụ Trách Khoa Học',
-                'level' => 58,
+                'level' => 70,
             ],
             [
                 'name' => 'Phó Trưởng Phòng Phụ Trách Hành Chính',
-                'level' => 57,
+                'level' => 80,
             ],
             [
                 'name' => 'Chuyên Gia',
-                'level' => 55,
+                'level' => 90,
             ],
             [
                 'name' => 'Kế Toán Tổng Hợp',
-                'level' => 50,
+                'level' => 100,
             ],
             [
                 'name' => 'Nghiên Cứu Viên',
-                'level' => 45,
+                'level' => 110,
             ],
             [
                 'name' => 'Kỹ Thuật Viên',
-                'level' => 40,
+                'level' => 120,
             ],
             [
                 'name' => 'Kế Toán Viên',
-                'level' => 35,
+                'level' => 130,
             ],
             [
                 'name' => 'Văn Thư',
-                'level' => 30,
+                'level' => 140,
             ],
             [
                 'name' => 'Nhân Viên',
-                'level' => 20,
+                'level' => 150,
             ],
             [
                 'name' => 'Cộng Tác Viên',
-                'level' => 10,
+                'level' => 160,
             ],
         ]));
     }

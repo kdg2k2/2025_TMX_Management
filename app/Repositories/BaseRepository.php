@@ -81,34 +81,43 @@ abstract class BaseRepository
         return $query->first();
     }
 
+    protected function customSort($query, array $request) {}
+
+    protected function applySort($query, array $request)
+    {
+        if (isset($request['custom_sort']) && ($request['custom_sort'] ?? false))
+            $this->customSort($query, $request);
+
+        // Sort mặc định
+        $orderBy = $request['order_by'] ?? 'id';
+        $sortBy = $request['sort_by'] ?? 'desc';
+        $query->orderBy($orderBy, $sortBy);
+    }
+
     public function list(array $request = [])
     {
         $query = $this->model->query();
-
-        if (!isset($request['order_by']))
-            $request['order_by'] = 'id';
-        if (!isset($request['sort_by']))
-            $request['sort_by'] = 'desc';
-
-        $query->orderBy($request['order_by'], $request['sort_by']);
 
         if (isset($request['columns']))
             $query->select($request['columns']);
 
         if (isset($request['ids']))
-            $query->whereIn('ids', $request['ids']);
+            $query->whereIn('id', $request['ids']);
 
         $this->applyListFilters($query, $request);
 
         if (isset($request['search']))
             $this->applySearch($query, $request['search']);
 
-        if (!isset($request['load_relations']))
-            $request['load_relations'] = true;
+        $relationsToLoad = [];
+        if (isset($this->relations) && ($request['load_relations'] ?? true))
+            $relationsToLoad = array_merge($relationsToLoad, $this->relations);
+        if (isset($request['custom_relations']))
+            $relationsToLoad = array_merge($relationsToLoad, $request['custom_relations']);
+        if (!empty($relationsToLoad))
+            $query->with($relationsToLoad);
 
-        if (isset($this->relations))
-            if ($request['load_relations'] == true)
-                $query->with($this->relations);
+        $this->applySort($query, $request);
 
         if (isset($request['paginate']) && $request['paginate'])
             return $query->paginate($request['per_page'] ?? 10);

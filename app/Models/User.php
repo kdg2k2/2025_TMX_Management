@@ -65,4 +65,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(UserSubEmail::class);
     }
+
+    public function workSchedules()
+    {
+        return $this->hasMany(WorkSchedule::class, 'created_by');
+    }
+
+    public function leaveRequest()
+    {
+        return $this->hasMany(LeaveRequest::class, 'created_by');
+    }
 }

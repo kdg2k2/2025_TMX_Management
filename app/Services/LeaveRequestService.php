@@ -22,6 +22,7 @@ class LeaveRequestService extends BaseService
 
         $array['approval_status'] = $this->repository->getApprovalStatus($array['approval_status']);
         $array['adjust_approval_status'] = $this->repository->getAdjustApprovalStatus($array['adjust_approval_status']);
+        $array['type'] = $this->repository->getType($array['type']);
 
         if (isset($array['from_date']))
             $array['from_date'] = $this->formatDateForPreview($array['from_date']);
@@ -248,5 +249,12 @@ class LeaveRequestService extends BaseService
         dispatch(new \App\Jobs\SendMailJob('emails.leave-request', $subject . ' nghỉ phép', $emails, [
             'data' => $this->formatRecord($record->toArray()),
         ]));
+    }
+
+    public function getBaseQueryForDateRange(string $from, string $to)
+    {
+        return $this->tryThrow(function () use ($from, $to) {
+            return $this->repository->getBaseQueryForDateRange($from, $to);
+        });
     }
 }

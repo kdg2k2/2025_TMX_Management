@@ -182,7 +182,7 @@
                     </a>
                 </li>
                 <li class="slide">
-                    <a href="javascript:void(0);" class="side-menu__item">
+                    <a href="{{ route('user.timetable.index') }}" class="side-menu__item">
                         <i class="side-menu__icon ti ti-calendar-time"></i>
                         <span class="side-menu__label">Thời gian biểu</span>
                     </a>

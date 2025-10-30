@@ -33,6 +33,7 @@ use App\Http\Controllers\Api\ProofContractController;
 use App\Http\Controllers\Api\SoftwareOwnershipController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserSubEmailController;
+use App\Http\Controllers\Api\UserTimeTableController;
 use App\Http\Controllers\Api\WorkScheduleController;
 use Illuminate\Support\Facades\Route;
 
@@ -147,6 +148,11 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::post('store', 'store')->name('api.user.sub-email.store');
             Route::patch('update', 'update')->name('api.user.sub-email.update');
             Route::delete('delete', 'delete')->name('api.user.sub-email.delete');
+        });
+
+        Route::prefix('timetable')->controller(UserTimeTableController::class)->group(function () {
+            Route::get('list', 'list')->name('api.user.timetable.list');
+            Route::get('get-weeks', 'getWeeks')->name('api.user.timetable.get-weeks');
         });
     });
 

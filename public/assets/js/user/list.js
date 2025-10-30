@@ -88,19 +88,11 @@ const renderColumns = () => {
         },
         {
             data: null,
-            title: "Trạng thái tài khoản",
+            title: "Khóa tài khoản",
             render: (data, type, row) => {
                 if (row?.is_banned)
-                    return `
-                        <span class="badge bg-danger">
-                            <i class="ti ti-check"></i>
-                        </span>
-                    `;
-                return `
-                    <span class="badge bg-primary">
-                        <i class="ti ti-x"></i>
-                    </span>
-                `;
+                    return createBadge("", 'danger', "ti ti-check");
+                return createBadge("", 'primary', "ti ti-x");
             },
         },
         {
@@ -108,16 +100,8 @@ const renderColumns = () => {
             title: "Nghỉ việc",
             render: (data, type, row) => {
                 if (row?.retired)
-                    return `
-                        <span class="badge bg-danger">
-                            <i class="ti ti-check"></i>
-                        </span>
-                    `;
-                return `
-                    <span class="badge bg-primary">
-                        <i class="ti ti-x"></i>
-                    </span>
-                `;
+                    return createBadge("", 'danger', "ti ti-check");
+                return createBadge("", 'primary', "ti ti-x");
             },
         },
         {
