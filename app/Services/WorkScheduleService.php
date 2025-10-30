@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\WorkSchedule;
 use App\Repositories\WorkScheduleRepository;
+use Carbon\Carbon;
 use Arr;
 use Exception;
 
@@ -20,6 +21,11 @@ class WorkScheduleService extends BaseService
     public function formatRecord(array $array)
     {
         $array = parent::formatRecord($array);
+
+        $array['real_total_work_days'] = $this->calculateRealWorkDays(
+            $array['from_date'],
+            $array['to_date']
+        );
 
         $array['type_program'] = $this->repository->getTypeProgram($array['type_program']);
         $array['approval_status'] = $this->repository->getApprovalStatus($array['approval_status']);
@@ -49,9 +55,50 @@ class WorkScheduleService extends BaseService
         return $array;
     }
 
-    public function getTotalTripDays(string $from, string $to)
+    private function calculateRealWorkDays(string $fromDate, string $toDate): array
+    {
+        $start = Carbon::parse($fromDate);
+        $end = Carbon::parse($toDate);
+
+        // Mảng lưu số công theo tháng: ['2025-08' => 2, '2025-09' => 5]
+        $workDaysByMonth = [];
+
+        // Duyệt qua từng ngày trong khoảng thời gian
+        $current = $start->copy();
+        while ($current->lte($end)) {
+            // Bỏ qua Chủ nhật (dayOfWeek = 0)
+            if ($current->dayOfWeek !== 0) {
+                $monthKey = $current->format('Y-m');  // '2025-08'
+
+                if (!isset($workDaysByMonth[$monthKey])) {
+                    $workDaysByMonth[$monthKey] = 0;
+                }
+
+                $workDaysByMonth[$monthKey]++;
+            }
+
+            $current->addDay();
+        }
+
+        // Chuyển đổi sang mảng string
+        $result = [];
+        foreach ($workDaysByMonth as $monthKey => $days) {
+            $date = Carbon::parse($monthKey . '-01');
+            $monthNumber = $this->dateService->formatMonthYear($date->month, $date->year);
+            $result[] = "{$monthNumber} ({$days} công)";
+        }
+
+        return $result;
+    }
+
+    private function getTotalTripDays(string $from, string $to)
     {
         return $this->dateService->getTotalDays($from, $to);
+    }
+
+    private function getTotalDays(string $from, string $to)
+    {
+        return $this->dateService->getTotalDays($from, $to, [0]);
     }
 
     public function isPendingApproval(WorkSchedule $data)
@@ -137,6 +184,7 @@ class WorkScheduleService extends BaseService
         app(LeaveRequestService::class)->checkOverLapDays($request);
 
         $request['total_trip_days'] = $this->getTotalTripDays($request['from_date'], $request['to_date']);
+        $request['total_work_days'] = $this->getTotalDays($request['from_date'], $request['to_date']);
 
         return $request;
     }
@@ -205,7 +253,7 @@ class WorkScheduleService extends BaseService
             $params = [
                 'is_completed' => true,
                 'total_trip_days' => $this->getTotalTripDays($data['from_date'], $data['to_date']),
-                'total_work_days' => $this->dateService->getTotalDays($data['from_date'], $data['to_date'], [0]),
+                'total_work_days' => $this->getTotalDays($data['from_date'], $data['to_date']),
             ];
 
             if ($data['return_approval_status'] == 'pendding')

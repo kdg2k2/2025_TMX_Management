@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-trait FormatDataTraits
+trait FormatDateTraits
 {
     public function formatDateTimeForPreview($time)
     {

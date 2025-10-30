@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Traits\AssetPathTraits;
 use App\Traits\CheckLocalTraits;
 use App\Traits\FailedValidation;
-use App\Traits\FormatDataTraits;
+use App\Traits\FormatDateTraits;
 use App\Traits\GuardTraits;
 use App\Traits\PaginateTraits;
 use App\Traits\TryCatchTraits;
@@ -17,7 +17,7 @@ abstract class BaseService
         FailedValidation,
         CheckLocalTraits,
         AssetPathTraits,
-        FormatDataTraits,
+        FormatDateTraits,
         GuardTraits;
 
     public $repository;

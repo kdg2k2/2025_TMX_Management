@@ -158,10 +158,25 @@ const renderColumns = () => {
             data: null,
             title: "Đã kết thúc công tác?",
             render: (data, type, row) => {
-                return createBadge(
-                    row?.is_completed?.converted,
-                    row?.is_completed?.color
-                );
+                if (row?.approval_status?.original == "approved")
+                    return createBadge(
+                        row?.is_completed?.converted,
+                        row?.is_completed?.color
+                    );
+                return "";
+            },
+        },
+        {
+            data: null,
+            title: "Số ngày công",
+            render: (data, type, row) => {
+                return `
+                    Tổng ${row?.total_work_days || ""} công
+                    <ul class="m-0">
+                        ${row?.real_total_work_days
+                            ?.map((i) => `<li>${i}</li>`)
+                            .join("")}
+                    </ul>`;
             },
         },
         {
