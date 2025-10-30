@@ -75,4 +75,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(LeaveRequest::class, 'created_by');
     }
+
+    public function warning()
+    {
+        return $this->hasMany(UserWarning::class);
+    }
 }

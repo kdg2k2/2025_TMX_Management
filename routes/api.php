@@ -34,6 +34,7 @@ use App\Http\Controllers\Api\SoftwareOwnershipController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserSubEmailController;
 use App\Http\Controllers\Api\UserTimeTableController;
+use App\Http\Controllers\Api\UserWarningController;
 use App\Http\Controllers\Api\WorkScheduleController;
 use Illuminate\Support\Facades\Route;
 
@@ -153,6 +154,10 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::prefix('timetable')->controller(UserTimeTableController::class)->group(function () {
             Route::get('list', 'list')->name('api.user.timetable.list');
             Route::get('get-weeks', 'getWeeks')->name('api.user.timetable.get-weeks');
+        });
+
+        Route::prefix('warning')->controller(UserWarningController::class)->group(function(){
+            Route::post('store', 'store')->name('api.user.warning.store');
         });
     });
 

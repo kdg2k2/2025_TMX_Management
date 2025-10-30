@@ -2,6 +2,8 @@ const year = document.getElementById("year");
 const week = document.getElementById("week");
 const department = document.getElementById("department");
 const timetableContainer = document.getElementById("timetable-container");
+const modalWarning = document.getElementById("modal-warning");
+const modalWarningForm = modalWarning.querySelector("form");
 
 let currentDataTables = []; // Lưu các DataTable instances
 
@@ -23,7 +25,7 @@ const getAndFillWeekSelect = async () => {
     }
 };
 
-const loadDataByWeek = async () => {
+window.loadDataByWeek = async () => {
     // Destroy tất cả DataTable cũ
     destroyAllDataTables();
 
@@ -49,10 +51,10 @@ const destroyAllDataTables = () => {
 
 const renderTimetable = (days) => {
     // Lấy ngày hôm nay để so sánh
-    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
 
     // Tìm index của ngày hôm nay trong danh sách
-    let activeDayIndex = days.findIndex(day => day.date === today);
+    let activeDayIndex = days.findIndex((day) => day.date === today);
 
     // Nếu không tìm thấy ngày hôm nay (khác tuần), mặc định tab đầu tiên
     if (activeDayIndex === -1) {
@@ -66,7 +68,7 @@ const renderTimetable = (days) => {
             title: `${day.day_name} ${formatDateTime(day.date)}`,
             icon: "ri-calendar-line",
             content: renderDayContent(day, index),
-            isToday: isToday
+            isToday: isToday,
         };
     });
 
@@ -78,14 +80,22 @@ const renderTimetable = (days) => {
                     .map(
                         (tab, index) => `
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link ${index === activeDayIndex ? "active" : ""}"
+                        <a class="nav-link ${
+                            index === activeDayIndex ? "active" : ""
+                        }"
                             data-bs-toggle="tab"
                             role="tab"
                             href="#day-tab-${index}"
-                            aria-selected="${index === activeDayIndex ? "true" : "false"}">
+                            aria-selected="${
+                                index === activeDayIndex ? "true" : "false"
+                            }">
                             <i class="${tab.icon} me-1"></i>
                             ${tab.title}
-                            ${tab.isToday ? '<span class="badge bg-primary ms-1">Hôm nay</span>' : ''}
+                            ${
+                                tab.isToday
+                                    ? '<span class="badge bg-primary ms-1">Hôm nay</span>'
+                                    : ""
+                            }
                         </a>
                     </li>
                 `
@@ -138,6 +148,7 @@ const renderDayContent = (day, dayIndex) => {
                         <th>Chức vụ</th>
                         <th>Chức danh</th>
                         <th>Chi tiết</th>
+                        <th>Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -161,6 +172,7 @@ const renderDayContent = (day, dayIndex) => {
                             <td>${user.position || "-"}</td>
                             <td>${user.job_title || "-"}</td>
                             <td>${renderUserDetails(user)}</td>
+                            <td>${renderActions(user, day.date)}</td>
                         </tr>
                     `
                         )
@@ -199,15 +211,66 @@ const renderUserDetails = (user) => {
     return "-";
 };
 
-const getLeaveTypeText = (type) => {
-    const types = {
-        one_day: "Nghỉ 1 ngày",
-        many_days: "Nghỉ nhiều ngày",
-        morning: "Nghỉ buổi sáng",
-        afternoon: "Nghỉ buổi chiều",
-    };
-    return types[type] || type;
+const renderActions = (user, date) => {
+    return `
+        ${
+            user?.warning != null
+                ? "Đã bị cảnh báo"
+                : `
+                    <div class="text-center">
+                        ${
+                            user?.details?.type == "work_schedule"
+                                ? createBtn(
+                                      "outline-warning",
+                                      "Cảnh báo công tác",
+                                      false,
+                                      {
+                                          "data-href": `${apiUserWarningStore}?user_id=${user?.user_id}&warning_date=${date}&type=work_schedule&work_schedule_id=${user?.details?.detail?.id}`,
+                                          "data-onsuccess": "loadDataByWeek",
+                                      },
+                                      "ti ti-calendar-exclamation",
+                                      "openModalWarning(this)"
+                                  )?.outerHTML
+                                : ""
+                        }
+                        ${
+                            createBtn(
+                                "outline-secondary",
+                                "Cảnh báo công việc",
+                                false,
+                                {
+                                    "data-href": `${apiUserWarningStore}?user_id=${user?.user_id}&warning_date=${date}&type=job`,
+                                    "data-onsuccess": "loadDataByWeek",
+                                },
+                                "ti ti-alert-triangle",
+                                "openModalWarning(this)"
+                            )?.outerHTML
+                        }
+                    </div>
+            `
+        }
+    `;
 };
+
+const openModalWarning = (btn) => {
+    const title = btn.getAttribute("aria-label");
+    const action = btn.getAttribute("data-href");
+    const onsuccess = btn.getAttribute("data-onsuccess");
+
+    if (title && action && onsuccess) {
+        modalWarning.querySelector(".modal-title").innerHTML = title;
+        modalWarningForm.setAttribute("action", action);
+        modalWarningForm.setAttribute("data-onsuccess", onsuccess);
+
+        showModal(modalWarning);
+    }
+};
+
+modalWarningForm.addEventListener("submit", async (e) => {
+    await handleSubmitForm(e, modalWarningForm, () => {
+        hideModal(modalWarning);
+    });
+});
 
 year.addEventListener("change", getAndFillWeekSelect);
 [week, department].forEach((item) =>

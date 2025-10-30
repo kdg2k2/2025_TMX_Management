@@ -62,6 +62,9 @@ class UserTimeTableService extends BaseService
                 'is_banned' => false,
                 'retired' => false,
                 'department_id' => $request['department_id'] ?? null,
+                'custom_relations' => [
+                    'warning',
+                ],
             ]);
 
             $userIds = array_column($users, 'id');
@@ -147,6 +150,7 @@ class UserTimeTableService extends BaseService
                     // Thêm thông tin user vào ngày
                     $info = [
                         'status' => $this->getStatus($status),
+                        'warning' => collect($user['warning'] ?? [])->filter(fn($i) => $i['warning_date'] == $dayDate)->first(),
                         'details' => $details,
                         'user_id' => $userId,
                         'user_name' => $user['name'],
@@ -157,17 +161,6 @@ class UserTimeTableService extends BaseService
                         'job_title' => $user['job_title']['name'] ?? null,
                     ];
                     $dayData['users'][] = $info;
-
-                    // if ($userId == 1 && $day['date'] == '2025-10-30') {
-                    //     dd(
-                    //         [
-                    //             'day' => $day,
-                    //             'info' => $info,
-                    //             'userWorkSchedules' => $userWorkSchedules,
-                    //             'userLeaveRequests' => $userLeaveRequests,
-                    //         ]
-                    //     );
-                    // }
                 }
 
                 usort($dayData['users'], function ($a, $b) {
@@ -188,7 +181,7 @@ class UserTimeTableService extends BaseService
         $statuses = [
             'working' => [
                 'original' => 'working',
-                'converted' => 'Đi làm',
+                'converted' => 'Làm việc tại cơ quan',
                 'color' => 'success',
                 'priority' => 3,
             ],

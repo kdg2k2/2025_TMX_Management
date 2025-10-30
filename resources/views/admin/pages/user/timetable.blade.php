@@ -31,10 +31,22 @@
         </div>
     </div>
 @endsection
+@section('modals')
+    <x-modal id="modal-warning" title="Xác nhận" method="POST" size="md">
+        <x-slot:body>
+            Có chắc chắn thực hiện cảnh báo?
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
+            <x-button-submit />
+        </x-slot:footer>
+    </x-modal>
+@endsection
 @section('scripts')
     <script>
         const apiUserTimetableList = @json(route('api.user.timetable.list'));
         const apiUserTimetableGetWeeks = @json(route('api.user.timetable.get-weeks'));
+        const apiUserWarningStore = @json(route('api.user.warning.store'));
     </script>
     <script src="assets/js/user/timetable.js"></script>
 @endsection
