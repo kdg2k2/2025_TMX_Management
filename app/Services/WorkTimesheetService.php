@@ -179,7 +179,7 @@ class WorkTimesheetService extends BaseService
 
             // mức lương ngoài giờ
             $salaryLevel = $userInfo['salary_level'] ?? 0;
-            $overtimeSalaryRate = round($salaryLevel / $proposedWorkDays, 0);
+            $overtimeSalaryRate = round(($salaryLevel / $proposedWorkDays) / 2, 0);
 
             // tính số lần ABC
             $ruleBCount = $ruleCCount = $trainingBCount = $trainingCCount = 0;
