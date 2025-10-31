@@ -74,12 +74,13 @@ class LeaveRequestRepository extends BaseRepository
             });
     }
 
-    public function getBaseQueryForDateRange(string $from, string $to)
+    public function getBaseQueryForDateRange(string $from, string $to, array $approvalStatus = ['pending', 'approved'], $query = null)
     {
-        return $this
-            ->model
-            ->newQuery()
-            ->whereIn('approval_status', ['pending', 'approved'])
+        if (!$query)
+            $query = $this->model->query();
+
+        return $query
+            ->whereIn('approval_status', $approvalStatus)
             ->where('from_date', '<=', $to)
             ->where('to_date', '>=', $from);
     }

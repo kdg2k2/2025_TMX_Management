@@ -4,8 +4,8 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use DateTime;
 use Illuminate\Support\Collection;
+use DateTime;
 
 class DateService
 {
@@ -690,7 +690,8 @@ class DateService
 
     public function stringToDateTime($time)
     {
-        if (empty($time)) return null;
+        if (empty($time))
+            return null;
         return DateTime::createFromFormat('H:i', $time);
     }
 
@@ -702,5 +703,31 @@ class DateService
     public function isSunday($date)
     {
         return date('w', strtotime($date)) == 0;
+    }
+
+    /**
+     * Lấy ngày đầu tiên của tháng
+     *
+     * @param int $month Tháng (1-12)
+     * @param int $year Năm
+     * @param string $format Format trả về (default: 'Y-m-d')
+     * @return string
+     */
+    public function getFirstDayOfMonth(int $month, int $year, string $format = 'Y-m-d'): string
+    {
+        return Carbon::create($year, $month, 1)->startOfDay()->format($format);
+    }
+
+    /**
+     * Lấy ngày cuối cùng của tháng
+     *
+     * @param int $month Tháng (1-12)
+     * @param int $year Năm
+     * @param string $format Format trả về (default: 'Y-m-d')
+     * @return string
+     */
+    public function getLastDayOfMonth(int $month, int $year, string $format = 'Y-m-d'): string
+    {
+        return Carbon::create($year, $month, 1)->endOfMonth()->startOfDay()->format($format);
     }
 }

@@ -55,7 +55,7 @@
         <label>
             Nội dung công tác
         </label>
-        <input class="form-control" type="text" name="content">
+        <input class="form-control" type="text" name="content" required>
     </div>
 </div>
 <div class="my-1 col-md-4">

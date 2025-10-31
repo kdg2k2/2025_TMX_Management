@@ -9,6 +9,8 @@ class WorkTimesheetRepository extends BaseRepository
     public function __construct()
     {
         $this->model = new WorkTimesheet();
-        $this->relations = [];
+        $this->relations = [
+            'details',
+        ];
     }
 }

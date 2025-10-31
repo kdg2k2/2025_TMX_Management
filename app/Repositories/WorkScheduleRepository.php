@@ -92,11 +92,13 @@ class WorkScheduleRepository extends BaseRepository
             });
     }
 
-    public function getBaseQueryForDateRange(string $from, string $to)
+    public function getBaseQueryForDateRange(string $from, string $to, array $approvalStatus = ['pending', 'approved'], $query = null)
     {
-        return $this
-            ->model
-            ->whereIn('approval_status', ['pending', 'approved'])
+        if (!$query)
+            $query = $this->model->query();
+
+        return $query
+            ->whereIn('approval_status', $approvalStatus)
             ->where('from_date', '<=', $to)
             ->where('to_date', '>=', $from);
     }
@@ -104,7 +106,7 @@ class WorkScheduleRepository extends BaseRepository
     public function getUserWorkScheduleFromTo(int $userId, string $from, string $to)
     {
         return $this
-            ->getBaseQueryForDateRange($from, $to)
+            ->getBaseQueryForDateRange($from, to: $to)
             ->where('created_by', $userId)
             ->get(['from_date', 'to_date']);
     }

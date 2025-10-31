@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->foreignId('work_timesheet_id')->comment('khóa ngoại xuất lưới')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
 
             // Thông tin cơ bản của user
+            $table->foreignId('user_id')->comment('khóa ngoại tài khoản')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name')->comment('tên');
             $table->string('department')->comment('phòng ban');
             $table->integer('position_id')->comment('chức vụ - chỉ dùng để sort user trong phòng ban');
@@ -64,15 +65,14 @@ return new class extends Migration {
             // Đánh giá nội quy / đào tạo
             $table->integer('rule_b_count')->default(0)->comment('Số lần bị đánh giá nội quy B');
             $table->integer('rule_c_count')->default(0)->comment('Số lần bị đánh giá nội quy C');
-            $table->integer('rule_d_count')->default(0)->comment('Số lần bị đánh giá nội quy D');
-            $table->integer('training_a_count')->default(0)->comment('Số lần bị đánh giá đào tạo A');
+            $table->integer('training_a_count')->default(0)->comment('Số lần đánh giá đào tạo A');
             $table->integer('training_b_count')->default(0)->comment('Số lần bị đánh giá đào tạo B');
             $table->integer('training_c_count')->default(0)->comment('Số lần bị đánh giá đào tạo đào tạo C');
 
             // Tiền & log
             $table->integer('deduction_amount')->default(0)->comment('Số tiền trừ');
             $table->integer('total_received_salary')->default(0)->comment('Tổng lương nhận');
-            $table->json('business_trip_days')->nullable()->comment('Mảng các ngày công tác trong tháng');
+            $table->json('detail_business_trip_and_leave_days')->nullable()->comment('Mảng các ngày công tác và nghỉ trong tháng');
 
             $table->string('note')->nullable()->comment('ghi chú');
         });

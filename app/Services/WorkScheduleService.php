@@ -311,10 +311,10 @@ class WorkScheduleService extends BaseService
         });
     }
 
-    public function getBaseQueryForDateRange(string $from, string $to)
+    public function getBaseQueryForDateRange(string $from, string $to, array $approvalStatus = ['pending', 'approved'], $query = null)
     {
-        return $this->tryThrow(function () use ($from, $to) {
-            return $this->repository->getBaseQueryForDateRange($from, $to);
+        return $this->tryThrow(function () use ($from, $to, $approvalStatus, $query) {
+            return $this->repository->getBaseQueryForDateRange($from, $to, $approvalStatus, $query);
         });
     }
 }

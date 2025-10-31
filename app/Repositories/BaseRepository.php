@@ -83,7 +83,6 @@ abstract class BaseRepository
         if ($loadRelation == true)
             $query->with($mergeRelations);
 
-
         return $query->first();
     }
 

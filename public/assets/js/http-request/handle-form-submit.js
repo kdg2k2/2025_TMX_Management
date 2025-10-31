@@ -16,7 +16,7 @@ const handleSubmitForm = async (
 
         const res = await http[method](action, formData);
         if (resetForm && method === "post") {
-            resetForm(form);
+            resetFormAfterSubmit(form);
         }
 
         if (typeof window[onSuccess] == "function") window[onSuccess]();
@@ -37,7 +37,7 @@ const getFormMethod = (form) => {
     );
 };
 
-const resetForm = (form) => {
+const resetFormAfterSubmit = (form) => {
     form.reset();
     refreshSumoSelect($(form).find("select"));
 };
