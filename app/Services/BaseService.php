@@ -54,10 +54,10 @@ abstract class BaseService
         });
     }
 
-    public function findByKey(string $key, $column)
+    public function findByKey(string $key, string $column, bool $useBinarySearch = true, bool $loadRelation = true, array $customRelations = [])
     {
-        return $this->tryThrow(function () use ($key, $column) {
-            return $this->repository->findByKey($key, $column);
+        return $this->tryThrow(function () use ($key, $column, $useBinarySearch, $loadRelation, $customRelations) {
+            return $this->repository->findByKey($key, $column, $useBinarySearch, $loadRelation, $customRelations);
         });
     }
 

@@ -10,6 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // lịch công tác
         Schema::create('work_schedules', function (Blueprint $table) {
             $table->id();
             $table->timestamps();

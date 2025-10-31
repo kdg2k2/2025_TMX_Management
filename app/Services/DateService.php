@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use DateTime;
 use Illuminate\Support\Collection;
 
 class DateService
@@ -631,5 +632,75 @@ class DateService
         }
 
         return $days;
+    }
+
+    /**
+     * Lấy tất cả các ngày trong tháng
+     *
+     * @param int $month Tháng (1-12)
+     * @param int $year Năm
+     * @param array $ignoreDays Mảng các ngày cần bỏ qua (0=CN, 1=T2, ..., 6=T7)
+     * @param string $format Format trả về (default: 'Y-m-d')
+     * @return Collection<string>
+     */
+    public function getDaysInMonth(
+        int $month,
+        int $year,
+        array $ignoreDays = [],
+        string $format = 'Y-m-d'
+    ): Collection {
+        // Tạo ngày đầu tháng và cuối tháng
+        $startDate = Carbon::create($year, $month, 1)->startOfDay();
+        $endDate = Carbon::create($year, $month, 1)->endOfMonth()->startOfDay();
+
+        // Sử dụng lại hàm getDatesInRange
+        return $this->getDatesInRange($startDate, $endDate, $ignoreDays, $format);
+    }
+
+    /**
+     * Tạo options cho dropdown năm
+     *
+     * @param int $startYear Năm bắt đầu
+     * @param int|null $endYear Năm kết thúc (default: năm hiện tại)
+     * @return array [2024 => 'Năm 2024', 2025 => 'Năm 2025']
+     */
+    public function getYearOptions(int $startYear, ?int $endYear = null): array
+    {
+        $endYear = $endYear ?? (int) date('Y');
+        $years = range($startYear, $endYear);
+        return array_combine($years, array_map(fn($y) => "Năm $y", $years));
+    }
+
+    /**
+     * Tạo options cho dropdown tháng
+     *
+     * @return array [1 => 'Tháng 1', ..., 12 => 'Tháng 12']
+     */
+    public function getMonthOptions(): array
+    {
+        $months = range(1, 12);
+        return array_combine($months, array_map(fn($m) => "Tháng $m", $months));
+    }
+
+    public function getTimeDiffInMinutes($actual, $standard)
+    {
+        $diff = $actual->getTimestamp() - $standard->getTimestamp();
+        return (int) round($diff / 60);
+    }
+
+    public function stringToDateTime($time)
+    {
+        if (empty($time)) return null;
+        return DateTime::createFromFormat('H:i', $time);
+    }
+
+    public function isSaturday($date)
+    {
+        return date('w', strtotime($date)) == 6;
+    }
+
+    public function isSunday($date)
+    {
+        return date('w', strtotime($date)) == 0;
     }
 }

@@ -10,6 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // bảng lưu trữ các lần user bị cảnh báo
         Schema::create('user_warnings', function (Blueprint $table) {
             $table->id();
             $table->timestamps();

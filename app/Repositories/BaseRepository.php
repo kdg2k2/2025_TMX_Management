@@ -72,12 +72,18 @@ abstract class BaseRepository
         })->get();
     }
 
-    public function findByKey(string $key, string $column, bool $useBinarySearch = true)
+    public function findByKey(string $key, string $column, bool $useBinarySearch = true, bool $loadRelation = true, array $customRelations=[])
     {
         if ($useBinarySearch)
             $query = $this->model->whereRaw("BINARY $column = ?", [$key]);
         else
             $query = $this->model->where($column, $key);
+
+        $mergeRelations = array_merge($this->relations, $customRelations);
+        if ($loadRelation == true)
+            $query->with($mergeRelations);
+
+
         return $query->first();
     }
 

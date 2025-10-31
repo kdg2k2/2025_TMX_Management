@@ -248,6 +248,40 @@
                         </li>
                     </ul>
                 </li>
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-report-analytics"></i>
+                        <span class="side-menu__label">
+                            Tổng hợp ABC
+                        </span>
+                        <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="javascript:void(0)">
+                                Tổng hợp ABC
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="{{ route('work-timesheet.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon ti ti-calendar-check"></i>
+                                Xuất lưới
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="javascript:void(0)" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon ti ti-cloud-upload"></i>
+                                Nộp bảng chấm công
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="javascript:void(0)" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon ti ti-currency-dollar"></i>
+                                Bảng lương
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
                 <li class="slide__category">
                     <span class="category-name">

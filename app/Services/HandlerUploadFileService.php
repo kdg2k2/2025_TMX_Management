@@ -83,7 +83,7 @@ class HandlerUploadFileService extends BaseService
             if (!$filePath)
                 return true;
 
-            $fullPath = app(\App\Services\HandlerUploadFileService::class)->getAbsolutePublicPath($filePath);
+            $fullPath = $this->getAbsolutePublicPath($filePath);
 
             // Kiểm tra file có tồn tại không
             if (!file_exists($fullPath)) {

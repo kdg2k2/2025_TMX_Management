@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserSubEmailController;
 use App\Http\Controllers\Admin\UserTimeTableController;
 use App\Http\Controllers\Admin\WorkScheduleController;
+use App\Http\Controllers\Admin\WorkTimesheetController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -235,5 +236,9 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
     Route::prefix('leave-request')->controller(LeaveRequestController::class)->group(function () {
         Route::get('index', 'index')->name('leave-request.index');
         Route::get('create', 'create')->name('leave-request.create');
+    });
+
+    Route::prefix('work-timesheet')->controller(WorkTimesheetController::class)->group(function () {
+        Route::get('index', 'index')->name('work-timesheet.index');
     });
 });

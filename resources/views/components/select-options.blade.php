@@ -10,10 +10,11 @@
     'recordFields' => null,
 ])
 
+
 @php
     $valueFieldsArray = is_array($valueFields) ? $valueFields : [$valueFields];
 
-    $getDisplayValue = function($item) use ($valueFieldsArray) {
+    $getDisplayValue = function ($item) use ($valueFieldsArray) {
         // Nếu item là scalar (string, number), return luôn
         if (!is_array($item)) {
             return $item;
@@ -23,23 +24,28 @@
         return implode(' - ', array_filter($values));
     };
 
-    $getKeyValue = function($item) use ($keyField) {
-        // Nếu item là scalar, return luôn
-        if (!is_array($item)) {
-            return $item;
+    $getKeyValue = function ($item, $key) use ($keyField, $items) {
+        // Nếu item là scalar (string/number)
+        if (!is_array($item) && !is_object($item)) {
+            // Check xem key có phải là string hoặc là số không liên tiếp không
+            // Ví dụ: [2024 => 'Năm 2024'] thì key = 2024
+            $firstKey = array_key_first($items);
+            if (!is_numeric($firstKey) || $firstKey !== 0) {
+                return $key; // Associative array, dùng key
+            }
+            return $item; // Indexed array, dùng item
         }
 
-        return is_array($keyField)
-            ? ($item[$keyField[0]] ?? '')
-            : ($item[$keyField] ?? '');
+        // Logic cũ cho array/object
+        return is_array($keyField) ? $item[$keyField[0]] ?? '' : $item[$keyField] ?? '';
     };
 
-    $isSelected = function($item) use ($selected, $getKeyValue) {
-        return $getKeyValue($item) == $selected;
+    $isSelected = function ($item, $key) use ($selected, $getKeyValue) {
+        return $getKeyValue($item, $key) == $selected;
     };
 
     // Function build attributes
-    $getAllAttributes = function($item) use ($optionAttributes, $recordAttribute, $recordFields) {
+    $getAllAttributes = function ($item) use ($optionAttributes, $recordAttribute, $recordFields) {
         // Nếu item là scalar, không có attributes
         if (!is_array($item)) {
             return '';
@@ -61,9 +67,7 @@
 
         // Record attribute riêng (nếu có)
         if ($recordAttribute) {
-            $data = $recordFields
-                ? array_intersect_key($item, array_flip($recordFields))
-                : $item;
+            $data = $recordFields ? array_intersect_key($item, array_flip($recordFields)) : $item;
             $jsonData = json_encode($data, JSON_HEX_APOS | JSON_HEX_QUOT);
             $attributes .= ' ' . $recordAttribute . '="' . htmlspecialchars($jsonData, ENT_QUOTES) . '"';
         }
@@ -72,14 +76,12 @@
     };
 @endphp
 
-@if($emptyOption)
+@if ($emptyOption)
     <option value="">{{ $emptyText }}</option>
 @endif
 
-@foreach($items as $item)
-    <option
-        value="{{ $getKeyValue($item) }}"
-        {{ $isSelected($item) ? 'selected' : '' }}
+@foreach ($items as $key => $item)
+    <option value="{{ $getKeyValue($item, $key) }}" {{ $isSelected($item, $key) ? 'selected' : '' }}
         {!! $getAllAttributes($item) !!}>
         {{ $getDisplayValue($item) }}
     </option>

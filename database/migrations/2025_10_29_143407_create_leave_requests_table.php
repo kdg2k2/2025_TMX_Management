@@ -10,6 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // nghỉ phép
         Schema::create('leave_requests', function (Blueprint $table) {
             $table->id();
             $table->timestamps();

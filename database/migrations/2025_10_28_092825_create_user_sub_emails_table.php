@@ -10,6 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // email phụ của user
         Schema::create('user_sub_emails', function (Blueprint $table) {
             $table->id();
             $table->timestamps();

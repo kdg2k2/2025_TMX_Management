@@ -36,6 +36,7 @@ use App\Http\Controllers\Api\UserSubEmailController;
 use App\Http\Controllers\Api\UserTimeTableController;
 use App\Http\Controllers\Api\UserWarningController;
 use App\Http\Controllers\Api\WorkScheduleController;
+use App\Http\Controllers\Api\WorkTimesheetController;
 use Illuminate\Support\Facades\Route;
 
 // Auth routes
@@ -156,7 +157,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::get('get-weeks', 'getWeeks')->name('api.user.timetable.get-weeks');
         });
 
-        Route::prefix('warning')->controller(UserWarningController::class)->group(function(){
+        Route::prefix('warning')->controller(UserWarningController::class)->group(function () {
             Route::post('store', 'store')->name('api.user.warning.store');
         });
     });
@@ -289,5 +290,10 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::post('adjust', 'adjust')->name('api.leave-request.adjust');
         Route::post('adjust-approve', 'adjustApprove')->name('api.leave-request.adjust-approve');
         Route::post('adjust-reject', 'adjustReject')->name('api.leave-request.adjust-reject');
+    });
+
+    Route::prefix('work-timesheet')->controller(WorkTimesheetController::class)->group(function () {
+        Route::get('data', 'data')->name('api.work-timesheet.data');
+        Route::post('import', 'import')->name('api.work-timesheet.import');
     });
 });

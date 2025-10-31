@@ -73,6 +73,8 @@ class UserSeeder extends Seeder
             ...array_map(function ($item) {
                 return [
                     'name' => $item,
+                    'is_salary_counted' => true,
+                    'salary_level' => 6000000,
                 ];
             }, [
                 'Lê Sỹ Doanh',
