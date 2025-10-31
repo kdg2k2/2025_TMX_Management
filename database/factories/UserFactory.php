@@ -31,7 +31,7 @@ class UserFactory extends Factory
             'position_id' => optional(Position::inRandomOrder()->first())->id,
             'job_title_id' => optional(JobTitle::inRandomOrder()->first())->id,
             'is_banned' => false,
-            'retired' => false,
+            'is_retired' => false,
             'jwt_version' => 1,
             'remember_token' => null,
         ];

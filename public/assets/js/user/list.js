@@ -75,8 +75,20 @@ const renderColumns = () => {
             },
         },
         {
-            data: "email",
+            data: null,
             title: "Email",
+            render: (data, type, row) => {
+                return `
+                    <div>${row?.email}</div>
+                    ${
+                        row?.sub_emails?.length > 0
+                            ? `<ul>${row?.sub_emails
+                                  ?.map((item) => `<li>${item?.email}</li>`)
+                                  .join("")}</ul>`
+                            : ""
+                    }
+                `;
+            },
         },
         {
             data: "phone",
@@ -91,17 +103,17 @@ const renderColumns = () => {
             title: "Khóa tài khoản",
             render: (data, type, row) => {
                 if (row?.is_banned)
-                    return createBadge("", 'danger', "ti ti-check");
-                return createBadge("", 'primary', "ti ti-x");
+                    return createBadge("", "danger", "ti ti-check");
+                return createBadge("", "primary", "ti ti-x");
             },
         },
         {
             data: null,
             title: "Nghỉ việc",
             render: (data, type, row) => {
-                if (row?.retired)
-                    return createBadge("", 'danger', "ti ti-check");
-                return createBadge("", 'primary', "ti ti-x");
+                if (row?.is_retired)
+                    return createBadge("", "danger", "ti ti-check");
+                return createBadge("", "primary", "ti ti-x");
             },
         },
         {

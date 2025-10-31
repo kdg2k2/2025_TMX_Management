@@ -60,7 +60,7 @@ class UserTimeTableService extends BaseService
                 'paginate' => false,
                 'custom_sort' => true,
                 'is_banned' => false,
-                'retired' => false,
+                'is_retired' => false,
                 'department_id' => $request['department_id'] ?? null,
                 'custom_relations' => [
                     'warning',

@@ -35,8 +35,8 @@ class UserRepository extends BaseRepository
             $query->where('role_id', $request['role_id']);
         if (isset($request['is_banned']))
             $query->where('is_banned', $request['is_banned']);
-        if (isset($request['retired']))
-            $query->where('retired', $request['retired']);
+        if (isset($request['is_retired']))
+            $query->where('is_retired', $request['is_retired']);
     }
 
     protected function getSearchConfig(): array

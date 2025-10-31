@@ -26,11 +26,7 @@ const DEFAULT_DATATABLE_CONFIG = {
         },
         {
             className: "all", // luôn hiển thị
-            targets: [0, 1, 2, 3, 4, 5, 6, -1], // 8 cột cần hiển thị
-        },
-        {
-            className: "none", // luôn ẩn vào responsive
-            targets: [7, 8, 9, 10, 11, 12, 13], // các cột còn lại
+            targets: [1, 2, 3, 4, 5, 6, -1],
         },
     ],
     language: {
@@ -79,6 +75,37 @@ const initializeBaseDataTable = (element, additionalConfig = {}) => {
         // Xóa columnDefs và chuyển responsive về true
         delete baseConfig.columnDefs;
         baseConfig.responsive = true;
+    } else {
+        // Tự động tính toán targets none dựa trên targets all
+        const allTargets =
+            baseConfig.columnDefs.find((def) => def.className === "all")
+                ?.targets || [];
+        const noneTargets = [];
+
+        for (let i = 1; i < columnCount; i++) {
+            // Bắt đầu từ 1 thay vì 0
+            if (!allTargets.includes(i) && i !== columnCount - 1) {
+                // Bỏ qua cột cuối (vì có -1)
+                noneTargets.push(i);
+            }
+        }
+
+        // Cập nhật lại columnDefs với targets none tự động
+        baseConfig.columnDefs = [
+            {
+                className: "dtr-control",
+                orderable: false,
+                targets: 0,
+            },
+            {
+                className: "all",
+                targets: allTargets,
+            },
+            {
+                className: "none",
+                targets: noneTargets,
+            },
+        ];
     }
 
     // Merge config mặc định với config bổ sung
