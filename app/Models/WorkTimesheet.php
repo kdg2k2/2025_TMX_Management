@@ -17,6 +17,6 @@ class WorkTimesheet extends Model
 
     public function details()
     {
-        return $this->hasMany(WorkTimesheetDetail::class);
+        return $this->hasMany(WorkTimesheetDetail::class, 'work_timesheet_id');
     }
 }

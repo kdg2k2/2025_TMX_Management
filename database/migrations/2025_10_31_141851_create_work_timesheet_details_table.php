@@ -25,7 +25,12 @@ return new class extends Migration {
 
             $table->integer('salary_level')->default(0)->comment('Mức lương');
             $table->integer('violation_penalty')->default(0)->comment('Mức tiêu chí');
+            $table->integer('social_insurance_deduction')->default(0)->comment('Tiền BHXH (8%)');
+            $table->integer('health_insurance_deduction')->default(0)->comment('Tiền BHYT (1.5%)');
+            $table->integer('unemployment_insurance_deduction')->default(0)->comment('Tiền BHTN (1%)');
+            $table->integer('total_tax_deduction')->default(0)->comment('Tổng tiền khấu trừ bảo hiểm');
             $table->integer('allowance_contact')->default(0)->comment('Phụ cấp liên lạc');
+            $table->integer('allowance_meal')->default(0)->comment('Phụ cấp ăn ca');
             $table->integer('allowance_position')->default(0)->comment('Phụ cấp chức vụ');
             $table->integer('allowance_fuel')->default(0)->comment('Phụ cấp xăng xe');
             $table->integer('allowance_transport')->default(0)->comment('Phụ cấp đi lại');
@@ -53,6 +58,8 @@ return new class extends Migration {
             $table->integer('business_trip_manual_count')->default(0)->comment('Tổng số công đi công tác - rà soát thủ công');
             $table->float('leave_days_with_permission')->default(0)->comment('Tổng số ngày nghỉ phép');
             $table->float('leave_days_without_permission')->default(0)->comment('Tổng số ngày nghỉ không phép');
+            $table->float('total_leave_days_in_year')->default(0)->comment('Tổng số ngày đã nghỉ trong năm');
+            $table->float('max_paid_leave_days_per_year')->default(0)->comment('số ngày nghỉ có lương tối đa của trong năm');
             $table->float('warning_count')->default(0)->comment('Tổng số lần bị cảnh báo');
 
             // Đánh giá

@@ -13,4 +13,8 @@ class WorkTimesheetRepository extends BaseRepository
             'details',
         ];
     }
+
+    public function findByMonthYear(int $month, int $year){
+        return $this->model->where('month', $month)->where('year', $year)->first();
+    }
 }

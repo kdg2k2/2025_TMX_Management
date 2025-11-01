@@ -2,26 +2,15 @@
 
 namespace App\Http\Requests\WorkTimesheet;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class ListRequest extends FormRequest
+class ListRequest extends BaseRequest
 {
-    public function prepareForValidation()
-    {
-        $this->merge([
-            //
-        ]);
-    }
-
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [
-            //
+            'year' => 'required|integer',
+            'month' => 'required|integer',
         ];
     }
 }

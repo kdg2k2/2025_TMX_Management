@@ -75,6 +75,7 @@ class UserSeeder extends Seeder
                     'name' => $item,
                     'is_salary_counted' => true,
                     'salary_level' => 6000000,
+                    'allowance_meal' => 630000,
                 ];
             }, [
                 'Lê Sỹ Doanh',

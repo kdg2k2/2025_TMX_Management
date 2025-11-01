@@ -39,6 +39,7 @@ return new class extends Migration {
             $table->integer('salary_level')->default(0)->comment('Mức lương');
             $table->integer('violation_penalty')->default(0)->comment('Mức tiêu chí (số tiền phạt khi vi phạm quy chế)');
             $table->integer('allowance_contact')->default(0)->comment('Phụ cấp liên lạc');
+            $table->integer('allowance_meal')->default(0)->comment('Phụ cấp ăn ca');
             $table->integer('allowance_position')->default(0)->comment('Phụ cấp chức vụ');
             $table->integer('allowance_fuel')->default(0)->comment('Phụ cấp xăng xe');
             $table->integer('allowance_transport')->default(0)->comment('Phụ cấp đi lại');

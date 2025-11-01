@@ -13,19 +13,28 @@ const loadAndShowData = async () => {
         month: month.value,
     });
 
+    console.log(res.data);
+
     if (res.data) {
-        iframeExcelContainer.hidden = false;
-        noneDataContainer.hidden = true;
-        excelUrl = res.data;
-        iframeExcel.setAttribute(
-            "src",
-            createLinkPreviewFileOnline(excelUrl, 1)
-        );
+        iframeExcelContainer.classList.remove("d-none");
+        noneDataContainer.classList.add("d-none", true);
+        excelUrl = res.data.path;
+    } else {
+        iframeExcelContainer.classList.add("d-none", true);
+        noneDataContainer.classList.remove("d-none");
+        excelUrl = "";
     }
+
+    console.log(excelUrl);
+
+    iframeExcel.setAttribute(
+        "src",
+        excelUrl ? createLinkPreviewFileOnline(excelUrl, 1) : ""
+    );
 };
 
 const openModalUpload = (btn) => {
-    resetForm(modalUploadForm);
+    resetFormAfterSubmit(modalUploadForm);
     showModal(modalUpload);
 };
 
@@ -40,5 +49,14 @@ const downloadExcel = () => {
 modalUploadForm.addEventListener("submit", async (e) => {
     await handleSubmitForm(e, modalUploadForm, () => {
         hideModal(modalUpload);
+        loadAndShowData();
     });
+});
+
+[year, month].forEach((item) => {
+    item.addEventListener("change", loadAndShowData);
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadAndShowData();
 });

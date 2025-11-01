@@ -11,8 +11,17 @@ class WorkTimesheetDetailService extends BaseService
         $this->repository = app(WorkTimesheetDetailRepository::class);
     }
 
-    public function getByUserIdAndMonthYear(int $userId, int $month, int $year)
+    public function getMaxProposedWorkDayInMonth(int $userId, int $month, int $year)
     {
-        return $this->tryThrow(fn() => $this->repository->getByUserIdAndMonthYear($userId, $month, $year));
+        return $this->tryThrow(function () use ($userId, $month, $year) {
+            return $this->repository->getMaxProposedWorkDayInMonth($userId, $month, $year);
+        });
+    }
+
+    public function getTotalLeaveDaysWithPermission(int $userId, int $year)
+    {
+        return $this->tryThrow(function () use ($userId, $year) {
+            return $this->repository->getTotalLeaveDaysWithPermission($userId, $year);
+        });
     }
 }
