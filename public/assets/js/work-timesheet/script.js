@@ -13,17 +13,15 @@ const loadAndShowData = async () => {
         month: month.value,
     });
 
-    if (res.data) {
+    if (res?.data?.calculated_path) {
         iframeExcelContainer.classList.remove("d-none");
         noneDataContainer.classList.add("d-none", true);
-        excelUrl = res.data.path;
+        excelUrl = res.data.calculated_path;
     } else {
         iframeExcelContainer.classList.add("d-none", true);
         noneDataContainer.classList.remove("d-none");
         excelUrl = "";
     }
-
-    console.log(excelUrl);
 
     iframeExcel.setAttribute(
         "src",

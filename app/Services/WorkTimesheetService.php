@@ -42,20 +42,22 @@ class WorkTimesheetService extends BaseService
     public function data(array $request = [])
     {
         return $this->tryThrow(function () use ($request) {
-            $path = optional($this->repository->findByMonthYear(
+            $data = optional($this->repository->findByMonthYear(
                 $request['month'],
                 $request['year']
             ))->toArray();
 
-            return $path ? $this->formatRecord($path) : null;
+            return $data ? $this->formatRecord($data) : null;
         });
     }
 
     public function formatRecord(array $array)
     {
         $array = parent::formatRecord($array);
-        if (isset($array['path']))
-            $array['path'] = $this->getAssetUrl($array['path']);
+        if (isset($array['original_path']))
+            $array['original_path'] = $this->getAssetUrl($array['original_path']);
+        if (isset($array['calculated_path']))
+            $array['calculated_path'] = $this->getAssetUrl($array['calculated_path']);
         return $array;
     }
 
@@ -67,7 +69,8 @@ class WorkTimesheetService extends BaseService
                 $request['month'],
                 $request['year']
             );
-            $oldPath = $old['path'] ?? null;
+            $oldOriginalPath = $old['original_path'] ?? null;
+            $oldCalculatedPath = $old['calculated_path'] ?? null;
             if ($old)
                 $old->delete();
 
@@ -83,13 +86,19 @@ class WorkTimesheetService extends BaseService
                     'power_outage_days' => $request['power_outage_days'] ?? [],
                     'compensated_days' => $request['compensated_days'] ?? [],
                 ]),
-                'path' => $this->handlerUploadFileService->storeAndRemoveOld($request['file'], 'work-timesheets', 'uploads'),
+                'original_path' => $this->handlerUploadFileService->storeAndRemoveOld($request['file'], "work-timesheets/{$request['year']}", $request['month']),
             ]);
 
-            // đọc excel
+            // đọc vã tính toán số liệu excel
             $this->readExcel($record);
 
-            $this->handlerUploadFileService->safeDeleteFile($oldPath);
+            // load các số liệu dã được tính toán
+            $record->load($this->repository->relations);
+
+            // tạo file excel hiển thị kết quả tính
+            $this->createCaculatedExcel($record);
+
+            $this->handlerUploadFileService->removeFiles([$oldOriginalPath, $oldCalculatedPath]);
         }, true);
     }
 
@@ -156,6 +165,114 @@ class WorkTimesheetService extends BaseService
         ];
     }
 
+    private function checkLateEarlyMultipleDays(array $times, bool $lambu)
+    {
+        $final = [
+            'validAttendanceCount' => 0,
+            'lateMorningCount' => 0,
+            'earlyMorningCount' => 0,
+            'lateAfternoonCount' => 0,
+            'earlyAfternoonCount' => 0,
+        ];
+
+        for ($i = 0; $i < count($times); $i++) {
+            if ($this->dateService->isSunday($times[$i][3]))
+                continue;
+
+            $res = $this->checkLateEarlyOneDay(
+                $times[$i][4],
+                $times[$i][5],
+                $times[$i][6],
+                $times[$i][7],
+                $this->dateService->isSaturday($times[$i][3]),
+                $lambu
+            );
+
+            $final['validAttendanceCount'] += $res['validAttendanceCount'];
+            $final['lateMorningCount'] += $res['lateMorningCount'];
+            $final['earlyMorningCount'] += $res['earlyMorningCount'];
+            $final['lateAfternoonCount'] += $res['lateAfternoonCount'];
+            $final['earlyAfternoonCount'] += $res['earlyAfternoonCount'];
+        }
+
+        return $final;
+    }
+
+    private function checkLateEarlyOneDay(
+        string $morningCheckInRaw = null,
+        string $morningCheckOutRaw = null,
+        string $afternoonCheckInRaw = null,
+        string $afternoonCheckOutRaw = null,
+        bool $isSaturday,
+        bool $isMakeUpWorkingDay
+    ) {
+        $standardTimes = [
+            'morningCheckIn' => $this->dateService->stringToDateTime('07:30'),
+            'morningCheckOut' => $this->dateService->stringToDateTime('12:00'),
+            'afternoonCheckIn' => $this->dateService->stringToDateTime('13:30'),
+            'afternoonCheckOut' => $this->dateService->stringToDateTime('17:00'),
+        ];
+
+        $standardTimesSaturday = [
+            'morningCheckIn' => $this->dateService->stringToDateTime('08:00'),
+            'morningCheckOut' => $this->dateService->stringToDateTime('11:30'),
+        ];
+
+        $userTimes = [
+            'morningCheckIn' => $this->dateService->stringToDateTime($morningCheckInRaw),
+            'morningCheckOut' => $this->dateService->stringToDateTime($morningCheckOutRaw),
+            'afternoonCheckIn' => $this->dateService->stringToDateTime($afternoonCheckInRaw),
+            'afternoonCheckOut' => $this->dateService->stringToDateTime($afternoonCheckOutRaw),
+        ];
+
+        $result = [
+            'validAttendanceCount' => 0,
+            'lateMorningCount' => 0,
+            'earlyMorningCount' => 0,
+            'lateAfternoonCount' => 0,
+            'earlyAfternoonCount' => 0,
+        ];
+
+        if ($isSaturday == false) {  // nếu là ngày thứ thì nửa ngày 1 công hợp lệ
+            if ($userTimes['morningCheckIn'])
+                $result['lateMorningCount'] = max(0, $this->dateService->getTimeDiffInMinutes($userTimes['morningCheckIn'], $standardTimes['morningCheckIn']));
+            if ($userTimes['morningCheckOut'])
+                $result['earlyMorningCount'] = max(0, $this->dateService->getTimeDiffInMinutes($standardTimes['morningCheckOut'], $userTimes['morningCheckOut']));
+            if ($userTimes['afternoonCheckIn'])
+                $result['lateAfternoonCount'] = max(0, $this->dateService->getTimeDiffInMinutes($userTimes['afternoonCheckIn'], $standardTimes['afternoonCheckIn']));
+            if ($userTimes['afternoonCheckOut'])
+                $result['earlyAfternoonCount'] = max(0, $this->dateService->getTimeDiffInMinutes($standardTimes['afternoonCheckOut'], $userTimes['afternoonCheckOut']));
+            if ($userTimes['morningCheckIn'] && $userTimes['morningCheckIn'])
+                $result['validAttendanceCount'] += 1;
+            if ($userTimes['afternoonCheckIn'] && $userTimes['afternoonCheckIn'])
+                $result['validAttendanceCount'] += 1;
+        } else {
+            if ($isMakeUpWorkingDay != false)  // nếu là ngày làm bù thì tính giờ giấc như ngày thứ, nếu là thứ 7 thì tính theo giờ t7
+            {
+                $standardTimes = [
+                    'morningCheckIn' => $this->dateService->stringToDateTime('08:00'),
+                    'morningCheckOut' => $this->dateService->stringToDateTime('11:30'),
+                ];
+
+                if ($userTimes['morningCheckIn'])
+                    $result['lateMorningCount'] = max(0, $this->dateService->getTimeDiffInMinutes($userTimes['morningCheckIn'], $standardTimesSaturday['morningCheckIn']));
+                if ($userTimes['morningCheckOut'])
+                    $result['earlyMorningCount'] = max(0, $this->dateService->getTimeDiffInMinutes($standardTimes['morningCheckOut'], $standardTimesSaturday['morningCheckOut']));
+                $result['lateAfternoonCount'] = null;
+                $result['earlyAfternoonCount'] = null;
+            }
+
+            // nếu là thứ 7 thì nửa ngày 2 công hợp lệ
+            if ($userTimes['morningCheckIn'] && $userTimes['morningCheckIn'])
+                $result['validAttendanceCount'] += 2;
+            if ($isMakeUpWorkingDay == true)  // nếu làm bù thì mới tính công chiều t7
+                if ($userTimes['afternoonCheckIn'] && $userTimes['afternoonCheckIn'])
+                    $result['validAttendanceCount'] += 2;
+        }
+
+        return $result;
+    }
+
     // tính lại số ngày nghỉ thực tế khi có nghỉ lễ
     private function calculateLeaveRequest(array $workTimeSheet, array $userInfo)
     {
@@ -219,7 +336,7 @@ class WorkTimesheetService extends BaseService
 
     private function readExcel(WorkTimesheet $record)
     {
-        $dataExcel = $this->excelService->readExcel($record['path']);
+        $dataExcel = $this->excelService->readExcel($record['original_path']);
         $sheetData = $dataExcel['Sheet1'] ?? [];
         if (empty($sheetData))
             throw new Exception("Không tìm thấy data trong 'Sheet1'");
@@ -398,111 +515,132 @@ class WorkTimesheetService extends BaseService
         return $details;
     }
 
-    private function checkLateEarlyMultipleDays(array $times, bool $lambu)
+    private function createCaculatedExcel(WorkTimesheet $record)
     {
-        $final = [
-            'validAttendanceCount' => 0,
-            'lateMorningCount' => 0,
-            'earlyMorningCount' => 0,
-            'lateAfternoonCount' => 0,
-            'earlyAfternoonCount' => 0,
-        ];
+        $headerExcel = array_map(fn($i) =>
+                [
+                    'name' => $i,
+                    'rowspan' => 1,
+                    'colspan' => 1,
+                ],
+            [
+                'STT',
+                'Họ tên',
+                'Công BPDX',
+                'Công chấm máy(Hợp lệ)',
+                'Ngoài giờ',
+                'Công tác (Đăng ký Hệ thống)',
+                'Công tác (Không đăng ký Hệ thống)',
+                'Đã nghỉ phép',
+                'Nghỉ phép',
+                'Chấm công không hợp lệ',
+                'Tỷ lệ không hợp lệ',
+                'Thời gian trung bình muộn',
+                'Cảnh báo',
+                'Phòng Đánh giá ABC',
+                'Hội đồng đánh giá',
+                'Ghi chú',
+            ]);
 
-        for ($i = 0; $i < count($times); $i++) {
-            if ($this->dateService->isSunday($times[$i][3]))
-                continue;
+        $details = collect($record['details'])->groupBy('department')->sortBy('position_id')->toArray();
 
-            $res = $this->checkLateEarlyOneDay(
-                $times[$i][4],
-                $times[$i][5],
-                $times[$i][6],
-                $times[$i][7],
-                $this->dateService->isSaturday($times[$i][3]),
-                $lambu
-            );
+        $dataExcel = [];
+        $centerRows = [];
+        $boldRows = [1];
+        $romanIndex = $intIndex = 1;
 
-            $final['validAttendanceCount'] += $res['validAttendanceCount'];
-            $final['lateMorningCount'] += $res['lateMorningCount'];
-            $final['earlyMorningCount'] += $res['earlyMorningCount'];
-            $final['lateAfternoonCount'] += $res['lateAfternoonCount'];
-            $final['earlyAfternoonCount'] += $res['earlyAfternoonCount'];
-        }
-
-        return $final;
-    }
-
-    private function checkLateEarlyOneDay(
-        string $morningCheckInRaw = null,
-        string $morningCheckOutRaw = null,
-        string $afternoonCheckInRaw = null,
-        string $afternoonCheckOutRaw = null,
-        bool $isSaturday,
-        bool $isMakeUpWorkingDay
-    ) {
-        $standardTimes = [
-            'morningCheckIn' => $this->dateService->stringToDateTime('07:30'),
-            'morningCheckOut' => $this->dateService->stringToDateTime('12:00'),
-            'afternoonCheckIn' => $this->dateService->stringToDateTime('13:30'),
-            'afternoonCheckOut' => $this->dateService->stringToDateTime('17:00'),
-        ];
-
-        $standardTimesSaturday = [
-            'morningCheckIn' => $this->dateService->stringToDateTime('08:00'),
-            'morningCheckOut' => $this->dateService->stringToDateTime('11:30'),
-        ];
-
-        $userTimes = [
-            'morningCheckIn' => $this->dateService->stringToDateTime($morningCheckInRaw),
-            'morningCheckOut' => $this->dateService->stringToDateTime($morningCheckOutRaw),
-            'afternoonCheckIn' => $this->dateService->stringToDateTime($afternoonCheckInRaw),
-            'afternoonCheckOut' => $this->dateService->stringToDateTime($afternoonCheckOutRaw),
-        ];
-
-        $result = [
-            'validAttendanceCount' => 0,
-            'lateMorningCount' => 0,
-            'earlyMorningCount' => 0,
-            'lateAfternoonCount' => 0,
-            'earlyAfternoonCount' => 0,
-        ];
-
-        if ($isSaturday == false) {  // nếu là ngày thứ thì nửa ngày 1 công hợp lệ
-            if ($userTimes['morningCheckIn'])
-                $result['lateMorningCount'] = max(0, $this->dateService->getTimeDiffInMinutes($userTimes['morningCheckIn'], $standardTimes['morningCheckIn']));
-            if ($userTimes['morningCheckOut'])
-                $result['earlyMorningCount'] = max(0, $this->dateService->getTimeDiffInMinutes($standardTimes['morningCheckOut'], $userTimes['morningCheckOut']));
-            if ($userTimes['afternoonCheckIn'])
-                $result['lateAfternoonCount'] = max(0, $this->dateService->getTimeDiffInMinutes($userTimes['afternoonCheckIn'], $standardTimes['afternoonCheckIn']));
-            if ($userTimes['afternoonCheckOut'])
-                $result['earlyAfternoonCount'] = max(0, $this->dateService->getTimeDiffInMinutes($standardTimes['afternoonCheckOut'], $userTimes['afternoonCheckOut']));
-            if ($userTimes['morningCheckIn'] && $userTimes['morningCheckIn'])
-                $result['validAttendanceCount'] += 1;
-            if ($userTimes['afternoonCheckIn'] && $userTimes['afternoonCheckIn'])
-                $result['validAttendanceCount'] += 1;
-        } else {
-            if ($isMakeUpWorkingDay != false)  // nếu là ngày làm bù thì tính giờ giấc như ngày thứ, nếu là thứ 7 thì tính theo giờ t7
-            {
-                $standardTimes = [
-                    'morningCheckIn' => $this->dateService->stringToDateTime('08:00'),
-                    'morningCheckOut' => $this->dateService->stringToDateTime('11:30'),
+        foreach ($details as $key => $value) {
+            if (is_string($key)) {
+                $dataExcel[] = [
+                    'color' => 'red',
+                    'record' => [
+                        $this->getRomanIndex($romanIndex),
+                        $key,
+                        ...array_map(fn($i) => '', range(1, count($headerExcel) - 2)),
+                    ],
                 ];
-
-                if ($userTimes['morningCheckIn'])
-                    $result['lateMorningCount'] = max(0, $this->dateService->getTimeDiffInMinutes($userTimes['morningCheckIn'], $standardTimesSaturday['morningCheckIn']));
-                if ($userTimes['morningCheckOut'])
-                    $result['earlyMorningCount'] = max(0, $this->dateService->getTimeDiffInMinutes($standardTimes['morningCheckOut'], $standardTimesSaturday['morningCheckOut']));
-                $result['lateAfternoonCount'] = null;
-                $result['earlyAfternoonCount'] = null;
+                $currentRow = count($dataExcel) + 1;  // +1 vì có header
+                $centerRows[] = $currentRow;
+                $boldRows[] = $currentRow;
+                $romanIndex++;
             }
 
-            // nếu là thứ 7 thì nửa ngày 2 công hợp lệ
-            if ($userTimes['morningCheckIn'] && $userTimes['morningCheckIn'])
-                $result['validAttendanceCount'] += 2;
-            if ($isMakeUpWorkingDay == true)  // nếu làm bù thì mới tính công chiều t7
-                if ($userTimes['afternoonCheckIn'] && $userTimes['afternoonCheckIn'])
-                    $result['validAttendanceCount'] += 2;
+            foreach ($value as $item) {
+                $dataExcel[] = [
+                    $intIndex,
+                    $item['name'],
+                    $item['proposed_work_days'],
+                    $item['valid_attendance_count'],
+                    $item['overtime_total_amount'],
+                    $item['business_trip_system_count'],
+                    $item['business_trip_manual_count'],
+                    $item['total_leave_days_in_year'],
+                    $item['leave_days_with_permission'],
+                    $item['invalid_attendance_count'],
+                    $item['invalid_attendance_rate'],
+                    $item['avg_late_minutes'],
+                    $item['warning_count'],
+                    $item['department_rating'],
+                    $item['council_rating'],
+                    $item['note'],
+                ];
+                $intIndex++;
+            }
         }
 
-        return $result;
+        $record->update([
+            'calculated_path' => $this->excelService->createExcel(
+                [
+                    (object) [
+                        'name' => 'Sheet1',
+                        'header' => [$headerExcel],
+                        'data' => $dataExcel,
+                        'boldRows' => $boldRows,
+                        'boldItalicRows' => [],
+                        'italicRows' => [],
+                        'centerColumns' => array_values(array_diff(range(1, count($headerExcel)), [2])),  // Loại cột 2 (Họ tên)
+                        'centerRows' => $centerRows,
+                        'filterStartRow' => 1,
+                        'freezePane' => 'custom',
+                        'freezeCell' => 'C2',
+                    ],
+                ],
+                "uploads/render/work-timesheets/{$record['year']}/{$record['month']}",
+                'calculated.xlsx'
+            ),
+        ]);
+
+        return $record;
+    }
+
+    private function getRomanIndex(int $num)
+    {
+        $map = [
+            'M' => 1000,
+            'CM' => 900,
+            'D' => 500,
+            'CD' => 400,
+            'C' => 100,
+            'XC' => 90,
+            'L' => 50,
+            'XL' => 40,
+            'X' => 10,
+            'IX' => 9,
+            'V' => 5,
+            'IV' => 4,
+            'I' => 1,
+        ];
+
+        $returnValue = '';
+        while ($num > 0) {
+            foreach ($map as $roman => $int) {
+                if ($num >= $int) {
+                    $num -= $int;
+                    $returnValue .= $roman;
+                    break;
+                }
+            }
+        }
+        return $returnValue;
     }
 }

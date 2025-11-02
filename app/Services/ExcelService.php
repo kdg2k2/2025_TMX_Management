@@ -35,15 +35,15 @@ class ExcelService
      *
      *  $dataExcel phải là mảng có dạng (index của mảng bắt buộc là số nguyên, value của mảng có thể là value hoặc phải là dạng như dưới)
      *  $dataExcel = [
-     *      'background' => 'red',
+     *      'background' => 'red',      // Màu nền: 'red', 'green', 'blue'... hoặc mã hex 'FF0000'
+     *      'color' => 'white',         // Màu chữ: 'white', 'black'... hoặc mã hex 'FFFFFF'
      *      'record' => [
      *          1,
      *          'Bùi Trung Hiếu',
-     *          'Kỹ thuật',
-     *          'XMG',
      *          [
      *              'value' => 8.0,
-     *              'background' => 'red'
+     *              'background' => 'yellow',   // Hỗ trợ tên màu tiếng Anh
+     *              'color' => 'red',           // hoặc mã hex 6 ký tự
      *          ],
      *      ],
      *  ];
@@ -93,10 +93,18 @@ class ExcelService
             foreach ($item->data as $index => $dt) {
                 $rowHasBackground = false;
                 $rowBackgroundColor = '';
+                $rowHasColor = false;
+                $rowTextColor = '';
 
-                if (is_array($dt) && isset($dt['record']) && isset($dt['background'])) {
-                    $rowHasBackground = true;
-                    $rowBackgroundColor = $dt['background'];
+                if (is_array($dt) && isset($dt['record'])) {
+                    if (isset($dt['background'])) {
+                        $rowHasBackground = true;
+                        $rowBackgroundColor = $this->convertColorNameToARGB($dt['background']);
+                    }
+                    if (isset($dt['color'])) {
+                        $rowHasColor = true;
+                        $rowTextColor = $this->convertColorNameToARGB($dt['color']);
+                    }
                     $dt = $dt['record'];
                 }
 
@@ -112,22 +120,38 @@ class ExcelService
                                 ->getFill()
                                 ->setFillType(Fill::FILL_SOLID)
                                 ->getStartColor()
-                                ->setARGB($cellData['background']);
+                                ->setARGB($this->convertColorNameToARGB($cellData['background']));
+                        }
+                        if (isset($cellData['color'])) {
+                            $sheet
+                                ->getStyle($cellCoordinate)
+                                ->getFont()
+                                ->getColor()
+                                ->setARGB($this->convertColorNameToARGB($cellData['color']));
                         }
                     } else {
                         $sheet->setCellValue($cellCoordinate, $cellData);
                     }
                 }
 
+                $rowNumber = count($item->header) + $index + 1;
+                $lastColumnLetter = Coordinate::stringFromColumnIndex(count($dt));
+
                 if ($rowHasBackground) {
-                    $rowNumber = count($item->header) + $index + 1;
-                    $lastColumnLetter = Coordinate::stringFromColumnIndex(count($dt));
                     $sheet
                         ->getStyle("A{$rowNumber}:{$lastColumnLetter}{$rowNumber}")
                         ->getFill()
                         ->setFillType(Fill::FILL_SOLID)
                         ->getStartColor()
                         ->setARGB($rowBackgroundColor);
+                }
+
+                if ($rowHasColor) {
+                    $sheet
+                        ->getStyle("A{$rowNumber}:{$lastColumnLetter}{$rowNumber}")
+                        ->getFont()
+                        ->getColor()
+                        ->setARGB($rowTextColor);
                 }
             }
 
@@ -509,5 +533,46 @@ class ExcelService
         $sheet->getStyle("A1:$rangeLastCol")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
         return $sheet;
+    }
+
+    /**
+     * Convert tên màu thông dụng sang mã ARGB
+     */
+    protected function convertColorNameToARGB($colorName)
+    {
+        $colorMap = [
+            'red' => 'FF0000',
+            'green' => '00FF00',
+            'blue' => '0000FF',
+            'yellow' => 'FFFF00',
+            'orange' => 'FFA500',
+            'purple' => '800080',
+            'pink' => 'FFC0CB',
+            'brown' => 'A52A2A',
+            'gray' => '808080',
+            'grey' => '808080',
+            'black' => '000000',
+            'white' => 'FFFFFF',
+            'cyan' => '00FFFF',
+            'magenta' => 'FF00FF',
+            'lime' => '00FF00',
+            'navy' => '000080',
+            'teal' => '008080',
+            'olive' => '808000',
+            'maroon' => '800000',
+            'aqua' => '00FFFF',
+            'silver' => 'C0C0C0',
+            'gold' => 'FFD700',
+        ];
+
+        $colorName = strtolower(trim($colorName));
+
+        // Nếu đã là mã hex (6 ký tự), return luôn
+        if (preg_match('/^[0-9A-Fa-f]{6}$/', $colorName)) {
+            return strtoupper($colorName);
+        }
+
+        // Convert tên màu sang mã
+        return $colorMap[$colorName] ?? 'FF0000';  // Default: red
     }
 }

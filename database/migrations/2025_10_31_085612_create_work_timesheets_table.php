@@ -22,7 +22,8 @@ return new class extends Migration {
             $table->integer('total_compensated_days')->default(0)->comment('Tổng số ngày làm bù');
             $table->json('days_details')->nullable()->comment('Mảng các ngày mất điện, nghỉ lễ, làm bù trong tháng');
 
-            $table->string('path')->comment('đường dẫn file khóa ngoại gốc');
+            $table->string('original_path')->comment('đường dẫn file gốc');
+            $table->string('calculated_path')->nullable()->comment('đường dẫn file đã tính toán');
 
             $table->unique(['year', 'month']);
         });
