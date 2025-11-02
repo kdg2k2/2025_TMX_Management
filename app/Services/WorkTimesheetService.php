@@ -42,10 +42,12 @@ class WorkTimesheetService extends BaseService
     public function data(array $request = [])
     {
         return $this->tryThrow(function () use ($request) {
-            return $this->formatRecord(optional($this->repository->findByMonthYear(
+            $path = optional($this->repository->findByMonthYear(
                 $request['month'],
                 $request['year']
-            ))->toArray() ?? []);
+            ))->toArray();
+
+            return $path ? $this->formatRecord($path) : null;
         });
     }
 
@@ -202,7 +204,7 @@ class WorkTimesheetService extends BaseService
         // số công
         $numberOfJobs = min($maxProposedWorkDays, $maxProposedWorkDays + $detail['max_paid_leave_days_per_year'] - $detail['leave_days_with_permission'] - $detail['leave_days_without_permission']);
 
-        // tổng lương: tổng phụ cấp + (mức lương/max công bpdx)
+        // tổng lương: tổng phụ cấp + (mức lương/max công bpdx) - tổng trừ tiêu chí + tổng công thêm
         $totalReceivedSalary = $detail['allowance_contact'] + $detail['allowance_meal'] + $detail['allowance_position'] + $detail['allowance_fuel'] + $detail['allowance_transport'] + (($detail['salary_level'] / $maxProposedWorkDays) * $numberOfJobs) - $detail['deduction_amount'] + $overtimeTotalCount;
         if ($detail['position_id'] != 6)
             $totalReceivedSalary -= (($detail['salary_level'] + $detail['allowance_position']) * 0.105);

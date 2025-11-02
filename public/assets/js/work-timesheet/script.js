@@ -13,8 +13,6 @@ const loadAndShowData = async () => {
         month: month.value,
     });
 
-    console.log(res.data);
-
     if (res.data) {
         iframeExcelContainer.classList.remove("d-none");
         noneDataContainer.classList.add("d-none", true);
