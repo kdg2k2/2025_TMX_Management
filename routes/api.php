@@ -37,6 +37,7 @@ use App\Http\Controllers\Api\UserTimeTableController;
 use App\Http\Controllers\Api\UserWarningController;
 use App\Http\Controllers\Api\WorkScheduleController;
 use App\Http\Controllers\Api\WorkTimesheetController;
+use App\Http\Controllers\Api\WorkTimesheetOvertimeController;
 use Illuminate\Support\Facades\Route;
 
 // Auth routes
@@ -292,8 +293,15 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::post('adjust-reject', 'adjustReject')->name('api.leave-request.adjust-reject');
     });
 
-    Route::prefix('work-timesheet')->controller(WorkTimesheetController::class)->group(function () {
-        Route::get('data', 'data')->name('api.work-timesheet.data');
-        Route::post('import', 'import')->name('api.work-timesheet.import');
+    Route::prefix('work-timesheet')->group(function () {
+        Route::controller(WorkTimesheetController::class)->group(function () {
+            Route::get('data', 'data')->name('api.work-timesheet.data');
+            Route::post('import', 'import')->name('api.work-timesheet.import');
+        });
+        Route::prefix('overtime')->controller(WorkTimesheetOvertimeController::class)->group(function () {
+            Route::get('list', 'list')->name('api.work-timesheet.overtime.list');
+            Route::get('template', 'template')->name('api.work-timesheet.overtime.template');
+            Route::post('upload', 'upload')->name('api.work-timesheet.overtime.upload');
+        });
     });
 });

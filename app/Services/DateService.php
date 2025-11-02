@@ -606,7 +606,8 @@ class DateService
      */
     public function getWeekFromDate(string $date): int
     {
-        return (int) Carbon::parse($date)->weekOfYear;
+        $parsedDate = $this->parseDate($date, false);
+        return $parsedDate ? (int) $parsedDate->weekOfYear : 0;
     }
 
     /**
@@ -649,11 +650,9 @@ class DateService
         array $ignoreDays = [],
         string $format = 'Y-m-d'
     ): Collection {
-        // Tạo ngày đầu tháng và cuối tháng
-        $startDate = Carbon::create($year, $month, 1)->startOfDay();
-        $endDate = Carbon::create($year, $month, 1)->endOfMonth()->startOfDay();
+        $startDate = $this->getFirstDayOfMonth($month, $year, 'Y-m-d');
+        $endDate = $this->getLastDayOfMonth($month, $year, 'Y-m-d');
 
-        // Sử dụng lại hàm getDatesInRange
         return $this->getDatesInRange($startDate, $endDate, $ignoreDays, $format);
     }
 
@@ -697,12 +696,14 @@ class DateService
 
     public function isSaturday($date)
     {
-        return date('w', strtotime($date)) == 6;
+        $parsedDate = $this->parseDate($date, false);  // false = return Carbon
+        return $parsedDate ? $parsedDate->dayOfWeek === 6 : false;
     }
 
     public function isSunday($date)
     {
-        return date('w', strtotime($date)) == 0;
+        $parsedDate = $this->parseDate($date, false);  // false = return Carbon
+        return $parsedDate ? $parsedDate->dayOfWeek === 0 : false;
     }
 
     /**

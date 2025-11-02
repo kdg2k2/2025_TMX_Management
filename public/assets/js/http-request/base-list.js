@@ -1,4 +1,6 @@
-var customDataTableFilterParams = {};
+if (typeof customDataTableFilterParams === "undefined") {
+    var customDataTableFilterParams = {};
+}
 
 const createDataTableFilterParams = () => {
     const defaultParams = {

@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\UserSubEmailController;
 use App\Http\Controllers\Admin\UserTimeTableController;
 use App\Http\Controllers\Admin\WorkScheduleController;
 use App\Http\Controllers\Admin\WorkTimesheetController;
+use App\Http\Controllers\Admin\WorkTimesheetOvertimeController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -238,7 +239,13 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::get('create', 'create')->name('leave-request.create');
     });
 
-    Route::prefix('work-timesheet')->controller(WorkTimesheetController::class)->group(function () {
-        Route::get('index', 'index')->name('work-timesheet.index');
+    Route::prefix('work-timesheet')->group(function () {
+        Route::controller(WorkTimesheetController::class)->group(function () {
+            Route::get('index', 'index')->name('work-timesheet.index');
+        });
+
+        Route::prefix('overtime')->controller(WorkTimesheetOvertimeController::class)->group(function () {
+            Route::get('index', 'index')->name('work-timesheet.overtime.index');
+        });
     });
 });

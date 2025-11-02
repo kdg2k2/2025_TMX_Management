@@ -24,6 +24,7 @@ return new class extends Migration {
 
             $table->string('original_path')->comment('đường dẫn file gốc');
             $table->string('calculated_path')->nullable()->comment('đường dẫn file đã tính toán');
+            $table->string('salary_path')->nullable()->comment('đường dẫn file bảng lương');
 
             $table->unique(['year', 'month']);
         });

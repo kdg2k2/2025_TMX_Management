@@ -17,16 +17,17 @@ class WorkTimesheetService extends BaseService
         private UserService $userService,
         private WorkScheduleService $workScheduleService,
         private LeaveRequestService $leaveRequestService,
-        private WorkTimesheetDetailService $workTimesheetDetailService
+        private WorkTimesheetDetailService $workTimesheetDetailService,
+        private WorkTimesheetOvertimeService $workTimesheetOvertimeService
     ) {
         $this->repository = app(WorkTimesheetRepository::class);
     }
 
     public function baseIndexData()
     {
-        $nowMonthYear = date('Y-n', strtotime('first day of last month'));
-        $currentYear = (int) date('Y', strtotime($nowMonthYear));
-        $currentMonth = (int) date('n', strtotime($nowMonthYear));
+        $baseOvertimeUpload = $this->workTimesheetOvertimeService->baseOvertimeUpload();
+        $currentYear = $baseOvertimeUpload['currentYear'];
+        $currentMonth = $baseOvertimeUpload['currentMonth'];
 
         $days = $this->dateService->getDaysInMonth($currentMonth, $currentYear, [0])->toArray();
 
