@@ -45,6 +45,8 @@ return new class extends Migration {
             $table->integer('allowance_transport')->default(0)->comment('Phụ cấp đi lại');
             $table->date('work_start_date')->nullable()->comment('Ngày bắt đầu đi làm');  // Để tính công, tính lương
             $table->date('work_end_date')->nullable()->comment('Ngày kết thúc đi làm');  // Để tính công, tính lương
+            $table->text('bank_code_number')->nullable()->comment('Mã số tài khoản ngân hàng');
+            $table->text('bank_name')->nullable()->comment('Tên ngân hàng');
 
             $table->unique(['email', 'phone'], 'unique_not_deleted')->whereNull('deleted_at');
         });

@@ -212,6 +212,14 @@ class ExcelService
                         ->setHorizontal('center');
                 }
             }
+            if (isset($item->leftRows)) {
+                foreach ($item->leftRows as $row) {
+                    $sheet
+                        ->getStyle("A{$row}:$lastColumnIndexSheet{$row}")
+                        ->getAlignment()
+                        ->setHorizontal('left');
+                }
+            }
             if (isset($item->boldRows)) {
                 foreach ($item->boldRows as $row) {
                     $sheet

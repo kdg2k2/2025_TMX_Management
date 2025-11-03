@@ -22,9 +22,12 @@ class UserSeeder extends Seeder
 
         $stringHandlerService = app(\App\Services\StringHandlerService::class);
         $arr = array_map(function ($item) use ($stringHandlerService) {
-            $item['department_id'] = Department::inRandomOrder()->first()->id;
-            $item['position_id'] = Position::inRandomOrder()->first()->id;
-            $item['job_title_id'] = JobTitle::inRandomOrder()->first()->id;
+            if (!isset($item['department_id']))
+                $item['department_id'] = Department::inRandomOrder()->first()->id;
+            if (!isset($item['position_id']))
+                $item['position_id'] = Position::inRandomOrder()->first()->id;
+            if (!isset($item['job_title_id']))
+                $item['job_title_id'] = JobTitle::inRandomOrder()->first()->id;
             $item['created_at'] = date('Y-m-d H:i:s');
             $item['updated_at'] = date('Y-m-d H:i:s');
 
@@ -77,10 +80,26 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Phạm Văn Huân',
                 'is_salary_counted' => false,
+                'department_id' => 2,
+                'job_title_id' => 5,
             ],
             [
                 'name' => 'Vũ Thị Kim Oanh',
                 'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Kiều Đăng Anh',
+                'is_salary_counted' => true,
+                'department_id' => 1,
+                'position_id' => 1,
+                'job_title_id' => 2,
+            ],
+            [
+                'name' => 'Trần Thị Bích Ngọc',
+                'is_salary_counted' => false,
+                'position_id' => 1,
+                'department_id' => 2,
+                'job_title_id' => 10,
             ],
             [
                 'name' => 'Tòng Thị Hoài Thu',

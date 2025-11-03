@@ -69,4 +69,19 @@ class UserRepository extends BaseRepository
             ->orderBy('job_titles.level', 'asc')
             ->select('users.*');
     }
+
+    public function getChiefAccountantUser()
+    {
+        return $this->model->whereHas('jobTitle', fn($query) => $query->where('name', 'like', '%Kế toán trưởng%'))->first();
+    }
+
+    public function getGeneralAccountingUser()
+    {
+        return $this->model->whereHas('jobTitle', fn($query) => $query->where('name', 'like', '%Kế toán tổng hợp%'))->first();
+    }
+
+    public function getManagertUser()
+    {
+        return $this->model->whereHas('jobTitle', fn($query) => $query->where('name', 'like', '%Giám Đốc%'))->first();
+    }
 }

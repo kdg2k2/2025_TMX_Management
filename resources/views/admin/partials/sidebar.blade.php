@@ -275,7 +275,7 @@
                             </a>
                         </li>
                         <li class="slide">
-                            <a href="javascript:void(0)" class="side-menu__item">
+                            <a href="{{ route('payroll.index') }}" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon ti ti-currency-dollar"></i>
                                 Bảng lương
                             </a>

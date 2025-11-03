@@ -19,7 +19,8 @@ class WorkTimesheetService extends BaseService
         private WorkScheduleService $workScheduleService,
         private LeaveRequestService $leaveRequestService,
         private WorkTimesheetDetailService $workTimesheetDetailService,
-        private WorkTimesheetOvertimeService $workTimesheetOvertimeService
+        private WorkTimesheetOvertimeService $workTimesheetOvertimeService,
+        private PayrollService $payrollService,
     ) {
         $this->repository = app(WorkTimesheetRepository::class);
     }
@@ -60,6 +61,8 @@ class WorkTimesheetService extends BaseService
             $array['original_path'] = $this->getAssetUrl($array['original_path']);
         if (isset($array['calculated_path']))
             $array['calculated_path'] = $this->getAssetUrl($array['calculated_path']);
+        if (isset($array['payroll_path']))
+            $array['payroll_path'] = $this->getAssetUrl($array['payroll_path']);
         return $array;
     }
 
@@ -102,7 +105,10 @@ class WorkTimesheetService extends BaseService
 
             // tạo file excel hiển thị kết quả tính
             $record = $this->createCaculatedExcel($record);
+            // tạo file excel bảng lương
+            $this->createPayrollExcel($record);
 
+            // xóa file cũ
             $this->handlerUploadFileService->removeFiles(array_map(fn($i) => !in_array($i, [$record['original_path'], $record['calculated_path']]), [$oldOriginalPath, $oldCalculatedPath]));
         }, true);
     }
@@ -361,6 +367,8 @@ class WorkTimesheetService extends BaseService
         $invalidAttendanceCount = $detail['invalid_attendance_count'];
         $proposedWorkDays = $detail['proposed_work_days'];
         $note = null;
+        $deductionAmount = $jobDeductionAmount = $ruleDeductionAmount = $trainingDeductionAmount = 0;
+        $violationPenalty = $detail['violation_penalty'] ?? 0;
 
         // cảnh báo trên 3 lần bị C nội quy
         if ($warningCount > 3) {
@@ -404,12 +412,15 @@ class WorkTimesheetService extends BaseService
         if ($detail['council_rating'] == 'D') {
             $ruleDCount++;
             $note = ($note ? $note . '; ' : '') . 'Hội đồng đánh giá => D';
+            $jobDeductionAmount = $detail['postion_id'] == 6 ? 100000 : $violationPenalty;
         } elseif ($detail['council_rating'] == 'C') {
             $ruleCCount++;
             $note = ($note ? $note . '; ' : '') . 'Hội đồng đánh giá => C';
+            $jobDeductionAmount = $detail['postion_id'] == 6 ? 200000 : $violationPenalty * 0.75;
         } elseif ($detail['council_rating'] == 'B') {
             $ruleBCount++;
             $note = ($note ? $note . '; ' : '') . 'Hội đồng đánh giá => B';
+            $jobDeductionAmount = $detail['postion_id'] == 6 ? 300000 : $violationPenalty * 0.25;
         }
 
         // công tác ko đăng ký
@@ -424,27 +435,20 @@ class WorkTimesheetService extends BaseService
             $note = ($note ? $note . '; ' : '') . 'Công tác ko đăng ký dưới 3 ngày => B';
         }
 
-        // tính trừ tiền
-        $violationPenalty = $detail['violation_penalty'] ?? 0;
-        $deductionAmount = 0;
+        // tính trừ tiền (dính tiêu chí D thì trừ tối đa)
+        if ($detail['position_id'] == 6) {  // Cộng tác viên
+            $minusValue = $jobDeductionAmount
+                + 100000 * ($ruleBCount + $trainingBCount)
+                + 200000 * ($ruleCCount + $trainingCCount);
 
-        if ($detail['position_id'] == 6) {  // cộng tác viên
-            $minusValue = ($ruleBCount * 100000) + ($ruleCCount * 200000) + ($trainingBCount * 100000) + ($trainingCCount * 200000);
-            if ($minusValue <= $violationPenalty) {
-                $deductionAmount = $minusValue;
-            } else {
-                $deductionAmount = $violationPenalty;
-            }
+            $deductionAmount = ($ruleDCount > 0 || $minusValue > $violationPenalty)
+                ? $violationPenalty
+                : $minusValue;
         } else {
-            $rate = (25 * $ruleBCount) + ($ruleCCount * 75) + ($ruleDCount * 100) + ($trainingBCount * 25) + ($trainingCCount * 75);
-            if ($rate == 0) {
-                $minusValue = 0;
-            } elseif ($rate > 0 && $rate < 100) {
-                $minusValue = $violationPenalty * ($rate / 100);
-            } else {
-                $minusValue = $violationPenalty;
-            }
-            $deductionAmount = $minusValue;
+            $ruleDeductionAmount = $violationPenalty * (min(100, 25 * $ruleBCount + 75 * $ruleCCount + 100 * $ruleDCount) / 100);
+            $trainingDeductionAmount = $violationPenalty * (min(100, 25 * $trainingBCount + 75 * $trainingCCount) / 100);
+
+            $deductionAmount = min($violationPenalty, $jobDeductionAmount + $ruleDeductionAmount + $trainingDeductionAmount);
         }
 
         $updates = [
@@ -453,6 +457,9 @@ class WorkTimesheetService extends BaseService
             'rule_d_count' => $ruleDCount,
             'training_b_count' => $trainingBCount,
             'training_c_count' => $trainingCCount,
+            'job_deduction_amount' => $jobDeductionAmount,
+            'rule_deduction_amount' => $ruleDeductionAmount,
+            'training_deduction_amount' => $trainingDeductionAmount,
             'deduction_amount' => $deductionAmount,
         ];
 
@@ -474,15 +481,16 @@ class WorkTimesheetService extends BaseService
         $overtimeTotalAmount = $detail['overtime_total_count'] * $overtimeSalaryRate;
 
         // số công
-        $numberOfJobs = min($maxProposedWorkDays, $maxProposedWorkDays + $detail['max_paid_leave_days_per_year'] - $detail['leave_days_with_permission'] - $detail['leave_days_without_permission']);
+        $totalWorkDayCount = min($maxProposedWorkDays, $maxProposedWorkDays + ($detail['position_id'] == 6 ? $detail['max_paid_leave_days_per_year'] : 0) - $detail['leave_days_with_permission'] - $detail['leave_days_without_permission']);
 
         // tổng lương: tổng phụ cấp + (mức lương/max công bpdx) - tổng trừ tiêu chí + tổng công thêm
-        $totalReceivedSalary = $detail['allowance_contact'] + $detail['allowance_meal'] + $detail['allowance_position'] + $detail['allowance_fuel'] + $detail['allowance_transport'] + (($detail['salary_level'] / $maxProposedWorkDays) * $numberOfJobs) - $detail['deduction_amount'] + $overtimeTotalAmount;
+        $totalReceivedSalary = $detail['allowance_contact'] + $detail['allowance_meal'] + $detail['allowance_position'] + $detail['allowance_fuel'] + $detail['allowance_transport'] + (($detail['salary_level'] / $maxProposedWorkDays) * $totalWorkDayCount) - $detail['deduction_amount'] + $overtimeTotalAmount;
         if ($detail['position_id'] != 6)
             $totalReceivedSalary -= (($detail['salary_level'] + $detail['allowance_position']) * 0.105);
         $totalReceivedSalary = round($totalReceivedSalary, 0);
 
         $detail->update([
+            'total_work_day_count' => $totalWorkDayCount,
             'overtime_salary_rate' => $overtimeSalaryRate,
             'overtime_total_amount' => $overtimeTotalAmount,
             'total_received_salary' => $totalReceivedSalary,
@@ -698,6 +706,9 @@ class WorkTimesheetService extends BaseService
             }
         }
 
+        if ($record['calculated_path'])
+            $this->handlerUploadFileService->safeDeleteFile($record['calculated_path']);
+
         $record->update([
             'calculated_path' => $this->excelService->createExcel(
                 [
@@ -828,6 +839,9 @@ class WorkTimesheetService extends BaseService
             // cập nhật lại excel xuất lưới
             $this->createCaculatedExcel($workTimesheet);
 
+            // cập nhật lại bảng lương
+            $this->createPayrollExcel($workTimesheet);
+
             return [
                 'message' => $message,
                 'updated_count' => $updatedCount,
@@ -895,62 +909,35 @@ class WorkTimesheetService extends BaseService
             // Map details theo name để dễ truy cập
             $detailsMap = $workTimesheet->details->keyBy('name');
 
-            $updatedCount = 0;
-            $notFoundUsers = [];
-            $errors = [];
-
             // Update từng user
             foreach ($parsedData as $data) {
                 $name = $data['name'];
 
                 // Kiểm tra user tồn tại
-                if (!isset($detailsMap[$name])) {
-                    $notFoundUsers[] = $name;
-                    continue;
-                }
+                if (!isset($detailsMap[$name]))
+                    throw new Exception("Không tìm thấy nhân sự: {$name}");
 
                 $detail = $detailsMap[$name];
 
-                try {
-                    // Update 3 cột
-                    $detail->update([
-                        'business_trip_manual_count' => $data['business_trip_manual_count'],
-                        'council_rating' => $data['council_rating'],
-                        'note' => $data['note'],
-                    ]);
+                // Update 3 cột
+                $detail->update([
+                    'business_trip_manual_count' => $data['business_trip_manual_count'],
+                    'council_rating' => $data['council_rating'],
+                    'note' => $data['note'],
+                ]);
 
-                    // Tính lại tiêu chí và mức trừ
-                    $this->calculateDeductionCriteria($detail, false);
+                // Tính lại tiêu chí và mức trừ
+                $this->calculateDeductionCriteria($detail, false);
 
-                    // Tính lại lương
-                    $this->calculateSalary($detail);
-
-                    $updatedCount++;
-                } catch (Exception $e) {
-                    $errors[] = "Lỗi khi cập nhật {$name}: " . $e->getMessage();
-                }
+                // Tính lại lương
+                $this->calculateSalary($detail);
             }
 
             // Cập nhật lại file calculated Excel
             $this->createCaculatedExcel($workTimesheet);
 
-            // Tạo thông báo kết quả
-            $message = "Đã cập nhật {$updatedCount} nhân sự thành công";
-
-            if (!empty($notFoundUsers)) {
-                $message .= '. Không tìm thấy: ' . implode(', ', $notFoundUsers);
-            }
-
-            if (!empty($errors)) {
-                $message .= '. Lỗi: ' . implode('; ', $errors);
-            }
-
-            return [
-                'message' => $message,
-                'updated_count' => $updatedCount,
-                'not_found_users' => $notFoundUsers,
-                'errors' => $errors,
-            ];
+            // cập nhật lại bảng lương
+            $this->createPayrollExcel($workTimesheet);
         }, true);
     }
 
@@ -1045,9 +1032,7 @@ class WorkTimesheetService extends BaseService
             }
 
             // Validate note - REQUIRED
-            if (empty($item['note'])) {
-                $errors[] = "Dòng {$rowNumber} ({$item['name']}): 'Ghi chú' không được để trống";
-            } elseif (mb_strlen($item['note']) > 255) {
+            if (mb_strlen($item['note']) > 255) {
                 $errors[] = "Dòng {$rowNumber} ({$item['name']}): 'Ghi chú' không được vượt quá 255 ký tự";
             }
         }
@@ -1055,5 +1040,18 @@ class WorkTimesheetService extends BaseService
         if (!empty($errors)) {
             throw new Exception("Dữ liệu không hợp lệ:\n" . implode("\n", $errors));
         }
+    }
+
+    private function createPayrollExcel(WorkTimesheet $record)
+    {
+        return $this->tryThrow(function () use ($record) {
+            $record->load('details');  // Load lại details để đảm bảo có dữ liệu mới nhất
+            if ($record['payroll_path'])
+                $this->handlerUploadFileService->safeDeleteFile($record['payroll_path']);
+            $record->update([
+                'payroll_path' => $this->payrollService->renderExcel($record),
+            ]);
+            return $record;
+        });
     }
 }

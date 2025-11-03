@@ -140,7 +140,7 @@ class UserService extends BaseService
     public function getEmails(array $userIds = [])
     {
         $users = $this->repository->findByKeys(array_filter($userIds, fn($i) => !empty($i)), 'id', true)->toArray();
-        
+
         return array_unique(array_filter(array_map(function ($item) {
             return array_merge(
                 [$item['email']],
@@ -161,5 +161,20 @@ class UserService extends BaseService
             return [];
 
         return $this->getEmails([$data['department']['manager']['id']]);
+    }
+
+    public function getChiefAccountantUser()
+    {
+        return $this->repository->getChiefAccountantUser();
+    }
+
+    public function getGeneralAccountingUser()
+    {
+        return $this->repository->getGeneralAccountingUser();
+    }
+
+    public function getManagertUser()
+    {
+        return $this->repository->getManagertUser();
     }
 }

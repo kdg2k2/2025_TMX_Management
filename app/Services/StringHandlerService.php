@@ -234,4 +234,86 @@ class StringHandlerService
     {
         return $this->createSlug($string, '', 'kebab');
     }
+
+    /**
+     * Đọc số thành chữ
+     */
+    public function convertNumberToVietnameseCurrency($sotien)
+    {
+        // Làm sạch input
+        $sotien = str_replace(["'", '.', ','], '', $sotien);
+        $sotien = (string) (int) $sotien;  // Đảm bảo là số nguyên
+
+        if ($sotien == '0' || empty($sotien)) {
+            return 'Không đồng';
+        }
+
+        $Text = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
+        $TextLuythua = ['', 'nghìn', 'triệu', 'tỷ', 'ngàn tỷ', 'triệu tỷ', 'tỷ tỷ'];
+        $textnumber = '';
+        $length = strlen($sotien);
+
+        // Đánh dấu các số 0 liên tiếp không cần đọc
+        $unread = array_fill(0, $length, 0);
+
+        for ($i = 0; $i < $length; $i++) {
+            $so = substr($sotien, $length - $i - 1, 1);
+
+            if (($so == 0) && ($i % 3 == 0) && ($unread[$i] == 0)) {
+                // Tìm vị trí số khác 0 tiếp theo
+                for ($j = $i + 1; $j < $length; $j++) {
+                    $so1 = substr($sotien, $length - $j - 1, 1);
+                    if ($so1 != 0)
+                        break;
+                }
+
+                // Đánh dấu các số 0 liên tiếp theo nhóm 3
+                if (intval(($j - $i) / 3) > 0) {
+                    for ($k = $i; $k < intval(($j - $i) / 3) * 3 + $i; $k++) {
+                        $unread[$k] = 1;
+                    }
+                }
+            }
+        }
+
+        // Đọc từng chữ số
+        for ($i = 0; $i < $length; $i++) {
+            $so = substr($sotien, $length - $i - 1, 1);
+
+            if ($unread[$i] == 1)
+                continue;
+
+            // Thêm đơn vị (nghìn, triệu, tỷ...)
+            if (($i % 3 == 0) && ($i > 0)) {
+                $textnumber = $TextLuythua[$i / 3] . ' ' . $textnumber;
+            }
+
+            // Thêm "trăm"
+            if ($i % 3 == 2) {
+                $textnumber = 'trăm ' . $textnumber;
+            }
+
+            // Thêm "mươi"
+            if ($i % 3 == 1) {
+                $textnumber = 'mươi ' . $textnumber;
+            }
+
+            $textnumber = $Text[$so] . ' ' . $textnumber;
+        }
+
+        // Chuẩn hóa cách đọc
+        $textnumber = str_replace('không mươi', 'lẻ', $textnumber);
+        $textnumber = str_replace('lẻ không', '', $textnumber);
+        $textnumber = str_replace('mươi không', 'mươi', $textnumber);
+        $textnumber = str_replace('một mươi', 'mười', $textnumber);
+        $textnumber = str_replace('mươi năm', 'mươi lăm', $textnumber);
+        $textnumber = str_replace('mươi một', 'mươi mốt', $textnumber);
+        $textnumber = str_replace('mười năm', 'mười lăm', $textnumber);
+
+        // Loại bỏ khoảng trắng thừa
+        $textnumber = preg_replace('/\s+/', ' ', $textnumber);
+        $textnumber = trim($textnumber);
+
+        return ucfirst($textnumber) . ' đồng';
+    }
 }

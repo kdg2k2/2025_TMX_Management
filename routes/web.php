@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EligibilityController;
 use App\Http\Controllers\Admin\GoogleDriveController;
 use App\Http\Controllers\Admin\LeaveRequestController;
+use App\Http\Controllers\Admin\PayrollController;
 use App\Http\Controllers\Admin\PersonnelController;
 use App\Http\Controllers\Admin\PersonnelCustomFieldController;
 use App\Http\Controllers\Admin\PersonnelFileController;
@@ -246,6 +247,10 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
 
         Route::prefix('overtime')->controller(WorkTimesheetOvertimeController::class)->group(function () {
             Route::get('index', 'index')->name('work-timesheet.overtime.index');
+        });
+
+        Route::prefix('payroll')->controller(PayrollController::class)->group(function () {
+            Route::get('index', 'index')->name('payroll.index');
         });
     });
 });

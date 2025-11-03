@@ -78,7 +78,11 @@ return new class extends Migration {
             $table->integer('training_c_count')->default(0)->comment('Số lần bị đánh giá đào tạo đào tạo C');
 
             // Tiền & log
-            $table->integer('deduction_amount')->default(0)->comment('Số tiền trừ');
+            $table->integer('total_work_day_count')->default(0)->comment('Tổng số ngày công trong tháng');
+            $table->integer('job_deduction_amount')->default(0)->comment('Số tiền trừ đánh giá công việc');
+            $table->integer('rule_deduction_amount')->default(0)->comment('Số tiền trừ đánh giá tiêu chí');
+            $table->integer('training_deduction_amount')->default(0)->comment('Số tiền trừ đánh giá đào tạo');
+            $table->integer('deduction_amount')->default(0)->comment('Tổng số tiền trừ');
             $table->integer('total_received_salary')->default(0)->comment('Tổng lương nhận');
             $table->json('detail_business_trip_and_leave_days')->nullable()->comment('Mảng các ngày công tác và nghỉ trong tháng');
 
