@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\EligibilityController;
 use App\Http\Controllers\Api\LeaveRequestController;
+use App\Http\Controllers\Api\PayrollController;
 use App\Http\Controllers\Api\PersonnelController;
 use App\Http\Controllers\Api\PersonnelCustomFieldController;
 use App\Http\Controllers\Api\PersonnelFileController;
@@ -309,6 +310,10 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::prefix('detail')->controller(WorkTimesheetOvertimeDetailController::class)->group(function () {
                 Route::get('list', 'list')->name('api.work-timesheet.overtime.detail.list');
             });
+        });
+        Route::prefix('payroll')->controller(PayrollController::class)->group(function () {
+            Route::get('data', 'data')->name('api.payroll.data');
+            Route::patch('update', 'update')->name('api.payroll.update');
         });
     });
 });
