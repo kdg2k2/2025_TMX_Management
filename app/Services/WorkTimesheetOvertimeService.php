@@ -170,6 +170,9 @@ class WorkTimesheetOvertimeService extends BaseService
             $uploadedUserIds = array_keys($mergedData);
             $this->syncOvertimeDetailsSelective($overtime, $mergedData, $uploadedUserIds);
 
+            // cập nhật lại thông tin xuất lưới
+            $workTimesheetService->syncDataWorkTimesheetOvertimeDetailByDepartmentId($workTimesheet, $authDepartmentId);
+
             // Sau khi xử lý xong, xóa file cũ (nếu có và khác file mới)
             if ($oldFilePath && $oldFilePath !== $filePath) {
                 $this->handlerUploadFileService->safeDeleteFile($oldFilePath);
@@ -572,7 +575,7 @@ class WorkTimesheetOvertimeService extends BaseService
     {
         $result = [];
         $headerRowCount = 4;
-        $validRatings = ['A', 'B', 'C', 'D'];
+        $validRatings = ['A', 'B', 'C'];
 
         for ($i = $headerRowCount; $i < count($sheetData); $i++) {
             $row = $sheetData[$i];
@@ -589,7 +592,7 @@ class WorkTimesheetOvertimeService extends BaseService
             }
 
             if (!in_array($rating, $validRatings)) {
-                throw new Exception("Đánh giá không hợp lệ cho {$name}: '{$rating}'. Chỉ chấp nhận: A, B, C, D (dòng " . ($i + 1) . ')');
+                throw new Exception("Đánh giá không hợp lệ cho {$name}: '{$rating}'. Chỉ chấp nhận: A, B, C (dòng " . ($i + 1) . ')');
             }
 
             $result[$user['id']] = [

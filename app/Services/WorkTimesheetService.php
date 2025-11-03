@@ -144,7 +144,6 @@ class WorkTimesheetService extends BaseService
     {
         $avgLateMinutes = 0;
         $isLatestArrival = false;
-        $note = null;
 
         // tính trung bình muộn: round(tổng 4 tiêu chí chấm muộn / (công hợp lệ + công tác), 2)
         $avgLateMinutes = round(collect($lateEarly)->except('validAttendanceCount')->sum() / ($validAttendanceCount + $businessTripDayCount), 2);
@@ -156,13 +155,11 @@ class WorkTimesheetService extends BaseService
         // nếu quá trung bình muộn quá 15p đánh giá top muộn
         if ($avgLateMinutes > 15) {
             $isLatestArrival = true;
-            $note = 'Muộn quá 15 phút';
         }
 
         return [
             'avgLateMinutes' => $avgLateMinutes,
             'isLatestArrival' => $isLatestArrival,
-            'note' => $note,
         ];
     }
 
@@ -308,6 +305,91 @@ class WorkTimesheetService extends BaseService
         ];
     }
 
+    // tính tiêu chí và mức trừ
+    private function calculateDeductionCriteria(WorkTimesheetDetail $detail)
+    {
+        // tính số lần ABC
+        $ruleBCount = $ruleCCount = $trainingBCount = $trainingCCount = 0;
+        $warningCount = $detail['warning_count'];
+        $leaveDaysWithPermission = $detail['leave_days_with_permission'];
+        $invalidAttendanceCount = $detail['invalid_attendance_count'];
+        $proposedWorkDays = $detail['proposed_work_days'];
+        $note = null;
+
+        // cảnh báo trên 3 lần bị C nội quy
+        if ($warningCount > 3) {
+            $ruleCCount++;
+            $note = ($note ? $note . '; ' : '') . 'Cảnh báo trên 3 lần';
+        } elseif ($warningCount > 0) {
+            // dưới 3 lần bị B
+            $ruleBCount++;
+            $note = ($note ? $note . '; ' : '') . 'Cảnh báo dưới 3 lần';
+        }
+
+        // nghỉ 5 ngày trở lên bị C
+        if ($leaveDaysWithPermission >= 5) {
+            $ruleCCount++;
+            $note = ($note ? $note . '; ' : '') . 'Nghỉ phép 5 ngày trở lên';
+        } elseif ($leaveDaysWithPermission >= 3) {
+            // 3 ngày bị B
+            $ruleBCount++;
+            $note = ($note ? $note . '; ' : '') . 'Nghỉ phép 3 ngày';
+        }
+
+        // top muộn bị B
+        if ($detail['is_latest_arrival']) {
+            $ruleBCount++;
+            $note = ($note ? $note . '; ' : '') . 'Muộn quá 15 phút';
+        }
+
+        // chênh lệch quá 20% công bộ phận đề xuất bị B
+        if ($invalidAttendanceCount > ($proposedWorkDays * 0.2)) {
+            $ruleBCount++;
+            $note = ($note ? $note . '; ' : '') . 'Chênh lệch công bộ phận đề xuất trên 20%';
+        }
+
+        // đánh giá của phòng ban
+        if ($detail['department_rating'] == 'C') {
+            $ruleCCount++;
+            $note = ($note ? $note . '; ' : '') . 'Đánh giá phòng mức C';
+        } elseif ($detail['department_rating'] == 'B') {
+            $ruleBCount++;
+            $note = ($note ? $note . '; ' : '') . 'Đánh giá phòng mức B';
+        }
+
+        // tính trừ tiền
+        $violationPenalty = $detail['violation_penalty'] ?? 0;
+        $deductionAmount = 0;
+
+        if ($detail['position_id'] == 6) {  // cộng tác viên
+            $minusValue = ($ruleBCount * 100000) + ($ruleCCount * 200000) + ($trainingBCount * 100000) + ($trainingCCount * 200000);
+            if ($minusValue <= $violationPenalty) {
+                $deductionAmount = $minusValue;
+            } else {
+                $deductionAmount = $violationPenalty;
+            }
+        } else {
+            $rate = (25 * $ruleBCount) + ($ruleCCount * 75) + ($trainingBCount * 25) + ($trainingCCount * 75);
+            if ($rate == 0) {
+                $minusValue = 0;
+            } elseif ($rate > 0 && $rate < 100) {
+                $minusValue = $violationPenalty * ($rate / 100);
+            } else {
+                $minusValue = $violationPenalty;
+            }
+            $deductionAmount = $minusValue;
+        }
+
+        $detail->update([
+            'rule_b_count' => $ruleBCount,
+            'rule_c_count' => $ruleCCount,
+            'training_b_count' => $trainingBCount,
+            'training_c_count' => $trainingCCount,
+            'deduction_amount' => $deductionAmount,
+            'note' => $note,
+        ]);
+    }
+
     // tính lương
     private function calculateSalary(WorkTimesheetDetail $detail)
     {
@@ -317,20 +399,20 @@ class WorkTimesheetService extends BaseService
         // mức lương ngoài giờ
         $overtimeSalaryRate = round(($detail['salary_level'] / $maxProposedWorkDays) / 2, 0);
         // tổng nhận lương ngoài giờ
-        $overtimeTotalCount = $detail['overtime_total_count'] * $overtimeSalaryRate;
+        $overtimeTotalAmount = $detail['overtime_total_count'] * $overtimeSalaryRate;
 
         // số công
         $numberOfJobs = min($maxProposedWorkDays, $maxProposedWorkDays + $detail['max_paid_leave_days_per_year'] - $detail['leave_days_with_permission'] - $detail['leave_days_without_permission']);
 
         // tổng lương: tổng phụ cấp + (mức lương/max công bpdx) - tổng trừ tiêu chí + tổng công thêm
-        $totalReceivedSalary = $detail['allowance_contact'] + $detail['allowance_meal'] + $detail['allowance_position'] + $detail['allowance_fuel'] + $detail['allowance_transport'] + (($detail['salary_level'] / $maxProposedWorkDays) * $numberOfJobs) - $detail['deduction_amount'] + $overtimeTotalCount;
+        $totalReceivedSalary = $detail['allowance_contact'] + $detail['allowance_meal'] + $detail['allowance_position'] + $detail['allowance_fuel'] + $detail['allowance_transport'] + (($detail['salary_level'] / $maxProposedWorkDays) * $numberOfJobs) - $detail['deduction_amount'] + $overtimeTotalAmount;
         if ($detail['position_id'] != 6)
             $totalReceivedSalary -= (($detail['salary_level'] + $detail['allowance_position']) * 0.105);
         $totalReceivedSalary = round($totalReceivedSalary, 0);
 
         $detail->update([
             'overtime_salary_rate' => $overtimeSalaryRate,
-            'overtime_total_count' => $overtimeTotalCount,
+            'overtime_total_amount' => $overtimeTotalAmount,
             'total_received_salary' => $totalReceivedSalary,
         ]);
     }
@@ -343,7 +425,7 @@ class WorkTimesheetService extends BaseService
             throw new Exception("Không tìm thấy data trong 'Sheet1'");
 
         // cắt 2 dòng header của file excel
-        array_splice($sheetData, 0, 2);
+        array_splice($sheetData, 0, length: 2);
 
         $details = collect($sheetData)->groupBy(1)->map(function ($value, $key) use ($record) {
             // tìm thông tin tài khoản
@@ -388,57 +470,6 @@ class WorkTimesheetService extends BaseService
             // tỷ lệ chấm công ko hợp lệ: round(lấy số lần chênh / công bộ phận đề xuất * 100, 2)
             $invalidAttendanceRate = round($invalidAttendanceCount / $proposedWorkDays * 100, 2);
 
-            // tính số lần ABC
-            $ruleBCount = $ruleCCount = $trainingBCount = $trainingCCount = 0;
-            $warningCount = count($userInfo['warning']);
-
-            // cảnh báo trên 3 lần bị C nội quy
-            if ($warningCount > 3) {
-                $ruleCCount++;
-            } elseif ($warningCount > 0) {
-                // dưới 3 lần bị B
-                $ruleBCount++;
-            }
-
-            // nghỉ 5 ngày trở lên bị C
-            if ($leaveDaysWithPermission >= 5) {
-                $ruleCCount++;
-            } elseif ($leaveDaysWithPermission >= 3) {
-                // 3 ngày bị B
-                $ruleBCount++;
-            }
-
-            // top muộn bị B
-            if ($calculateAvgLateMinute['isLatestArrival'])
-                $ruleBCount++;
-
-            // chênh lệch quá 20% công bộ phận đề xuất bị B
-            if ($invalidAttendanceCount > ($proposedWorkDays * 0.2))
-                $ruleBCount++;
-
-            // tính trừ tiền
-            $violationPenalty = $userInfo['violation_penalty'] ?? 0;
-            $deductionAmount = 0;
-
-            if ($userInfo['position_id'] == 6) {  // cộng tác viên
-                $minusValue = ($ruleBCount * 100000) + ($ruleCCount * 200000) + ($trainingBCount * 100000) + ($trainingCCount * 200000);
-                if ($minusValue <= $violationPenalty) {
-                    $deductionAmount = $minusValue;
-                } else {
-                    $deductionAmount = $violationPenalty;
-                }
-            } else {
-                $rate = (25 * $ruleBCount) + ($ruleCCount * 75) + ($trainingBCount * 25) + ($trainingCCount * 75);
-                if ($rate == 0) {
-                    $minusValue = 0;
-                } elseif ($rate > 0 && $rate < 100) {
-                    $minusValue = $violationPenalty * ($rate / 100);
-                } else {
-                    $minusValue = $violationPenalty;
-                }
-                $deductionAmount = $minusValue;
-            }
-
             // bảo hiểm
             $allowanceContact = $userInfo['allowance_contact'] ?? 0;
             $allowanceMeal = $userInfo['allowance_meal'] ?? 0;
@@ -460,7 +491,7 @@ class WorkTimesheetService extends BaseService
                 'department' => $userInfo['department']['name'] ?? 0,
                 'position_id' => $userInfo['position_id'] ?? 0,
                 'salary_level' => $salaryLevel,  // Mức lương
-                'violation_penalty' => $violationPenalty,  // Mức tiêu chí
+                'violation_penalty' => $userInfo['violation_penalty'] ?? 0,  // Mức tiêu chí
                 'social_insurance_deduction' => $socialInsuranceDeduction,  // Tiền BHXH (8%)
                 'health_insurance_deduction' => $healthInsuranceDeduction,  // Tiền BHYT (1.5%)
                 'unemployment_insurance_deduction' => $unemploymentInsuranceDeduction,  // Tiền BHTN (1%)
@@ -479,36 +510,27 @@ class WorkTimesheetService extends BaseService
                 'late_afternoon_count' => $lateEarly['lateAfternoonCount'],  // Số lần chấm công muộn buổi chiều
                 'early_afternoon_count' => $lateEarly['earlyAfternoonCount'],  // Số lần chấm công sớm buổi chiều
                 'avg_late_minutes' => $calculateAvgLateMinute['avgLateMinutes'],  // Trung bình phút chấm công muộn
-                'overtime_salary_rate' => 0,  // Mức lương ngoài giờ
-                'overtime_evening_count' => 0,  // Số công ngoài giờ buổi tối ===============> đợi các phòng đẩy công
-                'overtime_weekend_count' => 0,  // Số công ngoài giờ T7 CN ===============> đợi các phòng đẩy công
-                'overtime_total_count' => 0,  // Tổng số công ngoài giờ ===============> đợi các phòng đẩy công
-                'overtime_total_amount' => 0,  // Tổng tiền công ngoài giờ ===============> đợi các phòng đẩy công
                 'business_trip_system_count' => $businessTripDayCount,  // Tổng số công đi công tác - hệ thống tính
                 'business_trip_manual_count' => 0,  // Tổng số công đi công tác ==>>>>>>>>>>>>>>>> Rà soát đẩy thủ công
                 'leave_days_with_permission' => $calculateLeaveRequest['leaveDaysWithPermission'],  // Tổng số ngày nghỉ phép
                 'total_leave_days_in_year' => $calculateLeaveRequest['totalLeaveDaysInYear'],  // Tổng số ngày đã nghỉ phép trong năm
                 'max_paid_leave_days_per_year' => $calculateLeaveRequest['maxPaidLeaveDaysPerYear'],  // số ngày nghỉ có lương tối đa của trong năm
-                'leave_days_without_permission' => 0,  // Tổng số ngày nghỉ không phép ===============> đợi các phòng đẩy công
-                'warning_count' => $warningCount,  // Tổng số lần bị cảnh báo
-                'department_rating' => null,  // Đánh giá của phòng ===============> đợi các phòng đẩy công
+                'warning_count' => count($userInfo['warning']),  // Tổng số lần bị cảnh báo
                 'council_rating' => null,  // Đánh giá của hội đồng ==>>>>>>>>>>>>>>>> Rà soát đẩy thủ công
                 'is_latest_arrival' => $calculateAvgLateMinute['isLatestArrival'],  // Top muộn
-                'rule_b_count' => $ruleBCount,  // Số lần bị đánh giá nội quy B
-                'rule_c_count' => $ruleCCount,  // Số lần bị đánh giá nội quy C
-                'training_a_count' => 0,  // Số lần đánh giá đào tạo A
-                'training_b_count' => $trainingBCount,  // Số lần bị đánh giá đào tạo B
-                'training_c_count' => $trainingCCount,  // Số lần bị đánh giá đào tạo đào tạo C
-                'deduction_amount' => $deductionAmount,  // Số tiền trừ
-                'total_received_salary' => 0,  // Tổng lương nhận
                 'detail_business_trip_and_leave_days' => json_encode([
                     'business_trip_days' => $businessTripDays,
                     'leave_days' => $calculateLeaveRequest['leaveDays'],
                 ]),  // Mảng các ngày công tác và nghỉ trong tháng
-                'note' => $calculateAvgLateMinute['note'],  // Ghi chú ==>>>>>>>>>>>>>>>> Rà soát đẩy thủ công
             ];
 
+            // lưu chi tiết
             $detailRecord = $record->details()->create($detail);
+
+            // tính tiêu chí và mức trừ
+            $this->calculateDeductionCriteria($detailRecord);
+
+            // tính lương
             $this->calculateSalary($detailRecord);
             return $detailRecord;
         })->filter()->values()->toArray();
@@ -518,6 +540,8 @@ class WorkTimesheetService extends BaseService
 
     private function createCaculatedExcel(WorkTimesheet $record)
     {
+        $record->load('details');
+
         $headerExcel = array_map(fn($i) =>
                 [
                     'name' => $i,
@@ -650,5 +674,80 @@ class WorkTimesheetService extends BaseService
         return $this->tryThrow(function () use ($month, $year) {
             return $this->repository->findByMonthYear($month, $year);
         });
+    }
+
+    public function syncDataWorkTimesheetOvertimeDetailByDepartmentId(WorkTimesheet $workTimesheet, int $departmentId)
+    {
+        return $this->tryThrow(function () use ($workTimesheet, $departmentId) {
+            // Load relations với filter department
+            $workTimesheet->load([
+                'details' => fn($q) => $q->whereHas('user', fn($q) => $q->where('department_id', $departmentId)),
+                'overtimes.details' => fn($q) => $q->whereHas('user', fn($q) => $q->where('department_id', $departmentId)),
+            ]);
+
+            // Kiểm tra có overtime data không
+            if ($workTimesheet->overtimes->isEmpty()) {
+                throw new Exception("Không có dữ liệu overtime cho tháng {$workTimesheet->month}/{$workTimesheet->year}");
+            }
+
+            // Lấy overtime đầu tiên (vì 1 work_timesheet chỉ có 1 overtime)
+            $overtime = $workTimesheet->overtimes->first();
+
+            if ($overtime->details->isEmpty()) {
+                throw new Exception('Không có dữ liệu overtime detail cho phòng ban này');
+            }
+
+            // Map overtime details theo user_id để dễ truy cập
+            $overtimeDetailsMap = $overtime->details->keyBy('user_id');
+
+            $updatedCount = 0;
+            $notFoundUsers = [];
+
+            // Sync từng user
+            foreach ($workTimesheet->details as $detail) {
+                $userId = $detail->user_id;
+
+                // Kiểm tra user này có trong overtime details không
+                if (!isset($overtimeDetailsMap[$userId])) {
+                    $notFoundUsers[] = $detail->name;
+                    continue;
+                }
+
+                $overtimeDetail = $overtimeDetailsMap[$userId];
+
+                // Sync data từ overtime detail sang work timesheet detail
+                $detail->update([
+                    'overtime_evening_count' => $overtimeDetail->overtime_evening_count,
+                    'overtime_weekend_count' => $overtimeDetail->overtime_weekend_count,
+                    'overtime_total_count' => $overtimeDetail->overtime_total_count,
+                    'leave_days_without_permission' => $overtimeDetail->leave_days_without_permission,
+                    'department_rating' => $overtimeDetail->department_rating,
+                ]);
+
+                $updatedCount++;
+
+                // tính lại tiêu chí và mức trừ
+                $this->calculateDeductionCriteria($detail);
+
+                // Tính lại lương
+                $this->calculateSalary($detail);
+            }
+
+            // Thông báo kết quả
+            $message = "Đã sync {$updatedCount} user thành công";
+
+            if (!empty($notFoundUsers)) {
+                $message .= '. Không tìm thấy overtime data cho: ' . implode(', ', $notFoundUsers);
+            }
+
+            // cập nhật lại excel xuất lưới
+            $this->createCaculatedExcel($workTimesheet);
+
+            return [
+                'message' => $message,
+                'updated_count' => $updatedCount,
+                'not_found_users' => $notFoundUsers,
+            ];
+        }, true);
     }
 }

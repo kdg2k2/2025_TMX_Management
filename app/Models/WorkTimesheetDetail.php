@@ -15,6 +15,11 @@ class WorkTimesheetDetail extends Model
         'business_trip_days' => 'array',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function workTimeSheet()
     {
         return $this->belongsTo(WorkTimesheet::class, 'work_timesheet_id');

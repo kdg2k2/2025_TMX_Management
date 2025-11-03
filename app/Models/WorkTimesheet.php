@@ -19,4 +19,9 @@ class WorkTimesheet extends Model
     {
         return $this->hasMany(WorkTimesheetDetail::class, 'work_timesheet_id');
     }
+
+    public function overtimes()
+    {
+        return $this->hasMany(WorkTimesheetOvertime::class, 'work_timesheet_id');
+    }
 }

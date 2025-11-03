@@ -68,23 +68,41 @@ class UserSeeder extends Seeder
                     [
                         'email' => 'dangnguyen.xmg@xuanmaijsc.vn',
                     ]
-                ]
+                ],
             ],
-            ...array_map(function ($item) {
-                return [
-                    'name' => $item,
-                    'is_salary_counted' => true,
-                    'salary_level' => 6000000,
-                    'allowance_meal' => 630000,
-                ];
-            }, [
-                'Lê Sỹ Doanh',
-                'Phạm Văn Huân',
-                'Vũ Thị Kim Oanh',
-                'Tòng Thị Hoài Thu',
-                'Lê Ngọc Trọng',
-                'Ma Đình Tú',
-            ])
+            [
+                'name' => 'Lê Sỹ Doanh',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Phạm Văn Huân',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Vũ Thị Kim Oanh',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Tòng Thị Hoài Thu',
+                'is_salary_counted' => true,
+                'salary_level' => 6000000,
+                'violation_penalty' => 1000000,
+                'allowance_meal' => 630000,
+            ],
+            [
+                'name' => 'Lê Ngọc Trọng',
+                'is_salary_counted' => true,
+                'salary_level' => 6000000,
+                'violation_penalty' => 1000000,
+                'allowance_meal' => 630000,
+            ],
+            [
+                'name' => 'Ma Đình Tú',
+                'is_salary_counted' => true,
+                'salary_level' => 6000000,
+                'violation_penalty' => 1000000,
+                'allowance_meal' => 630000,
+            ],
         ]);
 
         foreach ($arr as $item) {
