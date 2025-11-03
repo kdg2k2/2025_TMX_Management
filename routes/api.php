@@ -298,6 +298,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::controller(WorkTimesheetController::class)->group(function () {
             Route::get('data', 'data')->name('api.work-timesheet.data');
             Route::post('import', 'import')->name('api.work-timesheet.import');
+            Route::patch('update', 'update')->name('api.work-timesheet.update');
         });
         Route::prefix('overtime')->group(function () {
             Route::controller(WorkTimesheetOvertimeController::class)->group(function () {

@@ -1,10 +1,12 @@
 @extends('admin.layout.master')
 @section('content')
     <x-breadcrumb :items="[['label' => 'Trang chủ', 'url' => route('dashboard')], ['label' => 'Xuất lưới', 'url' => null]]">
-        <x-button variant="warning" size="sm" icon="ti ti-upload" tooltip="Upload" class="me-1"
-            onclick="openModalUpload()" />
-        <x-button variant="success" size="sm" icon="ti ti-download" tooltip="Export" class="me-1"
+        <x-button variant="success" size="sm" icon="ti ti-download" tooltip="Tải file đang hiển thị" class="me-1"
             onclick="downloadExcel()" />
+        <x-button variant="warning" size="sm" icon="ti ti-database-import"
+            tooltip="Khởi tạo (Tải lên file xuất lưới của máy chấm công)" class="me-1" onclick="openModalImport()" />
+        <x-button variant="secondary" size="sm" icon="ti ti-database-edit"
+            tooltip="Cập nhật (Bản chỉnh sửa của file hệ thống hiển thị)" class="me-1" onclick="openModalUpdate()" />
         <x-button variant="primary" size="sm" icon="ti ti-send" tooltip="Gửi mail xin ý kiến" onclick="" />
     </x-breadcrumb>
 
@@ -35,8 +37,8 @@
     </div>
 @endsection
 @section('modals')
-    <x-modal id="modal-upload" title="Tải lên xuất lưới tháng: {{ $currentMonth }}/{{ $currentYear }}" size="md" method="post"
-        nested="true" :action="route('api.work-timesheet.import')">
+    <x-modal id="modal-import" title="Tải lên xuất lưới tháng: {{ $currentMonth }}/{{ $currentYear }}" size="md"
+        method="post" nested="true" :action="route('api.work-timesheet.import')">
         <x-slot:body>
             <input class="form-control" type="hidden" name="month" value="{{ $currentMonth }}" required>
             <input class="form-control" type="hidden" name="year" value="{{ $currentYear }}" required>
@@ -64,6 +66,24 @@
                     <x-select-options :items="$days" :emptyOption="false"></x-select-options>
                 </select>
             </div>
+            <div class="my-1">
+                <label>
+                    File xuất lưới (.xlsx)
+                </label>
+                <input class="form-control" type="file" name="file" required accept=".xlsx">
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
+            <x-button-submit />
+        </x-slot:footer>
+    </x-modal>
+
+    <x-modal id="modal-update" title="Tải lên bản cập nhật xuất lưới tháng: {{ $currentMonth }}/{{ $currentYear }}"
+        size="md" method="patch" nested="true" :action="route('api.work-timesheet.update')">
+        <x-slot:body>
+            <input class="form-control" type="hidden" name="month" value="{{ $currentMonth }}" required>
+            <input class="form-control" type="hidden" name="year" value="{{ $currentYear }}" required>
             <div class="my-1">
                 <label>
                     File xuất lưới (.xlsx)

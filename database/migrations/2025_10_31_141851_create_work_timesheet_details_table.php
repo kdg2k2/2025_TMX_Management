@@ -72,6 +72,7 @@ return new class extends Migration {
             // Đánh giá nội quy / đào tạo
             $table->integer('rule_b_count')->default(0)->comment('Số lần bị đánh giá nội quy B');
             $table->integer('rule_c_count')->default(0)->comment('Số lần bị đánh giá nội quy C');
+            $table->integer('rule_d_count')->default(0)->comment('Số lần bị đánh giá nội quy D');
             $table->integer('training_a_count')->default(0)->comment('Số lần đánh giá đào tạo A');
             $table->integer('training_b_count')->default(0)->comment('Số lần bị đánh giá đào tạo B');
             $table->integer('training_c_count')->default(0)->comment('Số lần bị đánh giá đào tạo đào tạo C');

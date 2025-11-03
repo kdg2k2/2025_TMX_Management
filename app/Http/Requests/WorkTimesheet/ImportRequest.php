@@ -2,14 +2,13 @@
 
 namespace App\Http\Requests\WorkTimesheet;
 
-class ImportRequest extends ListRequest
+class ImportRequest extends UpdateRequest
 {
     public function rules(): array
     {
         return array_merge(
             parent::rules(),
             [
-                'file' => 'required|file|mimes:xlsx',
                 'holiday_days' => 'nullable|array',
                 'holiday_days.*' => 'nullable|date_format:Y-m-d',
                 'power_outage_days' => 'nullable|array',

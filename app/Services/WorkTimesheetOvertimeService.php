@@ -575,7 +575,7 @@ class WorkTimesheetOvertimeService extends BaseService
     {
         $result = [];
         $headerRowCount = 4;
-        $validRatings = ['A', 'B', 'C'];
+        $validRatings = ['A', 'B', 'C', 'D'];
 
         for ($i = $headerRowCount; $i < count($sheetData); $i++) {
             $row = $sheetData[$i];
@@ -592,7 +592,7 @@ class WorkTimesheetOvertimeService extends BaseService
             }
 
             if (!in_array($rating, $validRatings)) {
-                throw new Exception("Đánh giá không hợp lệ cho {$name}: '{$rating}'. Chỉ chấp nhận: A, B, C (dòng " . ($i + 1) . ')');
+                throw new Exception("Đánh giá không hợp lệ cho {$name}: '{$rating}'. Chỉ chấp nhận: A, B, C, D (dòng " . ($i + 1) . ')');
             }
 
             $result[$user['id']] = [

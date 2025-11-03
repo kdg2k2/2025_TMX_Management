@@ -3,8 +3,10 @@ const month = document.getElementById("month");
 const iframeExcelContainer = document.getElementById("iframe-excel-container");
 const iframeExcel = document.getElementById("iframe-excel");
 const noneDataContainer = document.getElementById("none-data-container");
-const modalUpload = document.getElementById("modal-upload");
-const modalUploadForm = modalUpload.querySelector("form");
+const modalImport = document.getElementById("modal-import");
+const modalImportForm = modalImport.querySelector("form");
+const modalUpdate = document.getElementById("modal-update");
+const modalUpdateForm = modalUpdate.querySelector("form");
 var excelUrl = "";
 
 const loadAndShowData = async () => {
@@ -29,23 +31,38 @@ const loadAndShowData = async () => {
     );
 };
 
-const openModalUpload = (btn) => {
-    resetFormAfterSubmit(modalUploadForm);
-    showModal(modalUpload);
-};
-
 const downloadExcel = () => {
     if (!excelUrl) {
-        alertInfo("Tạo file excel trước");
+        alertInfo("Không có dữ liệu");
         return;
     }
     downloadFileHandler(excelUrl);
 };
 
-modalUploadForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalUploadForm, () => {
-        hideModal(modalUpload);
-        loadAndShowData();
+const openModalImport = (btn) => {
+    resetFormAfterSubmit(modalImportForm);
+    showModal(modalImport);
+};
+
+const openModalUpdate = (btn) => {
+    resetFormAfterSubmit(modalUpdateForm);
+    showModal(modalUpdate);
+};
+
+const afterSubmitFromHandle = (form) => {
+    hideModal(form);
+    loadAndShowData();
+};
+
+modalUpdateForm.addEventListener("submit", async (e) => {
+    await handleSubmitForm(e, modalUpdateForm, () => {
+        afterSubmitFromHandle(modalUpdate);
+    });
+});
+
+modalImportForm.addEventListener("submit", async (e) => {
+    await handleSubmitForm(e, modalImportForm, () => {
+        afterSubmitFromHandle(modalImport);
     });
 });
 

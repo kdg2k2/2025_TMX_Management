@@ -101,9 +101,9 @@ class WorkTimesheetService extends BaseService
             $this->setTop3LatestArrival($record);
 
             // tạo file excel hiển thị kết quả tính
-            $this->createCaculatedExcel($record);
+            $record = $this->createCaculatedExcel($record);
 
-            $this->handlerUploadFileService->removeFiles([$oldOriginalPath, $oldCalculatedPath]);
+            $this->handlerUploadFileService->removeFiles(array_map(fn($i) => !in_array($i, [$record['original_path'], $record['calculated_path']]), [$oldOriginalPath, $oldCalculatedPath]));
         }, true);
     }
 
@@ -301,10 +301,10 @@ class WorkTimesheetService extends BaseService
     }
 
     // tính tiêu chí và mức trừ
-    private function calculateDeductionCriteria(WorkTimesheetDetail $detail)
+    private function calculateDeductionCriteria(WorkTimesheetDetail $detail, bool $updateNote = true)
     {
         // tính số lần ABC
-        $ruleBCount = $ruleCCount = $trainingBCount = $trainingCCount = 0;
+        $ruleBCount = $ruleCCount = $ruleDCount = $trainingBCount = $trainingCCount = 0;
         $warningCount = $detail['warning_count'];
         $leaveDaysWithPermission = $detail['leave_days_with_permission'];
         $invalidAttendanceCount = $detail['invalid_attendance_count'];
@@ -338,12 +338,39 @@ class WorkTimesheetService extends BaseService
         }
 
         // đánh giá của phòng ban
-        if ($detail['department_rating'] == 'C') {
+        if ($detail['department_rating'] == 'D') {
+            $ruleDCount++;
+            $note = ($note ? $note . '; ' : '') . 'Phòng đánh giá => D';
+        } elseif ($detail['department_rating'] == 'C') {
             $ruleCCount++;
-            $note = ($note ? $note . '; ' : '') . 'Đánh giá phòng => C';
+            $note = ($note ? $note . '; ' : '') . 'Phòng đánh giá => C';
         } elseif ($detail['department_rating'] == 'B') {
             $ruleBCount++;
-            $note = ($note ? $note . '; ' : '') . 'Đánh giá phòng => B';
+            $note = ($note ? $note . '; ' : '') . 'Phòng đánh giá => B';
+        }
+
+        // đánh giá của hội đồng
+        if ($detail['council_rating'] == 'D') {
+            $ruleDCount++;
+            $note = ($note ? $note . '; ' : '') . 'Hội đồng đánh giá => D';
+        } elseif ($detail['council_rating'] == 'C') {
+            $ruleCCount++;
+            $note = ($note ? $note . '; ' : '') . 'Hội đồng đánh giá => C';
+        } elseif ($detail['council_rating'] == 'B') {
+            $ruleBCount++;
+            $note = ($note ? $note . '; ' : '') . 'Hội đồng đánh giá => B';
+        }
+
+        // công tác ko đăng ký
+        if ($detail['business_trip_manual_count'] >= 5) {
+            $ruleDCount++;
+            $note = ($note ? $note . '; ' : '') . 'Công tác ko đăng ký 5 ngày trở lên => D';
+        } elseif ($detail['business_trip_manual_count'] >= 3) {
+            $ruleCCount++;
+            $note = ($note ? $note . '; ' : '') . 'Công tác ko đăng ký 3 ngày trở lên => C';
+        } elseif ($detail['business_trip_manual_count'] > 0) {
+            $ruleBCount++;
+            $note = ($note ? $note . '; ' : '') . 'Công tác ko đăng ký dưới 3 ngày => B';
         }
 
         // tính trừ tiền
@@ -358,7 +385,7 @@ class WorkTimesheetService extends BaseService
                 $deductionAmount = $violationPenalty;
             }
         } else {
-            $rate = (25 * $ruleBCount) + ($ruleCCount * 75) + ($trainingBCount * 25) + ($trainingCCount * 75);
+            $rate = (25 * $ruleBCount) + ($ruleCCount * 75) + ($ruleDCount * 100) + ($trainingBCount * 25) + ($trainingCCount * 75);
             if ($rate == 0) {
                 $minusValue = 0;
             } elseif ($rate > 0 && $rate < 100) {
@@ -369,14 +396,19 @@ class WorkTimesheetService extends BaseService
             $deductionAmount = $minusValue;
         }
 
-        $detail->update([
+        $updates = [
             'rule_b_count' => $ruleBCount,
             'rule_c_count' => $ruleCCount,
+            'rule_d_count' => $ruleDCount,
             'training_b_count' => $trainingBCount,
             'training_c_count' => $trainingCCount,
             'deduction_amount' => $deductionAmount,
-            'note' => $note,
-        ]);
+        ];
+
+        if ($updateNote)
+            $updates['note'] = $note;
+
+        $detail->update($updates);
     }
 
     // tính lương
@@ -739,7 +771,7 @@ class WorkTimesheetService extends BaseService
         }, true);
     }
 
-    public function setTop3LatestArrival(WorkTimesheet $record)
+    private function setTop3LatestArrival(WorkTimesheet $record)
     {
         return $this->tryThrow(function () use ($record) {
             $top3 = $record
@@ -761,5 +793,202 @@ class WorkTimesheetService extends BaseService
 
             return $top3;
         }, true);
+    }
+
+    public function update(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            // Tìm work_timesheet
+            $workTimesheet = $this->repository->findByMonthYear(
+                $request['month'],
+                $request['year']
+            );
+
+            if (!$workTimesheet) {
+                throw new Exception("Không tìm thấy dữ liệu xuất lưới tháng {$request['month']}/{$request['year']}");
+            }
+
+            // Đọc file Excel
+            $excelData = $this->excelService->readExcel($request['file']);
+
+            // Validate file có sheet 'Sheet1'
+            if (!isset($excelData['Sheet1'])) {
+                throw new Exception("File Excel không đúng cấu trúc! Thiếu sheet 'Sheet1'");
+            }
+
+            $sheetData = $excelData['Sheet1'];
+
+            // Parse và validate data
+            $parsedData = $this->parseCalculatedExcelForUpdate($sheetData);
+
+            // Validate data
+            $this->validateUpdateData($parsedData);
+
+            // Load details
+            $workTimesheet->load('details');
+
+            // Map details theo name để dễ truy cập
+            $detailsMap = $workTimesheet->details->keyBy('name');
+
+            $updatedCount = 0;
+            $notFoundUsers = [];
+            $errors = [];
+
+            // Update từng user
+            foreach ($parsedData as $data) {
+                $name = $data['name'];
+
+                // Kiểm tra user tồn tại
+                if (!isset($detailsMap[$name])) {
+                    $notFoundUsers[] = $name;
+                    continue;
+                }
+
+                $detail = $detailsMap[$name];
+
+                try {
+                    // Update 3 cột
+                    $detail->update([
+                        'business_trip_manual_count' => $data['business_trip_manual_count'],
+                        'council_rating' => $data['council_rating'],
+                        'note' => $data['note'],
+                    ]);
+
+                    // Tính lại tiêu chí và mức trừ
+                    $this->calculateDeductionCriteria($detail, false);
+
+                    // Tính lại lương
+                    $this->calculateSalary($detail);
+
+                    $updatedCount++;
+                } catch (Exception $e) {
+                    $errors[] = "Lỗi khi cập nhật {$name}: " . $e->getMessage();
+                }
+            }
+
+            // Cập nhật lại file calculated Excel
+            $this->createCaculatedExcel($workTimesheet);
+
+            // Tạo thông báo kết quả
+            $message = "Đã cập nhật {$updatedCount} nhân sự thành công";
+
+            if (!empty($notFoundUsers)) {
+                $message .= '. Không tìm thấy: ' . implode(', ', $notFoundUsers);
+            }
+
+            if (!empty($errors)) {
+                $message .= '. Lỗi: ' . implode('; ', $errors);
+            }
+
+            return [
+                'message' => $message,
+                'updated_count' => $updatedCount,
+                'not_found_users' => $notFoundUsers,
+                'errors' => $errors,
+            ];
+        }, true);
+    }
+
+    /**
+     * Parse file Excel calculated để lấy 3 cột cần update
+     */
+    private function parseCalculatedExcelForUpdate(array $sheetData): array
+    {
+        $result = [];
+
+        // Bỏ qua header, bắt đầu từ dòng 1
+        for ($i = 1; $i < count($sheetData); $i++) {
+            $row = $sheetData[$i];
+
+            // Bỏ qua dòng trống
+            if (empty($row[1]))
+                continue;
+
+            // Kiểm tra xem có phải dòng phòng ban (La Mã) không
+            $firstCol = trim($row[0] ?? '');
+            if (preg_match('/^[IVX]+$/', $firstCol)) {
+                // Đây là dòng phòng ban, bỏ qua
+                continue;
+            }
+
+            // Lấy dữ liệu
+            $name = trim($row[1] ?? '');  // Cột B: Họ tên
+
+            // Bỏ qua nếu không có tên
+            if (empty($name))
+                continue;
+
+            // Lấy 3 cột cần update theo index
+            // Index trong file Excel created từ createCaculatedExcel:
+            // 0: STT
+            // 1: Họ tên
+            // 2: Công BPDX
+            // 3: Công chấm máy(Hợp lệ)
+            // 4: Ngoài giờ
+            // 5: Công tác (Đăng ký Hệ thống)
+            // 6: Công tác (Không đăng ký Hệ thống) ✅
+            // 7: Đã nghỉ phép
+            // 8: Nghỉ phép
+            // 9: Chấm công không hợp lệ
+            // 10: Tỷ lệ không hợp lệ
+            // 11: Thời gian trung bình muộn
+            // 12: Cảnh báo
+            // 13: Phòng Đánh giá ABC
+            // 14: Hội đồng đánh giá ✅
+            // 15: Ghi chú ✅
+
+            $businessTripManualCount = isset($row[6]) ? trim($row[6]) : null;
+            $councilRating = isset($row[14]) ? strtoupper(trim($row[14])) : null;
+            $note = isset($row[15]) ? trim($row[15]) : null;
+
+            $result[] = [
+                'name' => $name,
+                'business_trip_manual_count' => $businessTripManualCount,
+                'council_rating' => $councilRating,
+                'note' => $note,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Validate data update
+     */
+    private function validateUpdateData(array $data): void
+    {
+        $validRatings = ['A', 'B', 'C', 'D'];
+        $errors = [];
+
+        foreach ($data as $index => $item) {
+            $rowNumber = $index + 2;  // +2 vì bắt đầu từ dòng 1 và có header
+
+            // Validate business_trip_manual_count
+            if ($item['business_trip_manual_count'] !== null && $item['business_trip_manual_count'] !== '') {
+                if (!is_numeric($item['business_trip_manual_count'])) {
+                    $errors[] = "Dòng {$rowNumber} ({$item['name']}): 'Công tác (Không đăng ký)' phải là số";
+                } elseif ($item['business_trip_manual_count'] < 0) {
+                    $errors[] = "Dòng {$rowNumber} ({$item['name']}): 'Công tác (Không đăng ký)' phải >= 0";
+                }
+            }
+
+            // Validate council_rating - REQUIRED
+            if (empty($item['council_rating'])) {
+                $errors[] = "Dòng {$rowNumber} ({$item['name']}): 'Hội đồng đánh giá' không được để trống";
+            } elseif (!in_array(strtoupper($item['council_rating']), $validRatings)) {
+                $errors[] = "Dòng {$rowNumber} ({$item['name']}): 'Hội đồng đánh giá' chỉ chấp nhận: A, B, C, D";
+            }
+
+            // Validate note - REQUIRED
+            if (empty($item['note'])) {
+                $errors[] = "Dòng {$rowNumber} ({$item['name']}): 'Ghi chú' không được để trống";
+            } elseif (mb_strlen($item['note']) > 255) {
+                $errors[] = "Dòng {$rowNumber} ({$item['name']}): 'Ghi chú' không được vượt quá 255 ký tự";
+            }
+        }
+
+        if (!empty($errors)) {
+            throw new Exception("Dữ liệu không hợp lệ:\n" . implode("\n", $errors));
+        }
     }
 }
