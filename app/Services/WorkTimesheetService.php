@@ -314,42 +314,36 @@ class WorkTimesheetService extends BaseService
         // cảnh báo trên 3 lần bị C nội quy
         if ($warningCount > 3) {
             $ruleCCount++;
-            $note = ($note ? $note . '; ' : '') . 'Cảnh báo trên 3 lần';
+            $note = ($note ? $note . '; ' : '') . 'Cảnh báo trên 3 lần => C';
         } elseif ($warningCount > 0) {
             // dưới 3 lần bị B
             $ruleBCount++;
-            $note = ($note ? $note . '; ' : '') . 'Cảnh báo dưới 3 lần';
+            $note = ($note ? $note . '; ' : '') . 'Cảnh báo dưới 3 lần => B';
         }
 
         // nghỉ 5 ngày trở lên bị C
         if ($leaveDaysWithPermission >= 5) {
             $ruleCCount++;
-            $note = ($note ? $note . '; ' : '') . 'Nghỉ phép 5 ngày trở lên';
+            $note = ($note ? $note . '; ' : '') . 'Nghỉ phép 5 ngày trở lên => C';
         } elseif ($leaveDaysWithPermission >= 3) {
             // 3 ngày bị B
             $ruleBCount++;
-            $note = ($note ? $note . '; ' : '') . 'Nghỉ phép 3 ngày';
-        }
-
-        // top muộn bị B
-        if ($detail['is_latest_arrival']) {
-            $ruleBCount++;
-            $note = ($note ? $note . '; ' : '') . 'Muộn quá 15 phút';
+            $note = ($note ? $note . '; ' : '') . 'Nghỉ phép 3 ngày => B';
         }
 
         // chênh lệch quá 20% công bộ phận đề xuất bị B
         if ($invalidAttendanceCount > ($proposedWorkDays * 0.2)) {
             $ruleBCount++;
-            $note = ($note ? $note . '; ' : '') . 'Chênh lệch công bộ phận đề xuất trên 20%';
+            $note = ($note ? $note . '; ' : '') . 'Chênh lệch công bộ phận đề xuất trên 20% => B';
         }
 
         // đánh giá của phòng ban
         if ($detail['department_rating'] == 'C') {
             $ruleCCount++;
-            $note = ($note ? $note . '; ' : '') . 'Đánh giá phòng mức C';
+            $note = ($note ? $note . '; ' : '') . 'Đánh giá phòng => C';
         } elseif ($detail['department_rating'] == 'B') {
             $ruleBCount++;
-            $note = ($note ? $note . '; ' : '') . 'Đánh giá phòng mức B';
+            $note = ($note ? $note . '; ' : '') . 'Đánh giá phòng => B';
         }
 
         // tính trừ tiền
@@ -761,7 +755,7 @@ class WorkTimesheetService extends BaseService
             if (!empty($top3)) {
                 $record->details()->whereIn('id', $top3)->update([
                     'is_latest_arrival' => true,
-                    'note' => DB::raw("CONCAT(TRIM(COALESCE(note,'')), CASE WHEN note IS NULL OR note = '' THEN '' ELSE '; ' END, 'Top muộn')"),
+                    'note' => DB::raw("CONCAT(TRIM(COALESCE(note,'')), CASE WHEN note IS NULL OR note = '' THEN '' ELSE '; ' END, 'Top muộn -> B')"),
                 ]);
             }
 
