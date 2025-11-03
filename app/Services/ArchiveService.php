@@ -22,15 +22,16 @@ class ArchiveService extends BaseService
     public function compress(array $files, string $zipPath)
     {
         try {
-            // Tách folder và filename
             $zipFolder = dirname($zipPath);
             $zipFileName = basename($zipPath);
 
-            // Tạo folder trước
             $folderFullPath = $this->handlerUploadFileService->getAbsolutePublicPath($zipFolder);
-
-            // Đường dẫn đầy đủ của file zip
             $zipFullPath = $folderFullPath . '/' . $zipFileName;
+
+            if (file_exists($zipFullPath)) {
+                $this->handlerUploadFileService->safeDeleteFile($zipPath);
+                Log::info("Đã xóa file ZIP cũ: {$zipFullPath}");
+            }
 
             $archive = Archive::make($zipFullPath);
 

@@ -2,4 +2,15 @@
 
 namespace App\Http\Requests\WorkTimesheetOvertime;
 
-class TemplateRequest extends ListRequest {}
+use App\Http\Requests\BaseRequest;
+
+class TemplateRequest extends BaseRequest
+{
+    public function rules()
+    {
+        return [
+            'year' => 'required|integer',
+            'month' => 'required|integer',
+        ];
+    }
+}

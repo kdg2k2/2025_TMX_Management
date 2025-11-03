@@ -644,4 +644,11 @@ class WorkTimesheetService extends BaseService
         }
         return $returnValue;
     }
+
+    public function findByMonthYear(int $month, int $year)
+    {
+        return $this->tryThrow(function () use ($month, $year) {
+            return $this->repository->findByMonthYear($month, $year);
+        });
+    }
 }

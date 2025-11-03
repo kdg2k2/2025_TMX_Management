@@ -3,6 +3,7 @@
     <x-breadcrumb :items="[
         ['label' => 'Trang chủ', 'url' => route('dashboard')],
         ['label' => 'Nộp bảng chấm công', 'url' => null],
+        ['label' => auth()->user()->department->name . ' - ' . $currentMonth . '/' . $currentYear, 'url' => null],
     ]">
         <x-button variant="success" size="sm" icon="ti ti-download" tooltip="Export" class="me-1"
             onclick="downloadTemplate()" />
@@ -39,7 +40,7 @@
     <script>
         const $month = @json($currentMonth);
         const $year = @json($currentYear);
-        const listUrl = @json(route('api.work-timesheet.overtime.list'));
+        const listUrl = @json(route('api.work-timesheet.overtime.detail.list'));
         const apiWorkTimesheetOvertimeTemplate = @json(route('api.work-timesheet.overtime.template'));
     </script>
     <script src="assets/js/http-request/base-list.js"></script>

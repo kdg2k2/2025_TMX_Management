@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\WorkTimesheetOvertime;
 
-class UploadRequest extends ListRequest
+class UploadRequest extends TemplateRequest
 {
     public function rules(): array
     {

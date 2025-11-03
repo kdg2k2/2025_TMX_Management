@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\WorkTimesheetOvertime;
+namespace App\Http\Requests\WorkTimesheetOvertimeDetail;
 
 use App\Http\Requests\BaseListRequest;
 

@@ -10,7 +10,7 @@ class WorkTimesheetOvertimeRepository extends BaseRepository
     {
         $this->model = new WorkTimesheetOvertime();
         $this->relations = [
-            'details',
+            'details.user:id,name',
         ];
     }
 

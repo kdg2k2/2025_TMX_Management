@@ -15,6 +15,11 @@ class WorkTimesheetOvertimeDetail extends Model
         'detail_leave_days_without_permission' => 'array',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function workTimesheetOvertime()
     {
         return $this->belongsTo(WorkTimesheetOvertime::class, 'work_timesheet_overtime_id');

@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->timestamps();
             $table
                 ->foreignId('work_timesheet_overtime_id')
-                ->comment('khóa ngoại xuất lưới')
+                ->comment('khóa ngoại bảng chấm công làm thêm giờ')
                 ->constrained('work_timesheet_overtimes', 'id', 'fk_overtime_detail_overtime')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->integer('overtime_evening_count')->default(0)->comment('Số công ngoài giờ buổi tối');
             $table->integer('overtime_weekend_count')->default(0)->comment('Số công ngoài giờ T7 CN');
             $table->integer('overtime_total_count')->default(0)->comment('Tổng số công ngoài giờ');
-            $table->float('leave_days_without_permission')->default(0)->comment('Tổng số ngày nghỉ không phép');
+            $table->integer('leave_days_without_permission')->default(0)->comment('Tổng số ngày nghỉ không phép');
             $table->json('detail_leave_days_without_permission')->nullable()->comment('chi tiết các ngày nghỉ ko phép');
             $table->enum('department_rating', ['A', 'B', 'C', 'D'])->nullable()->comment('Đánh giá của phòng');
         });
