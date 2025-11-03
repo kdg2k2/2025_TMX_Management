@@ -7,13 +7,11 @@ use App\Traits\CheckLocalTraits;
 use App\Traits\FailedValidation;
 use App\Traits\FormatDateTraits;
 use App\Traits\GuardTraits;
-use App\Traits\PaginateTraits;
 use App\Traits\TryCatchTraits;
 
 abstract class BaseService
 {
     use TryCatchTraits,
-        PaginateTraits,
         FailedValidation,
         CheckLocalTraits,
         AssetPathTraits,
@@ -113,7 +111,6 @@ abstract class BaseService
             if (gettype($data) === 'object')
                 $data = $data->toArray();
             $data = $this->formatRecords($data);
-            $data = $this->paginateOrNot($request, $data);
             return $data;
         });
     }

@@ -121,10 +121,61 @@ class WorkTimesheetService extends BaseService
         ]))->toArray();
     }
 
-    // tính công bộ phận đề xuất: các ngày ko tính chủ nhật - nghỉ lễ - mất điện + làm bù + công tác
-    private function calculateProposedWorkDays(int $month, int $year, int $totalHolidayDays = 0, int $totalPowerOutageDays = 0, int $totalCompensatedDays = 0, int $totalBusinessTripDays = 0)
+    // Tính công bộ phận đề xuất dựa trên ngày làm việc thực tế của user
+    private function calculateProposedWorkDays(
+        int $month,
+        int $year,
+        array $holidayDays = [],  // Array các ngày nghỉ lễ
+        array $powerOutageDays = [],  // Array các ngày mất điện
+        array $compensatedDays = [],  // Array các ngày làm bù
+        int $totalBusinessTripDays = 0,
+        ?string $workStartDate = null,
+        ?string $workEndDate = null
+    ): float {
+        // Ngày đầu và cuối tháng
+        $monthStart = $this->dateService->getFirstDayOfMonth($month, $year);
+        $monthEnd = $this->dateService->getLastDayOfMonth($month, $year);
+
+        // Xác định khoảng thời gian làm việc thực tế
+        $actualStartDate = $workStartDate && $workStartDate >= $monthStart && $workStartDate <= $monthEnd
+            ? $workStartDate  // work_start_date TRONG tháng → dùng work_start_date
+            : $monthStart;  // work_start_date < đầu tháng hoặc null → dùng đầu tháng
+
+        $actualEndDate = $workEndDate && $workEndDate >= $monthStart && $workEndDate <= $monthEnd
+            ? $workEndDate  // work_end_date TRONG tháng → dùng work_end_date
+            : $monthEnd;  // work_end_date > cuối tháng hoặc null → dùng cuối tháng
+
+        // Nếu user không làm việc trong tháng này
+        if (($workStartDate && $workStartDate > $monthEnd) || ($workEndDate && $workEndDate < $monthStart)) {
+            return 0;
+        }
+
+        // Tính số ngày làm việc (không tính CN) trong khoảng thời gian thực tế
+        $workingDaysInRange = $this->dateService->getWorkingDays($actualStartDate, $actualEndDate, $month, $year);
+
+        // CHỈ TRỪ nghỉ lễ/mất điện NẰM TRONG khoảng làm việc
+        $actualHolidayDays = $this->filterDaysInRange($holidayDays, $actualStartDate, $actualEndDate);
+        $actualPowerOutageDays = $this->filterDaysInRange($powerOutageDays, $actualStartDate, $actualEndDate);
+
+        // CHỈ CỘNG ngày làm bù NẰM TRONG khoảng làm việc
+        $actualCompensatedDays = $this->filterDaysInRange($compensatedDays, $actualStartDate, $actualEndDate);
+
+        // Công thức: ngày làm việc - nghỉ lễ - mất điện + làm bù + công tác
+        return $workingDaysInRange - $actualHolidayDays - $actualPowerOutageDays + $actualCompensatedDays + $totalBusinessTripDays;
+    }
+
+    // Lọc các ngày nằm trong khoảng thời gian
+    private function filterDaysInRange(array $days, string $startDate, string $endDate): int
     {
-        return count($this->dateService->getDaysInMonth($month, $year, [0])) - $totalHolidayDays - $totalPowerOutageDays + $totalCompensatedDays + $totalBusinessTripDays;
+        if (empty($days)) {
+            return 0;
+        }
+
+        $daysInRange = array_filter($days, function ($day) use ($startDate, $endDate) {
+            return $day >= $startDate && $day <= $endDate;
+        });
+
+        return count($daysInRange);
     }
 
     // các ngày đi công tác trong tháng ko tính chủ nhật
@@ -464,8 +515,22 @@ class WorkTimesheetService extends BaseService
             $businessTripDays = $this->businessTripDays($userInfo['work_schedules'], $record['month'], $record['year']);
             $businessTripDayCount = count($businessTripDays);
 
-            // công bộ phận đề xuất
-            $proposedWorkDays = $this->calculateProposedWorkDays($record['month'], $record['year'], $record['total_holiday_days'], $record['total_power_outage_days'], $record['total_compensated_days'], $businessTripDayCount);
+            // Tính công bộ phận đề xuất với work_start_date và work_end_date
+            $daysDetails = json_decode($record['days_details'], true);
+            $proposedWorkDays = $this->calculateProposedWorkDays(
+                $record['month'],
+                $record['year'],
+                $daysDetails['holiday_days'],
+                $daysDetails['power_outage_days'],
+                $daysDetails['compensated_days'],
+                $businessTripDayCount,
+                $userInfo['work_start_date'] ?? null,  // Thêm tham số
+                $userInfo['work_end_date'] ?? null  // Thêm tham số
+            );
+
+            // Nếu user không làm việc trong tháng này, bỏ qua
+            if ($proposedWorkDays <= 0)
+                return null;
 
             // nếu công đi công tác quá công bộ phận đề xuất thì set = công bộ phận đề xuất
             $businessTripDayCount = $businessTripDayCount > $proposedWorkDays ? $proposedWorkDays : $businessTripDayCount;

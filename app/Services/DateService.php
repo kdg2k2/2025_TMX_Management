@@ -264,7 +264,7 @@ class DateService
     }
 
     /**
-     * Lấy số ngày làm việc (T2-T6) trong khoảng from -> to
+     * Lấy số ngày làm việc (T2-T7) trong khoảng from -> to
      * Sử dụng getTotalDays để kế thừa logic
      *
      * @param string|Carbon $from
@@ -279,8 +279,8 @@ class DateService
         ?int $month = null,
         ?int $year = null
     ): int {
-        // Kế thừa logic từ getTotalDays, bỏ qua thứ 7 (6) và Chủ nhật (0)
-        return $this->getTotalDays($from, $to, [0, 6], $month, $year);
+        // Kế thừa logic từ getTotalDays, bỏ qua Chủ nhật (0)
+        return $this->getTotalDays($from, $to, [0], $month, $year);
     }
 
     /**
