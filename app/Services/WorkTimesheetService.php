@@ -6,6 +6,7 @@ use App\Models\WorkTimesheet;
 use App\Models\WorkTimesheetDetail;
 use App\Repositories\WorkTimesheetRepository;
 use Arr;
+use DB;
 use Exception;
 
 class WorkTimesheetService extends BaseService
@@ -96,6 +97,9 @@ class WorkTimesheetService extends BaseService
             // load các số liệu dã được tính toán
             $record->load($this->repository->relations);
 
+            // cập nhật lại top 3 muộn
+            $this->setTop3LatestArrival($record);
+
             // tạo file excel hiển thị kết quả tính
             $this->createCaculatedExcel($record);
 
@@ -143,7 +147,6 @@ class WorkTimesheetService extends BaseService
     private function calculateAvgLateMinute(array $lateEarly, int $validAttendanceCount, int $businessTripDayCount, bool $isChildcareMode)
     {
         $avgLateMinutes = 0;
-        $isLatestArrival = false;
 
         // tính trung bình muộn: round(tổng 4 tiêu chí chấm muộn / (công hợp lệ + công tác), 2)
         $avgLateMinutes = round(collect($lateEarly)->except('validAttendanceCount')->sum() / ($validAttendanceCount + $businessTripDayCount), 2);
@@ -152,15 +155,7 @@ class WorkTimesheetService extends BaseService
         if ($isChildcareMode == 1)
             $avgLateMinutes -= 60;
 
-        // nếu quá trung bình muộn quá 15p đánh giá top muộn
-        if ($avgLateMinutes > 15) {
-            $isLatestArrival = true;
-        }
-
-        return [
-            'avgLateMinutes' => $avgLateMinutes,
-            'isLatestArrival' => $isLatestArrival,
-        ];
+        return $avgLateMinutes;
     }
 
     private function checkLateEarlyMultipleDays(array $times, bool $lambu)
@@ -459,7 +454,7 @@ class WorkTimesheetService extends BaseService
             $validAttendanceCount = $lateEarly['validAttendanceCount'] / 2;
 
             // tính trung bình muộn
-            $calculateAvgLateMinute = $this->calculateAvgLateMinute($lateEarly, $validAttendanceCount, $businessTripDayCount, $userInfo['is_childcare_mode']);
+            $avgLateMinutes = $this->calculateAvgLateMinute($lateEarly, $validAttendanceCount, $businessTripDayCount, $userInfo['is_childcare_mode']);
 
             // tính lại số ngày nghỉ thực tế khi có nghỉ lễ
             $calculateLeaveRequest = $this->calculateLeaveRequest(collect($record)->toArray(), $userInfo);
@@ -509,7 +504,7 @@ class WorkTimesheetService extends BaseService
                 'early_morning_count' => $lateEarly['earlyMorningCount'],  // Số lần chấm công sớm buổi sáng
                 'late_afternoon_count' => $lateEarly['lateAfternoonCount'],  // Số lần chấm công muộn buổi chiều
                 'early_afternoon_count' => $lateEarly['earlyAfternoonCount'],  // Số lần chấm công sớm buổi chiều
-                'avg_late_minutes' => $calculateAvgLateMinute['avgLateMinutes'],  // Trung bình phút chấm công muộn
+                'avg_late_minutes' => $avgLateMinutes,  // Trung bình phút chấm công muộn
                 'business_trip_system_count' => $businessTripDayCount,  // Tổng số công đi công tác - hệ thống tính
                 'business_trip_manual_count' => 0,  // Tổng số công đi công tác ==>>>>>>>>>>>>>>>> Rà soát đẩy thủ công
                 'leave_days_with_permission' => $calculateLeaveRequest['leaveDaysWithPermission'],  // Tổng số ngày nghỉ phép
@@ -517,7 +512,6 @@ class WorkTimesheetService extends BaseService
                 'max_paid_leave_days_per_year' => $calculateLeaveRequest['maxPaidLeaveDaysPerYear'],  // số ngày nghỉ có lương tối đa của trong năm
                 'warning_count' => count($userInfo['warning']),  // Tổng số lần bị cảnh báo
                 'council_rating' => null,  // Đánh giá của hội đồng ==>>>>>>>>>>>>>>>> Rà soát đẩy thủ công
-                'is_latest_arrival' => $calculateAvgLateMinute['isLatestArrival'],  // Top muộn
                 'detail_business_trip_and_leave_days' => json_encode([
                     'business_trip_days' => $businessTripDays,
                     'leave_days' => $calculateLeaveRequest['leaveDays'],
@@ -748,6 +742,30 @@ class WorkTimesheetService extends BaseService
                 'updated_count' => $updatedCount,
                 'not_found_users' => $notFoundUsers,
             ];
+        }, true);
+    }
+
+    public function setTop3LatestArrival(WorkTimesheet $record)
+    {
+        return $this->tryThrow(function () use ($record) {
+            $top3 = $record
+                ->details()
+                ->where('avg_late_minutes', '>', 0)
+                ->orderByDesc('avg_late_minutes')
+                ->limit(3)
+                ->pluck('id')
+                ->toArray();
+
+            $record->details()->where('avg_late_minutes', '>', 0)->update(['is_latest_arrival' => false]);
+
+            if (!empty($top3)) {
+                $record->details()->whereIn('id', $top3)->update([
+                    'is_latest_arrival' => true,
+                    'note' => DB::raw("CONCAT(TRIM(COALESCE(note,'')), CASE WHEN note IS NULL OR note = '' THEN '' ELSE '; ' END, 'Top muộn')"),
+                ]);
+            }
+
+            return $top3;
         }, true);
     }
 }
