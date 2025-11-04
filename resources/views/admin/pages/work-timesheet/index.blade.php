@@ -7,7 +7,6 @@
             tooltip="Khởi tạo (Tải lên file xuất lưới của máy chấm công)" class="me-1" onclick="openModalImport()" />
         <x-button variant="secondary" size="sm" icon="ti ti-database-edit"
             tooltip="Cập nhật (Bản chỉnh sửa của file hệ thống hiển thị)" class="me-1" onclick="openModalUpdate()" />
-        <x-button variant="primary" size="sm" icon="ti ti-send" tooltip="Gửi mail xin ý kiến" onclick="" />
     </x-breadcrumb>
 
     <div class="row mb-2">

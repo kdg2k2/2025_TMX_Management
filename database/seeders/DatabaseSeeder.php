@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             ContractFileTypeSeeder::class,
             ContractScanFileTypeSeeder::class,
             UserSeeder::class,
+            TaskScheduleSeeder::class,
         ]);
 
         if ($this->isLocal())

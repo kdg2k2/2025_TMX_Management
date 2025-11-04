@@ -20,6 +20,9 @@ class EmailService extends BaseService
             });
             $emails = $this->checkLocalMail($emails);
 
+            if($emails == [])
+                return true;
+
             // gửi mail
             Mail::send(
                 $view,

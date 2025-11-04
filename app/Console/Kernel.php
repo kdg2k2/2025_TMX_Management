@@ -93,6 +93,8 @@ class Kernel extends ConsoleKernel
             ->name('set-completed-work-schedules')
             ->dailyAt('17:00')
             ->withoutOverlapping();
+
+        $schedule->command('task-schedules:run')->everyMinute();
     }
 
     /**

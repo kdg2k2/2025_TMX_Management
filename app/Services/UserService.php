@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Arr;
 use Exception;
 
 class UserService extends BaseService
@@ -139,16 +140,25 @@ class UserService extends BaseService
 
     public function getEmails(array $userIds = [])
     {
+        if (empty($userIds))
+            return [];
+
         $users = $this->repository->findByKeys(array_filter($userIds, fn($i) => !empty($i)), 'id', true)->toArray();
 
-        return array_unique(array_filter(array_map(function ($item) {
-            return array_merge(
-                [$item['email']],
-                array_column($item['sub_emails'], 'email'),
-            );
-        }, $users), function ($item) {
-            return !empty($item);
-        }));
+        return array_unique(
+            Arr::flatten(
+                array_filter(
+                    array_map(function ($item) {
+                        return array_merge(
+                            [$item['email']],
+                            array_column($item['sub_emails'], 'email'),
+                        );
+                    }, $users), function ($item) {
+                        return !empty($item);
+                    }
+                )
+            )
+        );
     }
 
     public function getUserDepartmentManagerEmail(int $id = null)

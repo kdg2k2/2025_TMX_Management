@@ -108,6 +108,9 @@ class WorkTimesheetService extends BaseService
             // tạo file excel bảng lương
             $this->createPayrollExcel($record);
 
+            // gửi mail
+            app(TaskScheduleService::class)->run('WORK_TIMESHEET_REPORT');
+
             // xóa file cũ
             $this->handlerUploadFileService->removeFiles(array_map(fn($i) => !in_array($i, [$record['original_path'], $record['calculated_path']]), [$oldOriginalPath, $oldCalculatedPath]));
         }, true);
@@ -1053,5 +1056,34 @@ class WorkTimesheetService extends BaseService
             ]);
             return $record;
         });
+    }
+
+    public function emailSchedule(bool $isActive, string $type, string $subject, array $emails, array $data)
+    {
+        if (!$isActive)
+            return;
+
+        $time = $this->workTimesheetOvertimeService->baseOvertimeUpload();
+        $workTimesheet = $this->findByMonthYear($time['currentMonth'], $time['currentYear']);
+        if (!$workTimesheet)
+            throw new Exception("Tháng {$time['currentMonth']}/{$time['currentYear']} chưa có dữ liệu xuất lưới!");
+
+        switch ($type) {
+            case 'WORK_TIMESHEET_REPORT':
+                $files = [
+                    $this->handlerUploadFileService->getAbsolutePublicPath($workTimesheet['calculated_path'])
+                ];
+                break;
+            case 'PAYROLL_REPORT_WORK_TIMESHEET':
+                $files = [
+                    $this->handlerUploadFileService->getAbsolutePublicPath($workTimesheet['payroll_path'])
+                ];
+                break;
+            default:
+                $files = [];
+                break;
+        }
+
+        app(TaskScheduleService::class)->sendMail($subject, $emails, $data, $files);
     }
 }
