@@ -23,6 +23,8 @@ use App\Http\Controllers\Api\ContractScanFileTypeController;
 use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\EligibilityController;
+use App\Http\Controllers\Api\EmploymentContractPersonnelController;
+use App\Http\Controllers\Api\EmploymentContractPersonnelCustomFieldController;
 use App\Http\Controllers\Api\LeaveRequestController;
 use App\Http\Controllers\Api\PayrollController;
 use App\Http\Controllers\Api\PersonnelController;
@@ -318,9 +320,24 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         });
     });
 
-    Route::prefix('task-schedule')->controller(TaskScheduleController::class)->group(function(){
+    Route::prefix('task-schedule')->controller(TaskScheduleController::class)->group(function () {
         Route::get('list', 'list')->name('api.task-schedule.list');
         Route::patch('update', 'update')->name('api.task-schedule.update');
         Route::post('run', 'run')->name('api.task-schedule.run');
+    });
+
+    Route::prefix('employment-contract-personnel')->group(function () {
+        Route::controller(EmploymentContractPersonnelController::class)->group(function () {
+            Route::get('list', 'list')->name('api.employment-contract-personnel.list');
+            Route::get('syncthetic-excel', 'synctheticExcel')->name('api.employment-contract-personnel.syncthetic-excel');
+            Route::post('store', 'store')->name('api.employment-contract-personnel.store');
+            Route::patch('update', 'update')->name('api.employment-contract-personnel.update');
+        });
+
+        Route::prefix('custom-field')->controller(EmploymentContractPersonnelCustomFieldController::class)->group(function () {
+            Route::get('list', 'list')->name('api.employment-contract-personnel.custom-field.list');
+            Route::post('store', 'store')->name('api.employment-contract-personnel.custom-field.store');
+            Route::patch('update', 'update')->name('api.employment-contract-personnel.custom-field.update');
+        });
     });
 });

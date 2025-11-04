@@ -9,6 +9,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('admin.pages.dashboard.index');
+        return $this->catchWeb(fn() => view('admin.pages.dashboard.index'));
     }
 }

@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\ContractUnitController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EligibilityController;
+use App\Http\Controllers\Admin\EmploymentContractPersonnelController;
+use App\Http\Controllers\Admin\EmploymentContractPersonnelCustomFieldController;
 use App\Http\Controllers\Admin\GoogleDriveController;
 use App\Http\Controllers\Admin\LeaveRequestController;
 use App\Http\Controllers\Admin\PayrollController;
@@ -258,5 +260,21 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
     Route::prefix('task-schedule')->controller(TaskScheduleController::class)->group(function () {
         Route::get('index', 'index')->name('task-schedule.index');
         Route::get('edit', 'edit')->name('task-schedule.edit');
+    });
+
+    Route::prefix('employment-contract-personnel')->group(function () {
+        Route::controller(EmploymentContractPersonnelController::class)->group(function () {
+            Route::get('index', 'index')->name('employment-contract-personnel.index');
+            Route::get('create', 'create')->name('employment-contract-personnel.create');
+            Route::get('edit', 'edit')->name('employment-contract-personnel.edit');
+            Route::delete('delete', 'delete')->name('employment-contract-personnel.delete');
+        });
+
+        Route::prefix('custom-field')->controller(EmploymentContractPersonnelCustomFieldController::class)->group(function () {
+            Route::get('index', 'index')->name('employment-contract-personnel.custom-field.index');
+            Route::get('create', 'create')->name('employment-contract-personnel.custom-field.create');
+            Route::get('edit', 'edit')->name('employment-contract-personnel.custom-field.edit');
+            Route::delete('delete', 'delete')->name('employment-contract-personnel.custom-field.delete');
+        });
     });
 });

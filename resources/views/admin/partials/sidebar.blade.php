@@ -285,6 +285,49 @@
 
                 <li class="slide__category">
                     <span class="category-name">
+                        Hồ sơ - Biên bản - Công văn
+                    </span>
+                </li>
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-user-check"></i>
+                        <span class="side-menu__label">
+                            HS Lao Động/Bổ Nhiệm
+                        </span>
+                        <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="javascript:void(0)">
+                                HS Lao Động/Bổ Nhiệm
+                            </a>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon fs-6 ti ti-settings-2"></i>
+                                Thiết lập
+                                <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="{{ route('employment-contract-personnel.custom-field.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Cột thông tin nhân sự bổ sung
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide">
+                            <a href="{{ route('employment-contract-personnel.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon ti ti-id-badge-2"></i>
+                                Thông tin nhân sự
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="slide__category">
+                    <span class="category-name">
                         Khác
                     </span>
                 </li>
