@@ -65,7 +65,7 @@ class TaskScheduleSeeder extends Seeder
                 'user_ids' => $managerUserIds,
             ],
             [
-                'code' => 'WORK_TIMESHEET_REPORT',
+                'code' => 'COUNCIL_RATING',
                 'name' => 'Mail thông báo hội đồng đánh giá.',
                 'subject' => 'Thông báo xin ý kiến đánh giá, xếp loại ABC của các thành viên trong công ty',
                 'content' => "Dear quý Thầy/Cô; \n Hiện tại hệ thống đã tổng hợp xếp loại, đánh giá của các phòng. Đề nghị quý Thầy/Cô góp ý để hệ thống hoàn thiện bảng chấm công tháng vừa qua.",
