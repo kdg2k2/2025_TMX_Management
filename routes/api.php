@@ -314,6 +314,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         });
         Route::prefix('payroll')->controller(PayrollController::class)->group(function () {
             Route::get('data', 'data')->name('api.payroll.data');
+            Route::patch('update', 'update')->name('api.payroll.update');
         });
     });
 

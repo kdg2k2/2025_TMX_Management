@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Payroll\DataRequest;
 use App\Http\Requests\WorkTimesheet\UpdateRequest;
 use App\Services\PayrollService;
 

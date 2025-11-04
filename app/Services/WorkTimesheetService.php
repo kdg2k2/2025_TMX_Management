@@ -473,7 +473,7 @@ class WorkTimesheetService extends BaseService
     }
 
     // tính lương
-    private function calculateSalary(WorkTimesheetDetail $detail)
+    public function calculateSalary(WorkTimesheetDetail $detail)
     {
         // max công bpdx
         $maxProposedWorkDays = $this->workTimesheetDetailService->getMaxProposedWorkDayInMonth($detail['user_id'], $detail['workTimeSheet']['month'], $detail['workTimeSheet']['year']);

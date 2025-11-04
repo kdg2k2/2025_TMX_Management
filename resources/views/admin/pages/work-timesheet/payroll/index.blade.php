@@ -3,6 +3,8 @@
     <x-breadcrumb :items="[['label' => 'Trang chủ', 'url' => route('dashboard')], ['label' => 'Bảng lương', 'url' => null]]">
         <x-button variant="success" size="sm" icon="ti ti-download" tooltip="Tải file đang hiển thị" class="me-1"
             onclick="downloadExcel()" />
+        <x-button variant="secondary" size="sm" icon="ti ti-database-edit"
+            tooltip="Cập nhật (Bản chỉnh sửa của file hệ thống hiển thị)" class="me-1" onclick="openModalUpdate()" />
     </x-breadcrumb>
 
     <div class="row mb-2">
@@ -28,6 +30,39 @@
             </div>
         </div>
     </div>
+@endsection
+@section('modals')
+    <x-modal id="modal-update" title="Tải lên bản cập nhật bảng lương tháng: {{ $currentMonth }}/{{ $currentYear }}"
+        size="md" method="patch" nested="true" :action="route('api.payroll.update')">
+        <x-slot:body>
+            <span class="text-danger">
+                Lưu ý, hệ thống chỉ cho phép cập nhật tại sheet "Đánh giá ABC" ở nội dung của các cột:
+                <ul class="m-0">
+                    <li>
+                        "Các cột" trừ tiêu chí
+                    </li>
+                    <li>
+                        "Các cột" số lượng tiêu chí
+                    </li>
+                    <li>
+                        Tổng tiền
+                    </li>
+                </ul>
+            </span>
+            <input class="form-control" type="hidden" name="month" value="{{ $currentMonth }}" required>
+            <input class="form-control" type="hidden" name="year" value="{{ $currentYear }}" required>
+            <div class="my-1">
+                <label>
+                    File bảng lương (.xlsx)
+                </label>
+                <input class="form-control" type="file" name="file" required accept=".xlsx">
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
+            <x-button-submit />
+        </x-slot:footer>
+    </x-modal>
 @endsection
 @section('scripts')
     <script>

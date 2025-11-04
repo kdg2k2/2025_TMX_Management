@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\WorkTimesheet;
+use Exception;
 
 class PayrollService extends BaseService
 {
@@ -16,6 +17,141 @@ class PayrollService extends BaseService
     public function baseIndexData()
     {
         return app(WorkTimesheetService::class)->baseIndexData();
+    }
+
+    public function update(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $month = $request['month'];
+            $year = $request['year'];
+
+            // Validate đã có xuất lưới và bảng lương
+            $workTimesheetService = app(WorkTimesheetService::class);
+            $workTimesheet = $workTimesheetService->findByMonthYear($month, $year);
+
+            if (!$workTimesheet)
+                throw new Exception("Chưa upload xuất lưới tháng {$month}/{$year}");
+
+            if (!$workTimesheet['payroll_path'])
+                throw new Exception("Chưa có bảng lương tháng {$month}/{$year}");
+
+            // Đọc file Excel
+            $excelData = $this->excelService->readExcel($request['file']);
+
+            // Validate đúng file gốc (có đủ 6 sheets)
+            $requiredSheets = ['Bank', 'Lương Cơ Hữu', 'Lương CTV', 'Thêm Giờ Cơ Hữu', 'Tiêu Chí ABC', 'Tổng Thu Nhập'];
+            foreach ($requiredSheets as $sheetName) {
+                if (!isset($excelData[$sheetName])) {
+                    throw new Exception("File không đúng định dạng! Thiếu sheet: {$sheetName}");
+                }
+            }
+
+            // Parse sheet "Tiêu Chí ABC"
+            $tieuChiData = $this->parseTieuChiABCSheet($excelData['Tiêu Chí ABC']);
+
+            // Load details để validate và update
+            $workTimesheet->load('details');
+            $detailsMap = $workTimesheet->details->keyBy('name');
+
+            $errors = [];
+
+            foreach ($tieuChiData as $data) {
+                $name = $data['hoten'];
+
+                // Validate user tồn tại
+                if (!isset($detailsMap[$name])) {
+                    $errors[] = "Không tìm thấy nhân viên: {$name}";
+                    continue;
+                }
+
+                $detail = $detailsMap[$name];
+
+                // Validate số tiền tổng
+                $expectedTotal = ($data['tru_dg_cv'] ?? 0) + ($data['tru_dg_noiquy'] ?? 0) + ($data['tru_dg_daotao'] ?? 0);
+                if ($data['tong'] != $expectedTotal) {
+                    $errors[] = "Sai tổng tiền trừ cho {$name}: Tính được {$expectedTotal} nhưng tổng là {$data['tong']}";
+                    continue;
+                }
+
+                // Update TẤT CẢ các cột từ 4-12
+                $detail->update([
+                    'job_deduction_amount' => $data['tru_dg_cv'],
+                    'rule_b_count' => $data['noiquy_b'],
+                    'rule_c_count' => $data['noiquy_c'],
+                    'rule_d_count' => $data['noiquy_d'],
+                    'rule_deduction_amount' => $data['tru_dg_noiquy'],
+                    'training_b_count' => $data['training_b_count'],
+                    'training_c_count' => $data['training_c_count'],
+                    'training_deduction_amount' => $data['tru_dg_daotao'],
+                    'deduction_amount' => $data['tong'],
+                ]);
+
+                // tính lương
+                $workTimesheetService->calculateSalary($detail);
+            }
+
+            if (!empty($errors)) {
+                throw new Exception("Có lỗi khi cập nhật:\n" . implode("\n", $errors));
+            }
+
+            // Tạo lại file Excel bảng lương
+            $newFilePath = $this->renderExcel($workTimesheet);
+
+            // Cập nhật path mới
+            $workTimesheet->update(['payroll_path' => $newFilePath]);
+        }, true);
+    }
+
+    /**
+     * Parse sheet "Tiêu Chí ABC" - Lấy tất cả cột từ 4-12
+     */
+    private function parseTieuChiABCSheet(array $sheetData): array
+    {
+        $result = [];
+        $headerRowCount = 2;
+
+        for ($i = $headerRowCount; $i < count($sheetData); $i++) {
+            $row = $sheetData[$i];
+
+            if (empty($row[1]))
+                continue;
+
+            $name = trim($row[1]);
+
+            // Lấy TẤT CẢ cột từ 4-12
+            // 0: TT
+            // 1: Họ tên
+            // 2: Mức tính tiêu chí
+            // 3: Đánh giá công việc
+            // 4: Trừ tiêu chí (đánh giá CV) ✅
+            // 5: Tiêu chí nội quy B ✅
+            // 6: Tiêu chí nội quy C ✅
+            // 7: Tiêu chí nội quy D ✅
+            // 8: Trừ tiêu chí (nội quy) ✅
+            // 9: Tiêu chí đào tạo B ✅
+            // 10: Tiêu chí đào tạo C ✅
+            // 11: Trừ tiêu chí (đào tạo) ✅
+            // 12: Tổng ✅
+
+            $result[] = [
+                'hoten' => $name,
+                'tru_dg_cv' => isset($row[4]) ? (int) str_replace(',', '', $row[4]) : 0,
+                'noiquy_b' => isset($row[5]) ? (int) str_replace(',', '', $row[5]) : 0,
+                'noiquy_c' => isset($row[6]) ? (int) str_replace(',', '', $row[6]) : 0,
+                'noiquy_d' => isset($row[7]) ? (int) str_replace(',', '', $row[7]) : 0,
+                'tru_dg_noiquy' => isset($row[8]) ? (int) str_replace(',', '', $row[8]) : 0,
+                'training_b_count' => isset($row[9]) ? (int) str_replace(',', '', $row[9]) : 0,
+                'training_c_count' => isset($row[10]) ? (int) str_replace(',', '', $row[10]) : 0,
+                'tru_dg_daotao' => isset($row[11]) ? (int) str_replace(',', '', $row[11]) : 0,
+                'tong' => isset($row[12]) ? (int) str_replace(',', '', $row[12]) : 0,
+            ];
+        }
+
+        if (empty($result)) {
+            throw new Exception('Sheet "Tiêu Chí ABC" không có dữ liệu!');
+        }
+
+        return $result;
     }
 
     public function renderExcel(WorkTimesheet $record)
