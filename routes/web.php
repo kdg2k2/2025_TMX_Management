@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\PersonnelFileTypeController;
 use App\Http\Controllers\Admin\PersonnelUnitController;
 use App\Http\Controllers\Admin\ProofContractController;
 use App\Http\Controllers\Admin\SoftwareOwnershipController;
+use App\Http\Controllers\Admin\TaskScheduleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserSubEmailController;
 use App\Http\Controllers\Admin\UserTimeTableController;
@@ -252,5 +253,10 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::prefix('payroll')->controller(PayrollController::class)->group(function () {
             Route::get('index', 'index')->name('payroll.index');
         });
+    });
+
+    Route::prefix('task-schedule')->controller(TaskScheduleController::class)->group(function () {
+        Route::get('index', 'index')->name('task-schedule.index');
+        Route::get('edit', 'edit')->name('task-schedule.edit');
     });
 });

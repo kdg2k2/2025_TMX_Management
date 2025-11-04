@@ -19,7 +19,7 @@ class RunTaskSchedules extends Command
 
         foreach ($schedules as $schedule) {
             $this->info("Running schedule: {$schedule->name}");
-            $service->run($schedule);
+            $service->run($schedule->code);
         }
 
         $this->info("Completed running {$schedules->count()} schedules");

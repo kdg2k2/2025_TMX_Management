@@ -310,6 +310,14 @@
                         </span>
                     </a>
                 </li>
+                <li class="slide">
+                    <a href="{{ route('task-schedule.index') }}" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-calendar-clock"></i>
+                        <span class="side-menu__label">
+                            Mail tự động
+                        </span>
+                    </a>
+                </li>
             </ul>
 
             <div class="slide-right" id="slide-right">

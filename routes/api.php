@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\PersonnelFileTypeController;
 use App\Http\Controllers\Api\PersonnelUnitController;
 use App\Http\Controllers\Api\ProofContractController;
 use App\Http\Controllers\Api\SoftwareOwnershipController;
+use App\Http\Controllers\Api\TaskScheduleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserSubEmailController;
 use App\Http\Controllers\Api\UserTimeTableController;
@@ -314,5 +315,11 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::prefix('payroll')->controller(PayrollController::class)->group(function () {
             Route::get('data', 'data')->name('api.payroll.data');
         });
+    });
+
+    Route::prefix('task-schedule')->controller(TaskScheduleController::class)->group(function(){
+        Route::get('list', 'list')->name('api.task-schedule.list');
+        Route::patch('update', 'update')->name('api.task-schedule.update');
+        Route::post('run', 'run')->name('api.task-schedule.run');
     });
 });

@@ -6,7 +6,6 @@ use App\Models\TaskSchedule;
 use App\Repositories\TaskScheduleRepository;
 use Carbon\Carbon;
 use Cron\CronExpression;
-use Exception;
 
 class TaskScheduleService extends BaseService
 {
@@ -16,27 +15,45 @@ class TaskScheduleService extends BaseService
         $this->repository = app(TaskScheduleRepository::class);
     }
 
-    public function store(array $request)
+    public function formatRecord(array $array)
     {
-        return $this->tryThrow(function () use ($request) {
-            $request['next_run_at'] = $this->calculateNextRun($request['cron_expression']);
-            $userIds = $request['user_ids'];
-            unset($request['user_ids']);
+        $array = parent::formatRecord($array);
+        $array['frequency'] = $this->getFrequency($array['frequency']);
+        if (isset($array['last_run_at']))
+            $array['last_run_at'] = $this->formatDateTimeForPreview($array['last_run_at']);
+        if (isset($array['next_run_at']))
+            $array['next_run_at'] = $this->formatDateTimeForPreview($array['next_run_at']);
+        return $array;
+    }
 
-            $data = $this->repository->create($request);
-            $data->users()->attach($userIds);
+    public function getBaseUpdateView(int $id)
+    {
+        return [
+            'data' => $this->repository->findById($id),
+            'frequency' => $this->getFrequency(),
+            'users' => $this->userService->list([
+                'load_relations' => false,
+                'columns' => ['id', 'name'],
+            ]),
+        ];
+    }
 
-            return $data->fresh();
-        }, true);
+    public function getFrequency($key = null)
+    {
+        return $this->tryThrow(fn() => $this->repository->getFrequency($key));
     }
 
     public function update(array $request)
     {
         return $this->tryThrow(function () use ($request) {
             $request['content'] = str_replace(['<br>', '<br/>', '<br />'], "\n", $request['content']);
-            $request['next_run_at'] = $this->calculateNextRun($request['cron_expression']);
-            $userIds = $request['user_ids'];
-            unset($request['user_ids']);
+            if (isset($request['next_run_at']) && $request['next_run_at']) {
+                $request['next_run_at'] = Carbon::parse($request['next_run_at']);
+            } else {
+                $request['next_run_at'] = $this->calculateNextRun($request['cron_expression']);
+            }
+            $userIds = $request['users'];
+            unset($request['users']);
 
             $data = $this->repository->update($request);
             $data->users()->sync($userIds);
@@ -60,12 +77,12 @@ class TaskScheduleService extends BaseService
     public function run(string $code)
     {
         return $this->tryThrow(function () use ($code) {
-            $schedule = $this->findByKey($code, 'code', false, false);
+            $schedule = $this->findByKey($code, 'code', true, false);
 
-            if (!$schedule->is_active)
+            if (!$schedule || !isset($schedule->is_active))
                 return;
 
-            // Lấy user_ids từ relation
+            // Lấy users từ relation
             $userIds = $schedule->users->pluck('id')->toArray();
 
             // Lấy tất cả emails (bao gồm cả sub_emails) qua UserService
@@ -108,9 +125,9 @@ class TaskScheduleService extends BaseService
             case 'PAYROLL_REPORT':
                 app(WorkTimesheetService::class)->emailSchedule($schedule['is_active'], $schedule['code'], $schedule['subject'] ?? $schedule['name'], $flatEmails, $emailData);
                 break;
-
             default:
-                throw new Exception('Không xác dịnh được nội dung task cần chạy');
+                $this->sendMail($schedule['subject'] ?? $schedule['name'], $flatEmails = [], $emailData);
+                break;
         }
     }
 }

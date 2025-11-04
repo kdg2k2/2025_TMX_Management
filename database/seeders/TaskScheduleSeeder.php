@@ -26,11 +26,11 @@ class TaskScheduleSeeder extends Seeder
             [
                 'code' => 'WORK_TIMESHEET_REPORT',
                 'name' => 'Tự động gửi bảng xuất lưới',
-                'description' => 'Tự đồng gửi khi khi upload xuất lưới',
+                'description' => 'Tự động gửi khi khi upload xuất lưới và chạy lúc 8h sáng ngày 7 hàng tháng',
                 'subject' => 'Bảng xuất lưới chấm công máy',
-                'content' => "Kính gửi quý Thầy/Cô bảng tổng hợp chấm công tháng vừa qua. Đề nghị quý Thầy/Cô tổng hợp và đẩy dữ liệu công lên hệ thống để hệ thống tính lương trước mùng 6.",
+                'content' => 'Kính gửi quý Thầy/Cô bảng tổng hợp chấm công tháng vừa qua. Đề nghị quý Thầy/Cô tổng hợp và đẩy dữ liệu công lên hệ thống để hệ thống tính lương trước mùng 6.',
                 'frequency' => 'monthly',
-                'cron_expression' => '0 8 7 * *',  // 8h sáng ngày 7 hàng tháng
+                'cron_expression' => '0 8 7 * *',
                 'is_active' => false,
                 'user_ids' => $baseUserIds,
             ],
@@ -38,9 +38,10 @@ class TaskScheduleSeeder extends Seeder
                 'code' => 'PAYROLL_REPORT',
                 'name' => 'Tự động gửi bảng lương',
                 'subject' => 'Dữ liệu bảng lương',
-                'content' => "Kính gửi anh/chị dữ liệu tổng hợp bảng lương tháng vừa qua. (Chi tiết trong file đính kèm)",
+                'content' => 'Kính gửi anh/chị dữ liệu tổng hợp bảng lương tháng vừa qua. (Chi tiết trong file đính kèm)',
                 'frequency' => 'monthly',
-                'cron_expression' => '0 8 9 * *',  // 8h sáng ngày 9 hàng tháng
+                'cron_expression' => '0 8 9 * *',
+                'description' => 'Chạy lúc 8h sáng ngày 9 hàng tháng',
                 'is_active' => true,
                 'user_ids' => $baseUserIds,
             ],
@@ -50,7 +51,8 @@ class TaskScheduleSeeder extends Seeder
                 'subject' => 'Thông báo xuất lưới công chấm máy và công ngoài giờ',
                 'content' => "Dear quý Thầy/Cô, \n Hôm nay là đến thời gian các phòng môn tổng hợp công làm thêm tháng vừa qua của các thành viên nên đề nghị các phòng thực hiện các công việc sau trước ngày 7 tháng này: \n .Phòng tổng hợp xuất lưới chấm công máy và đẩy lên hệ thống \n .Các phòng  tải biểu mẫu chấm công ngoài giờ, nhập đầy đủ thông tin chấm công và đẩy lên hệ thống khi nhận được bảng xuất lưới từ hệ thống.",
                 'frequency' => 'monthly',
-                'cron_expression' => '0 8 1 * *',  // 8h sáng ngày 1 hàng tháng
+                'cron_expression' => '0 8 1 * *',
+                'description' => 'Chạy lúc 8h sáng ngày 1 hàng tháng',
                 'is_active' => true,
                 'user_ids' => $baseUserIds,
             ],
@@ -60,7 +62,8 @@ class TaskScheduleSeeder extends Seeder
                 'subject' => null,
                 'content' => null,
                 'frequency' => 'monthly',
-                'cron_expression' => '0 8 6 * *',  // 8h sáng ngày 6 hàng tháng
+                'cron_expression' => '0 8 6 * *',
+                'description' => 'Chạy lúc 8h sáng ngày 6 hàng tháng',
                 'is_active' => true,
                 'user_ids' => $managerUserIds,
             ],
@@ -70,7 +73,8 @@ class TaskScheduleSeeder extends Seeder
                 'subject' => 'Thông báo xin ý kiến đánh giá, xếp loại ABC của các thành viên trong công ty',
                 'content' => "Dear quý Thầy/Cô; \n Hiện tại hệ thống đã tổng hợp xếp loại, đánh giá của các phòng. Đề nghị quý Thầy/Cô góp ý để hệ thống hoàn thiện bảng chấm công tháng vừa qua.",
                 'frequency' => 'monthly',
-                'cron_expression' => '0 8 7 * *',  // 8h sáng ngày 7 hàng tháng
+                'cron_expression' => '0 8 7 * *',
+                'description' => 'Chạy lúc 8h sáng ngày 7 hàng tháng',
                 'is_active' => true,
                 'user_ids' => $managerUserIds,
             ],

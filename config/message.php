@@ -7,5 +7,5 @@ return [
     'accept' => 'Phê duyệt thành công',
     'reject' => 'Từ chối thành công',
     'render_file' => 'Tạo file thành công',
-    'default' => 'Lưu thao tác thành công',
+    'default' => 'Thao tác thành công',
 ];
