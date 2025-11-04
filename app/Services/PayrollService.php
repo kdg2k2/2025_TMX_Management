@@ -18,11 +18,6 @@ class PayrollService extends BaseService
         return app(WorkTimesheetService::class)->baseIndexData();
     }
 
-    public function update(array $request)
-    {
-        return $this->tryThrow(function () use ($request) {});
-    }
-
     public function renderExcel(WorkTimesheet $record)
     {
         return $this->tryThrow(function () use ($record) {

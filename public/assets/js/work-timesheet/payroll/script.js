@@ -3,8 +3,6 @@ const month = document.getElementById("month");
 const iframeExcelContainer = document.getElementById("iframe-excel-container");
 const iframeExcel = document.getElementById("iframe-excel");
 const noneDataContainer = document.getElementById("none-data-container");
-const modalUpdate = document.getElementById("modal-update");
-const modalUpdateForm = modalUpdate.querySelector("form");
 var excelUrl = "";
 
 const loadAndShowData = async () => {
@@ -37,21 +35,10 @@ const downloadExcel = () => {
     downloadFileHandler(excelUrl);
 };
 
-const openModalUpdate = (btn) => {
-    resetFormAfterSubmit(modalUpdateForm);
-    showModal(modalUpdate);
-};
-
 const afterSubmitFromHandle = (form) => {
     hideModal(form);
     loadAndShowData();
 };
-
-modalUpdateForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalUpdateForm, () => {
-        afterSubmitFromHandle(modalUpdate);
-    });
-});
 
 [year, month].forEach((item) => {
     item.addEventListener("change", loadAndShowData);
