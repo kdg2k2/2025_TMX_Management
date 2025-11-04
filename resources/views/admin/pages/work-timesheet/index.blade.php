@@ -79,6 +79,20 @@
     <x-modal id="modal-update" title="Tải lên bản cập nhật xuất lưới tháng: {{ $currentMonth }}/{{ $currentYear }}"
         size="md" method="patch" nested="true" :action="route('api.work-timesheet.update')">
         <x-slot:body>
+            <span class="text-danger">
+                Lưu ý, hệ thống chỉ cho phép cập nhật nội dung của các cột:
+                <ul class="m-0">
+                    <li>
+                        Công tác (Không đăng ký Hệ thống)
+                    </li>
+                    <li>
+                        Hội đồng đánh giá
+                    </li>
+                    <li>
+                        Ghi chú
+                    </li>
+                </ul>
+            </span>
             <input class="form-control" type="hidden" name="month" value="{{ $currentMonth }}" required>
             <input class="form-control" type="hidden" name="year" value="{{ $currentYear }}" required>
             <div class="my-1">
