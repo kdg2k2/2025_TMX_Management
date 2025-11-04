@@ -22,9 +22,7 @@
 
     <div class="card custom-card">
         <div class="card-body">
-            <div id="iframe-excel-container" class="position-relative d-none">
-                <x-button id="download-btn" class="position-absolute end-0" variant="success" :outline="true"
-                    icon="ti ti-download" size="sm" tooltip="Tải"></x-button>
+            <div id="iframe-excel-container" class="d-none">
                 <iframe id="iframe-excel" frameborder="0" style="height: 65vh; width: 100%;"></iframe>
             </div>
             <div id="none-data-container" class="d-flex justify-content-center">
