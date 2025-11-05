@@ -2,29 +2,15 @@
 
 namespace App\Services;
 
-use App\Models\InternalMeetingMinute;
-use App\Repositories\InternalMeetingMinuteRepository;
+use App\Models\ShareholderMeetingMinute;
+use App\Repositories\ShareholderMeetingMinuteRepository;
 
-class InternalMeetingMinuteService extends BaseService
+class ShareholderMeetingMinuteService extends BaseService
 {
     public function __construct(
         private HandlerUploadFileService $handlerUploadFileService,
-        private DateService $dateService
     ) {
-        $this->repository = app(InternalMeetingMinuteRepository::class);
-    }
-
-    public function baseDataCreateEdit(int $id = null)
-    {
-        $res = [];
-        $year = date('Y');
-        if ($id) {
-            $res['data'] = $this->repository->findById($id);
-            $year = date('Y', strtotime($res['data']['meeting_date']));
-        }
-        $res['weeks'] = $this->dateService->getWeeksOfYear($year);
-
-        return $res;
+        $this->repository = app(ShareholderMeetingMinuteRepository::class);
     }
 
     public function store(array $request)
@@ -60,7 +46,7 @@ class InternalMeetingMinuteService extends BaseService
         return $extracted;
     }
 
-    private function handleFile(InternalMeetingMinute $data, array $extracted, bool $isUpdate = false)
+    private function handleFile(ShareholderMeetingMinute $data, array $extracted, bool $isUpdate = false)
     {
         if ($extracted['path']) {
             $oldFile = $isUpdate ? $data['path'] : null;

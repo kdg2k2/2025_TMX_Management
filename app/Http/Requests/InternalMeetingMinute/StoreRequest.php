@@ -32,7 +32,7 @@ class StoreRequest extends FormRequest
             ],
             'week' => 'required|integer',
             'main_content' => 'required|max:500',
-            'path' => 'nullable|mimes:pdf',
+            'path' => 'required|mimes:pdf',
         ];
     }
 }

@@ -35,6 +35,7 @@ use App\Http\Controllers\Api\PersonnelFileController;
 use App\Http\Controllers\Api\PersonnelFileTypeController;
 use App\Http\Controllers\Api\PersonnelUnitController;
 use App\Http\Controllers\Api\ProofContractController;
+use App\Http\Controllers\Api\ShareholderMeetingMinuteController;
 use App\Http\Controllers\Api\SoftwareOwnershipController;
 use App\Http\Controllers\Api\TaskScheduleController;
 use App\Http\Controllers\Api\UserController;
@@ -353,5 +354,11 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::get('list', 'list')->name('api.board-meeting-minute.list');
         Route::post('store', 'store')->name('api.board-meeting-minute.store');
         Route::patch('update', 'update')->name('api.board-meeting-minute.update');
+    });
+
+    Route::prefix('shareholder-meeting-minute')->controller(ShareholderMeetingMinuteController::class)->group(function () {
+        Route::get('list', 'list')->name('api.shareholder-meeting-minute.list');
+        Route::post('store', 'store')->name('api.shareholder-meeting-minute.store');
+        Route::patch('update', 'update')->name('api.shareholder-meeting-minute.update');
     });
 });

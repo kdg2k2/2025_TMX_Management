@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\BoardMeetingMinute;
+namespace App\Http\Requests\ShareholderMeetingMinute;
 
 use Illuminate\Foundation\Http\FormRequest;
 

@@ -9,6 +9,9 @@ class UpdateRequest extends StoreRequest
         return array_merge(
             parent::rules(),
             app(FindByIdRequest::class)->rules(),
+            [
+                'path' => 'nullable|mimes:pdf',
+            ]
         );
     }
 }

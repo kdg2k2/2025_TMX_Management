@@ -56,6 +56,12 @@ class BoardMeetingMinuteService extends BaseService
         }
     }
 
+    public function afterDelete($entity)
+    {
+        if ($entity['path'])
+            $this->handlerUploadFileService->removeFiles($entity['path']);
+    }
+
     public function formatRecord(array $array)
     {
         $array = parent::formatRecord($array);

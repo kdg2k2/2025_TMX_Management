@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\PersonnelFileController;
 use App\Http\Controllers\Admin\PersonnelFileTypeController;
 use App\Http\Controllers\Admin\PersonnelUnitController;
 use App\Http\Controllers\Admin\ProofContractController;
+use App\Http\Controllers\Admin\ShareholderMeetingMinuteController;
 use App\Http\Controllers\Admin\SoftwareOwnershipController;
 use App\Http\Controllers\Admin\TaskScheduleController;
 use App\Http\Controllers\Admin\UserController;
@@ -292,5 +293,12 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::get('create', 'create')->name('board-meeting-minute.create');
         Route::get('edit', 'edit')->name('board-meeting-minute.edit');
         Route::delete('delete', 'delete')->name('board-meeting-minute.delete');
+    });
+
+    Route::prefix('shareholder-meeting-minute')->controller(ShareholderMeetingMinuteController::class)->group(function () {
+        Route::get('index', 'index')->name('shareholder-meeting-minute.index');
+        Route::get('create', 'create')->name('shareholder-meeting-minute.create');
+        Route::get('edit', 'edit')->name('shareholder-meeting-minute.edit');
+        Route::delete('delete', 'delete')->name('shareholder-meeting-minute.delete');
     });
 });

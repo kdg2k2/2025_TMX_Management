@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\InternalMeetingMinute;
+namespace App\Http\Requests\ShareholderMeetingMinute;
 
 class UpdateRequest extends StoreRequest
 {
