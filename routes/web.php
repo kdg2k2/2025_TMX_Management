@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\EligibilityController;
 use App\Http\Controllers\Admin\EmploymentContractPersonnelController;
 use App\Http\Controllers\Admin\EmploymentContractPersonnelCustomFieldController;
 use App\Http\Controllers\Admin\GoogleDriveController;
+use App\Http\Controllers\Admin\InternalBulletinController;
 use App\Http\Controllers\Admin\InternalMeetingMinuteController;
 use App\Http\Controllers\Admin\LeaveRequestController;
 use App\Http\Controllers\Admin\PayrollController;
@@ -300,5 +301,12 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::get('create', 'create')->name('shareholder-meeting-minute.create');
         Route::get('edit', 'edit')->name('shareholder-meeting-minute.edit');
         Route::delete('delete', 'delete')->name('shareholder-meeting-minute.delete');
+    });
+
+    Route::prefix('internal-bulletin')->controller(InternalBulletinController::class)->group(function () {
+        Route::get('index', 'index')->name('internal-bulletin.index');
+        Route::get('create', 'create')->name('internal-bulletin.create');
+        Route::get('edit', 'edit')->name('internal-bulletin.edit');
+        Route::delete('delete', 'delete')->name('internal-bulletin.delete');
     });
 });

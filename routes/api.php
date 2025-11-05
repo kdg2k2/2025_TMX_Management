@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\EligibilityController;
 use App\Http\Controllers\Api\EmploymentContractPersonnelController;
 use App\Http\Controllers\Api\EmploymentContractPersonnelCustomFieldController;
+use App\Http\Controllers\Api\InternalBulletinController;
 use App\Http\Controllers\Api\InternalMeetingMinuteController;
 use App\Http\Controllers\Api\LeaveRequestController;
 use App\Http\Controllers\Api\PayrollController;
@@ -360,5 +361,11 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::get('list', 'list')->name('api.shareholder-meeting-minute.list');
         Route::post('store', 'store')->name('api.shareholder-meeting-minute.store');
         Route::patch('update', 'update')->name('api.shareholder-meeting-minute.update');
+    });
+
+    Route::prefix('internal-bulletin')->controller(InternalBulletinController::class)->group(function () {
+        Route::get('list', 'list')->name('api.internal-bulletin.list');
+        Route::post('store', 'store')->name('api.internal-bulletin.store');
+        Route::patch('update', 'update')->name('api.internal-bulletin.update');
     });
 });

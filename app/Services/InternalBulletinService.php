@@ -2,29 +2,15 @@
 
 namespace App\Services;
 
-use App\Models\InternalMeetingMinute;
-use App\Repositories\InternalMeetingMinuteRepository;
+use App\Models\InternalBulletin;
+use App\Repositories\InternalBulletinRepository;
 
-class InternalMeetingMinuteService extends BaseService
+class InternalBulletinService extends BaseService
 {
     public function __construct(
         private HandlerUploadFileService $handlerUploadFileService,
-        private DateService $dateService
     ) {
-        $this->repository = app(InternalMeetingMinuteRepository::class);
-    }
-
-    public function baseDataCreateEdit(int $id = null)
-    {
-        $res = [];
-        $year = date('Y');
-        if ($id) {
-            $res['data'] = $this->repository->findById($id);
-            $year = date('Y', strtotime($res['data']['meeting_day']));
-        }
-        $res['weeks'] = $this->dateService->getWeeksOfYear($year);
-
-        return $res;
+        $this->repository = app(InternalBulletinRepository::class);
     }
 
     public function store(array $request)
@@ -60,7 +46,7 @@ class InternalMeetingMinuteService extends BaseService
         return $extracted;
     }
 
-    private function handleFile(InternalMeetingMinute $data, array $extracted, bool $isUpdate = false)
+    private function handleFile(InternalBulletin $data, array $extracted, bool $isUpdate = false)
     {
         if ($extracted['path']) {
             $oldFile = $isUpdate ? $data['path'] : null;
@@ -68,6 +54,10 @@ class InternalMeetingMinuteService extends BaseService
                 'files', $oldFile);
             $data->save();
         }
+
+        $date = date('d/m/Y', strtotime($data['created_at']));
+        $subject = !$isUpdate ? "Bản tin mới $date" : "Cập nhật bản tin $date";
+        $this->sendMail($data, $subject);
     }
 
     public function afterDelete($entity)
@@ -79,10 +69,16 @@ class InternalMeetingMinuteService extends BaseService
     public function formatRecord(array $array)
     {
         $array = parent::formatRecord($array);
-        if (isset($array['meeting_day']))
-            $array['meeting_day'] = $this->formatDateForPreview($array['meeting_day']);
         if (isset($array['path']))
             $array['path'] = $this->getAssetUrl($array['path']);
         return $array;
+    }
+
+    private function sendMail(InternalBulletin $data, string $subject)
+    {
+        $files = isset($data['path']) ? [$this->handlerUploadFileService->getAbsolutePublicPath($data['path'])] : [];
+        dispatch(new \App\Jobs\SendMailJob('emails.internal-bulletin', $subject, app(UserService::class)->getAllEmails(), [
+            'data' => $this->formatRecord($data->toArray()),
+        ], $files));
     }
 }

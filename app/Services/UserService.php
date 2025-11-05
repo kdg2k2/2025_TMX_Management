@@ -175,16 +175,29 @@ class UserService extends BaseService
 
     public function getChiefAccountantUser()
     {
-        return $this->repository->getChiefAccountantUser();
+        return $this->tryThrow(fn() => $this->repository->getChiefAccountantUser());
     }
 
     public function getGeneralAccountingUser()
     {
-        return $this->repository->getGeneralAccountingUser();
+        return $this->tryThrow(fn() => $this->repository->getGeneralAccountingUser());
     }
 
     public function getManagertUser()
     {
-        return $this->repository->getManagertUser();
+        return $this->tryThrow(fn() => $this->repository->getManagertUser());
+    }
+
+    public function getAllEmails()
+    {
+        return $this->tryThrow(function () {
+            $userIds = Arr::flatten($this->repository->list([
+                'load_relations' => false,
+                'columns' => ['id'],
+                'is_retired' => false,
+                'is_banned' => false,
+            ])->toArray());
+            return $this->getEmails($userIds);
+        });
     }
 }
