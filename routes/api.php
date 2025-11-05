@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\EligibilityController;
 use App\Http\Controllers\Api\EmploymentContractPersonnelController;
 use App\Http\Controllers\Api\EmploymentContractPersonnelCustomFieldController;
+use App\Http\Controllers\Api\InternalMeetingMinuteController;
 use App\Http\Controllers\Api\LeaveRequestController;
 use App\Http\Controllers\Api\PayrollController;
 use App\Http\Controllers\Api\PersonnelController;
@@ -339,5 +340,11 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::post('store', 'store')->name('api.employment-contract-personnel.custom-field.store');
             Route::patch('update', 'update')->name('api.employment-contract-personnel.custom-field.update');
         });
+    });
+
+    Route::prefix('internal-meeting-minute')->controller(InternalMeetingMinuteController::class)->group(function () {
+        Route::get('list', 'list')->name('api.internal-meeting-minute.list');
+        Route::post('store', 'store')->name('api.internal-meeting-minute.store');
+        Route::patch('update', 'update')->name('api.internal-meeting-minute.update');
     });
 });

@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\EligibilityController;
 use App\Http\Controllers\Admin\EmploymentContractPersonnelController;
 use App\Http\Controllers\Admin\EmploymentContractPersonnelCustomFieldController;
 use App\Http\Controllers\Admin\GoogleDriveController;
+use App\Http\Controllers\Admin\InternalMeetingMinuteController;
 use App\Http\Controllers\Admin\LeaveRequestController;
 use App\Http\Controllers\Admin\PayrollController;
 use App\Http\Controllers\Admin\PersonnelController;
@@ -276,5 +277,12 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::get('edit', 'edit')->name('employment-contract-personnel.custom-field.edit');
             Route::delete('delete', 'delete')->name('employment-contract-personnel.custom-field.delete');
         });
+    });
+
+    Route::prefix('internal-meeting-minute')->controller(InternalMeetingMinuteController::class)->group(function () {
+        Route::get('index', 'index')->name('internal-meeting-minute.index');
+        Route::get('create', 'create')->name('internal-meeting-minute.create');
+        Route::get('edit', 'edit')->name('internal-meeting-minute.edit');
+        Route::delete('delete', 'delete')->name('internal-meeting-minute.delete');
     });
 });

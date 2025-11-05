@@ -292,6 +292,46 @@
                     <a href="javascript:void(0);" class="side-menu__item">
                         <i class="side-menu__icon ti ti-user-check"></i>
                         <span class="side-menu__label">
+                            Biên bản họp - Bảng tin
+                        </span>
+                        <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="javascript:void(0)">
+                                Biên bản họp - Bảng tin
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="{{ route('internal-meeting-minute.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon ti ti-id-badge-2"></i>
+                                Giao ban
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="{javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon ti ti-id-badge-2"></i>
+                                Hội đồng quản trị
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon ti ti-id-badge-2"></i>
+                                Cổ đông
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon ti ti-id-badge-2"></i>
+                                Bảng tin
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-user-check"></i>
+                        <span class="side-menu__label">
                             HS Lao Động/Bổ Nhiệm
                         </span>
                         <i class="ri-arrow-right-s-line side-menu__angle"></i>
@@ -310,7 +350,8 @@
                             </a>
                             <ul class="slide-menu child2">
                                 <li class="slide">
-                                    <a href="{{ route('employment-contract-personnel.custom-field.index') }}" class="side-menu__item">
+                                    <a href="{{ route('employment-contract-personnel.custom-field.index') }}"
+                                        class="side-menu__item">
                                         <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
                                         Cột thông tin nhân sự bổ sung
                                     </a>
