@@ -309,7 +309,7 @@
                             </a>
                         </li>
                         <li class="slide">
-                            <a href="{javascript:void(0);" class="side-menu__item">
+                            <a href="{{ route('board-meeting-minute.index') }}" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon ti ti-id-badge-2"></i>
                                 Hội đồng quản trị
                             </a>

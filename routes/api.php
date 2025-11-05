@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\BiddingImplementationPersonnelController;
 use App\Http\Controllers\Api\BiddingOrtherFileController;
 use App\Http\Controllers\Api\BiddingProofContractController;
 use App\Http\Controllers\Api\BiddingSoftwareOwnershipController;
+use App\Http\Controllers\Api\BoardMeetingMinuteController;
 use App\Http\Controllers\Api\BuildSoftwareController;
 use App\Http\Controllers\Api\ContractAdvancePaymentController;
 use App\Http\Controllers\Api\ContractAppendixController;
@@ -346,5 +347,11 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::get('list', 'list')->name('api.internal-meeting-minute.list');
         Route::post('store', 'store')->name('api.internal-meeting-minute.store');
         Route::patch('update', 'update')->name('api.internal-meeting-minute.update');
+    });
+
+    Route::prefix('board-meeting-minute')->controller(BoardMeetingMinuteController::class)->group(function () {
+        Route::get('list', 'list')->name('api.board-meeting-minute.list');
+        Route::post('store', 'store')->name('api.board-meeting-minute.store');
+        Route::patch('update', 'update')->name('api.board-meeting-minute.update');
     });
 });

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BiddingController;
+use App\Http\Controllers\Admin\BoardMeetingMinuteController;
 use App\Http\Controllers\Admin\BuildSoftwareController;
 use App\Http\Controllers\Admin\ContractAdvancePaymentController;
 use App\Http\Controllers\Admin\ContractAppendixController;
@@ -284,5 +285,12 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::get('create', 'create')->name('internal-meeting-minute.create');
         Route::get('edit', 'edit')->name('internal-meeting-minute.edit');
         Route::delete('delete', 'delete')->name('internal-meeting-minute.delete');
+    });
+
+    Route::prefix('board-meeting-minute')->controller(BoardMeetingMinuteController::class)->group(function () {
+        Route::get('index', 'index')->name('board-meeting-minute.index');
+        Route::get('create', 'create')->name('board-meeting-minute.create');
+        Route::get('edit', 'edit')->name('board-meeting-minute.edit');
+        Route::delete('delete', 'delete')->name('board-meeting-minute.delete');
     });
 });
