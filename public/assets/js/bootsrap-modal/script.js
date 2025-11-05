@@ -1,5 +1,5 @@
 const createModal = (element) => {
-    return new bootstrap.Modal(element, {
+    return bootstrap.Modal.getOrCreateInstance(element, {
         backdrop: "static",
         keyboard: false,
     });
@@ -7,10 +7,10 @@ const createModal = (element) => {
 
 const showModal = (element) => {
     const modal = createModal(element);
-    modal.show();
+    modal?.show();
 };
 
 const hideModal = (element) => {
-    const modal = bootstrap.Modal.getOrCreateInstance(element);
-    modal.hide();
+    const modal = bootstrap.Modal.getInstance(element);
+    modal?.hide();
 };

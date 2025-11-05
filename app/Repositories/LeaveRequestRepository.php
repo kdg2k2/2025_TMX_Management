@@ -31,7 +31,7 @@ class LeaveRequestRepository extends BaseRepository
         return $this->model->getAdjustApprovalStatus($key);
     }
 
-    public function getSearchConfig(): array
+    protected function getSearchConfig(): array
     {
         return [
             'text' => [

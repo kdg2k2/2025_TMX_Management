@@ -56,4 +56,9 @@ class ContractRepository extends BaseRepository
     {
         return $this->model->find($id)->type_id == 2;
     }
+
+    public function getYears()
+    {
+        return $this->model->pluck('year')->unique()->sortByDesc('year')->toArray();
+    }
 }

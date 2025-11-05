@@ -44,7 +44,7 @@ class UserService extends BaseService
     public function changePassword($password)
     {
         return $this->tryThrow(function () use ($password) {
-            $user = $this->repository->findById($this->getGuard()->user()->id);
+            $user = $this->repository->findById($this->getUserId());
             $user->password = bcrypt($password);
             $user->save();
             return true;

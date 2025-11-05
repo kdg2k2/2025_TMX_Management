@@ -292,6 +292,73 @@
                     <a href="javascript:void(0);" class="side-menu__item">
                         <i class="side-menu__icon ti ti-user-check"></i>
                         <span class="side-menu__label">
+                            HSNN/HSCM
+                        </span>
+                        <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="javascript:void(0)">
+                                HSNN/HSCM
+                            </a>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon fs-6 ti ti-settings-2"></i>
+                                HS ngoại nghiệp
+                                <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="{{ route('dossier.type.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Kho loại hồ sơ
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('dossier.plan.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Lập kế hoạch
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="javascript:void(0)" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Bàn giao
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="javascript:void(0)" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Đăng ký sử dụng
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="javascript:void(0)" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Phê duyệt biên bản
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="javascript:void(0)" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Tổng hợp chứng từ
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide">
+                            <a href="{{ route('unit.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon ti ti-id-badge-2"></i>
+                                Quản lý đơn vị
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-user-check"></i>
+                        <span class="side-menu__label">
                             Biên bản họp - Bảng tin
                         </span>
                         <i class="ri-arrow-right-s-line side-menu__angle"></i>

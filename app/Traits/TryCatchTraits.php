@@ -18,7 +18,7 @@ trait TryCatchTraits
         $result = $this->catchError($callback, $transaction);
 
         if (!$result['success']) {
-            // dd($result);
+            dd($result);
             // Recreate và throw lại exception dựa trên exception_type
             $this->throwException($result);
         }

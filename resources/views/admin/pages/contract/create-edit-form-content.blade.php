@@ -111,7 +111,7 @@
                 <label>
                     Mục tiêu (tiếng việt)
                 </label>
-                <input class="form-control" type="text" name="target_vi">
+                <textarea name="target_vi" class="form-control" rows="1"></textarea>
             </div>
         </div>
         <div class="my-1 col-md-4">

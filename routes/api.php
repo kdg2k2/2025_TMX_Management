@@ -23,6 +23,12 @@ use App\Http\Controllers\Api\ContractScanFileController;
 use App\Http\Controllers\Api\ContractScanFileTypeController;
 use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
+use App\Http\Controllers\Api\DossierHandoverController;
+use App\Http\Controllers\Api\DossierMinuteController;
+use App\Http\Controllers\Api\DossierPlanController;
+use App\Http\Controllers\Api\DossierSyntheticController;
+use App\Http\Controllers\Api\DossierTypeController;
+use App\Http\Controllers\Api\DossierUsageRegisterController;
 use App\Http\Controllers\Api\EligibilityController;
 use App\Http\Controllers\Api\EmploymentContractPersonnelController;
 use App\Http\Controllers\Api\EmploymentContractPersonnelCustomFieldController;
@@ -39,6 +45,7 @@ use App\Http\Controllers\Api\ProofContractController;
 use App\Http\Controllers\Api\ShareholderMeetingMinuteController;
 use App\Http\Controllers\Api\SoftwareOwnershipController;
 use App\Http\Controllers\Api\TaskScheduleController;
+use App\Http\Controllers\Api\UnitController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserSubEmailController;
 use App\Http\Controllers\Api\UserTimeTableController;
@@ -367,5 +374,55 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::get('list', 'list')->name('api.internal-bulletin.list');
         Route::post('store', 'store')->name('api.internal-bulletin.store');
         Route::patch('update', 'update')->name('api.internal-bulletin.update');
+    });
+
+    // Các đơn vị thuộc tỉnh
+    Route::prefix('unit')->controller(UnitController::class)->group(function () {
+        Route::get('list', 'list')->name('api.unit.list');
+        Route::post('store', 'store')->name('api.unit.store');
+        Route::patch('update', 'update')->name('api.unit.update');
+    });
+
+    // hồ sơ ngoại nghiệp
+    Route::prefix('dossier')->group(function () {
+        Route::prefix('type')->controller(DossierTypeController::class)->group(function () {
+            Route::get('list', 'list')->name('api.dossier.type.list');
+            Route::post('store', 'store')->name('api.dossier.type.store');
+            Route::patch('update', 'update')->name('api.dossier.type.update');
+        });
+
+        Route::prefix('plan')->controller(DossierPlanController::class)->group(function () {
+            Route::get('find-by-id-contract-and-year', 'findByIdContractAndYear')->name('dossier.plan.findByIdContractAndYear');
+            Route::get('create-temp-excel', 'createTempExcel')->name('dossier.plan.createTempExcel');
+            Route::post('upload-excel', 'uploadExcel')->name('dossier.plan.uploadExcel');
+            Route::post('create-minute', 'createMinute')->name('dossier.plan.createMinute');
+            Route::post('send-approve-request', 'sendApproveRequest')->name('dossier.plan.sendApproveRequest');
+        });
+
+        Route::prefix('handover')->controller(DossierHandoverController::class)->group(function () {
+            Route::get('find-by-id-contract-and-year', 'findByIdContractAndYear')->name('dossier.handover.findByIdContractAndYear');
+            Route::get('create-temp-excel', 'createTempExcel')->name('dossier.handover.createTempExcel');
+            Route::post('upload-excel', 'uploadExcel')->name('dossier.handover.uploadExcel');
+            Route::get('create-minute', 'createMinute')->name('dossier.handover.createMinute');
+            Route::post('send-approve-request', 'sendApproveRequest')->name('dossier.handover.sendApproveRequest');
+        });
+
+        Route::prefix('usage_register')->controller(DossierUsageRegisterController::class)->group(function () {
+            Route::get('find-by-id-contract-and-year', 'findByIdContractAndYear')->name('dossier.usage_register.findByIdContractAndYear');
+            Route::get('create-temp-excel', 'createTempExcel')->name('dossier.usage_register.createTempExcel');
+            Route::post('upload-excel', 'uploadExcel')->name('dossier.usage_register.uploadExcel');
+            Route::get('create-minute', 'createMinute')->name('dossier.usage_register.createMinute');
+            Route::post('send-approve-request', 'sendApproveRequest')->name('dossier.usage_register.sendApproveRequest');
+        });
+
+        Route::prefix('minute')->controller(DossierMinuteController::class)->group(function () {
+            Route::get('list', 'list')->name('dossier.minute.list');
+            Route::post('accept', 'accept')->name('dossier.minute.accept');
+            Route::post('deny', 'deny')->name('dossier.minute.deny');
+        });
+
+        Route::prefix('synthetic')->controller(DossierSyntheticController::class)->group(function () {
+            Route::get('create-synthetic-file', 'createSyntheticFile')->name('dossier.synthetic.create-synthetic-file');
+        });
     });
 });

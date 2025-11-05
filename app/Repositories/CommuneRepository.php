@@ -9,6 +9,9 @@ class CommuneRepository extends BaseRepository
     public function __construct()
     {
         $this->model = new Commune();
+        $this->relations = [
+            'province'
+        ];
     }
 
     public function findByCode(int $code)

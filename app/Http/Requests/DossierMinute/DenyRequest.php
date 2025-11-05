@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Http\Requests\DossierMinute;
+
+
+class DenyRequest extends FindByIdRequest
+{
+    public function rules()
+    {
+        $rules = parent::rules();
+        $rules['rejection_note'] = 'nullable|string|max:255';
+        return $rules;
+    }
+}

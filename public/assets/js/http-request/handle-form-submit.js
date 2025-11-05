@@ -12,7 +12,7 @@ const handleSubmitForm = async (
     const action = form.getAttribute("action")?.toLowerCase();
 
     try {
-        btnSubmit?.setAttribute("disabled", true);
+        setButtonLoading(btnSubmit, true);
 
         const res = await http[method](action, formData);
         if (resetForm && method === "post") {
@@ -26,7 +26,18 @@ const handleSubmitForm = async (
         if (typeof callbackAfterSubmit == "function") callbackAfterSubmit();
     } catch (error) {
     } finally {
-        btnSubmit?.removeAttribute("disabled");
+        setButtonLoading(btnSubmit, false);
+    }
+};
+
+const setButtonLoading = (button, showOrNot, loadingText = "Đang xử lý...") => {
+    if (showOrNot) {
+        button.disabled = true;
+        button.dataset.originalText = button.innerHTML;
+        button.innerHTML = `${loadingText}`;
+    } else {
+        button.disabled = false;
+        button.innerHTML = button.dataset.originalText || button.innerHTML;
     }
 };
 

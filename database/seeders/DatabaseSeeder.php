@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             ContractScanFileTypeSeeder::class,
             UserSeeder::class,
             TaskScheduleSeeder::class,
+            SystemConfigSeeder::class,
         ]);
 
         if ($this->isLocal())

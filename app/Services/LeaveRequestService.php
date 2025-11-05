@@ -185,7 +185,7 @@ class LeaveRequestService extends BaseService
             $data = $this->findById($request['id'], false);
             $this->isApproved($data);
 
-            if ($this->getGuard()->user()->id != $data['created_by'])
+            if ($this->getUserId() != $data['created_by'])
                 throw new Exception('Chỉ người đăng ký mới có thể điều chỉnh');
 
             $oldData = collect($data)->toArray();

@@ -37,7 +37,7 @@ class WorkScheduleRepository extends BaseRepository
         return $this->model->getIsCompleted($key);
     }
 
-    public function getSearchConfig(): array
+    protected function getSearchConfig(): array
     {
         return [
             'text' => [

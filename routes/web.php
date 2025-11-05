@@ -17,6 +17,12 @@ use App\Http\Controllers\Admin\ContractScanFileTypeController;
 use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\ContractUnitController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DossierHandoverController;
+use App\Http\Controllers\Admin\DossierMinuteController;
+use App\Http\Controllers\Admin\DossierPlanController;
+use App\Http\Controllers\Admin\DossierSyntheticController;
+use App\Http\Controllers\Admin\DossierTypeController;
+use App\Http\Controllers\Admin\DossierUsageRegisterController;
 use App\Http\Controllers\Admin\EligibilityController;
 use App\Http\Controllers\Admin\EmploymentContractPersonnelController;
 use App\Http\Controllers\Admin\EmploymentContractPersonnelCustomFieldController;
@@ -34,6 +40,7 @@ use App\Http\Controllers\Admin\ProofContractController;
 use App\Http\Controllers\Admin\ShareholderMeetingMinuteController;
 use App\Http\Controllers\Admin\SoftwareOwnershipController;
 use App\Http\Controllers\Admin\TaskScheduleController;
+use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserSubEmailController;
 use App\Http\Controllers\Admin\UserTimeTableController;
@@ -308,5 +315,45 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::get('create', 'create')->name('internal-bulletin.create');
         Route::get('edit', 'edit')->name('internal-bulletin.edit');
         Route::delete('delete', 'delete')->name('internal-bulletin.delete');
+    });
+
+    // Các đơn vị thuộc tỉnh
+    Route::prefix('unit')->controller(UnitController::class)->group(function () {
+        Route::get('index', 'index')->name('unit.index');
+        Route::get('create', 'create')->name('unit.create');
+        Route::get('edit', 'edit')->name('unit.edit');
+        Route::delete('delete', 'delete')->name('unit.delete');
+    });
+
+    // hồ sơ ngoại nghiệp
+    Route::prefix('dossier')->group(function () {
+        Route::prefix('type')->controller(DossierTypeController::class)->group(function () {
+            Route::get('index', 'index')->name('dossier.type.index');
+            Route::get('edit', 'edit')->name('dossier.type.edit');
+            Route::delete('delete', 'delete')->name('dossier.type.delete');
+            Route::get('export', 'export')->name('dossier.type.export');
+            Route::post('import', 'import')->name('dossier.type.import');
+            Route::get('create', 'create')->name('dossier.type.create');
+        });
+
+        Route::prefix('plan')->controller(DossierPlanController::class)->group(function () {
+            Route::get('index', 'index')->name('dossier.plan.index');
+        });
+
+        Route::prefix('handover')->controller(DossierHandoverController::class)->group(function () {
+            Route::get('index', 'index')->name('dossier.handover.index');
+        });
+
+        Route::prefix('usage_register')->controller(DossierUsageRegisterController::class)->group(function () {
+            Route::get('index', 'index')->name('dossier.usage_register.index');
+        });
+
+        Route::prefix('minute')->controller(DossierMinuteController::class)->group(function () {
+            Route::get('index', 'index')->name('dossier.minute.index');
+        });
+
+        Route::prefix('synthetic')->controller(DossierSyntheticController::class)->group(function () {
+            Route::get('index', 'index')->name('dossier.synthetic.index');
+        });
     });
 });

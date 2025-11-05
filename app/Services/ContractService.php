@@ -289,4 +289,9 @@ class ContractService extends BaseService
 
         return $this->userService->getEmails($userIds);
     }
+
+    public function getYears()
+    {
+        return $this->repository->getYears();
+    }
 }

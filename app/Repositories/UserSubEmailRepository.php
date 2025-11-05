@@ -18,7 +18,7 @@ class UserSubEmailRepository extends BaseRepository
             $query->where('user_id', $request['user_id']);
     }
 
-    public function getSearchConfig(): array
+    protected function getSearchConfig(): array
     {
         return [
             'text' => [

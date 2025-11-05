@@ -213,7 +213,7 @@ class WorkScheduleService extends BaseService
             $data = $this->findById($request['id']);
             $this->isApproved($data);
 
-            if ($this->getGuard()->user()->id != $data['created_by'])
+            if ($this->getUserId() != $data['created_by'])
                 throw new Exception('Chỉ người đăng ký mới có thể yêu cầu kết thúc lịch công tác này');
 
             $data->update([

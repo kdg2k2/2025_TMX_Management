@@ -46,7 +46,7 @@ class LogAccess
         }
 
         LogAccessHistory::create([
-            'user_id' => $this->getGuard()->user()->id,
+            'user_id' => $this->getUserId(),
             'url' => $currentUrl,
             'method' => $request->method(),
             'body' => json_encode($body, JSON_UNESCAPED_UNICODE), // Tránh lỗi UTF-8
