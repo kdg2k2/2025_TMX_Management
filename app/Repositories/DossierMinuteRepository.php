@@ -63,7 +63,7 @@ class DossierMinuteRepository extends BaseRepository
             $query->where(function ($q) use ($search) {
                 $q
                     ->whereHas('plan.contract', function ($q) use ($search) {
-                        $q->where('tenhd', 'like', $search);
+                        $q->where('name', 'like', $search);
                     })
                     ->orWhereHas('approvedByUser', function ($q) use ($search) {
                         $q->where('name', 'like', $search);

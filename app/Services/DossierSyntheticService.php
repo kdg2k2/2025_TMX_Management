@@ -113,7 +113,7 @@ class DossierSyntheticService extends BaseService
 
         $contractInfo = [
             $contract['year'],
-            $contract['tenhd'],
+            $contract['name'],
         ];
 
         foreach ($data as $key => &$item) {

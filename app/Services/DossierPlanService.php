@@ -397,7 +397,7 @@ class DossierPlanService extends BaseService
             $this->dossierMinuteService->sendMail(
                 'Yêu cầu phê duyệt bàn giao kế hoạch chứng từ hồ sơ ngoại nghiệp',
                 [
-                    'tenhd' => $plan->contract->tenhd,
+                    'name' => $plan->contract->name,
                     'type' => 0,
                     'ghichu' => ''
                 ],

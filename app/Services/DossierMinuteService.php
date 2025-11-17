@@ -48,7 +48,7 @@ class DossierMinuteService extends BaseService
                 'user_id' => auth()->id(),
             ]);
 
-            $prepareData = $this->prepareDataToRenderMinuteFile($plan->details->toArray(), $plan['handover_by'], $plan['received_by']);
+            $prepareData = $this->prepareDataToRenderMinuteFile($plan->details->toArray(), $plan['handover_by'], $plan['received_by'], auth()->id());
 
             // xóa các biên bản draft của gói thầu này trước
             $this->repository->deleteDraftByType($plan['id'], 'plan');
@@ -57,7 +57,7 @@ class DossierMinuteService extends BaseService
             if (!file_exists($templatePath))
                 throw new Exception('Template file not found: ' . $templatePath);
 
-            $path = $this->renderMinuteFile($plan['contract']['tenhd'], $plan['handover_date'], $prepareData, $templatePath, 'plan');
+            $path = $this->renderMinuteFile($plan['contract']['name'], $this->formatDateForPreview($plan['handover_date']), $prepareData, $templatePath, 'plan');
 
             $minute = $this->repository->store([
                 'dossier_plan_id' => $plan['id'],
@@ -89,7 +89,7 @@ class DossierMinuteService extends BaseService
         if (!file_exists($templatePath))
             throw new Exception('Template file not found: ' . $templatePath);
 
-        $path = $this->renderMinuteFile($plan['contract']['tenhd'], date('d/m/Y'), $prepareData, $templatePath, 'handover');
+        $path = $this->renderMinuteFile($plan['contract']['name'], date('d/m/Y'), $prepareData, $templatePath, 'handover');
 
         if ($minute) {
             $minute->update([
@@ -146,13 +146,14 @@ class DossierMinuteService extends BaseService
     {
         $templateProcessor = $this->wordService->createFromTemplate($fullPathTemplate);
 
+        $templateProcessor->setValue('tenCty', htmlspecialchars(mb_strtoupper(config('custom.DEFAULT_TITLE'), 'UTF-8')));
         $templateProcessor->setValue('tenhd', htmlspecialchars($contractName));
         $templateProcessor->setValue('ngaybangiao', htmlspecialchars($handoverDate));
 
         $templateProcessor->setValue('t_nhan', htmlspecialchars($data['bennhanUserInfo']['name']));
-        $templateProcessor->setValue('p_nhan', htmlspecialchars($data['bennhanUserInfo']['bomon']['tenphong']));
+        $templateProcessor->setValue('p_nhan', htmlspecialchars($data['bennhanUserInfo']['department']['name']));
         $templateProcessor->setValue('t_giao', htmlspecialchars($data['bengiaoUserInfo']['name']));
-        $templateProcessor->setValue('p_giao', htmlspecialchars($data['bengiaoUserInfo']['bomon']['tenphong']));
+        $templateProcessor->setValue('p_giao', htmlspecialchars($data['bengiaoUserInfo']['department']['name']));
         if ($data['nguoilapUserInfo'])
             $templateProcessor->setValue('t_nguoilap', htmlspecialchars($data['nguoilapUserInfo']['name']));
 
@@ -223,6 +224,9 @@ class DossierMinuteService extends BaseService
 
     private function prepareDataToRenderMinuteFile(array $plantDetails, int $handoverById, int $receivedById, int $createrId = null, bool $signed = false)
     {
+        // dd(
+        //     $plantDetails, $handoverById, $receivedById, $createrId, $signed
+        // );
         $bengiaoUserInfo = $this->userService->findById($handoverById)->toArray();
         $bennhanUserInfo = $this->userService->findById($receivedById)->toArray();
         $nguoilapUserInfo = optional($this->userService->findById($createrId))->toArray();
@@ -411,7 +415,7 @@ class DossierMinuteService extends BaseService
                     $this->sendMail(
                         'Yêu cầu đăng ký sử dụng hồ sơ ngoại nghiệp đã được phê duyệt',
                         [
-                            'tenhd' => $minute->usageRegister->plan->contract->tenhd,
+                            'name' => $minute->usageRegister->plan->contract->name,
                             'type' => 7,
                             'lydo' => $request['approval_note'],
                             'nguoidangky' => $minute->usageRegister->registeredBy->name,
@@ -427,7 +431,7 @@ class DossierMinuteService extends BaseService
             $this->sendMail(
                 $subject,
                 [
-                    'tenhd' => $contract->tenhd,
+                    'name' => $contract->name,
                     'type' => $type,
                     'lydo' => $request['approval_note'],
                     'nguoilap' => $nguoilap,
@@ -511,7 +515,7 @@ class DossierMinuteService extends BaseService
                 'Thiếu giấy tờ để duyệt biên bản kế hoạch',
                 [
                     'type' => 9,
-                    'tenhd' => $minute->plan->contract->tenhd,
+                    'name' => $minute->plan->contract->name,
                     'messages' => array_values(array_filter(
                         array_map('trim', explode("\n", trim($message))),
                         function ($line) {
@@ -557,7 +561,7 @@ class DossierMinuteService extends BaseService
                 'Yêu cầu bổ sung các loại giấy tờ hồ sơ ngoại nghiệp sắp hết',
                 [
                     'type' => 10,
-                    'tenhd' => $minute->plan->contract->tenhd,
+                    'name' => $minute->plan->contract->name,
                     'messages' => array_values(array_filter(
                         array_map('trim', explode("\n", trim($message))),
                         function ($line) {
@@ -606,7 +610,7 @@ class DossierMinuteService extends BaseService
                     $this->sendMail(
                         'Yêu cầu đăng ký sử dụng hồ sơ ngoại nghiệp đã bị từ chối',
                         [
-                            'tenhd' => $minute->usageRegister->plan->contract->tenhd,
+                            'name' => $minute->usageRegister->plan->contract->name,
                             'type' => 8,
                             'lydo' => $request['rejection_note'],
                             'nguoidangky' => $minute->usageRegister->registeredBy->name,
@@ -622,7 +626,7 @@ class DossierMinuteService extends BaseService
             $this->sendMail(
                 $subject,
                 [
-                    'tenhd' => $contract->tenhd,
+                    'name' => $contract->name,
                     'type' => $type,
                     'lydo' => $request['rejection_note'],
                     'nguoilap' => $nguoilap,

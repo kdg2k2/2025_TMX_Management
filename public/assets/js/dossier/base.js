@@ -96,8 +96,8 @@ const createFormDataWithContract = (form) => {
  */
 const setStatusIcon = (element, hasData) => {
     element.innerHTML = hasData
-        ? '<i class="fa-regular fa-circle-check text-success"></i>'
-        : '<i class="fa-regular fa-circle-xmark text-danger"></i>';
+        ? '<i class="ti ti-circle-check text-success"></i>'
+        : '<i class="ti ti-xbox-x text-danger"></i>';
 };
 
 /**
@@ -172,7 +172,11 @@ const displayIframe = (path) => {
         const pdfUrl = `${path}#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0`;
 
         navBienban.innerHTML = `<iframe src="${pdfUrl}" frameborder="0" class="w-100 mt-3" style="height:82vh;" scrolling="auto"></iframe>`;
-        $(navBienban).trigger("click");
+
+        const el = document.querySelector(
+            `a[href="#${navBienban.getAttribute("id")}"]`
+        );
+        if (el) el.click();
     }
 };
 

@@ -498,7 +498,7 @@ class DossierUsageRegisterService extends BaseService
 
             $this->dossierMinuteService->sendMail(
                 'Yêu cầu phê duyệt đăng ký sử dụng chứng từ hồ sơ ngoại nghiệp',
-                ['type' => 6, 'name' => auth()->user()->name, 'sd_cho' => $register->plan->contract->tenhd, 'ngaybangiao' => $request['handover_date']],
+                ['type' => 6, 'name' => auth()->user()->name, 'sd_cho' => $register->plan->contract->name, 'ngaybangiao' => $request['handover_date']],
                 $minute
             );
         });

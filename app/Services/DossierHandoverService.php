@@ -762,7 +762,7 @@ class DossierHandoverService extends BaseService
 
             $this->dossierMinuteService->sendMail(
                 'Yêu cầu phê duyệt biên bản giao hồ sơ ngoại nghiệp',
-                ['tenhd' => $handover['plan']['contract']['tenhd'], 'type' => 3],
+                ['name' => $handover['plan']['contract']['name'], 'type' => 3],
                 $lastMinute
             );
         }, true);
