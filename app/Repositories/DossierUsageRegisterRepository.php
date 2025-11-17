@@ -60,12 +60,12 @@ class DossierUsageRegisterRepository extends BaseRepository
             }
         }
 
-        if (isset($request['contract_id']) || isset($request['nam']))
+        if (isset($request['contract_id']) || isset($request['year']))
             $query->whereHas('plan.contract', function ($q) use ($request) {
                 if (isset($request['contract_id']))
                     $q->where('id', $request['contract_id']);
-                if (isset($request['nam']))
-                    $q->where('nam', $request['nam']);
+                if (isset($request['year']))
+                    $q->where('year', $request['year']);
             });
     }
 
@@ -96,12 +96,12 @@ class DossierUsageRegisterRepository extends BaseRepository
             }
         }
 
-        if (isset($request['contract_id']) || isset($request['nam']))
+        if (isset($request['contract_id']) || isset($request['year']))
             $query->whereHas('plan.contract', function ($q) use ($request) {
                 if (isset($request['contract_id']))
                     $q->where('id', $request['contract_id']);
-                if (isset($request['nam']))
-                    $q->where('nam', $request['nam']);
+                if (isset($request['year']))
+                    $q->where('year', $request['year']);
             });
 
         return $query->delete();

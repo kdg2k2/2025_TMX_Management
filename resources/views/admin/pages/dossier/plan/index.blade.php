@@ -11,8 +11,8 @@
         <div class="card-body row">
             <div class="col-md-8 d-grid">
                 <div>
-                    <label for="nam">Năm</label>
-                    <select name="nam" id="nam" class="form-control">
+                    <label for="year">Năm</label>
+                    <select name="year" id="year" class="form-control">
                         <x-select-options :items="$years" />
                     </select>
                 </div>
@@ -105,12 +105,12 @@
     <x-modal id="createMinuteModal" title="Tạo biên bản kế hoạch" size="md" method="post" nested="true">
         <x-slot:body>
             <div class="form-group">
-                <label for="handover_date" class="form-label">Ngày bàn giao</label>
-                <input type="date" class="form-control" id="handover_date" name="handover_date" required>
+                <label for="handover-date" class="form-label">Ngày bàn giao</label>
+                <input type="date" class="form-control" id="handover-date" name="handover_date" required>
             </div>
             <div class="form-group">
-                <label for="received_by_id" class="form-label">Người nhận</label>
-                <select class="form-control" id="received_by_id" name="received_by_id" required>
+                <label for="received-by" class="form-label">Người nhận</label>
+                <select class="form-control" id="received-by" name="received_by" required>
                     <option value="">Chọn</option>
                     @foreach ($users as $item)
                         <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>

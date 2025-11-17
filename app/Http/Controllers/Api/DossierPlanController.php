@@ -20,7 +20,7 @@ class DossierPlanController extends Controller
     {
         return $this->catchAPI(function () use ($request) {
             $validated = $request->validated();
-            $data = $this->service->findByIdContractAndYear($validated['contract_id'], $validated['nam']);
+            $data = $this->service->findByIdContractAndYear($validated['contract_id'], $validated['year']);
             return response()->json($data);
         });
     }

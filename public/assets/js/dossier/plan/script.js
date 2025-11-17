@@ -57,27 +57,6 @@ const handleDownloadMinute = () => {
     }
 };
 
-const handleCreateMinuteClick = (event) => {
-    // Validate basic requirements
-    if (!validateBasicRequirements()) {
-        removeModalAttributes(createMinuteModalBtn);
-        return;
-    }
-
-    // Validate chưa có biên bản hoặc biên bản bị rejected
-    const hasMinute = isHasMinute.querySelector("i.fa-circle-check");
-    const minuteStatus = isMinusPending.textContent.trim();
-
-    if (hasMinute && minuteStatus.includes(["draft", "rejected"])) {
-        removeModalAttributes(createMinuteModalBtn);
-        alertInfo(`Đã có biên bản với trạng thái: ${minuteStatus}`);
-        return;
-    }
-
-    // Enable modal
-    setModalAttributes(createMinuteModalBtn, "#createMinuteModal");
-};
-
 const handleCreateMinuteSubmit = async (event) => {
     event.preventDefault();
 
@@ -100,8 +79,8 @@ const handleCreateMinuteSubmit = async (event) => {
 };
 
 const validateCreateMinuteForm = (form) => {
-    const handoverDate = form.querySelector("#handover_date").value;
-    const receivedById = form.querySelector("#received_by_id").value;
+    const handoverDate = form.querySelector("#handover-date").value;
+    const receivedById = form.querySelector("#received-by").value;
 
     // Validate handover date
     if (!handoverDate) {
@@ -119,6 +98,15 @@ const validateCreateMinuteForm = (form) => {
     // Validate received by
     if (!receivedById) {
         alertWarning("Vui lòng chọn người nhận!");
+        return false;
+    }
+
+    // Validate chưa có biên bản hoặc biên bản bị rejected
+    const hasMinute = isHasMinute.querySelector("i.fa-circle-check");
+    const minuteStatus = isMinusPending.textContent.trim();
+
+    if (hasMinute && minuteStatus.includes(["draft", "rejected"])) {
+        alertInfo(`Đã có biên bản với trạng thái: ${minuteStatus}`);
         return false;
     }
 

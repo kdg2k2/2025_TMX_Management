@@ -1,4 +1,4 @@
-const selectYear = document.getElementById("nam");
+const selectYear = document.getElementById("year");
 const selectContract = document.getElementById("contract_id");
 const countContract = document.querySelector('label[for="contract_id"] span');
 const tableDulieu = $("#table-dulieu");
@@ -180,12 +180,13 @@ const handleSelectYearChange = (e) => {
     const value = e.target.value;
 
     const filteredContracts = $contracts.filter(
-        (contract) => contract.year === value
+        (contract) => contract.year == value
     );
+
     selectContract.innerHTML = "";
     selectContract.append(new Option("Chọn hợp đồng", ""));
     filteredContracts.forEach((contract) => {
-        selectContract.append(new Option(contract.tenhd, contract.id));
+        selectContract.append(new Option(contract.name, contract.id));
     });
 
     countContract.textContent = `Tổng ${filteredContracts.length}`;
@@ -206,7 +207,7 @@ const loadData = async () => {
     if (currentContractId) {
         try {
             const response = await http.get(
-                `${urlLoadData}?nam=${selectYear.value}&contract_id=${currentContractId}`
+                `${urlLoadData}?year=${selectYear.value}&contract_id=${currentContractId}`
             );
             displayStatus(response ?? null);
             displayTable(response?.details ?? null);

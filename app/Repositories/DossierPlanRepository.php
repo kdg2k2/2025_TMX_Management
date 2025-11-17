@@ -27,9 +27,9 @@ class DossierPlanRepository extends BaseRepository
 
     protected function applyListFilters($query, array $request)
     {
-        if (isset($request['nam']))
+        if (isset($request['year']))
             $query->whereHas('contract', function ($q) use ($request) {
-                $q->where('nam', $request['nam']);
+                $q->where('year', $request['year']);
             });
 
         if (isset($request['contract_id']))
@@ -44,7 +44,7 @@ class DossierPlanRepository extends BaseRepository
 
         if ($year) {
             $query->whereHas('contract', function ($q) use ($year) {
-                $q->where('nam', $year);
+                $q->where('year', $year);
             });
         }
 

@@ -60,12 +60,12 @@ class DossierHandoverRepository extends BaseRepository
             }
         }
 
-        if (isset($request['contract_id']) || isset($request['nam']))
+        if (isset($request['contract_id']) || isset($request['year']))
             $query->whereHas('plan.contract', function ($q) use ($request) {
                 if (isset($request['contract_id']))
                     $q->where('id', $request['contract_id']);
-                if (isset($request['nam']))
-                    $q->where('nam', $request['nam']);
+                if (isset($request['year']))
+                    $q->where('year', $request['year']);
             });
 
         if (isset($request['type']))
@@ -80,7 +80,7 @@ class DossierHandoverRepository extends BaseRepository
             ->whereHas('plan.contract', function ($q) use ($idContract, $year) {
                 $q->where('id', $idContract);
                 if ($year) {
-                    $q->where('nam', $year);
+                    $q->where('year', $year);
                 }
             })
             ->first();

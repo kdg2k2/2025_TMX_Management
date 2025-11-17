@@ -10,7 +10,7 @@ class FindByContractIdAndYear extends BaseRequest
     {
         return [
             'contract_id' => 'required|integer|exists:contracts,id',
-            'nam' => 'nullable|integer|exists:contracts,nam'
+            'year' => 'nullable|integer|exists:contracts,year'
         ];
     }
 }

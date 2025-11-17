@@ -206,7 +206,7 @@ class DossierUsageRegisterService extends BaseService
         return $this->tryThrow(function () use ($request) {
             $dossierService = app(DossierService::class);
 
-            $data = $this->getAvailableDataForCreateExcel($request['contract_id'], $request['nam'] ?? null);
+            $data = $this->getAvailableDataForCreateExcel($request['contract_id'], $request['year'] ?? null);
 
             $sheets = [
                 (object) [

@@ -242,7 +242,7 @@ class DossierHandoverService extends BaseService
     {
         return $this->repository->list([
             'contract_id' => $contractId,
-            'nam' => $year,
+            'year' => $year,
             'type' => 'in',
             'minute_status' => 'approved',
         ]);
@@ -252,7 +252,7 @@ class DossierHandoverService extends BaseService
     {
         $handoverIn = $this->repository->list([
             'contract_id' => $contractId,
-            'nam' => $year,
+            'year' => $year,
             'type' => 'in',
             'minute_status' => ['draft', 'pending_approval'],
         ]);
@@ -273,7 +273,7 @@ class DossierHandoverService extends BaseService
         $handoverOut = $this->repository->list([
             'contract_id' => $contractId,
             'type' => 'out',
-            'nam' => $year,
+            'year' => $year,
         ]);
         return $handoverOut[0] ?? null;
     }

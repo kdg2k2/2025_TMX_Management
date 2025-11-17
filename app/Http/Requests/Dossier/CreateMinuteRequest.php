@@ -9,7 +9,7 @@ class CreateMinuteRequest extends FindByContractIdAndYear
     public function rules()
     {
         $rules = parent::rules();
-        unset($rules['nam']);
+        unset($rules['year']);
         return $rules;
     }
 }

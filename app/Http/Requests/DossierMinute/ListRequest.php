@@ -7,7 +7,7 @@ class ListRequest extends \App\Http\Requests\Dossier\ListRequest
     public function rules(): array
     {
         $rules = parent::rules();
-        unset($rules['contract_id'], $rules['nam']);
+        unset($rules['contract_id'], $rules['year']);
         return $rules;
     }
 }

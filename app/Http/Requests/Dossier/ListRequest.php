@@ -12,7 +12,7 @@ class ListRequest extends BaseListRequest
             parent::rules(),
             [
                 'contract_id' => 'nullable|integer|exists:contracts,id',
-                'nam' => 'nullable|integer|exists:contracts,nam',
+                'year' => 'nullable|integer|exists:contracts,year',
             ]
         );
     }
