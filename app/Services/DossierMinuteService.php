@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Jobs\SendMailJob;
 use App\Models\DossierMinute;
+use Arr;
 use Exception;
 use \App\Repositories\DossierMinuteRepository;
 
@@ -72,15 +73,15 @@ class DossierMinuteService extends BaseService
     public function createHandoverMinus(array $handover, bool $signed = false, DossierMinute $minute = null)
     {
         $plan = $handover['plan'];
-        $contractMembers = app(ContractService::class)->getMemberInContract(
-            app(ContractService::class)->findById($plan['contract']['id'])
+        $contractMembers = app(ContractService::class)->getMembers(
+            $plan['contract']['id']
         );
-        $chuyenmon = $contractMembers['chuyenmon'] ?? [];
+        $professionals = $contractMembers['professionals'] ?? [];
         if (!$this->isLocal())
-            if (empty($chuyenmon))
+            if (empty($professionals))
                 throw new Exception('Hợp đồng chưa có phụ trách chuyên môn');
 
-        $prepareData = $this->prepareDataToRenderMinuteFile($handover['details'], optional(reset($chuyenmon))->id ?? $handover['user_id'], $handover['received_by'], $handover['user_id'], $signed);
+        $prepareData = $this->prepareDataToRenderMinuteFile($handover['details'], optional(reset($professionals))->id ?? $handover['user_id'], $handover['received_by'], $handover['user_id'], $signed);
 
         // xóa các biên bản draft của gói thầu này trước
         $this->repository->deleteDraftByType($handover['id'], 'handover');
@@ -314,12 +315,14 @@ class DossierMinuteService extends BaseService
 
         $contractMemberEmails = [];
         if ($getContractMembers) {
-            $contractMember = app(ContractService::class)->getMemberInContract($contract);
-            $contractMemberEmails = app(UserService::class)->getUserEmails([
-                $contractMember['chuyenmon'],
-                $contractMember['giaingan'],
-                $contractMember['huongdan'],
-            ]);
+            $contractMember = app(ContractService::class)->getMembers($contract['id']);
+            $contractMemberEmails = app(UserService::class)->getEmails(
+                collect(Arr::flatten([
+                    $contractMember['professionals'],
+                    $contractMember['disbursements'],
+                    $contractMember['instructors'],
+                ]))->pluck('id')->unique()->toArray()
+            );
         }
 
         $emailSchedule = app(TaskScheduleService::class)->findById(36);

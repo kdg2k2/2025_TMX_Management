@@ -36,6 +36,7 @@ abstract class BaseRepository
     public function findById(int $id, bool $loadRelation = true)
     {
         $data = $this->model->find($id);
+        dd($this->relations, $data);
         if (!empty($this->relations) && $loadRelation == true)
             $data = $data->load($this->relations);
 
