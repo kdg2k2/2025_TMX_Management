@@ -182,7 +182,8 @@ class ContractService extends BaseService
             ]
         ];
 
-        \App\Jobs\InitFoldersOnDriveJob::dispatch($structure);
+        if (!$this->isLocal())
+            \App\Jobs\InitFoldersOnDriveJob::dispatch($structure);
     }
 
     public function getFolderOnGoogleDrive(Contract $data)
@@ -204,14 +205,15 @@ class ContractService extends BaseService
                 $data[$field] = $this->handlerUploadFileService->storeAndRemoveOld($extracted[$field], $this->repository->model->getTable(), $field, $oldFile);
                 $data->save();
 
-                \App\Jobs\UploadFileToDriveJob::dispatch(
-                    $this->handlerUploadFileService->getAbsolutePublicPath($data[$field]),
-                    $this->getFolderOnGoogleDrive($data),
-                    null,
-                    false,
-                    false,
-                    $oldFile ? $this->getFolderOnGoogleDrive($data) . '/' . basename($oldFile) : null
-                );
+                if (!$this->isLocal())
+                    \App\Jobs\UploadFileToDriveJob::dispatch(
+                        $this->handlerUploadFileService->getAbsolutePublicPath($data[$field]),
+                        $this->getFolderOnGoogleDrive($data),
+                        null,
+                        false,
+                        false,
+                        $oldFile ? $this->getFolderOnGoogleDrive($data) . '/' . basename($oldFile) : null
+                    );
             }
         }
 
@@ -256,10 +258,12 @@ class ContractService extends BaseService
     protected function afterDelete($entity)
     {
         $this->handlerUploadFileService->removeFiles([$entity['path_file_short'], $entity['path_file_full']]);
-        if ($entity['path_file_short'])
-            \App\Jobs\DeleteFileFromDriveJob::dispatch($this->getFolderOnGoogleDrive($entity) . '/' . basename($entity['path_file_short']));
-        if ($entity['path_file_full'])
-            \App\Jobs\DeleteFileFromDriveJob::dispatch($this->getFolderOnGoogleDrive($entity) . '/' . basename($entity['path_file_full']));
+        if (!$this->isLocal())
+            if ($entity['path_file_short'])
+                \App\Jobs\DeleteFileFromDriveJob::dispatch($this->getFolderOnGoogleDrive($entity) . '/' . basename($entity['path_file_short']));
+        if (!$this->isLocal())
+            if ($entity['path_file_full'])
+                \App\Jobs\DeleteFileFromDriveJob::dispatch($this->getFolderOnGoogleDrive($entity) . '/' . basename($entity['path_file_full']));
     }
 
     public function getMembers(int $id)
