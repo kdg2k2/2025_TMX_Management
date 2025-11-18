@@ -322,6 +322,7 @@ class DossierMinuteService extends BaseService
         elseif ($minute->usageRegister)
             $contract = $minute->usageRegister->plan->contract;
 
+        $contractMemberIds = [];
         if ($getContractMembers) {
             $contractMember = app(ContractService::class)->getMembers($contract['id']);
             $contractMemberIds = collect(Arr::flatten([

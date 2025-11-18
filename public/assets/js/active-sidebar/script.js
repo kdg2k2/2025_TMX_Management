@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentPath = window.location.pathname.replace(/\/+$/, "");
     const links = document.querySelectorAll(".main-menu li a");
     const activeSuffixes = ["create", "edit", "show"];
+    let activeLinkElement = null; // Biến để lưu trữ phần tử link đang active
 
     links.forEach((link) => {
         const href = link.getAttribute("href");
@@ -22,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let isActive = currentPath === linkPath;
 
+        // Logic so khớp tiền tố (prefix)
         if (!isActive && currentPath.startsWith(linkPath + "/")) {
             const prefixMatch = linkSegments.every(
                 (seg, i) => seg === currentSegments[i]
@@ -29,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (prefixMatch) isActive = true;
         }
 
+        // Logic cho các hành động 'index' (ví dụ: /users/create active link /users/index)
         if (!isActive) {
             const currentBase = currentSegments.slice(0, -1).join("/");
             const linkBase = linkSegments.slice(0, -1).join("/");
@@ -36,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (
                 linkSegments.at(-1) === "index" &&
+                linkSegments.length > 0 && // Đảm bảo linkPath có ít nhất một segment
                 currentBase === linkBase &&
                 activeSuffixes.includes(lastSegment)
             ) {
@@ -45,7 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (isActive) {
             link.classList.add("active");
+            activeLinkElement = link; // Lưu trữ phần tử active
 
+            // Mở các menu cha
             let li = link.closest("li");
             while (li) {
                 if (li.classList.contains("has-sub")) {
@@ -61,4 +67,25 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
+
+    // Cuộn phần tử sidebar chứa menu để đưa mục menu active vào tầm nhìn.
+    const scrollToActiveMenuItem = () => {
+        if (!activeLinkElement) return;
+
+        // Tìm phần tử chứa có thể cuộn (sidebar/menu container)
+        // Thay đổi ".main-menu" bằng selector thực tế của sidebar chứa
+        // nếu nó khác (ví dụ: "#sidebar-wrapper", ".app-sidebar")
+        const sidebarContainer = document.querySelector(".main-menu")?.closest(".app-sidebar") || document.querySelector(".main-menu")?.parentElement;
+
+        if (sidebarContainer) {
+            activeLinkElement.scrollIntoView({
+                behavior: "smooth", // Cho hiệu ứng cuộn mượt mà
+                block: "center",    // Căn giữa mục menu active trong tầm nhìn
+                inline: "nearest"
+            });
+        }
+    };
+
+    // Gọi hàm cuộn sau khi tất cả logic đánh dấu active đã chạy
+    scrollToActiveMenuItem();
 });

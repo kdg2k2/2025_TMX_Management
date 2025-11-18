@@ -288,10 +288,16 @@
                         Hồ sơ - Biên bản - Công văn
                     </span>
                 </li>
+                @php
+                    $pendingDossierMinuteFlag =
+                        app(\App\Models\DossierMinute::class)->where('status', 'pending_approval')->count() > 0
+                            ? 'text-danger'
+                            : '';
+                @endphp
                 <li class="slide has-sub">
                     <a href="javascript:void(0);" class="side-menu__item">
-                        <i class="side-menu__icon ti ti-user-check"></i>
-                        <span class="side-menu__label">
+                        <i class="side-menu__icon ti ti-user-check {{ $pendingDossierMinuteFlag }}"></i>
+                        <span class="side-menu__label {{ $pendingDossierMinuteFlag }}">
                             HSNN/HSCM
                         </span>
                         <i class="ri-arrow-right-s-line side-menu__angle"></i>
@@ -303,7 +309,7 @@
                             </a>
                         </li>
                         <li class="slide has-sub">
-                            <a href="javascript:void(0);" class="side-menu__item">
+                            <a href="javascript:void(0);" class="side-menu__item {{ $pendingDossierMinuteFlag }}">
                                 <i class="side-menu-doublemenu__icon fs-6 ti ti-settings-2"></i>
                                 HS ngoại nghiệp
                                 <i class="ri-arrow-right-s-line side-menu__angle"></i>
@@ -334,7 +340,8 @@
                                     </a>
                                 </li>
                                 <li class="slide">
-                                    <a href="{{ route('dossier.minute.index') }}" class="side-menu__item">
+                                    <a href="{{ route('dossier.minute.index') }}"
+                                        class="side-menu__item {{ $pendingDossierMinuteFlag }}">
                                         <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
                                         Phê duyệt biên bản
                                     </a>

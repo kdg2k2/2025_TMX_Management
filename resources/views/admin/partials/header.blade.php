@@ -188,13 +188,13 @@
                         <li>
                             <ul class="list-unstyled mb-0 sub-list">
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="profile">
+                                    <a class="dropdown-item d-flex align-items-center" href="javascript::void(0);">
                                         <i class="ti ti-user-circle me-2 fs-18"></i>
                                         Cá nhân
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="mail-settings">
+                                    <a class="dropdown-item d-flex align-items-center" href="javascript::void(0);">
                                         <i class="ti ti-settings-cog me-2 fs-18"></i>
                                         Đổi mật khẩu
                                     </a>
