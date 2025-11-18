@@ -5,6 +5,7 @@ use App\Models\DossierUsageRegister;
 use App\Repositories\DossierUsageRegisterRepository;
 use App\Services\DossierMinuteService;
 use App\Services\DossierPlanService;
+use Arr;
 use Exception;
 
 class DossierUsageRegisterService extends BaseService
@@ -21,19 +22,30 @@ class DossierUsageRegisterService extends BaseService
         $this->dossierPlanService = app(DossierPlanService::class);
     }
 
+    public function baseIndexData()
+    {
+        return $this->tryThrow(function () {
+            $res = app(DossierService::class)->baseIndexData();
+            $res['showCreateMinuteBtn'] = false;
+            $res['pageTitle'] = 'Đăng ký sử dụng';
+            return $res;
+        });
+    }
+
     public function findByIdContractAndYear($contractId, $year)
     {
         return $this->tryThrow(function () use ($contractId, $year) {
-            $available = $this->getAvailable($contractId, $year);  // hiện trạng
             $register = $this->getRegistersInDraftOrPendingApproval($contractId, $year) ?? [];  // đang đăng ký
+            $available = $this->getAvailable($contractId, $year);  // hiện trạng
 
-            $registerMerged = $this->mergeRegistersIntoAvailable($available, $this->createBaseFormData([$register], true));  // merge hiện trạng và đang đăng ký
+            $registerMerged = $this->mergeRegistersIntoAvailable($available, $this->createBaseFormData(collect($register)->toArray(), true));  // merge hiện trạng và đang đăng ký
 
-            $minute = $this->getMinuteById($register['id'] ?? null);
+            $firstRegiser = collect($register)->first();
+            $minute = $this->getMinuteById($firstRegiser['id'] ?? null);
             return [
                 'registerMerged' => array_values($registerMerged),
                 'flag' => [
-                    'user' => optional($register)->registeredBy,
+                    'user' => optional($firstRegiser)->registeredBy,
                     'has_data' => !empty($register),
                     'minutes' => $minute ? [$this->dossierMinuteService->formatRecord($minute)] : [],
                 ],
@@ -90,6 +102,9 @@ class DossierUsageRegisterService extends BaseService
     {
         $data = [];
         if (!empty($arrayHasDetail)) {
+            if (gettype($arrayHasDetail) != 'array')
+                $arrayHasDetail = optional($arrayHasDetail)->toArray();
+
             $data = array_merge(...array_map(function ($array) use ($takeNote) {
                 return array_map(function ($item) use ($takeNote) {
                     return [
@@ -268,7 +283,7 @@ class DossierUsageRegisterService extends BaseService
 
             return asset($dossierService->createExcel(
                 'uploads/dossier/usage_register',
-                uniqid('dossier_usage_register') . '.xlsx',
+                'dossier_usage_register_' . date('d-m-Y_H-i-s') . '.xlsx',
                 $sheets
             ));
         });

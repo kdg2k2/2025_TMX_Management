@@ -411,7 +411,6 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::get('find-by-id-contract-and-year', 'findByIdContractAndYear')->name('api.dossier.usage_register.findByIdContractAndYear');
             Route::get('create-temp-excel', 'createTempExcel')->name('api.dossier.usage_register.createTempExcel');
             Route::post('upload-excel', 'uploadExcel')->name('api.dossier.usage_register.uploadExcel');
-            Route::get('create-minute', 'createMinute')->name('api.dossier.usage_register.createMinute');
             Route::post('send-approve-request', 'sendApproveRequest')->name('api.dossier.usage_register.sendApproveRequest');
         });
 

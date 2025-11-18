@@ -9,7 +9,10 @@ const isMinusPending = document.getElementById("is-minus-pending");
 const downloadExcelBtn = document.getElementById("download-excel-btn");
 const uploadModalBtn = document.getElementById("upload-modal-btn");
 const uploadModal = document.getElementById("upload-modal");
-const createMinuteModalBtn = document.getElementById("create-minute-modal-btn");
+if ($showCreateMinuteBtn)
+    var createMinuteModalBtn = document.getElementById(
+        "create-minute-modal-btn"
+    );
 const downloadMinuteBtn = document.getElementById("download-minute-btn");
 const approveModalBtn = document.getElementById("approve-modal-btn");
 const approveModal = document.getElementById("approve-modal");
@@ -143,7 +146,7 @@ const loadData = async () => {
                 `${urlLoadData}?year=${selectYear.value}&contract_id=${currentContractId}`
             );
             displayStatus(response ?? null);
-            displayTable((response?.details || response?.comparison) ?? null);
+            displayTable((response?.details || response?.comparison || response?.registerMerged) ?? null);
         } catch (error) {
             console.error("Load data failed:", error);
         }

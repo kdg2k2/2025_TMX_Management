@@ -56,10 +56,12 @@
                             id="upload-modal-btn">
                             Tải lên Excel
                         </x-button>
-                        <x-button variant="warning" :outline="true" size="sm" tooltip="Tạo xem trước biên bản"
-                            icon="ti ti-file-type-docx" id="create-minute-modal-btn">
-                            Tạo BB
-                        </x-button>
+                        @if ($showCreateMinuteBtn)
+                            <x-button variant="warning" :outline="true" size="sm" tooltip="Tạo xem trước biên bản"
+                                icon="ti ti-file-type-docx" id="create-minute-modal-btn">
+                                Tạo BB
+                            </x-button>
+                        @endif
                         <x-button variant="info" :outline="true" size="sm" tooltip="Tải file biên bản"
                             icon="ti ti-download" id="download-minute-btn">
                             Tải BB
@@ -103,6 +105,9 @@
     @yield('child-modals')
 @endsection
 @section('scripts')
+    <script>
+        $showCreateMinuteBtn = @json($showCreateMinuteBtn);
+    </script>
     <script src="assets/js/dossier/base.js"></script>
     @yield('child-scripts')
 @endsection

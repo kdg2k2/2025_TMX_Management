@@ -219,7 +219,7 @@ class DossierMinuteService extends BaseService
         if (!is_dir($des_pdf_file))
             mkdir($des_pdf_file, 0777, true);
 
-        $output = $folder . '/' . uniqid("dossier_minute_$type");
+        $output = $folder . '/' . "dossier_minute_{$type}_" . date('d-m-Y_H-i-s') . '.xlsx';;
         $docx = $output . '.docx';
         $pdf = $output . '.pdf';
         $templateProcessor->saveAs(public_path($docx));

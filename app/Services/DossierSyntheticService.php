@@ -96,7 +96,7 @@ class DossierSyntheticService extends BaseService
             ];
 
             $folder = 'uploads/dossier/synthetic';
-            $fileName = uniqid('dossier_synthetic') . '.xlsx';
+            $fileName = 'dossier_synthetic_' . date('d-m-Y_H-i-s') . '.xlsx';
             return asset(
                 app(ExcelService::class)->createExcel(
                     $sheets,

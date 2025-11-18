@@ -41,6 +41,7 @@ class DossierPlanService extends BaseService
                         'columns' => ['id', 'name'],
                     ]),
                     'pageTitle' => 'Lập kế hoạch',
+                    'showCreateMinuteBtn' => true,
                 ]
             );
         });
@@ -126,7 +127,7 @@ class DossierPlanService extends BaseService
 
                 return asset($dossierService->createExcel(
                     'uploads/dossier/plan',
-                    uniqid('dossier_plan') . '.xlsx',
+                    'dossier_plan_' . date('d-m-Y_H-i-s') . '.xlsx',
                     $sheets
                 ));
             }

@@ -22,7 +22,8 @@ class DossierHandoverService extends BaseService
     public function baseIndexData()
     {
         return $this->tryThrow(function () {
-            $res = app(DossierPlanService::class)->baseIndexData();
+            $res = app(DossierService::class)->baseIndexData();
+            $res['showCreateMinuteBtn'] = true;
             $res['pageTitle'] = 'Bàn giao';
             return $res;
         });
@@ -354,7 +355,7 @@ class DossierHandoverService extends BaseService
 
         return asset($dossierService->createExcel(
             'uploads/dossier/handover',
-            uniqid('dossier_handover_') . '.xlsx',
+            'dossier_handover_' . date('d-m-Y_H-i-s') . '.xlsx',
             $sheets
         ));
     }
