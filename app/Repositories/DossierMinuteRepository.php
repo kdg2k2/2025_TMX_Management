@@ -5,16 +5,9 @@ use App\Models\DossierMinute;
 
 class DossierMinuteRepository extends BaseRepository
 {
-    public $baseRelation = [];
-
     public function __construct()
     {
         $this->model = new DossierMinute();
-        $this->baseRelation = [
-            'user',
-            'handoverBy',
-            'receivedBy',
-        ];
         $this->relations = [
             'plan' => function ($q) {
                 $q->with(app(DossierPlanRepository::class)->relations);

@@ -225,9 +225,6 @@ class DossierMinuteService extends BaseService
 
     private function prepareDataToRenderMinuteFile(array $plantDetails, int $handoverById, int $receivedById, int $createrId = null, bool $signed = false)
     {
-        // dd(
-        //     $plantDetails, $handoverById, $receivedById, $createrId, $signed
-        // );
         $bengiaoUserInfo = $this->userService->findById($handoverById)->toArray();
         $bennhanUserInfo = $this->userService->findById($receivedById)->toArray();
         $nguoilapUserInfo = optional($this->userService->findById($createrId))->toArray();
@@ -301,7 +298,11 @@ class DossierMinuteService extends BaseService
 
     private function getEmails($minute, $getContractMembers = true)
     {
-        $baseRelations = $this->repository->baseRelation;
+        $baseRelations = [
+            'user',
+            'handoverBy',
+            'receivedBy',
+        ];
         $minute = $minute->load(
             $this->repository->relations
         );
@@ -313,20 +314,21 @@ class DossierMinuteService extends BaseService
         elseif ($minute->usageRegister)
             $contract = $minute->usageRegister->plan->contract;
 
-        $contractMemberEmails = [];
         if ($getContractMembers) {
             $contractMember = app(ContractService::class)->getMembers($contract['id']);
-            $contractMemberEmails = app(UserService::class)->getEmails(
-                collect(Arr::flatten([
-                    $contractMember['professionals'],
-                    $contractMember['disbursements'],
-                    $contractMember['instructors'],
-                ]))->pluck('id')->unique()->toArray()
-            );
+            $contractMemberIds = collect(Arr::flatten([
+                $contractMember['professionals'],
+                $contractMember['disbursements'],
+                $contractMember['instructors'],
+            ]))->pluck('id')->unique()->toArray();
         }
 
-        $emailSchedule = app(TaskScheduleService::class)->findById(36);
-        $emails = array_merge($contractMemberEmails, array_map('trim', explode(', ', $emailSchedule->emails)));
+        $emails = app(UserService::class)->getEmails(
+            [
+                $contractMemberIds,
+                json_decode(app(SystemConfigService::class)->getDossierUserSendEmailIds()->value),
+            ]
+        );
 
         foreach ([
             'plan',

@@ -143,7 +143,7 @@ class UserService extends BaseService
         if (empty($userIds))
             return [];
 
-        $users = $this->repository->findByKeys(array_filter($userIds, fn($i) => !empty($i)), 'id', true)->toArray();
+        $users = $this->repository->findByKeys(array_filter(Arr::flatten($userIds), fn($i) => !empty($i)), 'id', true)->toArray();
 
         return array_unique(
             Arr::flatten(
