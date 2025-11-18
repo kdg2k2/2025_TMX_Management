@@ -1,4 +1,4 @@
-<table class="table table-bordered table-hover" id="table-dulieu">
+<table class="table table-hover" id="table-dulieu">
     <thead>
         <tr>
             <th>Loại hồ sơ</th>

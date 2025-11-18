@@ -1,37 +1,5 @@
 const navBienban = document.getElementById("dossier-plan-nav-tab-1");
-
-const downloadExcelBtn = document.getElementById("downloadExcelBtn");
-
-const uploadModalBtn = document.getElementById("uploadModalBtn");
-const uploadModal = document.getElementById("uploadModal");
-
-const createMinuteModalBtn = document.getElementById("createMinuteModalBtn");
-const createMinuteModal = document.getElementById("createMinuteModal");
-
-const downloadMinuteBtn = document.getElementById("downloadMinuteBtn");
-
-const approveModalBtn = document.getElementById("approveModalBtn");
-const approveModal = document.getElementById("approveModal");
-
-// tải mẫu
-const handleDownloadExcel = async () => {
-    const response = await http.get(urlCreateTempExcel);
-    if (response.message) downloadFileHandler(response.data);
-};
-
-// tải lên excel
-const handleUploadModalSubmit = async (event) => {
-    event.preventDefault();
-
-    const fileInput = uploadModal.querySelector('input[name="file"]');
-
-    if (!validateFileSelected(fileInput) || !validateContractSelected()) {
-        return;
-    }
-
-    const formData = createFormDataWithContract(event.target);
-    await handleUploadExcel(formData);
-};
+const createMinuteModal = document.getElementById("create-minute-modal");
 
 // tạo biên bản
 const handleCreateMinuteSubmit = async (event) => {
@@ -39,7 +7,7 @@ const handleCreateMinuteSubmit = async (event) => {
 
     if (
         !validateCreateMinuteForm(event.target) ||
-        !validateContractSelected()
+        !validateBasicRequirements()
     ) {
         return;
     }
@@ -49,32 +17,6 @@ const handleCreateMinuteSubmit = async (event) => {
 
     if (response && (response.success === true || response.message)) {
         hideModal(createMinuteModal);
-        loadData();
-    }
-};
-
-// tải xuống biên bản đang xem
-const handleDownloadMinute = () => {
-    if (!validateContractSelected()) return;
-
-    if (currentPath) {
-        downloadFileHandler(currentPath);
-    } else {
-        alertInfo("Chưa có file biên bản để tải xuống!");
-    }
-};
-
-// yêu cầu duyệt
-const handleApproveModalSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!validateContractSelected()) return;
-
-    const formData = createFormDataWithContract(event.target);
-    const response = await http.post(urlSendApproveRequest, formData);
-
-    if (response.message) {
-        hideModal(approveModal);
         loadData();
     }
 };
@@ -135,34 +77,41 @@ const renderTableContent = (data, table) => {
     initDataTable(table);
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-    selectYear.addEventListener("change", handleSelectYearChange);
-    selectContract.addEventListener("change", handleContractChange);
+const displayStatus = (response) => {
+    if (!response) {
+        clearStatusDisplay();
+        displayIframe(null);
+        currentPath = null;
+        return;
+    }
 
-    downloadExcelBtn.addEventListener("click", handleDownloadExcel);
-    downloadMinuteBtn.addEventListener("click", handleDownloadMinute);
+    // Update user info
+    if (response.user) {
+        createdName.innerHTML = `<span class="text-info">${response.user.name}</span>`;
+    }
 
-    [
-        {
-            btn: uploadModalBtn,
-            modal: uploadModal,
-            handlerSubmit: handleUploadModalSubmit,
-        },
-        {
-            btn: createMinuteModalBtn,
-            modal: createMinuteModal,
-            handlerSubmit: handleCreateMinuteSubmit,
-        },
-        {
-            btn: approveModalBtn,
-            modal: approveModal,
-            handlerSubmit: handleApproveModalSubmit,
-        },
-    ].forEach(({ btn, modal, handlerSubmit }) => {
-        btn?.addEventListener("click", () => {
-            showModal(modal);
-        });
+    // Update status icons
+    setStatusIcon(isHasData, response.details?.length > 0);
+    setStatusIcon(isHasMinute, response.minutes?.length > 0);
 
-        modal?.addEventListener("submit", handlerSubmit);
-    });
-});
+    // Update minute status
+    var minusStatus = "Chưa có biên bản";
+    if (response?.minutes?.length > 0) {
+        const latestMinute = response.minutes?.at(-1);
+        minusStatus = latestMinute?.status?.converted ?? "";
+
+        const latestPath =
+            latestMinute?.path || latestMinute?.file_path || null;
+
+        currentPath = latestPath;
+        displayIframe(latestPath);
+    }
+    isMinusPending.innerHTML = `<span class="text-danger">${minusStatus}</span>`;
+};
+
+if (typeof customArrayHandleModalSubmit !== "undefined")
+    customArrayHandleModalSubmit = {
+        btn: createMinuteModalBtn,
+        modal: createMinuteModal,
+        handlerSubmit: handleCreateMinuteSubmit,
+    };

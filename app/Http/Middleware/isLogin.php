@@ -18,6 +18,6 @@ class isLogin
         if (auth()->check())
             return $next($request);
         session(['url.previous' => url()->current()]);
-        return redirect(route('login'))->with('err', 'Đăng nhập để tiếp tục');
+        return redirect(route('login'))->with('error', 'Đăng nhập để tiếp tục');
     }
 }

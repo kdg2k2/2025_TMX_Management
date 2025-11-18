@@ -95,7 +95,7 @@ class DossierSyntheticService extends BaseService
                 'freezePane' => 'freezeTopRow',
             ];
 
-            $folder = 'dossier/synthetic';
+            $folder = 'uploads/dossier/synthetic';
             $fileName = uniqid('dossier_synthetic') . '.xlsx';
             return asset(
                 app(ExcelService::class)->createExcel(

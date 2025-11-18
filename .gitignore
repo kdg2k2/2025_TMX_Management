@@ -18,5 +18,3 @@ yarn-error.log
 /.idea
 /.vscode
 /public/uploads/*
-/public/dossier/*
-!/public/dossier/templates

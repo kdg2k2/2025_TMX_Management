@@ -19,15 +19,13 @@ class DossierHandoverService extends BaseService
         $this->dossierMinuteService = app(DossierMinuteService::class);
     }
 
-    public function beforeStore(array $request)
+    public function baseIndexData()
     {
-        $request['user_id'] = $this->getUserId();
-        return $request;
-    }
-
-    public function beforeImport(array $request)
-    {
-        return array_map([$this, 'beforeStore'], $request);
+        return $this->tryThrow(function () {
+            $res = app(DossierPlanService::class)->baseIndexData();
+            $res['pageTitle'] = 'Bàn giao';
+            return $res;
+        });
     }
 
     public function deleteByPlanId(int $id)
@@ -41,22 +39,17 @@ class DossierHandoverService extends BaseService
     {
         return $this->tryThrow(function () use ($contractId, $year) {
             $handoverOut = $this->getHandoverOut($contractId, $year);
-            $handoverInDraftOrPendingApproval = $this->getHandoverInDraftOrPendingApproval($contractId, $year) ?? [];
-            $handoverInsApproved = $this->getHandoverInsApproved($contractId, $year) ?? [];
-
-            // dd([
-            //     'số lượng giấy tờ theo kế hoạch cần được bàn giao' => $handoverOut,
-            //     'số lượng giấy tờ bàn giao vào đang chờ duyệt hoặc nháp' => $handoverInDraftOrPendingApproval,
-            //     'số lượng giấy tờ bàn giao vào đã được duyệt' => $handoverInsApproved
-            // ]);
+            $handoverInDraftOrPendingApproval = optional($this->getHandoverInDraftOrPendingApproval($contractId, $year))->toArray() ?? [];
+            $handoverInsApproved = optional($this->getHandoverInsApproved($contractId, $year))->toArray() ?? [];
 
             $comparison = $this->mergeAndCompareHandovers($handoverOut, $handoverInDraftOrPendingApproval, $handoverInsApproved);
 
             $handoverInDraftOrPendingApproval = $this->formatRecord($handoverInDraftOrPendingApproval);
+
             return [
                 'comparison' => $comparison,
                 'flag' => [
-                    'times' => $handoverInDraftOrPendingApproval['times'] ?? 0,
+                    'times' => $handoverInDraftOrPendingApproval['times'] ?? collect($handoverInsApproved)->first()['times'] ?? 0,
                     'has_data' => isset($handoverInDraftOrPendingApproval['details']) && count($handoverInDraftOrPendingApproval['details']) > 0,
                     'minutes' => $handoverInDraftOrPendingApproval['minutes'] ?? null,
                     'user' => $handoverInDraftOrPendingApproval['user'] ?? null,
@@ -65,7 +58,7 @@ class DossierHandoverService extends BaseService
         });
     }
 
-    private function mergeAndCompareHandovers($keHoach, $dangChoduyet, $daDuyet)
+    private function mergeAndCompareHandovers($plan, $waitingApprove, $approved)
     {
         $createKey = function ($item) {
             return implode('_', [
@@ -77,15 +70,15 @@ class DossierHandoverService extends BaseService
         };
 
         // Lấy mảng details từ các tham số
-        $keHoachDetails = isset($keHoach['details']) ? $keHoach['details'] : [];
-        $dangChoDuyetDetails = isset($dangChoduyet['details']) ? $dangChoduyet['details'] : [];
+        $keHoachDetails = isset($plan['details']) ? $plan['details'] : [];
+        $dangChoDuyetDetails = isset($waitingApprove['details']) ? $waitingApprove['details'] : [];
 
         // Xử lý mảng đã duyệt (có thể có nhiều record)
         $daDuyetDetails = [];
-        $dangChoDuyetId = $dangChoduyet['id'] ?? null;
+        $dangChoDuyetId = $waitingApprove['id'] ?? null;
 
-        if (is_array($daDuyet)) {
-            foreach ($daDuyet as $item) {
+        if (is_array($approved)) {
+            foreach ($approved as $item) {
                 if (isset($item['details']) && is_array($item['details'])) {
                     $handoverId = $item['id'] ?? null;
 
@@ -120,11 +113,11 @@ class DossierHandoverService extends BaseService
                 'handover_province' => null,
                 'handover_commune' => null,
                 'handover_unit' => null,
-                'ke_hoach' => $item['quantity'],
-                'dang_cho_duyet' => 0,
-                'da_duyet' => 0,
-                'ngoai_ke_hoach' => false,
-                'ghi_chu' => []
+                'plan' => $item['quantity'],
+                'waiting_approve' => 0,
+                'approved' => 0,
+                'out_plan' => false,
+                'note' => []
             ];
         }
 
@@ -148,19 +141,19 @@ class DossierHandoverService extends BaseService
                     'handover_province' => $item['province'] ?? null,
                     'handover_commune' => $item['commune'] ?? null,
                     'handover_unit' => $item['unit'] ?? null,
-                    'ke_hoach' => 0,
-                    'dang_cho_duyet' => 0,
-                    'da_duyet' => 0,
-                    'ngoai_ke_hoach' => true,
-                    'ghi_chu' => []
+                    'plan' => 0,
+                    'waiting_approve' => 0,
+                    'approved' => 0,
+                    'out_plan' => true,
+                    'note' => []
                 ];
             }
 
-            $result[$key]['dang_cho_duyet'] += $item['quantity'];
+            $result[$key]['waiting_approve'] += $item['quantity'];
 
             // Thêm ghi chú nếu có
             if (!empty($item['note'])) {
-                $result[$key]['ghi_chu'][] = $item['note'];
+                $result[$key]['note'][] = $item['note'];
             }
         }
 
@@ -184,42 +177,42 @@ class DossierHandoverService extends BaseService
                     'handover_province' => $item['province'] ?? null,
                     'handover_commune' => $item['commune'] ?? null,
                     'handover_unit' => $item['unit'] ?? null,
-                    'ke_hoach' => 0,
-                    'dang_cho_duyet' => 0,
-                    'da_duyet' => 0,
-                    'ngoai_ke_hoach' => true,
-                    'ghi_chu' => []
+                    'plan' => 0,
+                    'waiting_approve' => 0,
+                    'approved' => 0,
+                    'out_plan' => true,
+                    'note' => []
                 ];
             }
 
-            $result[$key]['da_duyet'] += $item['quantity'];
+            $result[$key]['approved'] += $item['quantity'];
 
             // Thêm ghi chú nếu có
             if (!empty($item['note'])) {
-                $result[$key]['ghi_chu'][] = $item['note'];
+                $result[$key]['note'][] = $item['note'];
             }
         }
 
         // Tính toán thêm các chỉ số và xử lý ghi chú
         foreach ($result as &$row) {
-            $row['tong_da_ban_giao'] = $row['da_duyet'] + $row['dang_cho_duyet'];
+            $row['total_approve'] = $row['approved'] + $row['waiting_approve'];
 
             // Tính còn lại (luôn >= 0)
-            $row['con_lai'] = max(0, $row['ke_hoach'] - $row['da_duyet']);
+            $row['total_left'] = max(0, $row['plan'] - $row['approved']);
 
             // Gộp các ghi chú thành chuỗi (loại bỏ trùng lặp)
-            if (!empty($row['ghi_chu']))
-                $row['ghi_chu'] = !empty($row['ghi_chu'])
-                    // ? implode('; ', array_unique($row['ghi_chu'])) // nối chuỗi các note
-                    ? reset($row['ghi_chu'])  // lấy note cuối cùng
+            if (!empty($row['note']))
+                $row['note'] = !empty($row['note'])
+                    // ? implode('; ', array_unique($row['note'])) // nối chuỗi các note
+                    ? reset($row['note'])  // lấy note cuối cùng
                     : '';
         }
         unset($row);
 
         // Sắp xếp: trong kế hoạch trước, ngoài kế hoạch sau
         usort($result, function ($a, $b) {
-            $scoreA = ($a['ngoai_ke_hoach'] ? 1 : 0) + ($a['da_duyet'] > 0 ? -1 : 0);
-            $scoreB = ($b['ngoai_ke_hoach'] ? 1 : 0) + ($b['da_duyet'] > 0 ? -1 : 0);
+            $scoreA = ($a['out_plan'] ? 1 : 0) + ($a['approved'] > 0 ? -1 : 0);
+            $scoreB = ($b['out_plan'] ? 1 : 0) + ($b['approved'] > 0 ? -1 : 0);
             return $scoreA <=> $scoreB;
         });
 
@@ -360,7 +353,7 @@ class DossierHandoverService extends BaseService
         ];
 
         return asset($dossierService->createExcel(
-            'dossier/handover',
+            'uploads/dossier/handover',
             uniqid('dossier_handover_') . '.xlsx',
             $sheets
         ));
@@ -388,7 +381,7 @@ class DossierHandoverService extends BaseService
                 $item['handover_province']['name'] ?? '',  // Địa chỉ từ đã duyệt (nếu có)
                 $item['handover_commune']['name'] ?? '',  // Địa chỉ từ đã duyệt (nếu có)
                 $item['handover_unit']['name'] ?? '',  // Địa chỉ từ đã duyệt (nếu có)
-                $item['ke_hoach'] ?? 0,
+                $item['plan'] ?? 0,
                 '',  // Cột để nhập số lượng bàn giao mới
                 '',  // Ghi chú
             ];
@@ -485,7 +478,7 @@ class DossierHandoverService extends BaseService
                 $row['plan_province']['name'] ?? '',  // Có thể null nếu ngoài kế hoạch
                 $row['plan_commune']['name'] ?? '',  // Có thể null nếu ngoài kế hoạch
                 $row['plan_unit']['name'] ?? '',  // Có thể null nếu ngoài kế hoạch
-                $row['ke_hoach'] ?? 0
+                $row['plan'] ?? 0
             ]);
             $statusKeys[$key] = $index;
         }
@@ -586,7 +579,7 @@ class DossierHandoverService extends BaseService
         } else {
             if (!is_numeric($row[8])) {
                 $errors[] = 'Số lượng bàn giao phải là số';
-            } elseif (!is_int($row[8]) || $row[8] < 0) {
+            } elseif (!ctype_digit((string) $row[8])) {
                 $errors[] = 'Số lượng bàn giao phải là số nguyên dương';
             }
         }
@@ -659,7 +652,7 @@ class DossierHandoverService extends BaseService
         if (!empty($row[8])) {
             if (!is_numeric($row[8])) {
                 $errors[] = 'Số lượng bàn giao phải là số';
-            } elseif (!is_int($row[8]) || $row[8] < 0) {
+            } elseif (!ctype_digit((string) $row[8])) {
                 $errors[] = 'Số lượng bàn giao phải là số nguyên dương';
             }
         }

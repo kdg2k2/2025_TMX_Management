@@ -139,7 +139,7 @@ const renderDayContent = (day, dayIndex) => {
 
     return `
         <div class="table-responsive">
-            <table id="table-day-${dayIndex}" class="table table-bordered table-hover nowrap w-100">
+            <table id="table-day-${dayIndex}" class="table table-hover nowrap w-100">
                 <thead>
                     <tr>
                         <th>Họ tên</th>

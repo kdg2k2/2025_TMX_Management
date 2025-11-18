@@ -1,19 +1,23 @@
 const selectYear = document.getElementById("year");
-const selectContract = document.getElementById("contract_id");
-const countContract = document.querySelector('label[for="contract_id"] span');
+const selectContract = document.getElementById("contract-id");
+const countContract = document.querySelector('label[for="contract-id"] span');
 const tableDulieu = $("#table-dulieu");
-const createdName = document.getElementById("createdName");
-const isHasData = document.getElementById("isHasData");
-const isHasMinute = document.getElementById("isHasMinute");
-const isMinusPending = document.getElementById("isMinusPending");
-
-// storage
+const createdName = document.getElementById("created-name");
+const isHasData = document.getElementById("is-has-data");
+const isHasMinute = document.getElementById("is-has-minute");
+const isMinusPending = document.getElementById("is-minus-pending");
+const downloadExcelBtn = document.getElementById("download-excel-btn");
+const uploadModalBtn = document.getElementById("upload-modal-btn");
+const uploadModal = document.getElementById("upload-modal");
+const createMinuteModalBtn = document.getElementById("create-minute-modal-btn");
+const downloadMinuteBtn = document.getElementById("download-minute-btn");
+const approveModalBtn = document.getElementById("approve-modal-btn");
+const approveModal = document.getElementById("approve-modal");
 var currentContractId = null;
 var currentPath = null;
+var customArrayHandleModalSubmit = {};
 
-/**
- * Validate contract đã được chọn
- */
+// Validate contract đã được chọn
 const validateContractSelected = () => {
     if (!currentContractId) {
         alertWarning("Vui lòng chọn hợp đồng!");
@@ -22,11 +26,9 @@ const validateContractSelected = () => {
     return true;
 };
 
-/**
- * Validate có dữ liệu
- */
+// Validate có dữ liệu
 const validateHasData = () => {
-    const hasData = isHasData.querySelector("i.fa-circle-check");
+    const hasData = isHasData.querySelector("i.ti-circle-check");
     if (!hasData) {
         alertWarning("Chưa có dữ liệu!");
         return false;
@@ -34,11 +36,9 @@ const validateHasData = () => {
     return true;
 };
 
-/**
- * Validate có biên bản
- */
+// Validate có biên bản
 const validateHasMinute = () => {
-    const hasMinute = isHasMinute.querySelector("i.fa-circle-check");
+    const hasMinute = isHasMinute.querySelector("i.ti-circle-check");
     if (!hasMinute) {
         alertWarning("Chưa có biên bản!");
         return false;
@@ -46,34 +46,19 @@ const validateHasMinute = () => {
     return true;
 };
 
-/**
- * Validate tổng hợp cho các action cần contract + data
- */
+// Validate tổng hợp cho các action cần contract + data
 const validateBasicRequirements = () => {
     return validateContractSelected() && validateHasData();
 };
 
-/**
- * Validate tổng hợp cho các action cần contract + data + minute
- */
+// Validate tổng hợp cho các action cần contract + data + minute
 const validateFullRequirements = () => {
     return (
         validateContractSelected() && validateHasData() && validateHasMinute()
     );
 };
 
-/**
- * Validate cho approve action
- */
-const validateApproveRequirements = () => {
-    return (
-        validateContractSelected() && validateHasData() && validateHasMinute()
-    );
-};
-
-/**
- * Validate file đã được chọn
- */
+// Validate file đã được chọn
 const validateFileSelected = (fileInput) => {
     if (!fileInput.files[0]) {
         alertWarning("Vui lòng chọn file!");
@@ -82,83 +67,27 @@ const validateFileSelected = (fileInput) => {
     return true;
 };
 
-/**
- * Create FormData with common fields
- */
+// chèn thêm contract_id vào form
 const createFormDataWithContract = (form) => {
     const formData = new FormData(form);
     formData.append("contract_id", currentContractId);
     return formData;
 };
 
-/**
- * Set status icon
- */
 const setStatusIcon = (element, hasData) => {
     element.innerHTML = hasData
         ? '<i class="ti ti-circle-check text-success"></i>'
         : '<i class="ti ti-xbox-x text-danger"></i>';
 };
 
-/**
- * Clear all status displays
- */
 const clearStatusDisplay = () => {
     createdName.innerHTML = "";
     setStatusIcon(isHasData, false);
     setStatusIcon(isHasMinute, false);
     isMinusPending.innerHTML = "";
-};
 
-/**
- * upload excel handler
- */
-const handleUploadExcel = async (formData) => {
-    try {
-        const data = await http.post(urlUploadExcel, formData);
-
-        if (data && (data.success === true || data.message)) {
-            loadData();
-            hideModal(uploadModal);
-        }
-    } catch (err) {
-        console.error("handleUploadExcel failed", err);
-    }
-};
-
-/**
- * display status
- */
-const displayStatus = (response) => {
-    if (!response) {
-        clearStatusDisplay();
-        displayIframe(null);
-        currentPath = null;
-        return;
-    }
-
-    // Update user info
-    if (response.user) {
-        createdName.innerHTML = `<span class="text-info">${response.user.name}</span>`;
-    }
-
-    // Update status icons
-    setStatusIcon(isHasData, response.details?.length > 0);
-    setStatusIcon(isHasMinute, response.minutes?.length > 0);
-
-    // Update minute status
-    var minusStatus = "Chưa có biên bản";
-    if (response?.minutes?.length > 0) {
-        const latestMinute = response.minutes?.at(-1);
-        minusStatus = latestMinute?.status?.converted ?? "";
-
-        const latestPath =
-            latestMinute?.path || latestMinute?.file_path || null;
-
-        currentPath = latestPath;
-        displayIframe(latestPath);
-    }
-    isMinusPending.innerHTML = `<span class="text-danger">${minusStatus}</span>`;
+    if (typeof customClearStatusDisplay == "function")
+        customClearStatusDisplay();
 };
 
 const displayIframe = (path) => {
@@ -214,7 +143,7 @@ const loadData = async () => {
                 `${urlLoadData}?year=${selectYear.value}&contract_id=${currentContractId}`
             );
             displayStatus(response ?? null);
-            displayTable(response?.details ?? null);
+            displayTable((response?.details || response?.comparison) ?? null);
         } catch (error) {
             console.error("Load data failed:", error);
         }
@@ -244,3 +173,104 @@ const displayTable = (data) => {
 
     renderTableContent(data, tableDulieu);
 };
+
+const handleModalSubmitBase = async ({ e, validate, url, modal }) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    const form = e.target;
+    form.setAttribute("action", url);
+
+    await handleSubmitForm(
+        e,
+        form,
+        () => {
+            loadData();
+            hideModal(modal);
+        },
+        true,
+        createFormDataWithContract(form)
+    );
+};
+
+// tải mẫu
+const handleDownloadExcel = async () => {
+    if (typeof customValidateHandleDownloadExcel == "function")
+        if (!customValidateHandleDownloadExcel()) return;
+
+    let params = {};
+    if (typeof customParamsHandleDownloadExcel == "function")
+        params = customParamsHandleDownloadExcel();
+
+    const response = await http.get(urlCreateTempExcel, params);
+    if (response.message) downloadFileHandler(response.data);
+};
+
+// tải lên excel
+const handleUploadModalSubmit = (e) =>
+    handleModalSubmitBase({
+        e,
+        validate: () =>
+            validateFileSelected(
+                uploadModal.querySelector('input[name="file"]')
+            ) && validateContractSelected(),
+        url: urlUploadExcel,
+        modal: uploadModal,
+    });
+
+// tải xuống biên bản đang xem
+const handleDownloadMinute = () => {
+    if (!validateFullRequirements()) return;
+
+    if (currentPath) {
+        downloadFileHandler(currentPath);
+    } else {
+        alertInfo("Chưa có file biên bản để tải xuống!");
+    }
+};
+
+// yêu cầu duyệt
+const handleApproveModalSubmit = (e) =>
+    handleModalSubmitBase({
+        e,
+        validate: validateFullRequirements,
+        url: urlSendApproveRequest,
+        modal: approveModal,
+    });
+
+const getArrayHandleModalSubmit = () => {
+    let arr = [
+        {
+            btn: uploadModalBtn,
+            modal: uploadModal,
+            handlerSubmit: handleUploadModalSubmit,
+        },
+        {
+            btn: approveModalBtn,
+            modal: approveModal,
+            handlerSubmit: handleApproveModalSubmit,
+        },
+    ];
+
+    if (
+        typeof customArrayHandleModalSubmit !== "undefined" &&
+        typeof customArrayHandleModalSubmit == "object"
+    )
+        arr.push(customArrayHandleModalSubmit);
+
+    return arr;
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    selectYear.addEventListener("change", handleSelectYearChange);
+    selectContract.addEventListener("change", handleContractChange);
+    downloadExcelBtn.addEventListener("click", handleDownloadExcel);
+    downloadMinuteBtn.addEventListener("click", handleDownloadMinute);
+
+    getArrayHandleModalSubmit().forEach(({ btn, modal, handlerSubmit }) => {
+        btn?.addEventListener("click", () => {
+            showModal(modal);
+        });
+        modal?.addEventListener("submit", handlerSubmit);
+    });
+});

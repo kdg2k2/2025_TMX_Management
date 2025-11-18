@@ -73,7 +73,7 @@ class DossierTypeService extends BaseService
             ];
 
             return asset(app(DossierService::class)->createExcel(
-                'dossier/type',
+                'uploads/dossier/type',
                 uniqid('dossier_type') . '.xlsx',
                 $sheets
             ));

@@ -2,22 +2,22 @@ const handleSubmitForm = async (
     e,
     form,
     callbackAfterSubmit = () => {},
-    resetForm = true
+    resetForm = true,
+    formData
 ) => {
     e.preventDefault();
     const btnSubmit = form.querySelector('button[type="submit"]');
     const method = getFormMethod(form);
-    const formData = new FormData(form);
+    if (!formData) formData = new FormData(form);
     const onSuccess = form.getAttribute("data-onsuccess") ?? null;
     const action = form.getAttribute("action")?.toLowerCase();
 
     try {
         setButtonLoading(btnSubmit, true);
 
-        const res = await http[method](action, formData);
-        if (resetForm && method === "post") {
-            resetFormAfterSubmit(form);
-        }
+        await http[method](action, formData);
+        
+        if (resetForm && method === "post") resetFormAfterSubmit(form);
 
         if (typeof window[onSuccess] == "function") window[onSuccess]();
 

@@ -26,7 +26,7 @@ class ProofContractService extends BaseService
         return $this->tryThrow(function () use ($request) {
             $extracted = $this->extractFields($request);
             $data = $this->repository->update($request);
-            $this->handleFile(data: $data, $extracted, true);
+            $this->handleFile($data, $extracted, true);
         }, true);
     }
 

@@ -11,7 +11,6 @@ class DossierMinuteService extends BaseService
 {
     private $userService;
     private $systemConfigService;
-    private $personnelFileService;
     private $wordService;
 
     public function __construct()
@@ -19,7 +18,6 @@ class DossierMinuteService extends BaseService
         $this->repository = app(DossierMinuteRepository::class);
         $this->userService = app(UserService::class);
         $this->systemConfigService = app(SystemConfigService::class);
-        $this->personnelFileService = app(PersonnelFileService::class);
         $this->wordService = app(WordService::class);
     }
 
@@ -64,7 +62,7 @@ class DossierMinuteService extends BaseService
             // xóa các biên bản draft của gói thầu này trước
             $this->repository->deleteDraftByType($plan['id'], 'plan');
 
-            $templatePath = public_path('dossier/templates/dossier_plan_minute.docx');
+            $templatePath = public_path('templates/dossier_plan_minute.docx');
             if (!file_exists($templatePath))
                 throw new Exception('Template file not found: ' . $templatePath);
 
@@ -96,7 +94,7 @@ class DossierMinuteService extends BaseService
         // xóa các biên bản draft của gói thầu này trước
         $this->repository->deleteDraftByType($handover['id'], 'handover');
 
-        $templatePath = public_path('dossier/templates/dossier_handover_minute.docx');
+        $templatePath = public_path('templates/dossier_handover_minute.docx');
         if (!file_exists($templatePath))
             throw new Exception('Template file not found: ' . $templatePath);
 
@@ -125,7 +123,7 @@ class DossierMinuteService extends BaseService
         $this->repository->deleteDraftByType($register['id'], 'usage_register');
 
         $fileName = $file->getClientOriginalName();
-        $folder = 'dossier/minute/usage_register';
+        $folder = 'uploads/dossier/minute/usage_register';
         $publicFolder = public_path($folder);
         if (!is_dir($publicFolder))
             mkdir($publicFolder, 0777, true);
@@ -216,7 +214,7 @@ class DossierMinuteService extends BaseService
             }
         }
 
-        $folder = "dossier/minute/$type";
+        $folder = "uploads/dossier/minute/$type";
         $des_pdf_file = public_path($folder);
         if (!is_dir($des_pdf_file))
             mkdir($des_pdf_file, 0777, true);
@@ -241,10 +239,10 @@ class DossierMinuteService extends BaseService
         $bengiaoSign = $bennhanSign = $nguoilapSign = [];
 
         if ($signed == true) {
-            $bengiaoSign = $this->personnelFileService->getSignature($bengiaoUserInfo['name'], null);
-            $bennhanSign = $this->personnelFileService->getSignature($bennhanUserInfo['name'], null);
+            $bengiaoSign = $bengiaoUserInfo['path_signature'];
+            $bennhanSign = $bennhanUserInfo['path_signature'];
             if ($nguoilapUserInfo)
-                $nguoilapSign = $this->personnelFileService->getSignature($nguoilapUserInfo['name'], $nguoilapUserInfo['vitri_ifee'] ?? null);
+                $nguoilapSign = $nguoilapUserInfo['path_signature'];
         }
 
         $table_1 = array_map(

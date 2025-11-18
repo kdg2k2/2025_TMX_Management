@@ -267,7 +267,7 @@ class DossierUsageRegisterService extends BaseService
             ];
 
             return asset($dossierService->createExcel(
-                'dossier/usage_register',
+                'uploads/dossier/usage_register',
                 uniqid('dossier_usage_register') . '.xlsx',
                 $sheets
             ));

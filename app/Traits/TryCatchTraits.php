@@ -2,11 +2,11 @@
 
 namespace App\Traits;
 
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Exception;
 
 trait TryCatchTraits
 {
@@ -40,7 +40,7 @@ trait TryCatchTraits
         } catch (TokenExpiredException $e) {
             return [
                 'success' => false,
-                'error_message' => "Refresh token expired",
+                'error_message' => 'Refresh token expired',
                 'error_code' => $this->getErrorCode($e),
                 'exception_type' => 'token_expired',
                 'original_exception' => $e
@@ -48,7 +48,7 @@ trait TryCatchTraits
         } catch (TokenInvalidException $e) {
             return [
                 'success' => false,
-                'error_message' => "Invalid refresh token",
+                'error_message' => 'Invalid refresh token',
                 'error_code' => $this->getErrorCode($e),
                 'exception_type' => 'token_invalid',
                 'original_exception' => $e
@@ -81,8 +81,8 @@ trait TryCatchTraits
 
         if (!$result['success']) {
             return response()->json([
-                "message" => $result['error_message'],
-                "type" => $result['exception_type'] ?? 'error'
+                'message' => $result['error_message'],
+                'type' => $result['exception_type'] ?? 'error'
             ], $result['error_code']);
         }
 
@@ -98,10 +98,10 @@ trait TryCatchTraits
 
         if (!$result['success']) {
             $errorMessage = is_array($result['error_message'])
-            ? $this->formatValidationErrors($result['error_message'])
-            : $result['error_message'];
+                ? $this->formatValidationErrors($result['error_message'])
+                : $result['error_message'];
 
-            return redirect()->back()->with('err', $errorMessage);
+            return redirect()->back()->with('error', $errorMessage);
         }
 
         return $result['data'];
@@ -157,10 +157,10 @@ trait TryCatchTraits
         // Fallback nếu không có original exception
         switch ($result['exception_type']) {
             case 'token_expired':
-                throw new TokenExpiredException("Refresh token expired");
+                throw new TokenExpiredException('Refresh token expired');
 
             case 'token_invalid':
-                throw new TokenInvalidException("Invalid refresh token");
+                throw new TokenInvalidException('Invalid refresh token');
 
             case 'validation':
                 // Recreate ValidationException - cách đơn giản nhất
