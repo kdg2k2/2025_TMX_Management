@@ -347,7 +347,7 @@
                                     </a>
                                 </li>
                                 <li class="slide">
-                                    <a href="javascript:void(0)" class="side-menu__item">
+                                    <a href="{{ route('dossier.synthetic.index') }}" class="side-menu__item">
                                         <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
                                         Tổng hợp chứng từ
                                     </a>

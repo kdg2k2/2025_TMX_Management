@@ -12,6 +12,13 @@ class DossierSyntheticService extends BaseService
         $this->ContractService = app(ContractService::class);
     }
 
+    public function baseIndexData()
+    {
+        return $this->tryThrow(function () {
+            return app(DossierService::class)->baseIndexData();
+        });
+    }
+
     public function createSyntheticFile(array $request)
     {
         return $this->tryThrow(function () use ($request) {

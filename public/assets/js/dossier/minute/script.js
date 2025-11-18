@@ -64,6 +64,7 @@ const renderColumns = () => {
             render: (data, type, row) => {
                 return `
                     ${createViewBtn(row.path)}
+                    ${createDownloadBtn(row.path)}
                     ${
                         row.status.original == "pending_approval"
                             ? createBtn(
