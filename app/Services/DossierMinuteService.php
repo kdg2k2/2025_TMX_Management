@@ -363,7 +363,7 @@ class DossierMinuteService extends BaseService
         return $emails;
     }
 
-    public function sendMail(string $subject, array $data, DossierMinute $minute, bool $useJobQueue = true, bool $getContractMembers = true)
+    public function sendMail(string $subject, array $data, DossierMinute $minute, bool $useJobQueue = true, bool $getContractMembers = true, bool $sendFile = true)
     {
         if (!isset($data['authUser']))
             $data['authUser'] = auth()->user()->name;
@@ -379,7 +379,7 @@ class DossierMinuteService extends BaseService
                 $subject,
                 $emails,
                 $data,
-                $files
+                $sendFile ? $files : []
             );
         } else {
             app(EmailService::class)->sendMail(
@@ -387,7 +387,7 @@ class DossierMinuteService extends BaseService
                 $subject,
                 $emails,
                 $data,
-                $files
+                $sendFile ? $files : []
             );
         }
     }
@@ -585,6 +585,7 @@ class DossierMinuteService extends BaseService
                 ],
                 $minute,
                 true,
+                false,
                 false
             );
         }
