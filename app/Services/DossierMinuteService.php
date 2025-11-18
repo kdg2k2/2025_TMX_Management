@@ -23,6 +23,16 @@ class DossierMinuteService extends BaseService
         $this->wordService = app(WordService::class);
     }
 
+    public function listExceptDraftSortByStatus(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $request = array_merge($request, [
+                'except_status' => 'draft',
+            ]);
+            return $this->list($request);
+        });
+    }
+
     public function findByContractId(int $contractId)
     {
         return $this->tryThrow(function () use ($contractId) {
@@ -361,7 +371,7 @@ class DossierMinuteService extends BaseService
 
         $emails = $this->getEmails($minute, $getContractMembers);
 
-        $view = 'sendMail.sendGDD';
+        $view = 'emails.dossier';
         $files = [public_path($minute['path'])];
 
         if ($useJobQueue) {
@@ -536,7 +546,7 @@ class DossierMinuteService extends BaseService
             throw new Exception($message);
         } else {
             // update lại số lượng kho
-            $planDetails->map(function (&$item) {
+            $planDetails->each(function ($item) {
                 $item->type->update([
                     'quantity' => $item->type->quantity - $item->quantity
                 ]);

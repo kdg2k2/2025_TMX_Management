@@ -253,17 +253,10 @@ const renderActions = (user, date) => {
 };
 
 const openModalWarning = (btn) => {
-    const title = btn.getAttribute("aria-label");
-    const action = btn.getAttribute("data-href");
-    const onsuccess = btn.getAttribute("data-onsuccess");
-
-    if (title && action && onsuccess) {
-        modalWarning.querySelector(".modal-title").innerHTML = title;
-        modalWarningForm.setAttribute("action", action);
-        modalWarningForm.setAttribute("data-onsuccess", onsuccess);
-
-        showModal(modalWarning);
-    }
+    openModalBase(btn, {
+        modal: modalWarning,
+        form: modalWarningForm,
+    });
 };
 
 modalWarningForm.addEventListener("submit", async (e) => {

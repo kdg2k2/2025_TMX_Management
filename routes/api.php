@@ -392,37 +392,37 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         });
 
         Route::prefix('plan')->controller(DossierPlanController::class)->group(function () {
-            Route::get('find-by-id-contract-and-year', 'findByIdContractAndYear')->name('dossier.plan.findByIdContractAndYear');
-            Route::get('create-temp-excel', 'createTempExcel')->name('dossier.plan.createTempExcel');
-            Route::post('upload-excel', 'uploadExcel')->name('dossier.plan.uploadExcel');
-            Route::post('create-minute', 'createMinute')->name('dossier.plan.createMinute');
-            Route::post('send-approve-request', 'sendApproveRequest')->name('dossier.plan.sendApproveRequest');
+            Route::get('find-by-id-contract-and-year', 'findByIdContractAndYear')->name('api.dossier.plan.findByIdContractAndYear');
+            Route::get('create-temp-excel', 'createTempExcel')->name('api.dossier.plan.createTempExcel');
+            Route::post('upload-excel', 'uploadExcel')->name('api.dossier.plan.uploadExcel');
+            Route::post('create-minute', 'createMinute')->name('api.dossier.plan.createMinute');
+            Route::post('send-approve-request', 'sendApproveRequest')->name('api.dossier.plan.sendApproveRequest');
         });
 
         Route::prefix('handover')->controller(DossierHandoverController::class)->group(function () {
-            Route::get('find-by-id-contract-and-year', 'findByIdContractAndYear')->name('dossier.handover.findByIdContractAndYear');
-            Route::get('create-temp-excel', 'createTempExcel')->name('dossier.handover.createTempExcel');
-            Route::post('upload-excel', 'uploadExcel')->name('dossier.handover.uploadExcel');
-            Route::get('create-minute', 'createMinute')->name('dossier.handover.createMinute');
-            Route::post('send-approve-request', 'sendApproveRequest')->name('dossier.handover.sendApproveRequest');
+            Route::get('find-by-id-contract-and-year', 'findByIdContractAndYear')->name('api.dossier.handover.findByIdContractAndYear');
+            Route::get('create-temp-excel', 'createTempExcel')->name('api.dossier.handover.createTempExcel');
+            Route::post('upload-excel', 'uploadExcel')->name('api.dossier.handover.uploadExcel');
+            Route::get('create-minute', 'createMinute')->name('api.dossier.handover.createMinute');
+            Route::post('send-approve-request', 'sendApproveRequest')->name('api.dossier.handover.sendApproveRequest');
         });
 
         Route::prefix('usage_register')->controller(DossierUsageRegisterController::class)->group(function () {
-            Route::get('find-by-id-contract-and-year', 'findByIdContractAndYear')->name('dossier.usage_register.findByIdContractAndYear');
-            Route::get('create-temp-excel', 'createTempExcel')->name('dossier.usage_register.createTempExcel');
-            Route::post('upload-excel', 'uploadExcel')->name('dossier.usage_register.uploadExcel');
-            Route::get('create-minute', 'createMinute')->name('dossier.usage_register.createMinute');
-            Route::post('send-approve-request', 'sendApproveRequest')->name('dossier.usage_register.sendApproveRequest');
+            Route::get('find-by-id-contract-and-year', 'findByIdContractAndYear')->name('api.dossier.usage_register.findByIdContractAndYear');
+            Route::get('create-temp-excel', 'createTempExcel')->name('api.dossier.usage_register.createTempExcel');
+            Route::post('upload-excel', 'uploadExcel')->name('api.dossier.usage_register.uploadExcel');
+            Route::get('create-minute', 'createMinute')->name('api.dossier.usage_register.createMinute');
+            Route::post('send-approve-request', 'sendApproveRequest')->name('api.dossier.usage_register.sendApproveRequest');
         });
 
         Route::prefix('minute')->controller(DossierMinuteController::class)->group(function () {
-            Route::get('list', 'list')->name('dossier.minute.list');
-            Route::post('accept', 'accept')->name('dossier.minute.accept');
-            Route::post('deny', 'deny')->name('dossier.minute.deny');
+            Route::get('list', 'list')->name('api.dossier.minute.list');
+            Route::post('accept', 'accept')->name('api.dossier.minute.accept');
+            Route::post('deny', 'deny')->name('api.dossier.minute.deny');
         });
 
         Route::prefix('synthetic')->controller(DossierSyntheticController::class)->group(function () {
-            Route::get('create-synthetic-file', 'createSyntheticFile')->name('dossier.synthetic.create-synthetic-file');
+            Route::get('create-synthetic-file', 'createSyntheticFile')->name('api.dossier.synthetic.create-synthetic-file');
         });
     });
 });

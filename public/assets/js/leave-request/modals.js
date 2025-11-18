@@ -9,53 +9,31 @@ const modalAdjustApproveRequestForm =
     modalAdjustApproveRequest.querySelector("form");
 
 const openModalApproveRequest = (btn) => {
-    const status = btn.getAttribute("data-approve-status");
-    const title = btn.getAttribute("aria-label");
-    const action = btn.getAttribute("data-href");
-    const onsuccess = btn.getAttribute("data-onsuccess");
-
-    if (status && title && action && onsuccess) {
-        modalApproveRequest.querySelector(".modal-title").innerHTML = title;
-        modalApproveRequestForm.querySelector(
-            'input[name="approval_status"]'
-        ).value = status;
-        modalApproveRequestForm.setAttribute("action", action);
-        modalApproveRequestForm.setAttribute("data-onsuccess", onsuccess);
-
-        showModal(modalApproveRequest);
-    }
+    openModalBase(btn, {
+        modal: modalApproveRequest,
+        form: modalApproveRequestForm,
+        inputs: {
+            'input[name="approval_status"]': btn.dataset.approveStatus,
+        },
+    });
 };
 
 const openModalAdjustRequest = (btn) => {
-    const action = btn.getAttribute("data-href");
-    const onsuccess = btn.getAttribute("data-onsuccess");
-
-    if (action && onsuccess) {
-        modalAdjustRequestForm.setAttribute("action", action);
-        modalAdjustRequestForm.setAttribute("data-onsuccess", onsuccess);
-
-        showModal(modalAdjustRequest);
-        toggleToDateVisibility();
-    }
+    openModalBase(btn, {
+        modal: modalAdjustRequest,
+        form: modalAdjustRequestForm,
+        afterShow: toggleToDateVisibility,
+    });
 };
 
 const openModalAdjustApproveRequest = (btn) => {
-    const status = btn.getAttribute("data-approve-status");
-    const title = btn.getAttribute("aria-label");
-    const action = btn.getAttribute("data-href");
-    const onsuccess = btn.getAttribute("data-onsuccess");
-
-    if (status && title && action && onsuccess) {
-        modalAdjustApproveRequest.querySelector(".modal-title").innerHTML =
-            title;
-        modalAdjustApproveRequestForm.querySelector(
-            'input[name="adjust_approval_status"]'
-        ).value = status;
-        modalAdjustApproveRequestForm.setAttribute("action", action);
-        modalAdjustApproveRequestForm.setAttribute("data-onsuccess", onsuccess);
-
-        showModal(modalAdjustApproveRequest);
-    }
+    openModalBase(btn, {
+        modal: modalAdjustApproveRequest,
+        form: modalAdjustApproveRequestForm,
+        inputs: {
+            'input[name="adjust_approval_status"]': btn.dataset.approveStatus,
+        },
+    });
 };
 
 modalApproveRequestForm.addEventListener("submit", async (e) => {

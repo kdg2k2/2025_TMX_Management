@@ -9,52 +9,28 @@ const modalReturnApproveRequestForm =
     modalReturnApproveRequest.querySelector("form");
 
 const openModalApproveRequest = (btn) => {
-    const status = btn.getAttribute("data-approve-status");
-    const title = btn.getAttribute("aria-label");
-    const action = btn.getAttribute("data-href");
-    const onsuccess = btn.getAttribute("data-onsuccess");
-
-    if (status && title && action && onsuccess) {
-        modalApproveRequest.querySelector(".modal-title").innerHTML = title;
-        modalApproveRequestForm.querySelector(
-            'input[name="approval_status"]'
-        ).value = status;
-        modalApproveRequestForm.setAttribute("action", action);
-        modalApproveRequestForm.setAttribute("data-onsuccess", onsuccess);
-
-        showModal(modalApproveRequest);
-    }
+    openModalBase(btn, {
+        modal: modalApproveRequest,
+        form: modalApproveRequestForm,
+        inputs: { 'input[name="approval_status"]': btn.dataset.approveStatus },
+    });
 };
 
 const openModalReturnRequest = (btn) => {
-    const action = btn.getAttribute("data-href");
-    const onsuccess = btn.getAttribute("data-onsuccess");
-
-    if (action && onsuccess) {
-        modalReturnRequestForm.setAttribute("action", action);
-        modalReturnRequestForm.setAttribute("data-onsuccess", onsuccess);
-
-        showModal(modalReturnRequest);
-    }
+    openModalBase(btn, {
+        modal: modalReturnRequest,
+        form: modalReturnRequestForm,
+    });
 };
 
 const openModalReturnApproveRequest = (btn) => {
-    const status = btn.getAttribute("data-approve-status");
-    const title = btn.getAttribute("aria-label");
-    const action = btn.getAttribute("data-href");
-    const onsuccess = btn.getAttribute("data-onsuccess");
-
-    if (status && title && action && onsuccess) {
-        modalReturnApproveRequest.querySelector(".modal-title").innerHTML =
-            title;
-        modalReturnApproveRequestForm.querySelector(
-            'input[name="return_approval_status"]'
-        ).value = status;
-        modalReturnApproveRequestForm.setAttribute("action", action);
-        modalReturnApproveRequestForm.setAttribute("data-onsuccess", onsuccess);
-
-        showModal(modalReturnApproveRequest);
-    }
+    openModalBase(btn, {
+        modal: modalReturnApproveRequest,
+        form: modalReturnApproveRequestForm,
+        inputs: {
+            'input[name="return_approval_status"]': btn.dataset.approveStatus,
+        },
+    });
 };
 
 modalApproveRequestForm.addEventListener("submit", async (e) => {

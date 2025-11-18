@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const modalLogout = document.getElementById("modalLogout");
+    const modalLogout = document.getElementById("modal-logout");
     if (!modalLogout) return;
 
     const logoutForm = modalLogout.querySelector("form");

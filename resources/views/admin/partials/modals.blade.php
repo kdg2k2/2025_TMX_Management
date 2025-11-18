@@ -1,4 +1,4 @@
-<x-modal id="modalLogout" title="Xác nhận" :action="route('logout')" method="POST" size="md">
+<x-modal id="modal-logout" title="Xác nhận" :action="route('logout')" method="POST" size="md">
     <x-slot:body>
         <p>Bạn có chắc chắn muốn đăng xuất?</p>
     </x-slot:body>
@@ -8,7 +8,7 @@
     </x-slot:footer>
 </x-modal>
 
-<x-modal id="modalDelete" title="Xóa dữ liệu" size="md" method="delete" nested="true">
+<x-modal id="modal-delete" title="Xóa dữ liệu" size="md" method="delete" nested="true">
     <x-slot:body>
         <p>Bạn có chắc chắn muốn xóa bản ghi này?</p>
     </x-slot:body>

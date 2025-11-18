@@ -78,15 +78,10 @@ const renderColumns = () => {
 };
 
 const openRunModal = (btn) => {
-    const action = btn.getAttribute("data-href");
-    const onsuccess = btn.getAttribute("data-onsuccess");
-
-    if (action && onsuccess) {
-        modalRunForm.setAttribute("action", action);
-        modalRunForm.setAttribute("data-onsuccess", onsuccess);
-
-        showModal(modalRun);
-    }
+    openModalBase(btn, {
+        modal: modalRun,
+        form: modalRunForm,
+    });
 };
 
 modalRunForm.addEventListener("submit", async (e) => {

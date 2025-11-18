@@ -37,7 +37,7 @@ const downloadExcel = () => {
     downloadFileHandler(excelUrl);
 };
 
-const openModalUpdate = (btn) => {
+const openModalUpdate = () => {
     resetFormAfterSubmit(modalUpdateForm);
     showModal(modalUpdate);
 };

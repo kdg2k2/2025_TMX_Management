@@ -39,12 +39,12 @@ const downloadExcel = () => {
     downloadFileHandler(excelUrl);
 };
 
-const openModalImport = (btn) => {
+const openModalImport = () => {
     resetFormAfterSubmit(modalImportForm);
     showModal(modalImport);
 };
 
-const openModalUpdate = (btn) => {
+const openModalUpdate = () => {
     resetFormAfterSubmit(modalUpdateForm);
     showModal(modalUpdate);
 };

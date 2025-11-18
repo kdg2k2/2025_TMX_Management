@@ -18,7 +18,7 @@
         </div>
 
         @include('admin.partials.footer')
-        @include('admin.partials.modal')
+        @include('admin.partials.modals')
         @yield('modals')
     </div>
 

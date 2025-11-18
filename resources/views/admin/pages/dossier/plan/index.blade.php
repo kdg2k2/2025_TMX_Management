@@ -138,11 +138,11 @@
 @section('scripts')
     <script>
         const $contracts = @json($contracts);
-        const urlLoadData = @json(route('dossier.plan.findByIdContractAndYear'));
-        const urlCreateTempExcel = @json(route('dossier.plan.createTempExcel'));
-        const urlUploadExcel = @json(route('dossier.plan.uploadExcel'));
-        const urlCreateMinute = @json(route('dossier.plan.createMinute'));
-        const urlSendApproveRequest = @json(route('dossier.plan.sendApproveRequest'));
+        const urlLoadData = @json(route('api.dossier.plan.findByIdContractAndYear'));
+        const urlCreateTempExcel = @json(route('api.dossier.plan.createTempExcel'));
+        const urlUploadExcel = @json(route('api.dossier.plan.uploadExcel'));
+        const urlCreateMinute = @json(route('api.dossier.plan.createMinute'));
+        const urlSendApproveRequest = @json(route('api.dossier.plan.sendApproveRequest'));
     </script>
     <script src="assets/js/dossier/base.js"></script>
     <script src="assets/js/dossier/plan/script.js"></script>

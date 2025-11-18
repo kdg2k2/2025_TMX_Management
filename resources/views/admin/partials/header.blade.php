@@ -203,7 +203,7 @@
                         </li>
                         <li>
                             <a class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
-                                data-bs-target="#modalLogout">
+                                data-bs-target="#modal-logout">
                                 <i class="ti ti-logout me-2 fs-18"></i>
                                 Đăng xuất
                             </a>

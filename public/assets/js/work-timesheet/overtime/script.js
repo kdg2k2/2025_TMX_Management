@@ -47,7 +47,7 @@ const downloadTemplate = async () => {
     if (res.data) downloadFileHandler(res.data);
 };
 
-const openModalUpload = (btn) => {
+const openModalUpload = () => {
     resetFormAfterSubmit(modalUploadForm);
     showModal(modalUpload);
 };

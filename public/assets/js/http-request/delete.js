@@ -1,4 +1,4 @@
-const deleteModal = document.getElementById("modalDelete");
+const deleteModal = document.getElementById("modal-delete");
 const deleteModalForm = deleteModal.querySelector("form");
 
 const openDeleteModal = (triggerEl) => {

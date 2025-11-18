@@ -13,6 +13,13 @@ const downloadMinuteBtn = document.getElementById("downloadMinuteBtn");
 const approveModalBtn = document.getElementById("approveModalBtn");
 const approveModal = document.getElementById("approveModal");
 
+// tải mẫu
+const handleDownloadExcel = async () => {
+    const response = await http.get(urlCreateTempExcel);
+    if (response.message) downloadFileHandler(response.data);
+};
+
+// tải lên excel
 const handleUploadModalSubmit = async (event) => {
     event.preventDefault();
 
@@ -26,27 +33,27 @@ const handleUploadModalSubmit = async (event) => {
     await handleUploadExcel(formData);
 };
 
-const handleApproveModalSubmit = async (event) => {
+// tạo biên bản
+const handleCreateMinuteSubmit = async (event) => {
     event.preventDefault();
 
-    const formData = createFormDataWithContract(event.target);
-    const response = await http.post(urlSendApproveRequest, formData);
+    if (
+        !validateCreateMinuteForm(event.target) ||
+        !validateContractSelected()
+    ) {
+        return;
+    }
 
-    if (response.message) {
-        hideModal(approveModal);
+    const formData = createFormDataWithContract(event.target);
+    const response = await http.post(urlCreateMinute, formData);
+
+    if (response && (response.success === true || response.message)) {
+        hideModal(createMinuteModal);
         loadData();
     }
 };
 
-const handleDownloadExcel = async () => {
-    try {
-        const response = await http.get(urlCreateTempExcel);
-        if (response.message) downloadFileHandler(response.data);
-    } catch (error) {
-        console.error("Download failed:", error);
-    }
-};
-
+// tải xuống biên bản đang xem
 const handleDownloadMinute = () => {
     if (!validateContractSelected()) return;
 
@@ -57,23 +64,17 @@ const handleDownloadMinute = () => {
     }
 };
 
-const handleCreateMinuteSubmit = async (event) => {
+// yêu cầu duyệt
+const handleApproveModalSubmit = async (event) => {
     event.preventDefault();
 
-    // Validate form inputs
-    if (!validateCreateMinuteForm(event.target)) {
-        return;
-    }
+    if (!validateContractSelected()) return;
 
-    // Prepare form data
     const formData = createFormDataWithContract(event.target);
+    const response = await http.post(urlSendApproveRequest, formData);
 
-    // Call API
-    const response = await http.post(urlCreateMinute, formData);
-
-    // Handle success
-    if (response && (response.success === true || response.message)) {
-        hideModal(createMinuteModal);
+    if (response.message) {
+        hideModal(approveModal);
         loadData();
     }
 };
@@ -135,11 +136,9 @@ const renderTableContent = (data, table) => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Simple event bindings
     selectYear.addEventListener("change", handleSelectYearChange);
     selectContract.addEventListener("change", handleContractChange);
 
-    // Button handlers
     downloadExcelBtn.addEventListener("click", handleDownloadExcel);
     downloadMinuteBtn.addEventListener("click", handleDownloadMinute);
 

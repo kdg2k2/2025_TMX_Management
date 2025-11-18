@@ -42,31 +42,31 @@ class DossierMinuteRepository extends BaseRepository
         })->where('status', 'approved')->first();
     }
 
-    public function listExceptDraftSortByStatus(array $request)
+    protected function applyListFilters($query, array $request)
     {
-        $query = $this
-            ->model
-            ->where('status', '!=', 'draft')
-            ->orderByRaw("CASE WHEN status = 'pending_approval' THEN 0 ELSE 1 END")
-            ->orderByDesc('id')
-            ->with($this->relations);
+        if (isset($request['except_status']))
+            $query->where('status', '!=', $request['except_status']);
+    }
 
-        if (!empty($request['search'])) {
-            $search = "%{$request['search']}%";
-            $query->where(function ($q) use ($search) {
-                $q
-                    ->whereHas('plan.contract', function ($q) use ($search) {
-                        $q->where('name', 'like', $search);
-                    })
-                    ->orWhereHas('approvedByUser', function ($q) use ($search) {
-                        $q->where('name', 'like', $search);
-                    })
-                    ->orWhere('approval_note', 'like', $search)
-                    ->orWhere('rejection_note', 'like', $search);
-            });
-        }
+    protected function customSort($query, array $request)
+    {
+        $query->orderByRaw("CASE WHEN status = 'pending_approval' THEN 0 ELSE 1 END");
+    }
 
-        return $query->get()->toArray();
+    protected function getSearchConfig(): array
+    {
+        return [
+            'text' => [
+                'approval_note',
+                'rejection_note',
+            ],
+            'date' => [],
+            'datetime' => [],
+            'relations' => [
+                'plan.contract' => ['name'],
+                'approvedByUser' => ['name'],
+            ]
+        ];
     }
 
     public function deleteDraftByType(int $typeId, string $type)
