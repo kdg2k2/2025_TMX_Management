@@ -293,11 +293,18 @@
                         app(\App\Models\DossierMinute::class)->where('status', 'pending_approval')->count() > 0
                             ? 'text-danger'
                             : '';
+                    $pendingProfessionalRecordMinuteFlag =
+                        app(\App\Models\ProfessionalRecordMinute::class)->where('status', 'pending_approval')->count() >
+                        0
+                            ? 'text-danger'
+                            : '';
                 @endphp
                 <li class="slide has-sub">
                     <a href="javascript:void(0);" class="side-menu__item">
-                        <i class="side-menu__icon ti ti-user-check {{ $pendingDossierMinuteFlag }}"></i>
-                        <span class="side-menu__label {{ $pendingDossierMinuteFlag }}">
+                        <i
+                            class="side-menu__icon ti ti-user-check {{ $pendingDossierMinuteFlag }} {{ $pendingProfessionalRecordMinuteFlag }}"></i>
+                        <span
+                            class="side-menu__label {{ $pendingDossierMinuteFlag }} {{ $pendingProfessionalRecordMinuteFlag }}">
                             HSNN/HSCM
                         </span>
                         <i class="ri-arrow-right-s-line side-menu__angle"></i>
@@ -348,6 +355,56 @@
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('dossier.synthetic.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Tổng hợp chứng từ
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);"
+                                class="side-menu__item {{ $pendingProfessionalRecordMinuteFlag }}">
+                                <i class="side-menu-doublemenu__icon fs-6 ti ti-settings-2"></i>
+                                HS chuyên môn
+                                <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="{{ route('professional-record.type.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Kho loại hồ sơ
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('professional-record.plan.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Lập kế hoạch
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('professional-record.handover.index') }}"
+                                        class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Bàn giao
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('professional-record.usage_register.index') }}"
+                                        class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Đăng ký sử dụng
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('professional-record.minute.index') }}"
+                                        class="side-menu__item {{ $pendingProfessionalRecordMinuteFlag }}">
+                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
+                                        Phê duyệt biên bản
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('professional-record.synthetic.index') }}"
+                                        class="side-menu__item">
                                         <i class="side-menu-doublemenu__icon fs-6 ti ti-input-search"></i>
                                         Tổng hợp chứng từ
                                     </a>

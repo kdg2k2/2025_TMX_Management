@@ -412,4 +412,13 @@ class DossierPlanService extends BaseService
     {
         return $plan->minutes()->latest()->first();
     }
+
+    public function getPlanApproved(int $contractId, int $year = null)
+    {
+        return $this->repository->list([
+            'contract_id' => $contractId,
+            'year' => $year,
+            'minute_status' => 'approved',
+        ]);
+    }
 }

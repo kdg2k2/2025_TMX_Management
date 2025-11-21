@@ -62,7 +62,7 @@ class DossierMinuteService extends BaseService
             // xóa các biên bản draft của gói thầu này trước
             $this->repository->deleteDraftByType($plan['id'], 'plan');
 
-            $templatePath = public_path('templates/dossier_plan_minute.docx');
+            $templatePath = public_path('templates/plan_minute.docx');
             if (!file_exists($templatePath))
                 throw new Exception('Template file not found: ' . $templatePath);
 
@@ -94,7 +94,7 @@ class DossierMinuteService extends BaseService
         // xóa các biên bản draft của gói thầu này trước
         $this->repository->deleteDraftByType($handover['id'], 'handover');
 
-        $templatePath = public_path('templates/dossier_handover_minute.docx');
+        $templatePath = public_path('templates/handover_minute.docx');
         if (!file_exists($templatePath))
             throw new Exception('Template file not found: ' . $templatePath);
 
@@ -538,6 +538,7 @@ class DossierMinuteService extends BaseService
                     ))
                 ],
                 $minute,
+                false,
                 false,
                 false
             );

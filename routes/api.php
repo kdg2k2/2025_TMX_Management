@@ -41,6 +41,12 @@ use App\Http\Controllers\Api\PersonnelCustomFieldController;
 use App\Http\Controllers\Api\PersonnelFileController;
 use App\Http\Controllers\Api\PersonnelFileTypeController;
 use App\Http\Controllers\Api\PersonnelUnitController;
+use App\Http\Controllers\Api\ProfessionalRecordHandoverController;
+use App\Http\Controllers\Api\ProfessionalRecordMinuteController;
+use App\Http\Controllers\Api\ProfessionalRecordPlanController;
+use App\Http\Controllers\Api\ProfessionalRecordSyntheticController;
+use App\Http\Controllers\Api\ProfessionalRecordTypeController;
+use App\Http\Controllers\Api\ProfessionalRecordUsageRegisterController;
 use App\Http\Controllers\Api\ProofContractController;
 use App\Http\Controllers\Api\ShareholderMeetingMinuteController;
 use App\Http\Controllers\Api\SoftwareOwnershipController;
@@ -422,6 +428,47 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
 
         Route::prefix('synthetic')->controller(DossierSyntheticController::class)->group(function () {
             Route::get('create-synthetic-file', 'createSyntheticFile')->name('api.dossier.synthetic.create-synthetic-file');
+        });
+    });
+
+    // hồ sơ chuyên môn
+    Route::prefix('professional-record')->group(function () {
+        Route::prefix('type')->controller(ProfessionalRecordTypeController::class)->group(function () {
+            Route::get('list', 'list')->name('api.professional-record.type.list');
+            Route::post('store', 'store')->name('api.professional-record.type.store');
+            Route::patch('update', 'update')->name('api.professional-record.type.update');
+        });
+
+        Route::prefix('plan')->controller(ProfessionalRecordPlanController::class)->group(function () {
+            Route::get('find-by-id-contract-and-year', 'findByIdContractAndYear')->name('api.professional-record.plan.findByIdContractAndYear');
+            Route::get('create-temp-excel', 'createTempExcel')->name('api.professional-record.plan.createTempExcel');
+            Route::post('upload-excel', 'uploadExcel')->name('api.professional-record.plan.uploadExcel');
+            Route::post('send-approve-request', 'sendApproveRequest')->name('api.professional-record.plan.sendApproveRequest');
+        });
+
+        Route::prefix('handover')->controller(ProfessionalRecordHandoverController::class)->group(function () {
+            Route::get('find-by-id-contract-and-year', 'findByIdContractAndYear')->name('api.professional-record.handover.findByIdContractAndYear');
+            Route::get('create-temp-excel', 'createTempExcel')->name('api.professional-record.handover.createTempExcel');
+            Route::post('upload-excel', 'uploadExcel')->name('api.professional-record.handover.uploadExcel');
+            Route::get('create-minute', 'createMinute')->name('api.professional-record.handover.createMinute');
+            Route::post('send-approve-request', 'sendApproveRequest')->name('api.professional-record.handover.sendApproveRequest');
+        });
+
+        Route::prefix('usage_register')->controller(ProfessionalRecordUsageRegisterController::class)->group(function () {
+            Route::get('find-by-id-contract-and-year', 'findByIdContractAndYear')->name('api.professional-record.usage_register.findByIdContractAndYear');
+            Route::get('create-temp-excel', 'createTempExcel')->name('api.professional-record.usage_register.createTempExcel');
+            Route::post('upload-excel', 'uploadExcel')->name('api.professional-record.usage_register.uploadExcel');
+            Route::post('send-approve-request', 'sendApproveRequest')->name('api.professional-record.usage_register.sendApproveRequest');
+        });
+
+        Route::prefix('minute')->controller(ProfessionalRecordMinuteController::class)->group(function () {
+            Route::get('list', 'list')->name('api.professional-record.minute.list');
+            Route::post('accept', 'accept')->name('api.professional-record.minute.accept');
+            Route::post('deny', 'deny')->name('api.professional-record.minute.deny');
+        });
+
+        Route::prefix('synthetic')->controller(ProfessionalRecordSyntheticController::class)->group(function () {
+            Route::get('create-synthetic-file', 'createSyntheticFile')->name('api.professional-record.synthetic.create-synthetic-file');
         });
     });
 });

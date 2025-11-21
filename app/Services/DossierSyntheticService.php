@@ -58,7 +58,22 @@ class DossierSyntheticService extends BaseService
                         'colspan' => 1,
                     ],
                     [
-                        'name' => 'Số lượng',
+                        'name' => 'Kế hoạch',
+                        'rowspan' => 1,
+                        'colspan' => 1,
+                    ],
+                    [
+                        'name' => 'Bàn giao',
+                        'rowspan' => 1,
+                        'colspan' => 1,
+                    ],
+                    [
+                        'name' => 'Sử dụng',
+                        'rowspan' => 1,
+                        'colspan' => 1,
+                    ],
+                    [
+                        'name' => 'Khả dụng',
                         'rowspan' => 1,
                         'colspan' => 1,
                     ],

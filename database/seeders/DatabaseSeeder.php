@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             TaskScheduleSeeder::class,
             SystemConfigSeeder::class,
             DossierTypeSeeder::class,
+            ProfessionalRecordTypeSeeder::class,
         ]);
 
         if ($this->isLocal())

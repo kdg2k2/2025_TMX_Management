@@ -36,6 +36,12 @@ use App\Http\Controllers\Admin\PersonnelCustomFieldController;
 use App\Http\Controllers\Admin\PersonnelFileController;
 use App\Http\Controllers\Admin\PersonnelFileTypeController;
 use App\Http\Controllers\Admin\PersonnelUnitController;
+use App\Http\Controllers\Admin\ProfessionalRecordHandoverController;
+use App\Http\Controllers\Admin\ProfessionalRecordMinuteController;
+use App\Http\Controllers\Admin\ProfessionalRecordPlanController;
+use App\Http\Controllers\Admin\ProfessionalRecordSyntheticController;
+use App\Http\Controllers\Admin\ProfessionalRecordTypeController;
+use App\Http\Controllers\Admin\ProfessionalRecordUsageRegisterController;
 use App\Http\Controllers\Admin\ProofContractController;
 use App\Http\Controllers\Admin\ShareholderMeetingMinuteController;
 use App\Http\Controllers\Admin\SoftwareOwnershipController;
@@ -354,6 +360,38 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
 
         Route::prefix('synthetic')->controller(DossierSyntheticController::class)->group(function () {
             Route::get('index', 'index')->name('dossier.synthetic.index');
+        });
+    });
+
+    // hồ sơ chuyên môn
+    Route::prefix('professional-record')->group(function () {
+        Route::prefix('type')->controller(ProfessionalRecordTypeController::class)->group(function () {
+            Route::get('index', 'index')->name('professional-record.type.index');
+            Route::get('edit', 'edit')->name('professional-record.type.edit');
+            Route::delete('delete', 'delete')->name('professional-record.type.delete');
+            Route::get('export', 'export')->name('professional-record.type.export');
+            Route::post('import', 'import')->name('professional-record.type.import');
+            Route::get('create', 'create')->name('professional-record.type.create');
+        });
+
+        Route::prefix('plan')->controller(ProfessionalRecordPlanController::class)->group(function () {
+            Route::get('index', 'index')->name('professional-record.plan.index');
+        });
+
+        Route::prefix('handover')->controller(ProfessionalRecordHandoverController::class)->group(function () {
+            Route::get('index', 'index')->name('professional-record.handover.index');
+        });
+
+        Route::prefix('usage_register')->controller(ProfessionalRecordUsageRegisterController::class)->group(function () {
+            Route::get('index', 'index')->name('professional-record.usage_register.index');
+        });
+
+        Route::prefix('minute')->controller(ProfessionalRecordMinuteController::class)->group(function () {
+            Route::get('index', 'index')->name('professional-record.minute.index');
+        });
+
+        Route::prefix('synthetic')->controller(ProfessionalRecordSyntheticController::class)->group(function () {
+            Route::get('index', 'index')->name('professional-record.synthetic.index');
         });
     });
 });

@@ -34,6 +34,9 @@ class DossierPlanRepository extends BaseRepository
 
         if (isset($request['contract_id']))
             $query->where('contract_id', $request['contract_id']);
+
+        if (isset($request['minute_status']))
+            $query->whereHas('minutes', fn($q) => $q->where('status', $request['minute_status']));
     }
 
     public function findByIdContractAndYear(int $idContract, int $year = null)

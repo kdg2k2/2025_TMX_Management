@@ -134,32 +134,40 @@ class DossierUsageRegisterService extends BaseService
 
     public function getAvailable(int $contractId, int $year = null)
     {
+        $plan = $this->createBaseFormData($this->dossierPlanService->getPlanApproved($contractId, $year));
         // Lấy tổng kho và đã sử dụng để tính hiện trạng
-        $total = $this->createBaseFormData(
+        $handover = $this->createBaseFormData(
             $this->dossierHandoverService->getHandoverInsApproved($contractId, $year) ?? []
         );  // tổng kho
         $used = $this->createBaseFormData(
             $this->getRegistersApproved($contractId, $year) ?? []
         );  // đã sử dụng
-        $available = $this->calculateAvailable($total, $used);  // hiện trạng
+        $available = $this->calculateAvailable($plan,$handover, $used);  // hiện trạng
 
         return $available;
     }
 
     /**
-     * Tính available = total - used
+     * Tính available = handover - used
      */
-    private function calculateAvailable(array $total, array $used): array
+    private function calculateAvailable(array $plan, array $handover, array $used): array
     {
-        foreach ($used as $key => $row) {
-            if (isset($total[$key])) {
-                $total[$key][4] -= $row[4];
-                if ($total[$key][4] <= 0) {
-                    unset($total[$key]);
-                }
+        foreach ($used as $key => &$row) {
+            if (isset($handover[$key])) {
+                array_splice($row, 4, 0, [
+                    $plan[$key][4],  // tổng kế hoạch
+                    $handover[$key][4],  // tổng bàn giao
+                    $row[4],  // tổng đăng ký
+                    $handover[$key][4] - $row[4],  // khả dụng
+                ]);
+                unset($row[8]);
+                if ($handover[$key][4] <= 0)
+                    unset($handover[$key]);
             }
         }
-        return $total;
+        unset($row);
+
+        return $used;
     }
 
     public function getRegistersInDraftOrPendingApproval($contractId, $year)

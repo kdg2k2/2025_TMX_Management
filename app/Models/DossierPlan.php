@@ -57,4 +57,9 @@ class DossierPlan extends Model
     {
         return $this->hasMany(DossierMinute::class);
     }
+
+    public function usageRegisters()
+    {
+        return $this->hasMany(DossierUsageRegister::class);
+    }
 }
