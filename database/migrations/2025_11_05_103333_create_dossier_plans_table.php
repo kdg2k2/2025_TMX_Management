@@ -16,9 +16,9 @@ return new class extends Migration {
             $table->timestamps();
             $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('handover_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('received_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->date('handover_date')->comment('ngày bàn giao');
+            $table->foreignId('handover_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('received_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->date('handover_date')->nullable()->comment('ngày bàn giao');
         });
     }
 

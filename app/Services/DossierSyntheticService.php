@@ -91,11 +91,11 @@ class DossierSyntheticService extends BaseService
 
             $data = [];
             if (!is_array($request['contract_id'])) {
-                $rawData = $this->DossierUsageRegisterService->getAvailable($request['contract_id'], $request['year'] ?? null);
+                $rawData = $this->DossierUsageRegisterService->getAvailable($request['contract_id'], $request['year'] ?? null, true);
                 $data = $this->prependContractInfo($request['contract_id'], $rawData);
             } else {
                 foreach ($request['contract_id'] as $contractId) {
-                    $rawData = $this->DossierUsageRegisterService->getAvailable($contractId, $request['year'] ?? null);
+                    $rawData = $this->DossierUsageRegisterService->getAvailable($contractId, $request['year'] ?? null, true);
                     if (empty($rawData))
                         continue;
                     $data = array_merge($data, $this->prependContractInfo($contractId, $rawData));

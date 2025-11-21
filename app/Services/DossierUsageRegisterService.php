@@ -132,7 +132,7 @@ class DossierUsageRegisterService extends BaseService
         return $merged;
     }
 
-    public function getAvailable(int $contractId, int $year = null)
+    public function getAvailable(int $contractId, int $year = null, bool $isSynthetic = false)
     {
         $plan = $this->createBaseFormData($this->dossierPlanService->getPlanApproved($contractId, $year));
         // Lấy tổng kho và đã sử dụng để tính hiện trạng
@@ -142,7 +142,7 @@ class DossierUsageRegisterService extends BaseService
         $used = $this->createBaseFormData(
             $this->getRegistersApproved($contractId, $year) ?? []
         );  // đã sử dụng
-        $available = $this->calculateAvailable($plan,$handover, $used);  // hiện trạng
+        $available = $this->calculateAvailable($plan, $handover, $used, $isSynthetic);  // hiện trạng
 
         return $available;
     }
@@ -150,24 +150,34 @@ class DossierUsageRegisterService extends BaseService
     /**
      * Tính available = handover - used
      */
-    private function calculateAvailable(array $plan, array $handover, array $used): array
+    private function calculateAvailable(array $plan, array $handover, array $used, bool $isSynthetic): array
     {
-        foreach ($used as $key => &$row) {
-            if (isset($handover[$key])) {
+        foreach ($plan as $key => &$row) {
+            $match = $handover[$key] ?? null;
+
+            $planTotal = $plan[$key][4] ?? 0;  // tổng kế hoạch
+            $handoverTotal = $match[4] ?? 0;  // tổng bàn giao
+            $usedTotal = $used[$key][4] ?? 0;  // tổng đăng ký
+            $availableTotal = $handoverTotal - $usedTotal;  // khả dụng
+
+            if ($isSynthetic) {
                 array_splice($row, 4, 0, [
-                    $plan[$key][4],  // tổng kế hoạch
-                    $handover[$key][4],  // tổng bàn giao
-                    $row[4],  // tổng đăng ký
-                    $handover[$key][4] - $row[4],  // khả dụng
+                    $planTotal,
+                    $handoverTotal,
+                    $usedTotal,
+                    $availableTotal,
                 ]);
                 unset($row[8]);
-                if ($handover[$key][4] <= 0)
-                    unset($handover[$key]);
+            } else {
+                $row[4] = $availableTotal;
             }
+
+            if (isset($handover[$key]) && $handoverTotal <= 0)
+                unset($handover[$key]);
         }
         unset($row);
 
-        return $used;
+        return $plan;
     }
 
     public function getRegistersInDraftOrPendingApproval($contractId, $year)
