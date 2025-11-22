@@ -1,66 +1,68 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\BiddingContractorExperienceController;
-use App\Http\Controllers\Api\BiddingController;
-use App\Http\Controllers\Api\BiddingEligibilityController;
-use App\Http\Controllers\Api\BiddingImplementationPersonnelController;
-use App\Http\Controllers\Api\BiddingOrtherFileController;
-use App\Http\Controllers\Api\BiddingProofContractController;
-use App\Http\Controllers\Api\BiddingSoftwareOwnershipController;
-use App\Http\Controllers\Api\BoardMeetingMinuteController;
-use App\Http\Controllers\Api\BuildSoftwareController;
-use App\Http\Controllers\Api\ContractAdvancePaymentController;
-use App\Http\Controllers\Api\ContractAppendixController;
-use App\Http\Controllers\Api\ContractBillController;
-use App\Http\Controllers\Api\ContractController;
-use App\Http\Controllers\Api\ContractFileController;
-use App\Http\Controllers\Api\ContractFileTypeController;
-use App\Http\Controllers\Api\ContractFinanceController;
-use App\Http\Controllers\Api\ContractInvestorController;
-use App\Http\Controllers\Api\ContractPaymentController;
-use App\Http\Controllers\Api\ContractScanFileController;
-use App\Http\Controllers\Api\ContractScanFileTypeController;
-use App\Http\Controllers\Api\ContractTypeController;
-use App\Http\Controllers\Api\ContractUnitController;
-use App\Http\Controllers\Api\DossierHandoverController;
-use App\Http\Controllers\Api\DossierMinuteController;
-use App\Http\Controllers\Api\DossierPlanController;
-use App\Http\Controllers\Api\DossierSyntheticController;
-use App\Http\Controllers\Api\DossierTypeController;
-use App\Http\Controllers\Api\DossierUsageRegisterController;
-use App\Http\Controllers\Api\EligibilityController;
-use App\Http\Controllers\Api\EmploymentContractPersonnelController;
-use App\Http\Controllers\Api\EmploymentContractPersonnelCustomFieldController;
-use App\Http\Controllers\Api\InternalBulletinController;
-use App\Http\Controllers\Api\InternalMeetingMinuteController;
-use App\Http\Controllers\Api\LeaveRequestController;
-use App\Http\Controllers\Api\PayrollController;
-use App\Http\Controllers\Api\PersonnelController;
-use App\Http\Controllers\Api\PersonnelCustomFieldController;
-use App\Http\Controllers\Api\PersonnelFileController;
-use App\Http\Controllers\Api\PersonnelFileTypeController;
-use App\Http\Controllers\Api\PersonnelUnitController;
-use App\Http\Controllers\Api\ProfessionalRecordHandoverController;
-use App\Http\Controllers\Api\ProfessionalRecordMinuteController;
-use App\Http\Controllers\Api\ProfessionalRecordPlanController;
-use App\Http\Controllers\Api\ProfessionalRecordSyntheticController;
-use App\Http\Controllers\Api\ProfessionalRecordTypeController;
-use App\Http\Controllers\Api\ProfessionalRecordUsageRegisterController;
-use App\Http\Controllers\Api\ProofContractController;
-use App\Http\Controllers\Api\ShareholderMeetingMinuteController;
-use App\Http\Controllers\Api\SoftwareOwnershipController;
-use App\Http\Controllers\Api\TaskScheduleController;
 use App\Http\Controllers\Api\UnitController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\UserSubEmailController;
-use App\Http\Controllers\Api\UserTimeTableController;
+use App\Http\Controllers\Api\BiddingController;
+use App\Http\Controllers\Api\PayrollController;
+use App\Http\Controllers\Api\ContractController;
+use App\Http\Controllers\Api\PersonnelController;
+use App\Http\Controllers\Api\DossierPlanController;
+use App\Http\Controllers\Api\DossierTypeController;
+use App\Http\Controllers\Api\EligibilityController;
 use App\Http\Controllers\Api\UserWarningController;
+use App\Http\Controllers\Api\ContractBillController;
+use App\Http\Controllers\Api\ContractFileController;
+use App\Http\Controllers\Api\ContractTypeController;
+use App\Http\Controllers\Api\ContractUnitController;
+use App\Http\Controllers\Api\LeaveRequestController;
+use App\Http\Controllers\Api\TaskScheduleController;
+use App\Http\Controllers\Api\UserSubEmailController;
 use App\Http\Controllers\Api\WorkScheduleController;
+use App\Http\Controllers\Api\BuildSoftwareController;
+use App\Http\Controllers\Api\DossierMinuteController;
+use App\Http\Controllers\Api\PersonnelFileController;
+use App\Http\Controllers\Api\PersonnelUnitController;
+use App\Http\Controllers\Api\ProofContractController;
+use App\Http\Controllers\Api\UserTimeTableController;
 use App\Http\Controllers\Api\WorkTimesheetController;
+use App\Http\Controllers\Api\ContractFinanceController;
+use App\Http\Controllers\Api\ContractPaymentController;
+use App\Http\Controllers\Api\DossierHandoverController;
+use App\Http\Controllers\Api\ContractAppendixController;
+use App\Http\Controllers\Api\ContractFileTypeController;
+use App\Http\Controllers\Api\ContractInvestorController;
+use App\Http\Controllers\Api\ContractScanFileController;
+use App\Http\Controllers\Api\DossierSyntheticController;
+use App\Http\Controllers\Api\InternalBulletinController;
+use App\Http\Controllers\Api\BiddingOrtherFileController;
+use App\Http\Controllers\Api\PersonnelFileTypeController;
+use App\Http\Controllers\Api\SoftwareOwnershipController;
+use App\Http\Controllers\Api\TrainAndBusTicketController;
+use App\Http\Controllers\Api\BiddingEligibilityController;
+use App\Http\Controllers\Api\BoardMeetingMinuteController;
+use App\Http\Controllers\Api\BiddingProofContractController;
+use App\Http\Controllers\Api\ContractScanFileTypeController;
+use App\Http\Controllers\Api\DossierUsageRegisterController;
+use App\Http\Controllers\Api\PersonnelCustomFieldController;
+use App\Http\Controllers\Api\InternalMeetingMinuteController;
 use App\Http\Controllers\Api\WorkTimesheetOvertimeController;
+use App\Http\Controllers\Api\ContractAdvancePaymentController;
+use App\Http\Controllers\Api\ProfessionalRecordPlanController;
+use App\Http\Controllers\Api\ProfessionalRecordTypeController;
+use App\Http\Controllers\Api\TrainAndBusTicketDetailController;
+use App\Http\Controllers\Api\BiddingSoftwareOwnershipController;
+use App\Http\Controllers\Api\ProfessionalRecordMinuteController;
+use App\Http\Controllers\Api\ShareholderMeetingMinuteController;
+use App\Http\Controllers\Api\ProfessionalRecordHandoverController;
+use App\Http\Controllers\Api\BiddingContractorExperienceController;
+use App\Http\Controllers\Api\EmploymentContractPersonnelController;
+use App\Http\Controllers\Api\ProfessionalRecordSyntheticController;
 use App\Http\Controllers\Api\WorkTimesheetOvertimeDetailController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\BiddingImplementationPersonnelController;
+use App\Http\Controllers\Api\ProfessionalRecordUsageRegisterController;
+use App\Http\Controllers\Api\EmploymentContractPersonnelCustomFieldController;
 
 // Auth routes
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
@@ -469,6 +471,20 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
 
         Route::prefix('synthetic')->controller(ProfessionalRecordSyntheticController::class)->group(function () {
             Route::get('create-synthetic-file', 'createSyntheticFile')->name('api.professional-record.synthetic.create-synthetic-file');
+        });
+    });
+
+    // vé tàu xe
+    Route::prefix('train-and-bus-ticket')->group(function () {
+        Route::controller(TrainAndBusTicketController::class)->group(function () {
+            Route::get('list', 'list')->name('train-and-bus-ticket.list');
+            Route::post('store', 'store')->name('train-and-bus-ticket.store');
+            Route::patch('update', 'update')->name('train-and-bus-ticket.update');
+        });
+
+        Route::prefix('detail')->controller(TrainAndBusTicketDetailController::class)->group(function () {
+            Route::get('list', 'list')->name('train-and-bus-ticket.detail.list');
+            Route::patch('update', 'update')->name('train-and-bus-ticket.detail.update');
         });
     });
 });

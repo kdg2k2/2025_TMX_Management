@@ -1,60 +1,62 @@
 <?php
 
-use App\Http\Controllers\Admin\BiddingController;
-use App\Http\Controllers\Admin\BoardMeetingMinuteController;
-use App\Http\Controllers\Admin\BuildSoftwareController;
-use App\Http\Controllers\Admin\ContractAdvancePaymentController;
-use App\Http\Controllers\Admin\ContractAppendixController;
-use App\Http\Controllers\Admin\ContractBillController;
-use App\Http\Controllers\Admin\ContractController;
-use App\Http\Controllers\Admin\ContractFileController;
-use App\Http\Controllers\Admin\ContractFileTypeController;
-use App\Http\Controllers\Admin\ContractFinanceController;
-use App\Http\Controllers\Admin\ContractInvestorController;
-use App\Http\Controllers\Admin\ContractPaymentController;
-use App\Http\Controllers\Admin\ContractScanFileController;
-use App\Http\Controllers\Admin\ContractScanFileTypeController;
-use App\Http\Controllers\Admin\ContractTypeController;
-use App\Http\Controllers\Admin\ContractUnitController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\DossierHandoverController;
-use App\Http\Controllers\Admin\DossierMinuteController;
-use App\Http\Controllers\Admin\DossierPlanController;
-use App\Http\Controllers\Admin\DossierSyntheticController;
-use App\Http\Controllers\Admin\DossierTypeController;
-use App\Http\Controllers\Admin\DossierUsageRegisterController;
-use App\Http\Controllers\Admin\EligibilityController;
-use App\Http\Controllers\Admin\EmploymentContractPersonnelController;
-use App\Http\Controllers\Admin\EmploymentContractPersonnelCustomFieldController;
-use App\Http\Controllers\Admin\GoogleDriveController;
-use App\Http\Controllers\Admin\InternalBulletinController;
-use App\Http\Controllers\Admin\InternalMeetingMinuteController;
-use App\Http\Controllers\Admin\LeaveRequestController;
-use App\Http\Controllers\Admin\PayrollController;
-use App\Http\Controllers\Admin\PersonnelController;
-use App\Http\Controllers\Admin\PersonnelCustomFieldController;
-use App\Http\Controllers\Admin\PersonnelFileController;
-use App\Http\Controllers\Admin\PersonnelFileTypeController;
-use App\Http\Controllers\Admin\PersonnelUnitController;
-use App\Http\Controllers\Admin\ProfessionalRecordHandoverController;
-use App\Http\Controllers\Admin\ProfessionalRecordMinuteController;
-use App\Http\Controllers\Admin\ProfessionalRecordPlanController;
-use App\Http\Controllers\Admin\ProfessionalRecordSyntheticController;
-use App\Http\Controllers\Admin\ProfessionalRecordTypeController;
-use App\Http\Controllers\Admin\ProfessionalRecordUsageRegisterController;
-use App\Http\Controllers\Admin\ProofContractController;
-use App\Http\Controllers\Admin\ShareholderMeetingMinuteController;
-use App\Http\Controllers\Admin\SoftwareOwnershipController;
-use App\Http\Controllers\Admin\TaskScheduleController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\BiddingController;
+use App\Http\Controllers\Admin\PayrollController;
+use App\Http\Controllers\Admin\ContractController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PersonnelController;
+use App\Http\Controllers\Admin\DossierPlanController;
+use App\Http\Controllers\Admin\DossierTypeController;
+use App\Http\Controllers\Admin\EligibilityController;
+use App\Http\Controllers\Admin\GoogleDriveController;
+use App\Http\Controllers\Admin\ContractBillController;
+use App\Http\Controllers\Admin\ContractFileController;
+use App\Http\Controllers\Admin\ContractTypeController;
+use App\Http\Controllers\Admin\ContractUnitController;
+use App\Http\Controllers\Admin\LeaveRequestController;
+use App\Http\Controllers\Admin\TaskScheduleController;
 use App\Http\Controllers\Admin\UserSubEmailController;
-use App\Http\Controllers\Admin\UserTimeTableController;
 use App\Http\Controllers\Admin\WorkScheduleController;
+use App\Http\Controllers\Admin\BuildSoftwareController;
+use App\Http\Controllers\Admin\DossierMinuteController;
+use App\Http\Controllers\Admin\PersonnelFileController;
+use App\Http\Controllers\Admin\PersonnelUnitController;
+use App\Http\Controllers\Admin\ProofContractController;
+use App\Http\Controllers\Admin\UserTimeTableController;
 use App\Http\Controllers\Admin\WorkTimesheetController;
+use App\Http\Controllers\Admin\ContractFinanceController;
+use App\Http\Controllers\Admin\ContractPaymentController;
+use App\Http\Controllers\Admin\DossierHandoverController;
+use App\Http\Controllers\Admin\ContractAppendixController;
+use App\Http\Controllers\Admin\ContractFileTypeController;
+use App\Http\Controllers\Admin\ContractInvestorController;
+use App\Http\Controllers\Admin\ContractScanFileController;
+use App\Http\Controllers\Admin\DossierSyntheticController;
+use App\Http\Controllers\Admin\InternalBulletinController;
+use App\Http\Controllers\Admin\PersonnelFileTypeController;
+use App\Http\Controllers\Admin\SoftwareOwnershipController;
+use App\Http\Controllers\Admin\TrainAndBusTicketController;
+use App\Http\Controllers\Admin\BoardMeetingMinuteController;
+use App\Http\Controllers\Admin\ContractScanFileTypeController;
+use App\Http\Controllers\Admin\DossierUsageRegisterController;
+use App\Http\Controllers\Admin\PersonnelCustomFieldController;
+use App\Http\Controllers\Admin\InternalMeetingMinuteController;
 use App\Http\Controllers\Admin\WorkTimesheetOvertimeController;
-use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ContractAdvancePaymentController;
+use App\Http\Controllers\Admin\ProfessionalRecordPlanController;
+use App\Http\Controllers\Admin\ProfessionalRecordTypeController;
+use App\Http\Controllers\Admin\TrainAndBusTicketDetailController;
+use App\Http\Controllers\Admin\ProfessionalRecordMinuteController;
+use App\Http\Controllers\Admin\ShareholderMeetingMinuteController;
+use App\Http\Controllers\Admin\ProfessionalRecordHandoverController;
+use App\Http\Controllers\Admin\EmploymentContractPersonnelController;
+use App\Http\Controllers\Admin\ProfessionalRecordSyntheticController;
+use App\Http\Controllers\Admin\ProfessionalRecordUsageRegisterController;
+use App\Http\Controllers\Admin\EmploymentContractPersonnelCustomFieldController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::get('/', 'getLogin')->name('login');
@@ -392,6 +394,21 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
 
         Route::prefix('synthetic')->controller(ProfessionalRecordSyntheticController::class)->group(function () {
             Route::get('index', 'index')->name('professional-record.synthetic.index');
+        });
+    });
+
+    // vé tàu xe
+    Route::prefix('train-and-bus-ticket')->group(function () {
+        Route::controller(TrainAndBusTicketController::class)->group(function () {
+            Route::get('index', 'index')->name('train-and-bus-ticket.index');
+            Route::get('create', 'create')->name('train-and-bus-ticket.create');
+            Route::get('edit', 'edit')->name('train-and-bus-ticket.edit');
+            Route::delete('delete', 'delete')->name('train-and-bus-ticket.delete');
+        });
+
+        Route::prefix('detail')->controller(TrainAndBusTicketDetailController::class)->group(function () {
+            Route::get('index', 'index')->name('train-and-bus-ticket.detail.index');
+            Route::get('edit', 'edit')->name('train-and-bus-ticket.detail.edit');
         });
     });
 });
