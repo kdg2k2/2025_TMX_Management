@@ -288,6 +288,36 @@
                         Hồ sơ - Biên bản - Công văn
                     </span>
                 </li>
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i
+                            class="side-menu__icon ti ti-ticket"></i>
+                        <span
+                            class="side-menu__label">
+                            Vé máy bay/tàu xe
+                        </span>
+                        <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="javascript:void(0)">
+                                Vé máy bay/tàu xe
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="javascript::void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon ti ti-plane"></i>
+                                Vé máy bay
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="javascript::void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon ti ti-train"></i>
+                                Vé tàu xe
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 @php
                     $pendingDossierMinuteFlag =
                         app(\App\Models\DossierMinute::class)->where('status', 'pending_approval')->count() > 0
