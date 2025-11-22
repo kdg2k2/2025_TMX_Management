@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->date('estimated_travel_time')->comment('thời gian đi dự kiến');
             $table->string('expected_departure')->comment('điểm khởi hành dự kiến');
             $table->string('expected_destination')->comment('điểm đến hành dự kiến');
-            $table->foreignId('created_by')->comment('người tạo')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('created_by')->comment('người tạo')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

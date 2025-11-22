@@ -477,14 +477,14 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
     // vé tàu xe
     Route::prefix('train-and-bus-ticket')->group(function () {
         Route::controller(TrainAndBusTicketController::class)->group(function () {
-            Route::get('list', 'list')->name('train-and-bus-ticket.list');
-            Route::post('store', 'store')->name('train-and-bus-ticket.store');
-            Route::patch('update', 'update')->name('train-and-bus-ticket.update');
+            Route::get('list', 'list')->name('api.train-and-bus-ticket.list');
+            Route::post('store', 'store')->name('api.train-and-bus-ticket.store');
+            Route::patch('update', 'update')->name('api.train-and-bus-ticket.update');
         });
 
         Route::prefix('detail')->controller(TrainAndBusTicketDetailController::class)->group(function () {
-            Route::get('list', 'list')->name('train-and-bus-ticket.detail.list');
-            Route::patch('update', 'update')->name('train-and-bus-ticket.detail.update');
+            Route::get('list', 'list')->name('api.train-and-bus-ticket.detail.list');
+            Route::patch('update', 'update')->name('api.train-and-bus-ticket.detail.update');
         });
     });
 });

@@ -26,7 +26,7 @@ return new class extends Migration {
             $table->integer('ticket_price')->nullable()->comment('giá vé');
             $table->string('ticket_image_path')->nullable()->comment('ảnh vé');
             $table->string('note')->nullable()->comment('ghi chú');
-            $table->foreignId('created_by')->comment('người tạo')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('created_by')->comment('người tạo')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 
