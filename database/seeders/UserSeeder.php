@@ -127,7 +127,8 @@ class UserSeeder extends Seeder
         foreach ($arr as $item) {
             $subEmails = $item['sub_emails'];
             unset($item['sub_emails']);
-            $user = User::create($item);
+            $user = User::updateOrCreate(['email' => $item['email']], $item);
+            $user->subEmails()->delete();
             $user->subEmails()->createMany($subEmails);
         }
 
