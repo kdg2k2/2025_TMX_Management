@@ -1,7 +1,7 @@
 @props([
     'type' => 'button',
     'variant' => 'primary', // primary, secondary, success, danger, warning, info, light, dark
-    'size' => 'md', // sm, md, lg
+    'size' => 'sm', // sm, md, lg
     'icon' => null,
     'iconPosition' => 'left', // left, right
     'text' => null,

@@ -8,7 +8,8 @@ class TrainAndBusTicketService extends BaseService
 {
     public function __construct(
         private UserService $userService,
-        private ContractService $contractService
+        private ContractService $contractService,
+        private TrainAndBusTicketDetailService $trainAndBusTicketDetailService
     ) {
         $this->repository = app(TrainAndBusTicketRepository::class);
     }
@@ -31,10 +32,12 @@ class TrainAndBusTicketService extends BaseService
             'load_relations' => false,
             'columns' => ['id', 'name'],
         ]);
-        $res['contracts'] = $this->userService->list([
+        $res['contracts'] = $this->contractService->list([
             'load_relations' => false,
             'columns' => ['id', 'name'],
         ]);
+        $res['types'] = $this->repository->getType();
+        $res['userTypes'] = $this->trainAndBusTicketDetailService->repository->getUserType();
         return $res;
     }
 }
