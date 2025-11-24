@@ -32,12 +32,14 @@ class AuthService extends BaseService
                 throw new Exception('Mật khẩu không chính xác', 401);
 
             $token = $isWebLogin
-                ? (function () use ($token) {
+                ? (function () {
+                    $route = route('dashboard');
                     $previousUrl = session('url.previous');
-                    session()->forget('url.previous');
-                    if ($previousUrl)
-                        $token = $previousUrl;
-                    return $token = route('dashboard');
+                    if ($previousUrl) {
+                        session()->forget('url.previous');
+                        $route = $previousUrl;
+                    }
+                    return $route;
                 })()
                 : $this->createNewToken($token, $this->createRefreshToken());
 
