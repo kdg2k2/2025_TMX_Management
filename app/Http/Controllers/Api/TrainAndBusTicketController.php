@@ -33,14 +33,4 @@ class TrainAndBusTicketController extends Controller
             ]);
         });
     }
-
-    public function update(UpdateRequest $request)
-    {
-        return $this->catchAPI(function () use ($request) {
-            return response()->json([
-                'data' => $this->service->update($request->validated()),
-                'message' => config('message.update'),
-            ]);
-        });
-    }
 }

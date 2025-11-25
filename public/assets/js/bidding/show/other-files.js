@@ -3,29 +3,6 @@ const ortherFileCloneRow = document.getElementById("orther-file-clone-row");
 const btnAddRowOrtherFile = ortherFileCloneRow.querySelector("button");
 const tableOrtherFile = document.getElementById("table-orther-file");
 
-const getOrtherFileSelects = (jquery = false) => {
-    return getFormInputsAndSelects(ortherFileForm, jquery);
-};
-
-const reindexOrtherFileRow = () => {
-    reindexRow(ortherFileForm);
-};
-
-const getMaxOrtherFileIndex = () => {
-    const selects = getOrtherFileSelects();
-    return getMaxRowIndex(selects);
-};
-
-const renderRowOrtherFile = () => {
-    return cloneRow(
-        ortherFileCloneRow,
-        ortherFileForm,
-        () => reindexOrtherFileRow(),
-        () => getOrtherFileSelects(true),
-        () => getMaxOrtherFileIndex()
-    );
-};
-
 window.loadTableOrtherFile = (table = tableOrtherFile) => {
     createDataTableServerSide(
         $(table),
@@ -81,7 +58,13 @@ window.loadTableOrtherFile = (table = tableOrtherFile) => {
 };
 
 btnAddRowOrtherFile.addEventListener("click", () => {
-    renderRowOrtherFile();
+    cloneRow(
+        ortherFileCloneRow,
+        ortherFileForm,
+        () => reindexRow(ortherFileForm),
+        () => {},
+        () => getMaxRowIndex(getFormFields(ortherFileForm))
+    );
 });
 
 ortherFileForm.addEventListener("submit", async (e) => {

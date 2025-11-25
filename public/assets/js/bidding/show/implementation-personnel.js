@@ -76,29 +76,14 @@ const loadAndFillSelectPersonelFiles = async (value, select) => {
     if (res.data) fillSelectPersonelFiles(select, res.data);
 };
 
-// lấy tất cả select
-const getImplementationPersonnelSelects = (jquery = false) => {
-    return getFormInputsAndSelects(implementationPersonnelForm, jquery);
-};
-
-// reindex toàn bộ dòng trước khi thêm dòng mới
-const reindexPersonnelRows = () => {
-    reindexRow(implementationPersonnelForm);
-};
-
-// lấy index cao nhất hiện có
-const getMaxPersonnelIndex = () => {
-    const selects = getImplementationPersonnelSelects();
-    return getMaxRowIndex(selects);
-};
-
 btnAddRowImplementationPersonnel.addEventListener("click", () => {
     cloneRow(
         implementationPersonnelCloneRow,
         implementationPersonnelForm,
-        () => reindexPersonnelRows(),
-        () => getImplementationPersonnelSelects(true),
-        () => getMaxPersonnelIndex()
+        () => reindexRow(implementationPersonnelForm),
+        () =>
+            getSelects(implementationPersonnelForm.querySelectorAll("select")),
+        () => getMaxRowIndex(getFormFields(implementationPersonnelForm))
     );
 });
 

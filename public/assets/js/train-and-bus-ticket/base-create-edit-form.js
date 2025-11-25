@@ -1,13 +1,15 @@
 const selectType = document.querySelector('select[name="type"]');
-const selectContract = document.querySelector('select[name="contract"]');
+const selectContract = document.querySelector('select[name="contract_id"]');
 const inputOtherProgramName = document.querySelector(
     'input[name="other_program_name"]'
 );
-var indexCloneRow = 0;
+const submitForm = document.getElementById("submit-form");
+const cloneRowElement = document.getElementById("clone-row");
+const btnAddRow = cloneRowElement.querySelector("button");
 
 const setHiddenAndRequired = (element, show = true, parent = null) => {
     if (!element) {
-        console.error("Element is undefined or null");
+        console.warn("Element is undefined or null");
         return;
     }
 
@@ -21,41 +23,88 @@ const setHiddenAndRequired = (element, show = true, parent = null) => {
 };
 
 const toggleSelectType = (e) => {
-    const element = e.target;
-    const parent = element.closest(".col-md-4");
+    const element = e?.target;
+    if (!element) return;
 
-    setHiddenAndRequired(selectContract, false, parent);
-    setHiddenAndRequired(inputOtherProgramName, false, parent);
+    setHiddenAndRequired(
+        selectContract,
+        false,
+        selectContract.closest(".col-md-4")
+    );
+    setHiddenAndRequired(
+        inputOtherProgramName,
+        false,
+        inputOtherProgramName.closest(".col-md-4")
+    );
 
     if (element.value == "contract") {
-        setHiddenAndRequired(selectContract, true, parent);
+        setHiddenAndRequired(
+            selectContract,
+            true,
+            selectContract.closest(".col-md-4")
+        );
     } else {
-        setHiddenAndRequired(inputOtherProgramName, true, parent);
+        setHiddenAndRequired(
+            inputOtherProgramName,
+            true,
+            inputOtherProgramName.closest(".col-md-4")
+        );
     }
 };
 
 const toggleSelectUserType = (e) => {
     const element = e.target;
-    const parent = element.closest(".col-md-5");
-    let selectUser = (inputExternalUserName = null);
-
-    selectUser = parent.querySelector('select[name="details[user]"]');
-    inputExternalUserName = parent.querySelector(
-        'input[name="details[external_user_name]"]'
+    if (!element) return;
+    const row = element.closest(".col-12.row");
+    const selectUser = row.querySelector(
+        'select[name^="details"][name$="[user_id]"]'
+    );
+    const inputExternalUserName = row.querySelector(
+        'input[name^="details"][name$="[external_user_name]"]'
     );
 
-    setHiddenAndRequired(selectUser, false, parent);
-    setHiddenAndRequired(inputExternalUserName, false, parent);
+    setHiddenAndRequired(selectUser, false, selectUser.closest(".col-md-7"));
+    setHiddenAndRequired(
+        inputExternalUserName,
+        false,
+        inputExternalUserName.closest(".col-md-7")
+    );
+    destroySumoSelect($(selectUser));
+    selectUser.value = "";
+    inputExternalUserName.value = "";
 
     if (element.value == "internal") {
-        setHiddenAndRequired(selectUser, true, parent);
+        setHiddenAndRequired(selectUser, true, selectUser.closest(".col-md-7"));
+        initSumoSelect($(selectUser));
     } else {
-        setHiddenAndRequired(inputExternalUserName, true, parent);
+        setHiddenAndRequired(
+            inputExternalUserName,
+            true,
+            inputExternalUserName.closest(".col-md-7")
+        );
     }
 };
 
-selectType.addEventListener("change", toggleSelectType);
+selectType.addEventListener("change", (e) => toggleSelectType(e));
+btnAddRow.addEventListener("click", () => {
+    cloneRow(
+        cloneRowElement,
+        submitForm,
+        () => reindexRow(submitForm),
+        () => getSelects(),
+        () => getMaxRowIndex(getFormFields(submitForm))
+    );
+});
+submitForm.addEventListener("change", (e) => {
+    if (e.target.matches("select.user-type")) toggleSelectUserType(e);
+});
 
 document.addEventListener("DOMContentLoaded", () => {
-    toggleSelectType();
+    selectType.dispatchEvent(new Event("change"));
+
+    submitForm.addEventListener("submit", async (e) => {
+        await handleSubmitForm(e, submitForm,()=>{
+            resetFormRows(submitForm, cloneRowElement);
+        });
+    });
 });

@@ -10,8 +10,9 @@ class TrainAndBusTicketRepository extends BaseRepository
     {
         $this->model = new TrainAndBusTicket();
         $this->relations = [
+            'contract:id,name',
             'createdBy',
-            'contract'
+            'approvedBy',
         ];
     }
 
@@ -34,5 +35,10 @@ class TrainAndBusTicketRepository extends BaseRepository
     public function getType($key = null)
     {
         return $this->model->getType($key);
+    }
+
+    public function getStatus($key = null)
+    {
+        return $this->model->getStatus($key);
     }
 }

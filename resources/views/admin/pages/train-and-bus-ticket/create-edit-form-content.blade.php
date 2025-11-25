@@ -13,7 +13,7 @@
         <label>
             Hợp đồng
         </label>
-        <select name="contract">
+        <select name="contract_id" required>
             <x-select-options :items="$contracts" />
         </select>
     </div>
@@ -23,7 +23,7 @@
         <label>
             Tên chương trình khác
         </label>
-        <input type="text" class="form-control" name="other_program_name">
+        <input type="text" class="form-control" name="other_program_name" required>
     </div>
 </div>
 <div class="my-1 col-md-4">
@@ -55,32 +55,32 @@
     <div class="card-header">
         Danh sách thành viên
     </div>
-    <div class="card-body">
-        <div class="row" id="clone-row">
-            <div class="my-1 col-md-5">
+    <div class="card-body row clone-container">
+        <div class="col-12 row" id="clone-row">
+            <div class="my-1 col-md-4">
                 <label>
                     Kiểu thành viên
                 </label>
-                <select name="details[user_type][0]" required>
+                <select name="details[0][user_type]" class="user-type" required>
                     <x-select-options :items="$userTypes" :emptyOption="false" keyField="original" valueFields="converted" />
                 </select>
             </div>
-            <div class="my-1 col-md-5">
+            <div class="my-1 col-md-7">
                 <label>
                     Thành viên nội bộ
                 </label>
-                <select name="details[user][0]">
+                <select name="details[0][user_id]">
                     <x-select-options :items="$users" />
                 </select>
             </div>
-            <div class="my-1 col-md-5">
+            <div class="my-1 col-md-7" hidden>
                 <label>
                     Tên thành viên ngoài
                 </label>
-                <input type="text" class="form-control" name="details[external_user_name][0]">
+                <input type="text" class="form-control" name="details[0][external_user_name]">
             </div>
             <div class="col-1 d-flex justify-content-center align-items-end">
-                <div class="my-1 action button">
+                <div class="my-1">
                     <x-button variant="success" icon="ti ti-plus" tooltip="Thêm dòng"></x-button>
                 </div>
             </div>

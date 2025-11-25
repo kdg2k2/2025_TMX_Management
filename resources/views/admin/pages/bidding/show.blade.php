@@ -109,6 +109,7 @@
         const deleteBiddingOrtherFileUrl = @json(route('api.bidding.orther-file.delete'));
         const biddingDownloadBuiltResultUrl = @json(route('api.bidding.download-built-result'));
     </script>
+    <script src="assets/js/clone-row/script.js"></script>
     <script src="assets/js/bidding/show/script.js"></script>
     <script src="assets/js/bidding/show/contractor-experience.js"></script>
     <script src="assets/js/bidding/show/eligibility.js"></script>

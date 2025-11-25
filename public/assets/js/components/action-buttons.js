@@ -9,20 +9,6 @@ const createEditBtn = (url) => {
     )?.outerHTML;
 };
 
-const createDeleteBtn = (url, onSuccess = "loadList") => {
-    return createBtn(
-        "danger",
-        "Xóa",
-        false,
-        {
-            "data-href": url,
-            "data-onsuccess": onSuccess,
-        },
-        "ti ti-trash",
-        "openDeleteModal(this)"
-    )?.outerHTML;
-};
-
 const createViewBtn = (url) => {
     return createBtn(
         "info",
@@ -44,3 +30,43 @@ const createDownloadBtn = (url) => {
         `downloadFileHandler('${url}')`
     )?.outerHTML;
 };
+
+const createActionBtn = (
+    type = "primary",
+    label = "Button",
+    url = "#",
+    onsuccess = "loadList",
+    func = null,
+    icon = ""
+) => {
+    const addFunc =
+        typeof func === "function" || typeof onsuccess === "function";
+    return createBtn(
+        type,
+        label,
+        false,
+        {
+            "data-href": url,
+            "data-onsuccess":
+                addFunc && typeof onsuccess !== "function" ? onsuccess : "",
+        },
+        icon,
+        addFunc ? "func(this)" : ""
+    )?.outerHTML;
+};
+
+const createDeleteBtn = (url, onsuccess = "loadList") =>
+    createActionBtn("danger", "Xóa", url, onsuccess, null, "ti ti-trash");
+
+const createApproveBtn = (url, onsuccess = "loadList", func = null) =>
+    createActionBtn(
+        "primary",
+        "Phê duyệt",
+        url,
+        onsuccess,
+        func,
+        "ti ti-check"
+    );
+
+const createRejectBtn = (url, onsuccess = "loadList", func = null) =>
+    createActionBtn("danger", "Từ chối", url, onsuccess, func, "ti ti-x");

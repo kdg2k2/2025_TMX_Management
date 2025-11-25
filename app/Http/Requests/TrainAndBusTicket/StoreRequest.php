@@ -17,9 +17,9 @@ class StoreRequest extends BaseRequest
     {
         return [
             'type' => 'required|in:contract,other',
-            'contract_id' => 'required_if:type,contract|exists:contracts,id',
-            'other_program_name' => 'required_if:type,other|max:255',
-            'estimated_travel_time' => 'required|date_format:Y-m-d',
+            'contract_id' => 'required_if:type,contract|nullable|exists:contracts,id',
+            'other_program_name' => 'required_if:type,other|nullable|max:255',
+            'estimated_travel_time' => 'required|date_format:Y-m-d|after_or_equal:today',
             'expected_departure' => 'required|max:255',
             'expected_destination' => 'required|max:255',
             'created_by' => 'required|exists:users,id',

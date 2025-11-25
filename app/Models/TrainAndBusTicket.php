@@ -17,15 +17,38 @@ class TrainAndBusTicket extends Model
             'original' => 'contract',
             'converted' => 'Theo hợp đồng',
         ],
-        'orther' => [
-            'original' => 'orther',
+        'other' => [
+            'original' => 'other',
             'converted' => 'Khác',
+        ],
+    ];
+
+    protected const STATUS = [
+        'pending_approval' => [
+            'original' => 'pending_approval',
+            'converted' => 'Chờ phê duyệt',
+            'color' => 'warning',
+        ],
+        'approved' => [
+            'original' => 'approved',
+            'converted' => 'Đã phê duyệt',
+            'color' => 'success',
+        ],
+        'rejected' => [
+            'original' => 'rejected',
+            'converted' => 'Đã từ chối',
+            'color' => 'danger',
         ],
     ];
 
     public function getType($key = null)
     {
         return $this->getValueFromArrayByKey(self::TYPES, $key);
+    }
+
+    public function getStatus($key)
+    {
+        return $this->getValueFromArrayByKey(self::STATUS, $key);
     }
 
     public function contract()
@@ -36,5 +59,15 @@ class TrainAndBusTicket extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function details()
+    {
+        return $this->hasMany(TrainAndBusTicketDetail::class);
+    }
+
+    public function approvedBy()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 }

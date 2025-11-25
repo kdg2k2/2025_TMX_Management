@@ -21,6 +21,11 @@ return new class extends Migration {
             $table->string('expected_departure')->comment('điểm khởi hành dự kiến');
             $table->string('expected_destination')->comment('điểm đến dự kiến');
             $table->foreignId('created_by')->comment('người tạo')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->enum('status', ['pending_approval', 'approved', 'rejected'])->default('pending_approval')->comment('Trạng thái duyệt');
+            $table->foreignId('approved_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->dateTime('approved_at')->nullable()->comment('Thời gian phê duyệt');
+            $table->text('approval_note')->nullable()->comment('Ghi chú phê duyệt');
+            $table->text('rejection_note')->nullable()->comment('Ghi chú từ chối phê duyệt');
         });
     }
 

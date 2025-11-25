@@ -3,7 +3,12 @@ let multipleSelectTimeouts = new Map();
 let singleSelectTimeouts = new Map();
 let needsRefresh = new Set();
 
-const destroySumoSelect = (selector) => {
+const destroySumoSelect = (selector = null) => {
+    if (!selector) {
+        console.warn("destroySumoSelect: selector rỗng");
+        return;
+    }
+
     selector.each(function () {
         if ($(this)[0].sumo) {
             $(this)[0].sumo.unload();
@@ -11,20 +16,9 @@ const destroySumoSelect = (selector) => {
     });
 };
 
-const initSumoSelect = (selector, placeholder = "Chọn...") => {
-    // Validate input
-    if (!selector || !selector.jquery) {
-        console.warn("initSumoSelect: selector phải là jQuery object");
-        return;
-    }
-
-    if (selector.length === 0) {
-        console.warn("initSumoSelect: không tìm thấy element nào");
-        return;
-    }
-
-    if (typeof selector.SumoSelect !== "function") {
-        console.warn("initSumoSelect: SumoSelect plugin chưa được load");
+const initSumoSelect = (selector = null, placeholder = "Chọn...") => {
+    if (!selector) {
+        console.warn("initSumoSelect: selector rỗng");
         return;
     }
 
@@ -96,8 +90,8 @@ const initSumoSelect = (selector, placeholder = "Chọn...") => {
     });
 };
 
-const getSelects = () => {
-    return $("select").not('.un-sumo');
+const getSelects = (query) => {
+    return $(query ? query : "select").not(".un-sumo");
 };
 
 const refreshSumoSelect = (selects = null) => {
