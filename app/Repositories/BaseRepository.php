@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Services\SearchService;
 use App\Traits\GuardTraits;
 
 abstract class BaseRepository
