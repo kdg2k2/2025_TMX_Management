@@ -11,7 +11,14 @@ class TrainAndBusTicketDetailRepository extends BaseRepository
         $this->model = new TrainAndBusTicketDetail();
         $this->relations = [
             'createdBy',
+            'user:id,name',
         ];
+    }
+
+    protected function applyListFilters($query, array $request)
+    {
+        if (isset($request['train_and_bus_ticket_id']))
+            $query->where('train_and_bus_ticket_id', $request['train_and_bus_ticket_id']);
     }
 
     protected function getSearchConfig(): array

@@ -25,7 +25,14 @@ const renderColumns = () => {
             data: null,
             title: "Thành viên",
             render: (data, type, row) => {
-                return `${row?.details?.map(item =>`<li>${item?.user_type?.converted} - ${item?.user?.name||item?.external_user_name}</li>`).join('')}`;
+                return `${row?.details
+                    ?.map(
+                        (item) =>
+                            `<li>${item?.user_type?.converted} - ${
+                                item?.user?.name || item?.external_user_name
+                            }</li>`
+                    )
+                    .join("")}`;
             },
         },
         {
@@ -51,10 +58,9 @@ const renderColumns = () => {
         },
         {
             data: null,
-            className: "text-center",
             title: "Trạng thái",
             render: (data, type, row) => {
-                return `<span class="p-1 text-white badge bg-${row.status.color}">${row.status.converted}</span>`;
+                return createBadge(row.status.converted, row.status.color);
             },
         },
         {
@@ -93,6 +99,13 @@ const renderColumns = () => {
             className: "text-center",
             render: (data, type, row) => {
                 return `
+                    ${
+                        row.status.original == "approved"
+                            ? createDetailBtn(
+                                  `window.location.href='${trainAndBusTicketDetailIndex}?id=${row.id}'`
+                              )
+                            : ""
+                    }
                     ${
                         row.status.original == "pending_approval"
                             ? createApproveBtn(

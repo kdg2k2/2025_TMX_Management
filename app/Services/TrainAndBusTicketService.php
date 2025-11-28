@@ -73,6 +73,8 @@ class TrainAndBusTicketService extends BaseService
                 'user_id' => $value['user_id'],
                 'external_user_name' => $value['external_user_name'],
                 'created_by' => $data['created_by'],
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
         }
         return $res;

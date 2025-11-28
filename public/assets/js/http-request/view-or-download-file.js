@@ -24,6 +24,9 @@ const officeFormats = [
     "potm",
 ];
 
+// Danh sách định dạng ảnh
+const imageFormats = ["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "ico"];
+
 const validateUrl = (url) => {
     try {
         return new URL(url);
@@ -54,7 +57,9 @@ const viewFileHandler = (url) => {
         const pathname = validUrl.pathname;
         const extension = pathname.split(".").pop().toLowerCase();
 
-        if (officeFormats.includes(extension)) {
+        if (imageFormats.includes(extension)) {
+            window.open(url, "_blank");
+        } else if (officeFormats.includes(extension)) {
             window.open(createLinkPreviewFileOnline(url, 1), "_blank");
         } else if (extension === "pdf") {
             window.open(createLinkPreviewFileOnline(url, 2), "_blank");

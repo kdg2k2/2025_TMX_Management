@@ -8,9 +8,12 @@ use Log;
 
 class HandlerUploadFileService extends BaseService
 {
-    public function storeAndRemoveOld($file, string $rootFolder, string $folder, string $oldPath = null)
+    public function storeAndRemoveOld($file, string $rootFolder, string $folder = '', string $oldPath = null)
     {
-        $folderSave = "uploads/$rootFolder/$folder";
+        $folderSave = "uploads/$rootFolder";
+        if ($folder)
+            $folderSave .= "/$folder";
+
         $destinationPath = $this->getAbsolutePublicPath($folderSave);
 
         // Nếu là file dạng UploadedFile (từ request upload)

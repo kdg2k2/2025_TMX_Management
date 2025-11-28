@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\TrainAndBusTicketDetailService;
 use App\Http\Requests\TrainAndBusTicketDetail\EditRequest;
-use App\Http\Requests\TrainAndBusTicketDetail\DeleteRequest;
 
 class TrainAndBusTicketDetailController extends Controller
 {
@@ -24,7 +23,7 @@ class TrainAndBusTicketDetailController extends Controller
     public function edit(EditRequest $request)
     {
         return $this->catchWeb(function () use ($request) {
-            return view('admin.pages.train-and-bus-ticket.detail.edit', $this->service->baseDataForCreateEditView($request->validated()['id']));
+            return view('admin.pages.train-and-bus-ticket.detail.edit', $this->service->baseDataForEditView($request->validated()['id']));
         });
     }
 }

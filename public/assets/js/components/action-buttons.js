@@ -31,6 +31,11 @@ const createDownloadBtn = (url) => {
     )?.outerHTML;
 };
 
+const createDetailBtn = (func = null) => {
+    return createBtn("info", "Chi tiết", false, {}, "ti ti-list-details", func)
+        ?.outerHTML;
+};
+
 const createActionBtn = (
     type = "primary",
     label = "Button",
@@ -56,7 +61,14 @@ const createActionBtn = (
 };
 
 const createDeleteBtn = (url, onsuccess = "loadList") =>
-    createActionBtn("danger", "Xóa", url, onsuccess, "openDeleteModal", "ti ti-trash");
+    createActionBtn(
+        "danger",
+        "Xóa",
+        url,
+        onsuccess,
+        "openDeleteModal",
+        "ti ti-trash"
+    );
 
 const createApproveBtn = (url, onsuccess = "loadList", func = null) =>
     createActionBtn(

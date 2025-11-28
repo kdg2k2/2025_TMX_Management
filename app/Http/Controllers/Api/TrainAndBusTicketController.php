@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TrainAndBusTicket\ListRequest;
 use App\Http\Requests\TrainAndBusTicket\StoreRequest;
-use App\Http\Requests\TrainAndBusTicket\UpdateRequest;
 use App\Services\TrainAndBusTicketService;
 
 class TrainAndBusTicketController extends Controller

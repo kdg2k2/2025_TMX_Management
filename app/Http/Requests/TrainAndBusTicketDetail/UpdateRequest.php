@@ -18,12 +18,8 @@ class UpdateRequest extends BaseRequest
         return array_merge(
             app(FindByIdRequest::class)->rules(),
             [
-                'train_and_bus_ticket_id' => 'required|exists:train_and_bus_tickets,id',
-                'user_type' => 'required|in:internal,external',
-                'user_id' => 'required_if:user_type,internal|exists:users,id',
-                'external_user_name' => 'required_if:user_type,external|max:255',
                 'departure_date' => 'nullable|date_format:Y-m-d',
-                'return_date' => 'nullable|date_format:Y-m-d',
+                'return_date' => 'nullable|date_format:Y-m-d|after:departure_date',
                 'departure_place' => 'nullable|max:255',
                 'return_place' => 'nullable|max:255',
                 'train_number' => 'nullable|max:255',
