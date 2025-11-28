@@ -13,6 +13,7 @@ class TrainAndBusTicketRepository extends BaseRepository
             'contract:id,name',
             'createdBy',
             'approvedBy',
+            'details.user',
         ];
     }
 

@@ -29,7 +29,7 @@ class TrainAndBusTicketController extends Controller
         return $this->catchAPI(function () use ($request) {
             return response()->json([
                 'data' => $this->service->store($request->validated()),
-                'message' => config('message.store'),
+                'message' => config('message.request_approve'),
             ]);
         });
     }

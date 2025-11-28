@@ -10,13 +10,20 @@
         </div>
     </div>
 @endsection
+@section('modals')
+    <x-approve-modal id="approve-modal" title="Xác nhận duyệt biên bản" size="md" method="post"
+        noteName="approval_note"></x-approve-modal>
+    <x-approve-modal id="reject-modal" title="Xác nhận từ chối biên bản" size="md" method="post"
+        noteName="rejection_note" buttonVariant="danger"></x-approve-modal>
+@endsection
 @section('scripts')
     <script>
         const table = $('#datatable');
         const listUrl = @json(route('api.train-and-bus-ticket.list'));
-        const editUrl = @json(route('train-and-bus-ticket.edit'));
-        const deleteUrl = @json(route('train-and-bus-ticket.delete'));
+        const trainAndBusTicketApproveUrl = @json(route('train-and-bus-ticket.approve'));
+        const trainAndBusTicketRejectUrl = @json(route('train-and-bus-ticket.reject'));
     </script>
     <script src="assets/js/http-request/base-list.js"></script>
+    <script src="assets/js/train-and-bus-ticket/modals.js"></script>
     <script src="assets/js/train-and-bus-ticket/list.js"></script>
 @endsection

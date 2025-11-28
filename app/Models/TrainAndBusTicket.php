@@ -19,7 +19,7 @@ class TrainAndBusTicket extends Model
         ],
         'other' => [
             'original' => 'other',
-            'converted' => 'Khác',
+            'converted' => 'Chương trình khác',
         ],
     ];
 

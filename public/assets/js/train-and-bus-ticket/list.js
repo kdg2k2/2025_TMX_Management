@@ -23,6 +23,13 @@ const renderColumns = () => {
         },
         {
             data: null,
+            title: "Thành viên",
+            render: (data, type, row) => {
+                return `${row?.details?.map(item =>`<li>${item?.user_type?.converted} - ${item?.user?.name||item?.external_user_name}</li>`).join('')}`;
+            },
+        },
+        {
+            data: null,
             title: "Thời gian dự kiến",
             render: (data, type, row) => {
                 return row?.estimated_travel_time || "";
@@ -54,16 +61,14 @@ const renderColumns = () => {
             data: null,
             title: "Người duyệt",
             render: (data, type, row) => {
-                return `
-                    <div>
-                        <div class="text-center">${
-                            row?.approved_by?.name || ""
-                        }</div>
-                        <div>${
-                            row?.approval_note || row?.rejection_note || ""
-                        }</div>
-                    </div>
-                `;
+                return row?.approved_by?.name || "";
+            },
+        },
+        {
+            data: null,
+            title: "Ghi chú duyệt",
+            render: (data, type, row) => {
+                return row?.approval_note || row?.rejection_note || "";
             },
         },
         {
@@ -90,7 +95,16 @@ const renderColumns = () => {
                 return `
                     ${
                         row.status.original == "pending_approval"
-                            ? createApproveBtn("") + createRejectBtn("")
+                            ? createApproveBtn(
+                                  `${trainAndBusTicketApproveUrl}?id=${row.id}`,
+                                  "loadList",
+                                  "showApproveModal"
+                              ) +
+                              createRejectBtn(
+                                  `${trainAndBusTicketRejectUrl}?id=${row.id}`,
+                                  "loadList",
+                                  "showRejectModal"
+                              )
                             : ""
                     }
                 `;

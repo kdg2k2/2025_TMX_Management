@@ -41,7 +41,7 @@ class WorkScheduleController extends Controller
         return $this->tryThrow(function () use ($request) {
             return response()->json([
                 'data' => $this->service->approvalRequest($request->validated()),
-                'message' => config('message.accept'),
+                'message' => config('message.approve'),
             ]);
         });
     }
@@ -71,7 +71,7 @@ class WorkScheduleController extends Controller
         return $this->tryThrow(function () use ($request) {
             return response()->json([
                 'data' => $this->service->returnApprovalRequest($request->validated()),
-                'message' => config('message.accept'),
+                'message' => config('message.approve'),
             ]);
         });
     }

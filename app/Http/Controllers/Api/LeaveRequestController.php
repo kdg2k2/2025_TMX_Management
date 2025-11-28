@@ -56,7 +56,7 @@ class LeaveRequestController extends Controller
         return $this->tryThrow(function () use ($request) {
             return response()->json([
                 'data' => $this->service->approvalRequest($request->validated()),
-                'message' => config('message.accept'),
+                'message' => config('message.approve'),
             ]);
         });
     }
@@ -86,7 +86,7 @@ class LeaveRequestController extends Controller
         return $this->tryThrow(function () use ($request) {
             return response()->json([
                 'data' => $this->service->adjustApprovalRequest($request->validated()),
-                'message' => config('message.accept'),
+                'message' => config('message.approve'),
             ]);
         });
     }

@@ -53,7 +53,7 @@ class BuildSoftwareController extends Controller
         return $this->catchAPI(function () use ($request) {
             $this->service->accept($request->validated());
             return response()->json([
-                'message' => config('message.accept'),
+                'message' => config('message.approve'),
             ]);
         });
     }

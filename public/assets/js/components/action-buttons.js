@@ -39,24 +39,24 @@ const createActionBtn = (
     func = null,
     icon = ""
 ) => {
-    const addFunc =
-        typeof func === "function" || typeof onsuccess === "function";
+    // Nếu có func (string tên hàm) → tạo onclick string
+    const onclickHandler = func ? `${func}(this)` : "";
+
     return createBtn(
         type,
         label,
         false,
         {
             "data-href": url,
-            "data-onsuccess":
-                addFunc && typeof onsuccess !== "function" ? onsuccess : "",
+            "data-onsuccess": onsuccess,
         },
         icon,
-        addFunc ? "func(this)" : ""
+        onclickHandler
     )?.outerHTML;
 };
 
 const createDeleteBtn = (url, onsuccess = "loadList") =>
-    createActionBtn("danger", "Xóa", url, onsuccess, null, "ti ti-trash");
+    createActionBtn("danger", "Xóa", url, onsuccess, "openDeleteModal", "ti ti-trash");
 
 const createApproveBtn = (url, onsuccess = "loadList", func = null) =>
     createActionBtn(

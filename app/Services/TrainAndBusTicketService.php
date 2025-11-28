@@ -25,6 +25,8 @@ class TrainAndBusTicketService extends BaseService
             $array['estimated_travel_time'] = $this->formatDateForPreview($array['estimated_travel_time']);
         if (isset($array['approved_at']))
             $array['approved_at'] = $this->formatDateForPreview($array['approved_at']);
+        if (isset($array['details']))
+            $array['details'] = $this->trainAndBusTicketDetailService->formatRecords($array['details']);
 
         return $array;
     }
@@ -56,6 +58,8 @@ class TrainAndBusTicketService extends BaseService
             $data = $this->repository->store($request);
 
             $this->syncDetails($data, $this->formatFields($data, $details));
+
+            $this->sendMail($data['id'], 'Yều cầu');
         }, true);
     }
 
@@ -82,5 +86,39 @@ class TrainAndBusTicketService extends BaseService
             return;
 
         $data->details()->insert($pivot);
+    }
+
+    public function approve(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $data = $this->repository->update($request);
+            $this->sendMail($data['id'], 'Phê duyệt');
+        }, true);
+    }
+
+    public function reject(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $data = $this->repository->update($request);
+            $this->sendMail($data['id'], 'Từ chối');
+        }, true);
+    }
+
+    private function sendMail(int $id, string $subject)
+    {
+        $data = $this->findById($id, true, true);
+        $emails = $this->getEmails($data);
+        dispatch(new \App\Jobs\SendMailJob('emails.train-and-bus-ticket', $subject . ' đăng ký vé tàu xe', $emails, [
+            'data' => $data,
+        ]));
+    }
+
+    private function getEmails($data)
+    {
+        return $this->userService->getEmails([
+            $data['created_by']['id'],
+            $data['approved_by']['id'] ?? null,
+            collect($data['details'])->pluck('user_id')->unique()->filter()->toArray()
+        ]);
     }
 }
