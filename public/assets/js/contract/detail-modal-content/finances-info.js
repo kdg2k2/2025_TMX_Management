@@ -386,7 +386,7 @@ const triggerChangeFinanceInputValues = () => {
 
 contractFinanceModalForm.addEventListener("submit", async (e) => {
     appendContractIdInForm(contractFinanceModalForm);
-    await handleSubmitForm(e, contractFinanceModalForm, () => {
+    await handleSubmitForm(e, () => {
         renderFinancesInfo();
         triggerChangeFinanceInputValues();
     });

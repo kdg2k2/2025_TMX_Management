@@ -260,7 +260,7 @@ const openModalWarning = (btn) => {
 };
 
 modalWarningForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalWarningForm, () => {
+    await handleSubmitForm(e, () => {
         hideModal(modalWarning);
     });
 });

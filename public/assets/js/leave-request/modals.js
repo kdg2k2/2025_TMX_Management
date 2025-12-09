@@ -37,19 +37,19 @@ const openModalAdjustApproveRequest = (btn) => {
 };
 
 modalApproveRequestForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalApproveRequestForm, () => {
+    await handleSubmitForm(e, () => {
         hideModal(modalApproveRequest);
     });
 });
 
 modalAdjustRequestForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalAdjustRequestForm, () => {
+    await handleSubmitForm(e, () => {
         hideModal(modalAdjustRequest);
     });
 });
 
 modalAdjustApproveRequestForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalAdjustApproveRequestForm, () => {
+    await handleSubmitForm(e, () => {
         hideModal(modalAdjustApproveRequest);
     });
 });

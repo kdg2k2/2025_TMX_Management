@@ -26,21 +26,21 @@ const openUpdateStateModal = (url, data) => {
 };
 
 acceptModalFrom.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, acceptModalFrom, () => {
+    await handleSubmitForm(e, () => {
         loadList();
         hideModal(acceptModal);
     });
 });
 
 rejectModalFrom.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, rejectModalFrom, () => {
+    await handleSubmitForm(e, () => {
         loadList();
         hideModal(rejectModal);
     });
 });
 
 updateStateModalFrom.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, updateStateModalFrom, () => {
+    await handleSubmitForm(e, () => {
         loadList();
         hideModal(updateStateModal);
     });

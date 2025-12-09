@@ -53,7 +53,7 @@ const openModalUpload = () => {
 };
 
 modalUploadForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalUploadForm, () => {
+    await handleSubmitForm(e, () => {
         hideModal(modalUpload);
         loadList();
     });

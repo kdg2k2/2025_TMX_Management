@@ -1,11 +1,11 @@
 const handleSubmitForm = async (
     e,
-    form,
     callbackAfterSubmit = () => {},
     resetForm = true,
-    formData
+    formData = null
 ) => {
     e.preventDefault();
+    const form = e.target;
     const btnSubmit = form.querySelector('button[type="submit"]');
     const method = getFormMethod(form);
     if (!formData) formData = new FormData(form);
@@ -16,7 +16,7 @@ const handleSubmitForm = async (
         setButtonLoading(btnSubmit, true);
 
         await http[method](action, formData);
-        
+
         if (resetForm && method === "post") resetFormAfterSubmit(form);
 
         if (typeof window[onSuccess] == "function") window[onSuccess]();
@@ -31,6 +31,8 @@ const handleSubmitForm = async (
 };
 
 const setButtonLoading = (button, showOrNot, loadingText = "Đang xử lý...") => {
+    if (!button) return;
+
     if (showOrNot) {
         button.disabled = true;
         button.dataset.originalText = button.innerHTML;
@@ -50,5 +52,5 @@ const getFormMethod = (form) => {
 
 const resetFormAfterSubmit = (form) => {
     form.reset();
-    refreshSumoSelect($(form).find("select"));
+    refreshSumoSelect($(form.querySelectorAll("select")));
 };

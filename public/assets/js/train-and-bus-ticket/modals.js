@@ -18,9 +18,9 @@ const showRejectModal = (btn) => {
 };
 
 approveModalForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, e.target, () => hideModal(approveModal));
+    await handleSubmitForm(e, () => hideModal(approveModal));
 });
 
 rejectModalForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, e.target, () => hideModal(rejectModal));
+    await handleSubmitForm(e, () => hideModal(rejectModal));
 });

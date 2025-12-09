@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Traits\AssetPathTraits;
 use App\Traits\CheckLocalTraits;
-use App\Traits\FailedValidation;
 use App\Traits\FormatDateTraits;
 use App\Traits\GuardTraits;
 use App\Traits\TryCatchTraits;
@@ -12,7 +11,6 @@ use App\Traits\TryCatchTraits;
 abstract class BaseService
 {
     use TryCatchTraits,
-        FailedValidation,
         CheckLocalTraits,
         AssetPathTraits,
         FormatDateTraits,
@@ -23,6 +21,13 @@ abstract class BaseService
     public function getColumns()
     {
         return $this->repository->getColumns();
+    }
+
+    public function count()
+    {
+        return $this->tryThrow(function () {
+            return $this->repository->count();
+        });
     }
 
     public function getIds()

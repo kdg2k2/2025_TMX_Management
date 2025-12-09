@@ -85,7 +85,7 @@ const openRunModal = (btn) => {
 };
 
 modalRunForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalRunForm, () => {
+    await handleSubmitForm(e, () => {
         hideModal(modalRun);
     });
 });

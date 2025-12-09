@@ -27,6 +27,14 @@ abstract class BaseRepository
         return array_filter($columns, fn($item) => !in_array($item, $ignores));
     }
 
+    public function count(string $tableName = null)
+    {
+        if ($tableName) {
+            return \DB::table($tableName)->count();
+        }
+        return $this->model->count();
+    }
+
     public function getIds()
     {
         return $this->model->pluck('id')->toArray();
@@ -71,7 +79,7 @@ abstract class BaseRepository
         })->get();
     }
 
-    public function findByKey(string $key, string $column, bool $useBinarySearch = true, bool $loadRelation = true, array $customRelations=[])
+    public function findByKey(string $key, string $column, bool $useBinarySearch = true, bool $loadRelation = true, array $customRelations = [])
     {
         if ($useBinarySearch)
             $query = $this->model->whereRaw("BINARY $column = ?", [$key]);
@@ -181,6 +189,11 @@ abstract class BaseRepository
         $model = $this->findById($request['id']);
         $model->update($request);
         return $model;
+    }
+
+    public function updateOrCreate(array $attr, array $values)
+    {
+        return $this->model->updateOrCreate($attr, $values);
     }
 
     public function delete(int $id)

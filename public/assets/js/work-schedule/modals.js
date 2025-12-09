@@ -34,19 +34,19 @@ const openModalReturnApproveRequest = (btn) => {
 };
 
 modalApproveRequestForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalApproveRequestForm, () => {
+    await handleSubmitForm(e, () => {
         hideModal(modalApproveRequest);
     });
 });
 
 modalReturnRequestForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalReturnRequestForm, () => {
+    await handleSubmitForm(e, () => {
         hideModal(modalReturnRequest);
     });
 });
 
 modalReturnApproveRequestForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalReturnApproveRequestForm, () => {
+    await handleSubmitForm(e, () => {
         hideModal(modalReturnApproveRequest);
     });
 });

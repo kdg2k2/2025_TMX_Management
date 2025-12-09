@@ -55,13 +55,13 @@ const afterSubmitFromHandle = (form) => {
 };
 
 modalUpdateForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalUpdateForm, () => {
+    await handleSubmitForm(e, () => {
         afterSubmitFromHandle(modalUpdate);
     });
 });
 
 modalImportForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, modalImportForm, () => {
+    await handleSubmitForm(e, () => {
         afterSubmitFromHandle(modalImport);
     });
 });

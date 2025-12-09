@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             SystemConfigSeeder::class,
             DossierTypeSeeder::class,
             ProfessionalRecordTypeSeeder::class,
+            AirportSeeder::class,
         ]);
 
         if ($this->isLocal())

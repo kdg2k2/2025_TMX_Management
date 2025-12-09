@@ -112,7 +112,7 @@ const openDenyModal = (btn) => {
 
 const bindSubmit = (form, modal) =>
     form.addEventListener("submit", (e) =>
-        handleSubmitForm(e, form, () => hideModal(modal))
+        handleSubmitForm(e, () => hideModal(modal))
     );
 
 bindSubmit(acceptModalForm, acceptModal);

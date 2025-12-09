@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selectType.dispatchEvent(new Event("change"));
 
     submitForm.addEventListener("submit", async (e) => {
-        await handleSubmitForm(e, submitForm,()=>{
+        await handleSubmitForm(e, ()=>{
             resetFormRows(submitForm, cloneRowElement);
         });
     });

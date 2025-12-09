@@ -186,7 +186,6 @@ const handleModalSubmitBase = async ({ e, validate, url, modal }) => {
 
     await handleSubmitForm(
         e,
-        form,
         () => {
             loadData();
             hideModal(modal);

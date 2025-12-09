@@ -232,7 +232,7 @@ const triggerChangeAppendixInputValues = () => {
 
 contractAppendixModalForm.addEventListener("submit", async (e) => {
     appendContractIdInForm(contractAppendixModalForm);
-    await handleSubmitForm(e, contractAppendixModalForm, () => {
+    await handleSubmitForm(e, () => {
         renderAppendixesInfo();
         triggerChangeAppendixInputValues();
     });

@@ -194,7 +194,7 @@ window.loadTableImplementationPersonnel = (
 };
 
 implementationPersonnelForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, implementationPersonnelForm, () => {
+    await handleSubmitForm(e, () => {
         resetFormRows(
             implementationPersonnelForm,
             implementationPersonnelCloneRow

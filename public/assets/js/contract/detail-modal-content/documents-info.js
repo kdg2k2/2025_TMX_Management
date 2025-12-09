@@ -151,7 +151,7 @@ contractFileType.addEventListener("change", () => {
 createContractFileModalForm.addEventListener("submit", async (e) => {
     appendContractIdInForm(createContractFileModalForm);
 
-    await handleSubmitForm(e, createContractFileModalForm, () => {
+    await handleSubmitForm(e, () => {
         showAndSetAcceptExts();
         renderDocumentsInfo();
     });

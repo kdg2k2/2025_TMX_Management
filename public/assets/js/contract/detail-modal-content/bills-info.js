@@ -166,7 +166,7 @@ const triggerChangeBillInputValues = () => {
 
 contractBillModalForm.addEventListener("submit", async (e) => {
     appendContractIdInForm(contractBillModalForm);
-    await handleSubmitForm(e, contractBillModalForm, () => {
+    await handleSubmitForm(e, () => {
         renderBillsInfo();
         triggerChangeBillInputValues();
     });

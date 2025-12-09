@@ -68,7 +68,7 @@ btnAddRowOrtherFile.addEventListener("click", () => {
 });
 
 ortherFileForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, ortherFileForm, () => {
+    await handleSubmitForm(e, () => {
         resetFormRows(ortherFileForm, ortherFileCloneRow);
         loadTableOrtherFile();
     });

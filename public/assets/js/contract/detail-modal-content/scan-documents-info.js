@@ -171,7 +171,7 @@ contractScanFileType.addEventListener("change", () => {
 createContractScanFileModalForm.addEventListener("submit", async (e) => {
     appendContractIdInForm(createContractScanFileModalForm);
 
-    await handleSubmitForm(e, createContractScanFileModalForm, () => {
+    await handleSubmitForm(e, () => {
         showAndSetAcceptExtsScanDocument();
         renderScanDocumentsInfo();
     });

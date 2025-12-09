@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AirportController;
 use App\Http\Controllers\Admin\BiddingController;
 use App\Http\Controllers\Admin\BoardMeetingMinuteController;
 use App\Http\Controllers\Admin\BuildSoftwareController;
@@ -410,5 +411,13 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::get('index', 'index')->name('train-and-bus-ticket.detail.index');
             Route::get('edit', 'edit')->name('train-and-bus-ticket.detail.edit');
         });
+    });
+
+    // Sân bay
+    Route::prefix('airport')->controller(AirportController::class)->group(function () {
+        Route::get('index', 'index')->name('airport.index');
+        Route::get('create', 'create')->name('airport.create');
+        Route::get('edit', 'edit')->name('airport.edit');
+        Route::delete('delete', 'delete')->name('airport.delete');
     });
 });

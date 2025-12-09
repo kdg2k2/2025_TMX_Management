@@ -58,7 +58,7 @@ const triggerChangePaymentInputValues = () => {
 
 contractPaymentModalForm.addEventListener("submit", async (e) => {
     appendFinanceIdInForm(contractPaymentModalForm);
-    await handleSubmitForm(e, contractPaymentModalForm, () => {
+    await handleSubmitForm(e, () => {
         renderFinancesInfo();
         triggerChangePaymentInputValues();
     });

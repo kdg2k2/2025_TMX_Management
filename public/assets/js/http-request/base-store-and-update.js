@@ -6,6 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Submit form
     form.addEventListener("submit", async (e) => {
-        await handleSubmitForm(e, form);
+        await handleSubmitForm(e);
     });
 });
