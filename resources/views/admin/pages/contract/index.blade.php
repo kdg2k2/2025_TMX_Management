@@ -392,17 +392,17 @@
         const updatePaymentUrl = @json(route('api.contract.finance.payment.update'));
         const deletePaymentUrl = @json(route('contract.finance.payment.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/http-request/base-store-and-update.js"></script>
-    <script src="assets/js/contract/list.js"></script>
-    <script src="assets/js/contract/vat-calculator.js"></script>
-    <script src="assets/js/contract/detail-modal-content/script.js"></script>
-    <script src="assets/js/contract/detail-modal-content/general-info.js"></script>
-    <script src="assets/js/contract/detail-modal-content/documents-info.js"></script>
-    <script src="assets/js/contract/detail-modal-content/scan-documents-info.js"></script>
-    <script src="assets/js/contract/detail-modal-content/bills-info.js"></script>
-    <script src="assets/js/contract/detail-modal-content/appendixes-info.js"></script>
-    <script src="assets/js/contract/detail-modal-content/finances-info.js"></script>
-    <script src="assets/js/contract/detail-modal-content/advance-payment.js"></script>
-    <script src="assets/js/contract/detail-modal-content/payment.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/http-request/base-store-and-update.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/list.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/vat-calculator.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/detail-modal-content/script.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/detail-modal-content/general-info.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/detail-modal-content/documents-info.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/detail-modal-content/scan-documents-info.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/detail-modal-content/bills-info.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/detail-modal-content/appendixes-info.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/detail-modal-content/finances-info.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/detail-modal-content/advance-payment.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/detail-modal-content/payment.js?v={{ time() }}"></script>
 @endsection

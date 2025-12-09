@@ -17,6 +17,6 @@
         const editUrl = @json(route('airport.edit'));
         const deleteUrl = @json(route('airport.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/airport/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/airport/list.js?v={{ time() }}"></script>
 @endsection

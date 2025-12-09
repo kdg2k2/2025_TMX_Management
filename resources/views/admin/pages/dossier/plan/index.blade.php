@@ -47,5 +47,5 @@
         const urlCreateMinute = @json(route('api.dossier.plan.createMinute'));
         const urlSendApproveRequest = @json(route('api.dossier.plan.sendApproveRequest'));
     </script>
-    <script src="assets/js/dossier/plan/script.js"></script>
+    <script src="assets/js/dossier/plan/script.js?v={{ time() }}"></script>
 @endsection

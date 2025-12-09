@@ -24,6 +24,6 @@
         const editUrl = @json(route('user.sub-email.edit'));
         const deleteUrl = @json(route('api.user.sub-email.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/user/sub-email/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/user/sub-email/list.js?v={{ time() }}"></script>
 @endsection

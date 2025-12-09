@@ -29,5 +29,5 @@
         const urlCreateMinute = @json(route('api.professional-record.handover.createMinute'));
         const urlSendApproveRequest = @json(route('api.professional-record.handover.sendApproveRequest'));
     </script>
-    <script src="assets/js/professional-record/handover/script.js"></script>
+    <script src="assets/js/professional-record/handover/script.js?v={{ time() }}"></script>
 @endsection

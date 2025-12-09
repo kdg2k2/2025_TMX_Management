@@ -11,7 +11,8 @@
 
     <div class="card custom-card">
         <div class="card-body">
-            <form id="submit-form" class="row" action="{{ route('api.train-and-bus-ticket.detail.update', ['id' => $data['id']]) }}">
+            <form id="submit-form" class="row"
+                action="{{ route('api.train-and-bus-ticket.detail.update', ['id' => $data['id']]) }}">
                 @method('patch')
                 @include('admin.pages.train-and-bus-ticket.detail.edit-form-content')
                 <div class="my-1 col-12 text-center">
@@ -25,6 +26,6 @@
     <script>
         const $data = @json($data ?? null);
     </script>
-    <script src="assets/js/http-request/base-store-and-update.js"></script>
-    <script src="assets/js/train-and-bus-ticket/detail/update.js"></script>
+    <script src="assets/js/http-request/base-store-and-update.js?v={{ time() }}"></script>
+    <script src="assets/js/train-and-bus-ticket/detail/update.js?v={{ time() }}"></script>
 @endsection

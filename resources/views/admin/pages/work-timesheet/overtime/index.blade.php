@@ -43,6 +43,6 @@
         const listUrl = @json(route('api.work-timesheet.overtime.detail.list'));
         const apiWorkTimesheetOvertimeTemplate = @json(route('api.work-timesheet.overtime.template'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/work-timesheet/overtime/script.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/work-timesheet/overtime/script.js?v={{ time() }}"></script>
 @endsection

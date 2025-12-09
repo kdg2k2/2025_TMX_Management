@@ -130,7 +130,7 @@
         const apiWorkScheduleReturnApprove = @json(route('api.work-schedule.return-approve'));
         const apiWorkScheduleReturnReject = @json(route('api.work-schedule.return-reject'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/work-schedule/list.js"></script>
-    <script src="assets/js/work-schedule/modals.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/work-schedule/list.js?v={{ time() }}"></script>
+    <script src="assets/js/work-schedule/modals.js?v={{ time() }}"></script>
 @endsection

@@ -17,6 +17,6 @@
         const editUrl = @json(route('software_ownerships.edit'));
         const deleteUrl = @json(route('software_ownerships.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/software_ownerships/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/software_ownerships/list.js?v={{ time() }}"></script>
 @endsection

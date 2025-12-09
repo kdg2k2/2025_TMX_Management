@@ -108,6 +108,6 @@
     <script>
         $showCreateMinuteBtn = @json($showCreateMinuteBtn);
     </script>
-    <script src="assets/js/dossier/base.js"></script>
+    <script src="assets/js/dossier/base.js?v={{ time() }}"></script>
     @yield('child-scripts')
 @endsection

@@ -38,5 +38,5 @@
         const urlUploadExcel = @json(route('api.professional-record.plan.uploadExcel'));
         const urlSendApproveRequest = @json(route('api.professional-record.plan.sendApproveRequest'));
     </script>
-    <script src="assets/js/professional-record/plan/script.js"></script>
+    <script src="assets/js/professional-record/plan/script.js?v={{ time() }}"></script>
 @endsection

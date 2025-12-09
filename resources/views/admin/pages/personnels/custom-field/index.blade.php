@@ -21,6 +21,6 @@
         const editUrl = @json(route('personnels.custom-field.edit'));
         const deleteUrl = @json(route('personnels.custom-field.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/personnels/custom-field/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/personnels/custom-field/list.js?v={{ time() }}"></script>
 @endsection

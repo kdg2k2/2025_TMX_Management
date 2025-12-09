@@ -17,6 +17,6 @@
         const editUrl = @json(route('eligibilities.edit'));
         const deleteUrl = @json(route('eligibilities.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/eligibilities/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/eligibilities/list.js?v={{ time() }}"></script>
 @endsection

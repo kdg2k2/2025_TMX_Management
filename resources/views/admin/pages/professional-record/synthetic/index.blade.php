@@ -26,8 +26,8 @@
                     </select>
                 </div>
                 <div class="col-md-1 d-grid align-content-center">
-                    <x-button id="download-excel-btn" :outline="true" icon="ti ti-download" variant="success" tooltip="Tải file thống kê"
-                        size="md">Tải</x-button>
+                    <x-button id="download-excel-btn" :outline="true" icon="ti ti-download" variant="success"
+                        tooltip="Tải file thống kê" size="md">Tải</x-button>
                 </div>
             </div>
         </div>
@@ -46,5 +46,5 @@
         const $contracts = @json($contracts);
         const createSyntheticFile = @json(route('api.professional-record.synthetic.create-synthetic-file'));
     </script>
-    <script src="assets/js/professional-record/synthetic/script.js"></script>
+    <script src="assets/js/professional-record/synthetic/script.js?v={{ time() }}"></script>
 @endsection

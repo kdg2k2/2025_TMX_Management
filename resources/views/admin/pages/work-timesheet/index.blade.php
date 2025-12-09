@@ -112,5 +112,5 @@
     <script>
         const apiWorkTimesheetData = @json(route('api.work-timesheet.data'));
     </script>
-    <script src="assets/js/work-timesheet/script.js"></script>
+    <script src="assets/js/work-timesheet/script.js?v={{ time() }}"></script>
 @endsection

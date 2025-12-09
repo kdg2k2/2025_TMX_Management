@@ -17,21 +17,21 @@
                     'content' => view('admin.pages.bidding.partials.contractor-experience', [
                         'biddingContractorExperienceFileTypes' => $biddingContractorExperienceFileTypes,
                     ])->render(),
-
+            
                     'onclick' => 'tabBiddingContractorExperience()',
                 ],
                 [
                     'title' => 'Tư cách hợp lệ',
                     'icon' => 'ti ti-certificate',
                     'content' => view('admin.pages.bidding.partials.eligibility')->render(),
-
+            
                     'onclick' => 'tabBiddingEligibility()',
                 ],
                 [
                     'title' => 'Sở hữu phần mềm',
                     'icon' => 'ti ti-device-desktop',
                     'content' => view('admin.pages.bidding.partials.software-ownership')->render(),
-
+            
                     'onclick' => 'tabBiddingSoftwareOwnership()',
                 ],
                 [
@@ -41,14 +41,14 @@
                         'data' => $data,
                         'biddingimplementationPersonnelJobtitles' => $biddingimplementationPersonnelJobtitles,
                     ])->render(),
-
+            
                     'onclick' => 'tabImplementationPersonnel()',
                 ],
                 [
                     'title' => 'Hợp đồng minh chứng / Quyết định giao nhiệm vụ',
                     'icon' => 'ti ti-file-certificate',
                     'content' => view('admin.pages.bidding.partials.proof-contract')->render(),
-
+            
                     'onclick' => 'tabBiddingProofContract()',
                 ],
                 [
@@ -57,7 +57,7 @@
                     'content' => view('admin.pages.bidding.partials.other-files', [
                         'data' => $data,
                     ])->render(),
-
+            
                     'onclick' => 'loadTableOrtherFile()',
                 ],
                 [
@@ -109,13 +109,13 @@
         const deleteBiddingOrtherFileUrl = @json(route('api.bidding.orther-file.delete'));
         const biddingDownloadBuiltResultUrl = @json(route('api.bidding.download-built-result'));
     </script>
-    <script src="assets/js/clone-row/script.js"></script>
-    <script src="assets/js/bidding/show/script.js"></script>
-    <script src="assets/js/bidding/show/contractor-experience.js"></script>
-    <script src="assets/js/bidding/show/eligibility.js"></script>
-    <script src="assets/js/bidding/show/software-ownership.js"></script>
-    <script src="assets/js/bidding/show/proof-contract.js"></script>
-    <script src="assets/js/bidding/show/implementation-personnel.js"></script>
-    <script src="assets/js/bidding/show/other-files.js"></script>
-    <script src="assets/js/bidding/show/syncthetic.js"></script>
+    <script src="assets/js/clone-row/script.js?v={{ time() }}"></script>
+    <script src="assets/js/bidding/show/script.js?v={{ time() }}"></script>
+    <script src="assets/js/bidding/show/contractor-experience.js?v={{ time() }}"></script>
+    <script src="assets/js/bidding/show/eligibility.js?v={{ time() }}"></script>
+    <script src="assets/js/bidding/show/software-ownership.js?v={{ time() }}"></script>
+    <script src="assets/js/bidding/show/proof-contract.js?v={{ time() }}"></script>
+    <script src="assets/js/bidding/show/implementation-personnel.js?v={{ time() }}"></script>
+    <script src="assets/js/bidding/show/other-files.js?v={{ time() }}"></script>
+    <script src="assets/js/bidding/show/syncthetic.js?v={{ time() }}"></script>
 @endsection

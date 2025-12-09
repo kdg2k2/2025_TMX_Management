@@ -30,7 +30,7 @@
         const editUrl = @json(route('personnels.edit'));
         const deleteUrl = @json(route('personnels.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/personnels/list.js"></script>
-    <script src="assets/js/personnels/synthetic-excel.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/personnels/list.js?v={{ time() }}"></script>
+    <script src="assets/js/personnels/synthetic-excel.js?v={{ time() }}"></script>
 @endsection

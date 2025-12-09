@@ -21,6 +21,6 @@
         const editUrl = @json(route('contract.type.edit'));
         const deleteUrl = @json(route('contract.type.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/contract/type/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/type/list.js?v={{ time() }}"></script>
 @endsection

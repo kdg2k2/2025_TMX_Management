@@ -28,14 +28,14 @@
 
     @yield('body')
 
-    <script src="assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script src="assets/js/main.js"></script>
-    <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/loading-animation/loading.js"></script>
-    <script src="assets/libs/nostfly-main/nostfly.js"></script>
-    <script src="assets/js/nostfly/nostfly.js"></script>
-    <script src="assets/js/auth/csrf_token.js"></script>
-    <script src="assets/js/http-request/fetch.js"></script>
+    <script src="assets/libs/choices.js/public/assets/scripts/choices.min.js?v={{ time() }}"></script>
+    <script src="assets/js/main.js?v={{ time() }}"></script>
+    <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js?v={{ time() }}"></script>
+    <script src="assets/js/loading-animation/loading.js?v={{ time() }}"></script>
+    <script src="assets/libs/nostfly-main/nostfly.js?v={{ time() }}"></script>
+    <script src="assets/js/nostfly/nostfly.js?v={{ time() }}"></script>
+    <script src="assets/js/auth/csrf_token.js?v={{ time() }}"></script>
+    <script src="assets/js/http-request/fetch.js?v={{ time() }}"></script>
     <script>
         @if (session('success'))
             var success = @json(session('success'));

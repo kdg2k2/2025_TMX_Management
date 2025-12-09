@@ -30,7 +30,7 @@
         const editUrl = @json(route('employment-contract-personnel.edit'));
         const deleteUrl = @json(route('employment-contract-personnel.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/employment-contract-personnel/list.js"></script>
-    <script src="assets/js/employment-contract-personnel/synthetic-excel.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/employment-contract-personnel/list.js?v={{ time() }}"></script>
+    <script src="assets/js/employment-contract-personnel/synthetic-excel.js?v={{ time() }}"></script>
 @endsection

@@ -10,8 +10,7 @@
 
     <div class="card custom-card">
         <div class="card-body">
-            <form id="submit-form" class="row"
-                action="{{ route('api.internal-bulletin.update', ['id' => $data['id']]) }}">
+            <form id="submit-form" class="row" action="{{ route('api.internal-bulletin.update', ['id' => $data['id']]) }}">
                 @method('patch')
                 @include('admin.pages.internal-bulletin.create-edit-form-content')
                 <div class="my-1 col-12 text-center">
@@ -25,5 +24,5 @@
     <script>
         const $data = @json($data ?? null);
     </script>
-    <script src="assets/js/http-request/base-store-and-update.js"></script>
+    <script src="assets/js/http-request/base-store-and-update.js?v={{ time() }}"></script>
 @endsection

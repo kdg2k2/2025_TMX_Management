@@ -21,6 +21,6 @@
     </div>
 @endsection
 @section('scripts')
-    <script src="assets/js/clone-row/script.js"></script>
-    <script src="assets/js/train-and-bus-ticket/base-create-edit-form.js"></script>
+    <script src="assets/js/clone-row/script.js?v={{ time() }}"></script>
+    <script src="assets/js/train-and-bus-ticket/base-create-edit-form.js?v={{ time() }}"></script>
 @endsection

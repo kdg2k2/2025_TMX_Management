@@ -20,6 +20,6 @@
         const editUrl = @json(route('shareholder-meeting-minute.edit'));
         const deleteUrl = @json(route('shareholder-meeting-minute.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/shareholder-meeting-minute/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/shareholder-meeting-minute/list.js?v={{ time() }}"></script>
 @endsection

@@ -25,7 +25,7 @@
     <script>
         const $data = @json($data ?? null);
     </script>
-    <script src="assets/js/http-request/base-store-and-update.js"></script>
-    <script src="assets/js/contract/file/type/base-store-and-update.js"></script>
-    <script src="assets/js/contract/file/type/store.js"></script>
+    <script src="assets/js/http-request/base-store-and-update.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/file/type/base-store-and-update.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/file/type/store.js?v={{ time() }}"></script>
 @endsection

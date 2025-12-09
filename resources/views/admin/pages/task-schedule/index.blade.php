@@ -30,6 +30,6 @@
         const editUrl = @json(route('task-schedule.edit'));
         const runUrl = @json(route('api.task-schedule.run'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/task-schedule/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/task-schedule/list.js?v={{ time() }}"></script>
 @endsection

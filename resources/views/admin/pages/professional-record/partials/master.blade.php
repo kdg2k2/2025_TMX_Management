@@ -109,6 +109,6 @@
     <script>
         $showCreateMinuteBtn = @json($showCreateMinuteBtn);
     </script>
-    <script src="assets/js/professional-record/base.js"></script>
+    <script src="assets/js/professional-record/base.js?v={{ time() }}"></script>
     @yield('child-scripts')
 @endsection

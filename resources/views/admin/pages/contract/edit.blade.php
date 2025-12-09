@@ -27,8 +27,8 @@
     <script>
         const $data = @json($data ?? null);
     </script>
-    <script src="assets/js/http-request/base-store-and-update.js"></script>
-    <script src="assets/js/contract/vat-calculator.js"></script>
-    <script src="assets/js/contract/base-store-and-update.js"></script>
-    <script src="assets/js/contract/update.js"></script>
+    <script src="assets/js/http-request/base-store-and-update.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/vat-calculator.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/base-store-and-update.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/update.js?v={{ time() }}"></script>
 @endsection

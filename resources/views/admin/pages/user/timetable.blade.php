@@ -48,5 +48,5 @@
         const apiUserTimetableGetWeeks = @json(route('api.user.timetable.get-weeks'));
         const apiUserWarningStore = @json(route('api.user.warning.store'));
     </script>
-    <script src="assets/js/user/timetable.js"></script>
+    <script src="assets/js/user/timetable.js?v={{ time() }}"></script>
 @endsection

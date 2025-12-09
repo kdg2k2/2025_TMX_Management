@@ -22,6 +22,6 @@
         const listUrl = @json(route('api.train-and-bus-ticket.detail.list'));
         const editUrl = @json(route('train-and-bus-ticket.detail.edit'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/train-and-bus-ticket/detail/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/train-and-bus-ticket/detail/list.js?v={{ time() }}"></script>
 @endsection

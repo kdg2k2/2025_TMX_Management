@@ -47,6 +47,6 @@
         const acceptUrl = @json(route('api.professional-record.minute.accept'));
         const denyUrl = @json(route('api.professional-record.minute.deny'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/professional-record/minute/script.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/professional-record/minute/script.js?v={{ time() }}"></script>
 @endsection

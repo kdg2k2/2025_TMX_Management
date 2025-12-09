@@ -63,6 +63,6 @@
 @endsection
 
 @section('js')
-    <script src="assets/js/auth/show-password.js"></script>
-    <script src="assets/js/auth/login.js"></script>
+    <script src="assets/js/auth/show-password.js?v={{ time() }}"></script>
+    <script src="assets/js/auth/login.js?v={{ time() }}"></script>
 @endsection

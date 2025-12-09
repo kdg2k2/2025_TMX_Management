@@ -28,7 +28,7 @@
     <script>
         const $data = @json($data ?? null);
     </script>
-    <script src="assets/js/http-request/base-store-and-update.js"></script>
-    <script src="assets/js/personnels/file/toggle-file-type-select.js"></script>
-    <script src="assets/js/personnels/file/update.js"></script>
+    <script src="assets/js/http-request/base-store-and-update.js?v={{ time() }}"></script>
+    <script src="assets/js/personnels/file/toggle-file-type-select.js?v={{ time() }}"></script>
+    <script src="assets/js/personnels/file/update.js?v={{ time() }}"></script>
 @endsection

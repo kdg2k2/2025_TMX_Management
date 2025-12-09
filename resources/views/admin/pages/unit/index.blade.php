@@ -17,6 +17,6 @@
         const editUrl = @json(route('unit.edit'));
         const deleteUrl = @json(route('unit.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/unit/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/unit/list.js?v={{ time() }}"></script>
 @endsection

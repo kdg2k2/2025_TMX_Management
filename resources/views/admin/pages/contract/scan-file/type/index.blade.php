@@ -21,6 +21,6 @@
         const editUrl = @json(route('contract.scan-file.type.edit'));
         const deleteUrl = @json(route('contract.scan-file.type.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/contract/scan-file/type/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/contract/scan-file/type/list.js?v={{ time() }}"></script>
 @endsection

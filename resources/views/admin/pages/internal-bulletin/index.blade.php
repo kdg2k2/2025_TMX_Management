@@ -1,9 +1,6 @@
 @extends('admin.layout.master')
 @section('content')
-    <x-breadcrumb :items="[
-        ['label' => 'Trang chủ', 'url' => route('dashboard')],
-        ['label' => 'Bảng tin', 'url' => null],
-    ]">
+    <x-breadcrumb :items="[['label' => 'Trang chủ', 'url' => route('dashboard')], ['label' => 'Bảng tin', 'url' => null]]">
         <x-button variant="success" size="sm" icon="ti ti-plus" tooltip="Thêm mới" :href="route('internal-bulletin.create')" />
     </x-breadcrumb>
 
@@ -20,6 +17,6 @@
         const editUrl = @json(route('internal-bulletin.edit'));
         const deleteUrl = @json(route('internal-bulletin.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/internal-bulletin/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/internal-bulletin/list.js?v={{ time() }}"></script>
 @endsection

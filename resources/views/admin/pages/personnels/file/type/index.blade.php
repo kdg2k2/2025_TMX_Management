@@ -21,6 +21,6 @@
         const editUrl = @json(route('personnels.file.type.edit'));
         const deleteUrl = @json(route('personnels.file.type.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/personnels/file/type/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/personnels/file/type/list.js?v={{ time() }}"></script>
 @endsection

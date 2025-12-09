@@ -33,5 +33,5 @@
         const editUrl = @json(route('personnels.file.edit'));
         const deleteUrl = @json(route('personnels.file.delete'));
     </script>
-    <script src="assets/js/personnels/file/list.js"></script>
+    <script src="assets/js/personnels/file/list.js?v={{ time() }}"></script>
 @endsection

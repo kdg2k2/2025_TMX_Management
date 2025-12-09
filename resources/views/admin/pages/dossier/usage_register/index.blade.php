@@ -23,5 +23,5 @@
         const urlUploadExcel = @json(route('api.dossier.usage_register.uploadExcel'));
         const urlSendApproveRequest = @json(route('api.dossier.usage_register.sendApproveRequest'));
     </script>
-    <script src="assets/js/dossier/usage_register/script.js"></script>
+    <script src="assets/js/dossier/usage_register/script.js?v={{ time() }}"></script>
 @endsection

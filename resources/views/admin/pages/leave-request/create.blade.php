@@ -24,6 +24,6 @@
     <script>
         const $data = @json($data ?? null);
     </script>
-    <script src="assets/js/http-request/base-store-and-update.js"></script>
-    <script src="assets/js/leave-request/get-total-leave-days.js"></script>
+    <script src="assets/js/http-request/base-store-and-update.js?v={{ time() }}"></script>
+    <script src="assets/js/leave-request/get-total-leave-days.js?v={{ time() }}"></script>
 @endsection

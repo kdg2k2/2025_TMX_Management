@@ -101,8 +101,8 @@
         const apiLeaveRequestAdjustApprove = @json(route('api.leave-request.adjust-approve'));
         const apiLeaveRequestAdjustReject = @json(route('api.leave-request.adjust-reject'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/leave-request/list.js"></script>
-    <script src="assets/js/leave-request/modals.js"></script>
-    <script src="assets/js/leave-request/get-total-leave-days.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/leave-request/list.js?v={{ time() }}"></script>
+    <script src="assets/js/leave-request/modals.js?v={{ time() }}"></script>
+    <script src="assets/js/leave-request/get-total-leave-days.js?v={{ time() }}"></script>
 @endsection

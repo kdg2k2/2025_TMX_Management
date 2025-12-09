@@ -29,5 +29,5 @@
         const urlCreateMinute = @json(route('api.dossier.handover.createMinute'));
         const urlSendApproveRequest = @json(route('api.dossier.handover.sendApproveRequest'));
     </script>
-    <script src="assets/js/dossier/handover/script.js"></script>
+    <script src="assets/js/dossier/handover/script.js?v={{ time() }}"></script>
 @endsection

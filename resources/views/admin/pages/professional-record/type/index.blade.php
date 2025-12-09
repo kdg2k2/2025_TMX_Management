@@ -1,6 +1,9 @@
 @extends('admin.layout.master')
 @section('content')
-    <x-breadcrumb :items="[['label' => 'Trang chủ', 'url' => route('dashboard')], ['label' => 'Loại tài liệu hồ sơ chuyên môn', 'url' => null]]">
+    <x-breadcrumb :items="[
+        ['label' => 'Trang chủ', 'url' => route('dashboard')],
+        ['label' => 'Loại tài liệu hồ sơ chuyên môn', 'url' => null],
+    ]">
         <x-button variant="success" size="sm" icon="ti ti-plus" tooltip="Thêm mới" :href="route('professional-record.type.create')" />
     </x-breadcrumb>
 
@@ -17,6 +20,6 @@
         const editUrl = @json(route('professional-record.type.edit'));
         const deleteUrl = @json(route('professional-record.type.delete'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/professional-record/type/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/professional-record/type/list.js?v={{ time() }}"></script>
 @endsection

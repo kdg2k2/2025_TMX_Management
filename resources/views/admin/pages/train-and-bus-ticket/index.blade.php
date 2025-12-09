@@ -24,7 +24,7 @@
         const trainAndBusTicketRejectUrl = @json(route('train-and-bus-ticket.reject'));
         const trainAndBusTicketDetailIndex = @json(route('train-and-bus-ticket.detail.index'));
     </script>
-    <script src="assets/js/http-request/base-list.js"></script>
-    <script src="assets/js/train-and-bus-ticket/modals.js"></script>
-    <script src="assets/js/train-and-bus-ticket/list.js"></script>
+    <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/train-and-bus-ticket/modals.js?v={{ time() }}"></script>
+    <script src="assets/js/train-and-bus-ticket/list.js?v={{ time() }}"></script>
 @endsection
