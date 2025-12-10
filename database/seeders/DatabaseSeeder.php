@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
             DossierTypeSeeder::class,
             ProfessionalRecordTypeSeeder::class,
             AirportSeeder::class,
+            AirlineSeeder::class,
         ]);
 
         if ($this->isLocal())

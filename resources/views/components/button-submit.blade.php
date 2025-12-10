@@ -8,7 +8,7 @@
     'form' => null,
 ])
 
-<x-button class="mt-3" type="submit" :variant="$variant" :size="$size" :icon="$loading ? null : $icon" :text="$loading ? $loadingText : $text"
+<x-button type="submit" :variant="$variant" :size="$size" :icon="$loading ? null : $icon" :text="$loading ? $loadingText : $text"
     :loading="$loading" :form="$form" {{ $attributes }}>
     {{ $slot }}
 </x-button>

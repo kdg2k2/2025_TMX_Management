@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AirlineController;
 use App\Http\Controllers\Api\AirportController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BiddingContractorExperienceController;
@@ -494,5 +495,12 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::get('list', 'list')->name('api.airport.list');
         Route::post('store', 'store')->name('api.airport.store');
         Route::patch('update', 'update')->name('api.airport.update');
+    });
+
+    // Hãng bay
+    Route::prefix('airline')->controller(AirlineController::class)->group(function () {
+        Route::get('list', 'list')->name('api.airline.list');
+        Route::post('store', 'store')->name('api.airline.store');
+        Route::patch('update', 'update')->name('api.airline.update');
     });
 });

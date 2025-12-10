@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AirlineController;
 use App\Http\Controllers\Admin\AirportController;
 use App\Http\Controllers\Admin\BiddingController;
 use App\Http\Controllers\Admin\BoardMeetingMinuteController;
@@ -419,5 +420,13 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::get('create', 'create')->name('airport.create');
         Route::get('edit', 'edit')->name('airport.edit');
         Route::delete('delete', 'delete')->name('airport.delete');
+    });
+
+    // Hãng bay
+    Route::prefix('airline')->controller(AirlineController::class)->group(function () {
+        Route::get('index', 'index')->name('airline.index');
+        Route::get('create', 'create')->name('airline.create');
+        Route::get('edit', 'edit')->name('airline.edit');
+        Route::delete('delete', 'delete')->name('airline.delete');
     });
 });

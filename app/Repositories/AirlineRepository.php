@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Services;
+namespace App\Repositories;
 
-use App\Repositories\AirportRepository;
+use App\Models\Airline;
 
-class AirportService extends BaseService
+class AirlineRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->repository = app(AirportRepository::class);
+        $this->model = new Airline();
+        $this->relations = [];
     }
 
     public function getSearchConfig(): array
