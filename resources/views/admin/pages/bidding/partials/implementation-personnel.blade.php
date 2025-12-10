@@ -7,7 +7,7 @@
             action="{{ route('api.bidding.implementation-personnel.store') }}">
             @method('post')
             <div class="row clone-container">
-                <div class="col-12 row" id="implementation-personnel-clone-row">
+                <div class="clone-row row" id="implementation-personnel-clone-row">
                     <input type="hidden" name="personnels[0][bidding_id]" value="{{ $data['id'] }}">
                     <div class="col-lg-3 col-md-6">
                         <div class="my-1">

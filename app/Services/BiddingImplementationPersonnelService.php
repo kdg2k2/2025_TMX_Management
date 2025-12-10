@@ -31,7 +31,7 @@ class BiddingImplementationPersonnelService extends BaseService
                     'personnel_id' => $item['personnel_id'],
                 ]);
 
-                $this->syncRelationship($data, 'bidding_implementation_personnel_id', 'files', $item['files'], 'personnel_file_id');
+                $this->syncRelationship($data, 'bidding_implementation_personnel_id', 'files', array_map(fn($i) => ['personnel_file_id' => $i], $item['files']));
             }
         }, true);
     }

@@ -14,6 +14,8 @@ class RunTaskSchedules extends Command
     public function handle(TaskScheduleService $service): int
     {
         $schedules = TaskSchedule::where('is_active', true)
+            ->whereNotNull('cron_expression')
+            ->where('manual_run', true)
             ->where('next_run_at', '<=', now())
             ->get();
 

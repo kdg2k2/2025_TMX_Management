@@ -15,7 +15,10 @@ class BiddingSoftwareOwnershipService extends BaseService
     public function updateOrCreate(array $request)
     {
         return $this->tryThrow(function () use ($request) {
-            return $this->repository->updateOrCreate($request);
+            return $this->repository->updateOrCreate([
+                'software_ownership_id' => $request['software_ownership_id'],
+                'bidding_id' => $request['bidding_id'],
+            ], $request);
         }, true);
     }
 

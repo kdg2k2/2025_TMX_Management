@@ -1,4 +1,4 @@
-var allRowClass = ".col-12.row";
+var allRowClass = ".clone-row.row";
 
 const getFormFields = (form) => {
     return form.querySelectorAll("select, input:not([type='hidden'])");
@@ -26,9 +26,6 @@ const getMaxRowIndex = (elements) => {
 const cloneRow = (
     cloneElement,
     form,
-    reindexFunc = () => {},
-    getSelectsFunc = () => {},
-    getMaxIndexFunc = () => {},
     cloneContainer = form.querySelector(".clone-container")
 ) => {
     if (!cloneContainer) {
@@ -36,16 +33,17 @@ const cloneRow = (
         return;
     }
 
-    destroySumoSelect(getSelectsFunc());
+    const currentFormSelects = cloneContainer.querySelectorAll("select");
+    destroySumoSelect($(currentFormSelects));
 
     // Reindex trước khi clone
-    reindexFunc();
-
+    reindexRow(form);
     const clone = cloneElement.cloneNode(true);
+
     clone.removeAttribute("id");
 
     // Lấy index mới (sau khi reindex thì max luôn là dòng cuối)
-    const newIndex = getMaxIndexFunc() + 1;
+    const newIndex = getMaxRowIndex(currentFormSelects) + 1;
 
     // Cập nhật name
     clone.querySelectorAll("select[name], input[name]").forEach((el) => {
@@ -67,7 +65,7 @@ const cloneRow = (
 
         clone.remove();
         // sau khi xóa, reindex lại luôn
-        reindexFunc();
+        reindexRow(form);
     };
 
     const icon = btn.querySelector("i");
@@ -77,7 +75,7 @@ const cloneRow = (
     // Gắn clone trước node
     cloneContainer.append(clone);
 
-    initSumoSelect(getSelectsFunc());
+    refreshSumoSelect($(cloneContainer.querySelectorAll("select")));
 
     return clone;
 };

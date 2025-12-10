@@ -58,7 +58,7 @@ class ContractScanFileTypeService extends BaseService
 
     public function syncExtensions(ContractScanFileType $contractFileType, array $ids)
     {
-        $this->syncRelationship($contractFileType, 'type_id', 'extensions', $ids, 'extension_id');
+        $this->syncRelationship($contractFileType, 'type_id', 'extensions', array_map(fn($i) => ['extension_id' => $i], $ids));
     }
 
     public function getExtensions(int $id)

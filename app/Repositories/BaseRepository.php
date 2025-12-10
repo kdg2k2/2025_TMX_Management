@@ -86,8 +86,8 @@ abstract class BaseRepository
         else
             $query = $this->model->where($column, $key);
 
-        $mergeRelations = array_merge($this->relations, $customRelations);
-        if ($loadRelation == true)
+        $mergeRelations = array_merge($loadRelation ? $this->relations : [], $customRelations);
+        if (!empty($mergeRelations))
             $query->with($mergeRelations);
 
         return $query->first();

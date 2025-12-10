@@ -15,7 +15,10 @@ class BiddingContractorExperienceService extends BaseService
     public function updateOrCreate(array $request)
     {
         return $this->tryThrow(function () use ($request) {
-            return $this->repository->updateOrCreate($request);
+            return $this->repository->updateOrCreate([
+                'contract_id' => $request['contract_id'],
+                'bidding_id' => $request['bidding_id'],
+            ], $request);
         }, true);
     }
 

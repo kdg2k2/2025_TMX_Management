@@ -6,7 +6,7 @@
         <form id="orther-file-form" action="{{ route('api.bidding.orther-file.store') }}" enctype="multipart/form-data">
             @method('post')
             <div class="row clone-container">
-                <div class="col-12 row" id="orther-file-clone-row">
+                <div class="clone-row row" id="orther-file-clone-row">
                     <input type="hidden" name="orther_file[0][bidding_id]" value="{{ $data['id'] }}">
                     <div class="col-lg-6 col-md-6">
                         <div class="my-1">

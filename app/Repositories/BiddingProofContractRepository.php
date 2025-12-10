@@ -15,14 +15,6 @@ class BiddingProofContractRepository extends BaseRepository
         ];
     }
 
-    public function updateOrCreate(array $request)
-    {
-        return $this->model->updateOrCreate([
-            'proof_contract_id' => $request['proof_contract_id'],
-            'bidding_id' => $request['bidding_id'],
-        ], $request);
-    }
-
     protected function applyListFilters($query, array $request)
     {
         if (isset($request['bidding_id']))

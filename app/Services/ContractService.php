@@ -227,32 +227,32 @@ class ContractService extends BaseService
 
     private function contractScope(Contract $contract, array $codes)
     {
-        $this->syncRelationship($contract, 'contract_id', 'scopes', $codes, 'province_code');
+        $this->syncRelationship($contract, 'contract_id', 'scopes', array_map(fn($i) => ['province_code' => $i], $codes));
     }
 
     private function contractProfessionals(Contract $contract, array $ids)
     {
-        $this->syncRelationship($contract, 'contract_id', 'professionals', $ids, 'user_id');
+        $this->syncRelationship($contract, 'contract_id', 'professionals', array_map(fn($i) => ['user_id' => $i], $ids));
     }
 
     private function contractDisbursement(Contract $contract, array $ids)
     {
-        $this->syncRelationship($contract, 'contract_id', 'disbursements', $ids, 'user_id');
+        $this->syncRelationship($contract, 'contract_id', 'disbursements', array_map(fn($i) => ['user_id' => $i], $ids));
     }
 
     private function contractInstructor(Contract $contract, array $ids)
     {
-        $this->syncRelationship($contract, 'contract_id', 'instructors', $ids, 'user_id');
+        $this->syncRelationship($contract, 'contract_id', 'instructors', array_map(fn($i) => ['user_id' => $i], $ids));
     }
 
     private function contractManyYear(Contract $contract, array $years)
     {
-        $this->syncRelationship($contract, 'contract_id', 'manyYears', $years, 'year');
+        $this->syncRelationship($contract, 'contract_id', 'manyYears', array_map(fn($i) => ['year' => $i], $years));
     }
 
     private function contractIntermediateCollaborator(Contract $contract, array $ids)
     {
-        $this->syncRelationship($contract, 'contract_id', 'intermediateCollaborators', $ids, 'user_id');
+        $this->syncRelationship($contract, 'contract_id', 'intermediateCollaborators', array_map(fn($i) => ['user_id' => $i], $ids));
     }
 
     protected function afterDelete($entity)

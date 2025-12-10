@@ -24,29 +24,25 @@ class TrainAndBusTicketService extends BaseService
         if (isset($array['estimated_travel_time']))
             $array['estimated_travel_time'] = $this->formatDateForPreview($array['estimated_travel_time']);
         if (isset($array['approved_at']))
-            $array['approved_at'] = $this->formatDateForPreview($array['approved_at']);
+            $array['approved_at'] = $this->formatDateTimeForPreview($array['approved_at']);
         if (isset($array['details']))
             $array['details'] = $this->trainAndBusTicketDetailService->formatRecords($array['details']);
 
         return $array;
     }
 
-    public function baseDataForCreateView(int $id = null)
+    public function baseDataForCreateView()
     {
-        $res = [];
-        if ($id)
-            $res['data'] = $this->repository->findById($id);
-        $res['users'] = $this->userService->list([
+        $baseInfo = [
             'load_relations' => false,
             'columns' => ['id', 'name'],
-        ]);
-        $res['contracts'] = $this->contractService->list([
-            'load_relations' => false,
-            'columns' => ['id', 'name'],
-        ]);
-        $res['types'] = $this->repository->getType();
-        $res['userTypes'] = $this->trainAndBusTicketDetailService->repository->getUserType();
-        return $res;
+        ];
+        return [
+            'userTypes' => $this->trainAndBusTicketDetailService->getUserType(),
+            'types' => $this->repository->getType(),
+            'contracts' => $this->contractService->list($baseInfo),
+            'users' => $this->userService->list($baseInfo),
+        ];
     }
 
     public function store(array $request)
@@ -57,37 +53,18 @@ class TrainAndBusTicketService extends BaseService
 
             $data = $this->repository->store($request);
 
-            $this->syncDetails($data, $this->formatFields($data, $details));
+            $this->syncDetails($data, $details);
 
             $this->sendMail($data['id'], 'Yều cầu');
         }, true);
     }
 
-    private function formatFields(TrainAndBusTicket $data, array $fields)
+    private function syncDetails(TrainAndBusTicket $data, array $details)
     {
-        $res = [];
-        foreach ($fields as $key => $value) {
-            $res[] = [
-                'train_and_bus_ticket_id' => $data['id'],
-                'user_type' => $value['user_type'],
-                'user_id' => $value['user_id'],
-                'external_user_name' => $value['external_user_name'],
-                'created_by' => $data['created_by'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-        return $res;
-    }
-
-    private function syncDetails(TrainAndBusTicket $data, array $pivot)
-    {
-        $data->details()->delete();
-
-        if (count($pivot) == 0)
-            return;
-
-        $data->details()->insert($pivot);
+        $this->syncRelationship($data, 'train_and_bus_ticket_id', 'details', array_map(function ($i) use ($data) {
+            $i['created_by'] = $data['created_by'];
+            return $i;
+        }, $details));
     }
 
     public function approve(array $request)
@@ -120,7 +97,8 @@ class TrainAndBusTicketService extends BaseService
         return $this->userService->getEmails([
             $data['created_by']['id'],
             $data['approved_by']['id'] ?? null,
-            collect($data['details'])->pluck('user_id')->unique()->filter()->toArray()
+            collect($data['details'])->pluck('user_id')->unique()->filter()->toArray(),
+            app(TaskScheduleService::class)->findByKey('TRAIN_AND_BUS_TICKET', 'code', false, false, ['emails'])['emails']->pluck('user_id')->unique()->filter()->toArray()
         ]);
     }
 }

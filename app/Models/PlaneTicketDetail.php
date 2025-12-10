@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Models;
+
+use App\Traits\GetValueFromArrayByKeyTraits;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class PlaneTicketDetail extends Model
+{
+    use HasFactory, GetValueFromArrayByKeyTraits;
+
+    protected $guarded = [];
+
+    protected const USER_TYPES = [
+        'internal' => [
+            'original' => 'internal',
+            'converted' => 'Nội bộ',
+        ],
+        'external' => [
+            'original' => 'external',
+            'converted' => 'Bên ngoài',
+        ],
+    ];
+
+    public function getUserType($key = null)
+    {
+        return $this->getValueFromArrayByKey(self::USER_TYPES, $key);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function departureAirport()
+    {
+        return $this->belongsTo(Airport::class, 'departure_airport_id');
+    }
+
+    public function returnAirport()
+    {
+        return $this->belongsTo(Airport::class, 'return_airport_id');
+    }
+
+    public function airline()
+    {
+        return $this->belongsTo(Airline::class);
+    }
+
+    public function planeTicketClass()
+    {
+        return $this->belongsTo(PlaneTicketClass::class);
+    }
+}

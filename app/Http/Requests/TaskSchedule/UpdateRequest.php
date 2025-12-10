@@ -41,7 +41,7 @@ class UpdateRequest extends FindByIdRequest
                 'content' => 'required|string',
                 'frequency' => 'required|in:daily,weekly,monthly',
                 'cron_expression' => [
-                    'required',
+                    'nullable',
                     'string',
                     function ($attribute, $value, $fail) {
                         try {

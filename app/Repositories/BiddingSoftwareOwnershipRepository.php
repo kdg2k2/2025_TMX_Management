@@ -15,14 +15,6 @@ class BiddingSoftwareOwnershipRepository extends BaseRepository
         ];
     }
 
-    public function updateOrCreate(array $request)
-    {
-        return $this->model->updateOrCreate([
-            'software_ownership_id' => $request['software_ownership_id'],
-            'bidding_id' => $request['bidding_id'],
-        ], $request);
-    }
-
     protected function applyListFilters($query, array $request)
     {
         if (isset($request['bidding_id']))

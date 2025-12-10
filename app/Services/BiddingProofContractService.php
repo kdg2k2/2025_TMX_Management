@@ -15,7 +15,10 @@ class BiddingProofContractService extends BaseService
     public function updateOrCreate(array $request)
     {
         return $this->tryThrow(function () use ($request) {
-            return $this->repository->updateOrCreate($request);
+            return $this->repository->updateOrCreate([
+                'proof_contract_id' => $request['proof_contract_id'],
+                'bidding_id' => $request['bidding_id'],
+            ], $request);
         }, true);
     }
 

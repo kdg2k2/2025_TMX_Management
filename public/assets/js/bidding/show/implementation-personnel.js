@@ -77,19 +77,12 @@ const loadAndFillSelectPersonelFiles = async (value, select) => {
 };
 
 btnAddRowImplementationPersonnel.addEventListener("click", () => {
-    cloneRow(
-        implementationPersonnelCloneRow,
-        implementationPersonnelForm,
-        () => reindexRow(implementationPersonnelForm),
-        () =>
-            getSelects(implementationPersonnelForm.querySelectorAll("select")),
-        () => getMaxRowIndex(getFormFields(implementationPersonnelForm))
-    );
+    cloneRow(implementationPersonnelCloneRow, implementationPersonnelForm);
 });
 
 implementationPersonnelForm.addEventListener("change", (e) => {
     const target = e.target;
-    const closestRow = target.closest(".col-12");
+    const closestRow = target.closest(".clone-row");
 
     if (target.classList.contains("implementation-personnel-unit"))
         loadAndFillSelectPersonels(

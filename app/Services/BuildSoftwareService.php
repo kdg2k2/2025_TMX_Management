@@ -100,12 +100,12 @@ class BuildSoftwareService extends BaseService
 
     private function businessAnalysts(BuildSoftware $data, array $ids)
     {
-        $this->syncRelationship($data, 'build_software_id', 'businessAnalysts', $ids, 'user_id');
+        $this->syncRelationship($data, 'build_software_id', 'businessAnalysts', array_map(fn($i) => ['user_id' => $i], $ids));
     }
 
     private function contractMembers(BuildSoftware $data, array $ids)
     {
-        $this->syncRelationship($data, 'build_software_id', 'members', $ids, 'user_id');
+        $this->syncRelationship($data, 'build_software_id', 'members', array_map(fn($i) => ['user_id' => $i], $ids));
     }
 
     protected function beforeDelete(int $id)

@@ -52,5 +52,8 @@ class TrainAndBusTicketDetailService extends BaseService
         return $data;
     }
 
-    protected function afterUpdate($data, array $request) {}
+    public function getUserType($key = null)
+    {
+        return $this->repository->getUserType($key);
+    }
 }

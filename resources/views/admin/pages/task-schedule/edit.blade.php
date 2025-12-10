@@ -20,7 +20,8 @@
                         <label>
                             Tên tiến trình
                         </label>
-                        <input class="form-control" type="text" name="name" required>
+                        <input class="form-control {{ $data['manual_run'] == 0 ? 'bg-light' : '' }}" type="text"
+                            name="name" required {{ $data['manual_run'] == 0 ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="my-1 col-md-4">
@@ -28,7 +29,8 @@
                         <label>
                             Mô tả
                         </label>
-                        <input class="form-control" type="text" name="description">
+                        <input class="form-control {{ $data['manual_run'] == 0 ? 'bg-light' : '' }}" type="text"
+                            name="description" {{ $data['manual_run'] == 0 ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="my-1 col-md-4">
@@ -36,7 +38,8 @@
                         <label>
                             Tiêu đề email
                         </label>
-                        <input class="form-control" type="text" name="subject">
+                        <input class="form-control {{ $data['manual_run'] == 0 ? 'bg-light' : '' }}" type="text"
+                            name="subject" {{ $data['manual_run'] == 0 ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="my-1 col-md-12">
@@ -44,7 +47,8 @@
                         <label>
                             Nội dung email
                         </label>
-                        <textarea name="content" class="form-control" rows="3"></textarea>
+                        <textarea name="content" class="form-control {{ $data['manual_run'] == 0 ? 'bg-light' : '' }}" rows="3"
+                            {{ $data['manual_run'] == 0 ? 'readonly' : '' }}></textarea>
                     </div>
                 </div>
                 <div class="my-1 col-md-4">
@@ -52,7 +56,7 @@
                         <label>
                             Kiểu tiến trình
                         </label>
-                        <select name="frequency" required>
+                        <select name="frequency" required {{ $data['manual_run'] == 0 ? 'readonly' : '' }}>
                             <x-select-options :items="$frequency" :emptyOption="false" keyField="original"
                                 valueFields="converted" />
                         </select>
@@ -63,7 +67,8 @@
                         <label>
                             Biểu thức cho thời gian chạy tiến trình
                         </label>
-                        <input class="form-control" type="text" name="cron_expression" required>
+                        <input class="form-control {{ $data['manual_run'] == 0 ? 'bg-light' : '' }}" type="text"
+                            name="cron_expression" {{ $data['manual_run'] == 0 ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="my-1 col-md-4">
@@ -71,7 +76,8 @@
                         <label>
                             Lần chạy tiếp theo
                         </label>
-                        <input class="form-control" type="datetime-local" name="next_run_at">
+                        <input class="form-control {{ $data['manual_run'] == 0 ? 'bg-light' : '' }}" type="datetime-local"
+                            name="next_run_at" {{ $data['manual_run'] == 0 ? 'readonly' : '' }}>
                     </div>
                 </div>
                 <div class="my-1 col-md-4">
@@ -79,7 +85,7 @@
                         <label>
                             Trạng thái hoạt động
                         </label>
-                        <select name="is_active" required>
+                        <select name="is_active" required {{ $data['manual_run'] == 0 ? 'readonly' : '' }}>
                             <option value="true">Bật</option>
                             <option value="false">Tắt</option>
                         </select>

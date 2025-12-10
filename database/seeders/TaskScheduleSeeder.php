@@ -32,6 +32,7 @@ class TaskScheduleSeeder extends Seeder
                 'frequency' => 'monthly',
                 'cron_expression' => '0 8 7 * *',
                 'is_active' => false,
+                'manual_run' => true,
                 'user_ids' => $baseUserIds,
             ],
             [
@@ -43,6 +44,7 @@ class TaskScheduleSeeder extends Seeder
                 'cron_expression' => '0 8 9 * *',
                 'description' => 'Chạy lúc 8h sáng ngày 9 hàng tháng',
                 'is_active' => true,
+                'manual_run' => true,
                 'user_ids' => $baseUserIds,
             ],
             [
@@ -54,6 +56,7 @@ class TaskScheduleSeeder extends Seeder
                 'cron_expression' => '0 8 1 * *',
                 'description' => 'Chạy lúc 8h sáng ngày 1 hàng tháng',
                 'is_active' => true,
+                'manual_run' => true,
                 'user_ids' => $baseUserIds,
             ],
             [
@@ -65,6 +68,7 @@ class TaskScheduleSeeder extends Seeder
                 'cron_expression' => '0 8 6 * *',
                 'description' => 'Chạy lúc 8h sáng ngày 6 hàng tháng',
                 'is_active' => true,
+                'manual_run' => true,
                 'user_ids' => $managerUserIds,
             ],
             [
@@ -76,28 +80,47 @@ class TaskScheduleSeeder extends Seeder
                 'cron_expression' => '0 8 7 * *',
                 'description' => 'Chạy lúc 8h sáng ngày 7 hàng tháng',
                 'is_active' => true,
+                'manual_run' => true,
+                'user_ids' => $managerUserIds,
+            ],
+            [
+                'code' => 'TRAIN_AND_BUS_TICKET',
+                'name' => 'Vé tàu xe.',
+                'subject' => null,
+                'content' => null,
+                'frequency' => 'daily',
+                'cron_expression' => null,
+                'description' => 'Tự chạy khi có đăng ký, duyệt...',
+                'is_active' => false,
+                'manual_run' => false,
+                'user_ids' => $managerUserIds,
+            ],
+            [
+                'code' => 'PLANE_TICKET',
+                'name' => 'Vé máy bay.',
+                'subject' => null,
+                'content' => null,
+                'frequency' => 'daily',
+                'cron_expression' => null,
+                'description' => 'Tự chạy khi có đăng ký, duyệt...',
+                'is_active' => false,
+                'manual_run' => false,
                 'user_ids' => $managerUserIds,
             ],
         ];
 
         foreach ($tasks as $task) {
             $cronExpression = $task['cron_expression'];
-            $cron = new CronExpression($cronExpression);
+            $cron = $cronExpression ? Carbon::instance((new CronExpression($cronExpression))->getNextRunDate()) : null;
+            $task['cron_expression'] = $cron;
+            $userIds = $task['user_ids'] ?? [];
+            unset($task['user_ids']);
 
             $data = TaskSchedule::updateOrCreate([
                 'code' => $task['code'],
-            ], [
-                'name' => $task['name'],
-                'description' => $task['description'] ?? '',
-                'subject' => $task['subject'],
-                'content' => $task['content'],
-                'frequency' => $task['frequency'],
-                'is_active' => $task['is_active'],
-                'cron_expression' => $cronExpression,
-                'next_run_at' => Carbon::instance($cron->getNextRunDate()),
-            ]);
+            ], $task);
 
-            $data->users()->sync($task['user_ids']);
+            $data->users()->sync($userIds);
         }
     }
 }

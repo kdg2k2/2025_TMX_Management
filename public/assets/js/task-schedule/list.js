@@ -56,7 +56,7 @@ const renderColumns = () => {
             render: (data, type, row) => {
                 return `
                 ${
-                    row?.is_active
+                    row?.is_active && row?.manual_run
                         ? createBtn(
                               "secondary",
                               "Chạy task thủ công",

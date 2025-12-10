@@ -56,7 +56,7 @@
         Danh sách thành viên
     </div>
     <div class="card-body row clone-container">
-        <div class="col-12 row" id="clone-row">
+        <div class="clone-row row" id="clone-row">
             <div class="my-1 col-md-4">
                 <label>
                     Kiểu thành viên

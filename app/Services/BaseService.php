@@ -275,20 +275,18 @@ abstract class BaseService
         // Override in child classes
     }
 
-    protected function syncRelationship($model, $foreignKey, string $relation, array $items, string $columnName)
+    protected function syncRelationship($model, $foreignKey, string $relation, array $items)
     {
         $model->$relation()->delete();
 
         if (count($items) == 0)
             return;
 
-        $data = collect($items)->map(function ($item) use ($model, $columnName, $foreignKey) {
-            return [
-                $columnName => $item,
-                $foreignKey => $model['id'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+        $data = collect($items)->map(function ($item) use ($model, $foreignKey) {
+            $item[$foreignKey] = $model['id'];
+            $item['created_at'] = now();
+            $item['updated_at'] = now();
+            return $item;
         })->toArray();
 
         if (!empty($data))

@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // hãng bay
         Schema::create('airlines', function (Blueprint $table) {
             $table->id();
             $table->timestamps();

@@ -58,13 +58,7 @@ window.loadTableOrtherFile = (table = tableOrtherFile) => {
 };
 
 btnAddRowOrtherFile.addEventListener("click", () => {
-    cloneRow(
-        ortherFileCloneRow,
-        ortherFileForm,
-        () => reindexRow(ortherFileForm),
-        () => {},
-        () => getMaxRowIndex(getFormFields(ortherFileForm))
-    );
+    cloneRow(ortherFileCloneRow, ortherFileForm);
 });
 
 ortherFileForm.addEventListener("submit", async (e) => {

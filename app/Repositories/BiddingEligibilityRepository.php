@@ -15,14 +15,6 @@ class BiddingEligibilityRepository extends BaseRepository
         ];
     }
 
-    public function updateOrCreate(array $request)
-    {
-        return $this->model->updateOrCreate([
-            'eligibility_id' => $request['eligibility_id'],
-            'bidding_id' => $request['bidding_id'],
-        ], $request);
-    }
-
     protected function applyListFilters($query, array $request)
     {
         if (isset($request['bidding_id']))

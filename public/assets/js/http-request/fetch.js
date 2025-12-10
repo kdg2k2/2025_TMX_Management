@@ -1,4 +1,5 @@
 let controller = null;
+let activeFetchCount = 0;
 const unloadHandler = () => {
     if (controller) {
         controller.abort();
@@ -21,8 +22,6 @@ const makeHttpRequest = (
 
         controller = new AbortController();
         const { signal } = controller;
-
-        if (showLoadingOrNot == true) showLoading();
 
         const fetchOptions = {
             method: method.toUpperCase(),
@@ -52,6 +51,9 @@ const makeHttpRequest = (
             const qp = new URLSearchParams(params).toString();
             fetchUrl = `${url}?${qp}`;
         }
+
+        activeFetchCount++;
+        if (showLoadingOrNot == true) showLoading();
 
         fetch(fetchUrl, fetchOptions)
             .then(async (response) => {
@@ -92,7 +94,12 @@ const makeHttpRequest = (
                 }
                 reject(err);
             })
-            .finally(hideLoading);
+            .finally(() => {
+                activeFetchCount--; // fetch xong
+                if (activeFetchCount === 0) {
+                    hideLoading(); // chỉ hide nếu không còn fetch
+                }
+            });
     });
 };
 
