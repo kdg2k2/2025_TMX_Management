@@ -81,38 +81,39 @@
                         </li>
                         <li class="slide has-sub">
                             <a href="javascript:void(0);" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon fs-6 ti ti-settings"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-settings"></i>
                                 Thiết lập
                                 <i class="ri-arrow-right-s-line side-menu__angle"></i>
                             </a>
                             <ul class="slide-menu child2">
                                 <li class="slide">
                                     <a href="{{ route('contract.type.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-category"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-category"></i>
                                         Loại hợp đồng
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('contract.investor.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-building-skyscraper"></i>
+                                        <i
+                                            class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-building-skyscraper"></i>
                                         Nhà đầu tư
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('contract.unit.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-affiliate"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-affiliate"></i>
                                         Đơn vị liên danh
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('contract.file.type.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-file-settings"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-file-settings"></i>
                                         Loại file
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('contract.scan-file.type.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-scan"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-scan"></i>
                                         Loại scan file
                                     </a>
                                 </li>
@@ -120,7 +121,7 @@
                         </li>
                         <li class="slide">
                             <a href="{{ route('contract.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon fs-6 ti ti-file-invoice"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-file-invoice"></i>
                                 Hợp đồng
                             </a>
                         </li>
@@ -174,26 +175,27 @@
                         </li>
                         <li class="slide has-sub">
                             <a href="javascript:void(0);" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon fs-6 ti ti-settings"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-settings"></i>
                                 Thiết lập
                                 <i class="ri-arrow-right-s-line side-menu__angle"></i>
                             </a>
                             <ul class="slide-menu child2">
                                 <li class="slide">
                                     <a href="{{ route('personnels.custom-field.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-columns"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-columns"></i>
                                         Cột thông tin nhân sự bổ sung
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('personnels.units.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-building-community"></i>
+                                        <i
+                                            class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-building-community"></i>
                                         Đơn vị
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('personnels.file.type.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-certificate"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-certificate"></i>
                                         Loại file bằng cấp
                                     </a>
                                 </li>
@@ -201,13 +203,13 @@
                         </li>
                         <li class="slide">
                             <a href="{{ route('personnels.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon ti ti-user-circle"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-user-circle"></i>
                                 Thông tin nhân sự
                             </a>
                         </li>
                         <li class="slide">
                             <a href="{{ route('personnels.file.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon ti ti-certificate-2"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-certificate-2"></i>
                                 Bằng cấp trình độ
                             </a>
                         </li>
@@ -229,19 +231,19 @@
                         </li>
                         <li class="slide">
                             <a href="{{ route('work-timesheet.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon ti ti-table-export"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-table-export"></i>
                                 Xuất lưới
                             </a>
                         </li>
                         <li class="slide">
                             <a href="{{ route('work-timesheet.overtime.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon ti ti-file-upload"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-file-upload"></i>
                                 Nộp bảng chấm công
                             </a>
                         </li>
                         <li class="slide">
                             <a href="{{ route('payroll.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon ti ti-cash"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-cash"></i>
                                 Bảng lương
                             </a>
                         </li>
@@ -270,26 +272,33 @@
                         </li>
                         <li class="slide has-sub">
                             <a href="javascript:void(0);" class="side-menu__item ">
-                                <i class="side-menu-doublemenu__icon fs-6 ti ti-plane-departure"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-plane-departure"></i>
                                 Vé máy bay
                                 <i class="ri-arrow-right-s-line side-menu__angle"></i>
                             </a>
                             <ul class="slide-menu child2">
                                 <li class="slide">
                                     <a href="{{ route('airport.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-building-airport"></i>
+                                        <i
+                                            class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-building-airport"></i>
                                         Sân bay
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('airline.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-plane-tilt"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-plane-tilt"></i>
                                         Hãng bay
                                     </a>
                                 </li>
                                 <li class="slide">
+                                    <a href="{{ route('plane-ticket-class.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-medal"></i>
+                                        Hạng vé máy bay
+                                    </a>
+                                </li>
+                                <li class="slide">
                                     <a href="javascript::void(0);" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-ticket"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-ticket"></i>
                                         Vé máy bay
                                     </a>
                                 </li>
@@ -297,7 +306,7 @@
                         </li>
                         <li class="slide">
                             <a href="{{ route('train-and-bus-ticket.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon ti ti-bus"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-bus"></i>
                                 Vé tàu xe
                             </a>
                         </li>
@@ -332,45 +341,46 @@
                         </li>
                         <li class="slide has-sub">
                             <a href="javascript:void(0);" class="side-menu__item {{ $pendingDossierMinuteFlag }}">
-                                <i class="side-menu-doublemenu__icon fs-6 ti ti-folder"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-folder"></i>
                                 HS ngoại nghiệp
                                 <i class="ri-arrow-right-s-line side-menu__angle"></i>
                             </a>
                             <ul class="slide-menu child2">
                                 <li class="slide">
                                     <a href="{{ route('dossier.type.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-file-stack"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-file-stack"></i>
                                         Kho loại hồ sơ
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('dossier.plan.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-checklist"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-checklist"></i>
                                         Lập kế hoạch
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('dossier.handover.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-file-export"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-file-export"></i>
                                         Bàn giao
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('dossier.usage_register.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-clipboard-text"></i>
+                                        <i
+                                            class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-clipboard-text"></i>
                                         Đăng ký sử dụng
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('dossier.minute.index') }}"
                                         class="side-menu__item {{ $pendingDossierMinuteFlag }}">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-file-check"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-file-check"></i>
                                         Phê duyệt biên bản
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('dossier.synthetic.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-files"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-files"></i>
                                         Tổng hợp chứng từ
                                     </a>
                                 </li>
@@ -379,48 +389,49 @@
                         <li class="slide has-sub">
                             <a href="javascript:void(0);"
                                 class="side-menu__item {{ $pendingProfessionalRecordMinuteFlag }}">
-                                <i class="side-menu-doublemenu__icon fs-6 ti ti-folder-share"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-folder-share"></i>
                                 HS chuyên môn
                                 <i class="ri-arrow-right-s-line side-menu__angle"></i>
                             </a>
                             <ul class="slide-menu child2">
                                 <li class="slide">
                                     <a href="{{ route('professional-record.type.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-file-stack"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-file-stack"></i>
                                         Kho loại hồ sơ
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('professional-record.plan.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-checklist"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-checklist"></i>
                                         Lập kế hoạch
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('professional-record.handover.index') }}"
                                         class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-file-export"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-file-export"></i>
                                         Bàn giao
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('professional-record.usage_register.index') }}"
                                         class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-clipboard-text"></i>
+                                        <i
+                                            class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-clipboard-text"></i>
                                         Đăng ký sử dụng
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('professional-record.minute.index') }}"
                                         class="side-menu__item {{ $pendingProfessionalRecordMinuteFlag }}">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-file-check"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-file-check"></i>
                                         Phê duyệt biên bản
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('professional-record.synthetic.index') }}"
                                         class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-files"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-files"></i>
                                         Tổng hợp chứng từ
                                     </a>
                                 </li>
@@ -428,7 +439,7 @@
                         </li>
                         <li class="slide">
                             <a href="{{ route('unit.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon ti ti-building"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-building"></i>
                                 Quản lý đơn vị
                             </a>
                         </li>
@@ -450,25 +461,25 @@
                         </li>
                         <li class="slide">
                             <a href="{{ route('internal-meeting-minute.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon ti ti-user-check"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-user-check"></i>
                                 Giao ban
                             </a>
                         </li>
                         <li class="slide">
                             <a href="{{ route('board-meeting-minute.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon ti ti-users"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-users"></i>
                                 Hội đồng quản trị
                             </a>
                         </li>
                         <li class="slide">
                             <a href="{{ route('shareholder-meeting-minute.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon ti ti-chart-pie"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-chart-pie"></i>
                                 Cổ đông
                             </a>
                         </li>
                         <li class="slide">
                             <a href="{{ route('internal-bulletin.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon ti ti-news"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-news"></i>
                                 Bảng tin
                             </a>
                         </li>
@@ -490,7 +501,7 @@
                         </li>
                         <li class="slide has-sub">
                             <a href="javascript:void(0);" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon fs-6 ti ti-settings"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-settings"></i>
                                 Thiết lập
                                 <i class="ri-arrow-right-s-line side-menu__angle"></i>
                             </a>
@@ -498,7 +509,7 @@
                                 <li class="slide">
                                     <a href="{{ route('employment-contract-personnel.custom-field.index') }}"
                                         class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon fs-6 ti ti-columns"></i>
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-columns"></i>
                                         Cột thông tin nhân sự bổ sung
                                     </a>
                                 </li>
@@ -506,7 +517,7 @@
                         </li>
                         <li class="slide">
                             <a href="{{ route('employment-contract-personnel.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon ti ti-user-circle"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-user-circle"></i>
                                 Thông tin nhân sự
                             </a>
                         </li>

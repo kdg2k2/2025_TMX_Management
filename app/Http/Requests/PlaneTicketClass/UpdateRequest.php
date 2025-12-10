@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Airport;
+namespace App\Http\Requests\PlaneTicketClass;
 
 class UpdateRequest extends FindByIdRequest
 {
@@ -9,7 +9,7 @@ class UpdateRequest extends FindByIdRequest
         return array_merge(
             parent::rules(),
             [
-                'name' => 'required|max:255|unique:airports,name,' . $this->id
+                'name' => 'required|max:255|unique:plane_ticket_classes,name,' . $this->id
             ],
         );
     }

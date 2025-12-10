@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\Airport;
+use App\Models\PlaneTicketClass;
 
-class AirportRepository extends BaseRepository
+class PlaneTicketClassRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Airport();
+        $this->model = new PlaneTicketClass();
         $this->relations = [];
     }
 

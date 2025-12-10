@@ -2,13 +2,15 @@
 
 namespace App\Http\Requests\Airline;
 
-class UpdateRequest extends StoreRequest
+class UpdateRequest extends FindByIdRequest
 {
     public function rules(): array
     {
         return array_merge(
             parent::rules(),
-            app(FindByIdRequest::class)->rules(),
+            [
+                'name' => 'required|max:255|unique:airlines,name,' . $this->id
+            ],
         );
     }
 }
