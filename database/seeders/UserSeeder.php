@@ -25,9 +25,9 @@ class UserSeeder extends Seeder
             if (!isset($item['department_id']))
                 $item['department_id'] = Department::inRandomOrder()->first()->id;
             if (!isset($item['position_id']))
-                $item['position_id'] = Position::inRandomOrder()->first()->id;
+                $item['position_id'] = 5;
             if (!isset($item['job_title_id']))
-                $item['job_title_id'] = JobTitle::inRandomOrder()->first()->id;
+                $item['job_title_id'] = 11;
             $item['created_at'] = date('Y-m-d H:i:s');
             $item['updated_at'] = date('Y-m-d H:i:s');
 
@@ -103,24 +103,151 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'Tòng Thị Hoài Thu',
-                'is_salary_counted' => true,
-                'salary_level' => 6000000,
-                'violation_penalty' => 1000000,
-                'allowance_meal' => 630000,
+                'is_salary_counted' => false,
             ],
             [
                 'name' => 'Lê Ngọc Trọng',
-                'is_salary_counted' => true,
-                'salary_level' => 6000000,
-                'violation_penalty' => 1000000,
-                'allowance_meal' => 630000,
+                'is_salary_counted' => false,
             ],
             [
                 'name' => 'Ma Đình Tú',
-                'is_salary_counted' => true,
-                'salary_level' => 6000000,
-                'violation_penalty' => 1000000,
-                'allowance_meal' => 630000,
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Trần Văn Hải',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Phạm Văn Duẩn',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Nguyễn Thị Ánh Vân',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Nguyễn Văn Thị',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Lê Sỹ Hòa',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Bùi Trung Hiếu',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Lã Nguyên Khang',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Nguyễn Thị Mai Dương',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Nguyễn Văn Hiếu',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Phạm Quang Dương',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Hoàng Văn Khiên',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Vũ Thị Thìn',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Nguyễn Văn Tùng',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Nguyễn Hữu Văn',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Nguyễn Văn Tuyên',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Lê Thị Anh',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Trần Lê Kiều Oanh',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Nguyễn Song Anh',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Đào Thị Dương',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Hoàng Thị Ngọc',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Trần Thị Minh',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Hồ Thu Phương',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Vũ Trần Thúy Nhi',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Lỳ Pé Mư',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Vương Thị Hà',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Nguyễn Sơn Hà',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Hoàng Thị Kiều Diễm',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Phan Ngọc Sơn',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Hoàng Văn Thành',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Nguyễn Khả Đăng',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Lê Hữu Cường',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Nguyễn Xuân Việt',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Hoàng Hương Giang',
+                'is_salary_counted' => false,
+            ],
+            [
+                'name' => 'Nguyễn Văn Ánh',
+                'is_salary_counted' => false,
             ],
         ]);
 
@@ -131,8 +258,5 @@ class UserSeeder extends Seeder
             $user->subEmails()->delete();
             $user->subEmails()->createMany($subEmails);
         }
-
-        if ($this->isLocal())
-            User::factory()->count(10)->create();
     }
 }

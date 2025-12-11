@@ -39,13 +39,6 @@ class DatabaseSeeder extends Seeder
             DeviceTypeSeeder::class,
         ]);
 
-        if ($this->isLocal())
-            $this->call([
-                ContractInvestorySeeder::class,
-                ContractUnitSeeder::class,
-                PersonnelSeeder::class,
-            ]);
-
         Artisan::call('db:fix-auto-increment');
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
