@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             AirportSeeder::class,
             AirlineSeeder::class,
             PlaneTicketClassSeeder::class,
+            DeviceTypeSeeder::class,
         ]);
 
         if ($this->isLocal())

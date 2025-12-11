@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\ContractScanFileTypeController;
 use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\ContractUnitController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DeviceTypeController;
 use App\Http\Controllers\Admin\DossierHandoverController;
 use App\Http\Controllers\Admin\DossierMinuteController;
 use App\Http\Controllers\Admin\DossierPlanController;
@@ -453,6 +454,16 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::prefix('detail')->controller(PlaneTicketDetailController::class)->group(function () {
             Route::get('index', 'index')->name('plane-ticket.detail.index');
             Route::get('edit', 'edit')->name('plane-ticket.detail.edit');
+        });
+    });
+
+    // thiết bị
+    Route::prefix('device')->group(function () {
+        Route::prefix('type')->controller(DeviceTypeController::class)->group(function () {
+            Route::get('index', 'index')->name('device.type.index');
+            Route::get('create', 'create')->name('device.type.create');
+            Route::get('edit', 'edit')->name('device.type.edit');
+            Route::delete('delete', 'delete')->name('device.type.delete');
         });
     });
 });

@@ -256,62 +256,6 @@
                         Hồ sơ - Biên bản - Công văn
                     </span>
                 </li>
-                <li class="slide has-sub">
-                    <a href="javascript:void(0);" class="side-menu__item">
-                        <i class="side-menu__icon ti ti-plane"></i>
-                        <span class="side-menu__label">
-                            Vé máy bay/tàu xe
-                        </span>
-                        <i class="ri-arrow-right-s-line side-menu__angle"></i>
-                    </a>
-                    <ul class="slide-menu child1">
-                        <li class="slide side-menu__label1">
-                            <a href="javascript:void(0)">
-                                Vé máy bay/tàu xe
-                            </a>
-                        </li>
-                        <li class="slide has-sub">
-                            <a href="javascript:void(0);" class="side-menu__item ">
-                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-plane-departure"></i>
-                                Vé máy bay
-                                <i class="ri-arrow-right-s-line side-menu__angle"></i>
-                            </a>
-                            <ul class="slide-menu child2">
-                                <li class="slide">
-                                    <a href="{{ route('airport.index') }}" class="side-menu__item">
-                                        <i
-                                            class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-building-airport"></i>
-                                        Sân bay
-                                    </a>
-                                </li>
-                                <li class="slide">
-                                    <a href="{{ route('airline.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-plane-tilt"></i>
-                                        Hãng bay
-                                    </a>
-                                </li>
-                                <li class="slide">
-                                    <a href="{{ route('plane-ticket-class.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-medal"></i>
-                                        Hạng vé máy bay
-                                    </a>
-                                </li>
-                                <li class="slide">
-                                    <a href="{{ route('plane-ticket.index') }}" class="side-menu__item">
-                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-ticket"></i>
-                                        Vé máy bay
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="slide">
-                            <a href="{{ route('train-and-bus-ticket.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-bus"></i>
-                                Vé tàu xe
-                            </a>
-                        </li>
-                    </ul>
-                </li>
                 @php
                     $pendingDossierMinuteFlag =
                         app(\App\Models\DossierMinute::class)->where('status', 'pending_approval')->count() > 0
@@ -537,6 +481,148 @@
                             ĐXXD Phần mềm
                         </span>
                     </a>
+                </li>
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-plane"></i>
+                        <span class="side-menu__label">
+                            Vé máy bay/tàu xe
+                        </span>
+                        <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="javascript:void(0)">
+                                Vé máy bay/tàu xe
+                            </a>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item ">
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-plane-departure"></i>
+                                Vé máy bay
+                                <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="{{ route('airport.index') }}" class="side-menu__item">
+                                        <i
+                                            class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-building-airport"></i>
+                                        Sân bay
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('airline.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-plane-tilt"></i>
+                                        Hãng bay
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('plane-ticket-class.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-medal"></i>
+                                        Hạng vé máy bay
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('plane-ticket.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-ticket"></i>
+                                        Vé máy bay
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide">
+                            <a href="{{ route('train-and-bus-ticket.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-bus"></i>
+                                Vé tàu xe
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-tools"></i>
+                        <span class="side-menu__label">
+                            Thiết bị/Sửa chữa/Ô tô
+                        </span>
+                        <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="javascript:void(0)">
+                                Thiết bị/Sửa chữa/Ô tô
+                            </a>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item ">
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-devices"></i>
+                                Thiết bị
+                                <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="{{ route('device.type.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-category"></i>
+                                        Loại thiết bị
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="javascript:void(0);" class="side-menu__item">
+                                        <i
+                                            class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-device-laptop"></i>
+                                        Thiết bị
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="javascript:void(0);" class="side-menu__item">
+                                        <i
+                                            class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-arrows-exchange"></i>
+                                        Đăng ký mượn/Trả/Phê duyệt
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="javascript:void(0);" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-tool"></i>
+                                        Đăng ký sửa chữa/Phê duyệt
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="javascript:void(0);" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-chart-bar"></i>
+                                        Thống kê tổng hợp
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item ">
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-car"></i>
+                                Ô tô
+                                <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="javascript:void(0);" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-car-garage"></i>
+                                        Phương tiện
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="javascript:void(0);" class="side-menu__item">
+                                        <i
+                                            class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-arrows-exchange"></i>
+                                        Mượn/Trả/Phê duyệt
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="javascript:void(0);" class="side-menu__item">
+                                        <i
+                                            class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-report-analytics"></i>
+                                        Thống kê tổng hợp
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </li>
 
                 <!-- Hệ thống -->

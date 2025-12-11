@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\ContractScanFileController;
 use App\Http\Controllers\Api\ContractScanFileTypeController;
 use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
+use App\Http\Controllers\Api\DeviceTypeController;
 use App\Http\Controllers\Api\DossierHandoverController;
 use App\Http\Controllers\Api\DossierMinuteController;
 use App\Http\Controllers\Api\DossierPlanController;
@@ -525,6 +526,15 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::prefix('detail')->controller(PlaneTicketDetailController::class)->group(function () {
             Route::get('list', 'list')->name('api.plane-ticket.detail.list');
             Route::patch('update', 'update')->name('api.plane-ticket.detail.update');
+        });
+    });
+
+    // thiết bị
+    Route::prefix('device')->group(function () {
+        Route::prefix('type')->controller(DeviceTypeController::class)->group(function () {
+            Route::get('list', 'list')->name('api.device.type.list');
+            Route::post('store', 'store')->name('api.device.type.store');
+            Route::patch('update', 'update')->name('api.device.type.update');
         });
     });
 });
