@@ -5,6 +5,7 @@
         ['label' => 'Vé tàu xe', 'url' => null],
         ['label' => 'Chi tiết', 'url' => null],
     ]">
+        <x-button variant="primary" size="sm" icon="ti ti-list" tooltip="Danh sách" :href="route('train-and-bus-ticket.index')" />
     </x-breadcrumb>
 
     <div class="card custom-card">

@@ -22,12 +22,17 @@ const toggleSelectType = (e) => {
         inputOtherProgramName.closest(".col-md-4")
     );
 
+    destroySumoSelect($(selectContract));
+    selectContract.value = "";
+    inputOtherProgramName.value = "";
+
     if (element.value == "contract") {
         setHiddenAndRequired(
             selectContract,
             true,
             selectContract.closest(".col-md-4")
         );
+        initSumoSelect($(selectContract));
     } else {
         setHiddenAndRequired(
             inputOtherProgramName,

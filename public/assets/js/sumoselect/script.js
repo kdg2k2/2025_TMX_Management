@@ -100,7 +100,7 @@ const refreshSumoSelect = (selects = null) => {
     initSumoSelect(selects);
 };
 
-const destroySumoAllSelect = () => {
+const destroyAllSumoSelect = () => {
     const selects = getSelects();
 
     // Clear tất cả timeout đang chờ
