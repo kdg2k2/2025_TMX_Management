@@ -1,0 +1,48 @@
+/* Carousel Image Wrapper */
+.carousel-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 120px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+}
+
+.carousel-image-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Carousel container */
+.carousel {
+    min-width: 200px;
+    /* Chiều rộng tối thiểu */
+}
+
+/* Fix carousel controls */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 40px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.carousel:hover .carousel-control-prev,
+.carousel:hover .carousel-control-next {
+    opacity: 1;
+}
+
+.carousel-indicators {
+    margin-bottom: 0.5rem;
+}
+
+.carousel-indicators button {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 3px;
+}

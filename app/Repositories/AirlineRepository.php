@@ -12,7 +12,7 @@ class AirlineRepository extends BaseRepository
         $this->relations = [];
     }
 
-    public function getSearchConfig(): array
+    protected function getSearchConfig(): array
     {
         return [
             'text' => [

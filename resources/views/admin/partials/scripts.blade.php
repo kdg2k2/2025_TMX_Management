@@ -48,3 +48,5 @@
 <script src="assets/js/format/span-formatter.js?v={{ time() }}"></script>
 
 <script src="assets/js/auto-fill/fill-select.js?v={{ time() }}"></script>
+<script src="assets/libs/glightbox/js/glightbox.min.js?v={{ time() }}"></script>
+<script src="assets/js/default-image/script.js?v={{ time() }}"></script>

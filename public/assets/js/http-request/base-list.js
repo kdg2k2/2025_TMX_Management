@@ -16,7 +16,10 @@ window.loadList = () => {
         listUrl,
         renderColumns(),
         (item) => item,
-        createDataTableFilterParams()
+        createDataTableFilterParams(),
+        typeof callbackAfterRenderLoadList !== "undefined"
+            ? callbackAfterRenderLoadList
+            : () => {}
     );
 };
 

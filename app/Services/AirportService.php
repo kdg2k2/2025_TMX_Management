@@ -10,16 +10,4 @@ class AirportService extends BaseService
     {
         $this->repository = app(AirportRepository::class);
     }
-
-    public function getSearchConfig(): array
-    {
-        return [
-            'text' => [
-                'name',
-            ],
-            'date' => [],
-            'datetime' => [],
-            'relations' => []
-        ];
-    }
 }

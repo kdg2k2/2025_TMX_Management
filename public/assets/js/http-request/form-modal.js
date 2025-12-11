@@ -5,12 +5,12 @@ const openModalBase = (btn, options) => {
     const action = btn.dataset.href;
     const onsuccess = btn.dataset.onsuccess;
 
-    if (action && onsuccess) {
+    if (action) {
         const titleEl = modal.querySelector(".modal-title");
         if (titleEl) titleEl.innerHTML = title;
 
         form.action = action;
-        form.dataset.onsuccess = onsuccess;
+        if (onsuccess) form.dataset.onsuccess = onsuccess;
 
         // Set giá trị các input động
         Object.entries(inputs).forEach(([selector, value]) => {

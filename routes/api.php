@@ -25,6 +25,8 @@ use App\Http\Controllers\Api\ContractScanFileController;
 use App\Http\Controllers\Api\ContractScanFileTypeController;
 use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
+use App\Http\Controllers\Api\DeviceController;
+use App\Http\Controllers\Api\DeviceImageController;
 use App\Http\Controllers\Api\DeviceTypeController;
 use App\Http\Controllers\Api\DossierHandoverController;
 use App\Http\Controllers\Api\DossierMinuteController;
@@ -535,6 +537,18 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::get('list', 'list')->name('api.device.type.list');
             Route::post('store', 'store')->name('api.device.type.store');
             Route::patch('update', 'update')->name('api.device.type.update');
+        });
+
+        Route::controller(DeviceController::class)->group(function () {
+            Route::get('list', 'list')->name('api.device.list');
+            Route::post('store', 'store')->name('api.device.store');
+            Route::patch('update', 'update')->name('api.device.update');
+        });
+
+        Route::prefix('image')->controller(DeviceImageController::class)->group(function () {
+            Route::get('list', 'list')->name('api.device.image.list');
+            Route::post('store', 'store')->name('api.device.image.store');
+            Route::patch('update', 'update')->name('api.device.image.update');
         });
     });
 });

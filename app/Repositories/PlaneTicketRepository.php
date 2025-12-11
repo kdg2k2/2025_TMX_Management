@@ -30,7 +30,7 @@ class PlaneTicketRepository extends BaseRepository
         return $this->model->getStatus($key);
     }
 
-    public function getSearchConfig(): array
+    protected function getSearchConfig(): array
     {
         return [
             'text' => [

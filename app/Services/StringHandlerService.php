@@ -217,7 +217,7 @@ class StringHandlerService
             $randomString .= $characters[ord($bytes[$i]) % $charactersLength];
         }
         $timestamp = substr(str_replace('.', '', microtime(true)), -6);
-        return $prefix . '_' . $timestamp . '_' . $randomString;
+        return implode('_', collect([$prefix, $timestamp, $randomString])->filter()->toArray());
     }
 
     public function createPascalSlug(string $string)

@@ -8,3 +8,4 @@
 <link rel="stylesheet" href="assets/libs/datatable/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="assets/libs/datatable/jquery.dataTables.min.css">
 <link rel="stylesheet" href="assets/libs/sumoselect/sumoselect.css">
+<link rel="stylesheet" href="assets/libs/glightbox/css/glightbox.min.css">

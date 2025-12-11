@@ -8,12 +8,11 @@ use Log;
 
 class HandlerUploadFileService extends BaseService
 {
-    public function storeAndRemoveOld($file, string $rootFolder, string $folder = '', string $oldPath = null)
+    public function storeAndRemoveOld($file, string $rootFolder, string $folder = null, string $oldPath = null)
     {
         $folderSave = "uploads/$rootFolder";
         if ($folder)
             $folderSave .= "/$folder";
-
         $destinationPath = $this->getAbsolutePublicPath($folderSave);
 
         // Nếu là file dạng UploadedFile (từ request upload)
@@ -74,12 +73,6 @@ class HandlerUploadFileService extends BaseService
         }
     }
 
-    /**
-     * Xóa file an toàn với xử lý lỗi
-     *
-     * @param string $filePath Đường dẫn file relative từ public
-     * @return bool
-     */
     public function safeDeleteFile($filePath = null)
     {
         try {
@@ -128,13 +121,16 @@ class HandlerUploadFileService extends BaseService
 
     public function removeFolder(string $folder)
     {
-        if (!is_dir($this->getAbsolutePublicPath($folder))) {
+        $absolutePath = $this->getAbsolutePublicPath($folder);
+
+        if (!is_dir($absolutePath)) {
+            \Log::warning("Folder does not exist: {$absolutePath}");
             return false;
         }
 
         try {
-            $this->deleteFolderContents($folder);
-            return rmdir($folder);
+            $this->deleteFolderContents($absolutePath);
+            return rmdir($absolutePath);
         } catch (\Exception $e) {
             \Log::error("Failed to remove folder: {$folder}. Error: " . $e->getMessage());
             return false;
@@ -143,6 +139,10 @@ class HandlerUploadFileService extends BaseService
 
     private function deleteFolderContents(string $folder)
     {
+        if (!is_dir($folder)) {
+            return;
+        }
+
         $files = array_diff(scandir($folder), ['.', '..']);
 
         foreach ($files as $file) {
@@ -156,39 +156,126 @@ class HandlerUploadFileService extends BaseService
         }
     }
 
-    public function uploadChunk(array $request, string $folder)
+    public function uploadChunk(array $request, string $parentFolder)
     {
-        $file = $request['file'];
+        $file = $request['file'];  // UploadedFile
+        $chunkIndex = (int) $request['dzchunkindex'];  // index của chunk
+        $totalChunks = (int) $request['dztotalchunkcount'];
+        $fileName = $request['dzfilename'];  // tên file gốc
 
-        $folder = $folder . '/' . auth()->id() . '/' . date('d-m-Y');
-        $uploadsDir = $this->getAbsolutePublicPath($folder);
+        // Tạo thư mục lưu các phần chunk
+        // uploads/xxx/chunks/filename/0
+        $chunkDir = "{$parentFolder}/chunks/{$fileName}";
+        $absoluteChunkDir = $this->getAbsolutePublicPath($chunkDir);
 
+        // Lưu chunk vào đúng vị trí
+        $file->move($absoluteChunkDir, $chunkIndex);
+
+        // Nếu chưa phải chunk cuối → kết thúc
+        if ($chunkIndex < $totalChunks - 1) {
+            return [
+                'done' => false,
+                'message' => "Chunk {$chunkIndex}/{$totalChunks} uploaded"
+            ];
+        }
+
+        // Chunk cuối → tiến hành merge
+        return $this->mergeChunks($parentFolder, $fileName, $totalChunks, $chunkDir);
+    }
+
+    private function mergeChunks(string $parentFolder, string $fileName, int $totalChunks, string $chunkDir)
+    {
+        // Đường dẫn file merge cuối
+        $mergedFolder = "{$parentFolder}/merged/" . date('d-m-Y');
+        $absoluteMergedFolder = $this->getAbsolutePublicPath($mergedFolder);
+
+        // File merge cuối cùng
+        $finalFilePath = "{$absoluteMergedFolder}/{$fileName}";
+        $finalFile = fopen($finalFilePath, 'wb');
+
+        // Lấy đường dẫn folder chunks
+        $absoluteChunkDir = $this->getAbsolutePublicPath($chunkDir);
+
+        // Merge tuần tự
+        for ($i = 0; $i < $totalChunks; $i++) {
+            $path = "{$absoluteChunkDir}/{$i}";
+            $chunk = fopen($path, 'rb');
+
+            stream_copy_to_stream($chunk, $finalFile);
+
+            fclose($chunk);
+            $this->safeDeleteFile($path);
+        }
+
+        fclose($finalFile);
+
+        // Xóa folder chunks sau khi merge
+        @rmdir($absoluteChunkDir);
+
+        return [
+            'done' => true,
+            'merged_path' => "{$mergedFolder}/{$fileName}",
+            'message' => 'Tải lên thành công! Đang bắt đầu kiểm tra...'
+        ];
+    }
+
+    /**
+     * Xóa các file trong thư mục được tạo khác ngày hôm nay
+     *
+     * @param string $directory Đường dẫn thư mục cần cleanup
+     * @return void
+     */
+    public function cleanupOldOverlapFiles(string $directory): void
+    {
         try {
-            $fileTmpLoc = $file->getPathname();
-            $fileOriginalName = $file->getClientOriginalName();
-            $fileName = pathinfo($fileOriginalName, PATHINFO_FILENAME);
-
-            $id = $request['id'] ?? '';
-            $fileLoc = "$uploadsDir/$fileOriginalName";
-
-            if (strlen($id) != 13) {
-                $id = uniqid();
-                $file->move($uploadsDir, $fileOriginalName);
-            } else {
-                if (!file_exists($fileLoc))
-                    throw new Exception('ID tệp không hợp lệ');
-
-                file_put_contents($fileLoc, file_get_contents($fileTmpLoc), FILE_APPEND);
+            if (!is_dir($directory)) {
+                return;
             }
 
-            return [
-                'id' => $id,
-                'file_name' => $fileName,
-                'path_zip' => $folder,
-            ];
+            // Lấy ngày hôm nay (Y-m-d format)
+            $today = date('Y-m-d');
+
+            // Quét tất cả files trong thư mục
+            $files = scandir($directory);
+
+            $deletedCount = 0;
+            $deletedSize = 0;
+
+            foreach ($files as $file) {
+                // Skip . và ..
+                if ($file === '.' || $file === '..') {
+                    continue;
+                }
+
+                $filePath = $directory . '/' . $file;
+
+                // Chỉ xử lý files, không xử lý folders
+                if (!is_file($filePath)) {
+                    continue;
+                }
+
+                // Lấy thời gian tạo file (modification time)
+                $fileModifiedTime = filemtime($filePath);
+                $fileDate = date('Y-m-d', $fileModifiedTime);
+
+                // Nếu file được tạo khác ngày hôm nay → Xóa
+                if ($fileDate !== $today) {
+                    $fileSize = filesize($filePath);
+
+                    if ($this->safeDeleteFile($filePath)) {
+                        $deletedCount++;
+                        $deletedSize += $fileSize;
+                        Log::info("Deleted old overlap file: $file (Date: $fileDate, Size: " . round($fileSize / 1024, 2) . ' KB)');
+                    }
+                }
+            }
+
+            if ($deletedCount > 0) {
+                Log::info("Cleanup completed: Deleted $deletedCount old files, freed " . round($deletedSize / 1024 / 1024, 2) . ' MB');
+            }
         } catch (Exception $e) {
-            $this->removeFolder($uploadsDir);
-            throw $e;
+            // Log error nhưng không throw exception để không ảnh hưởng main process
+            Log::warning('Error cleaning up old overlap files: ' . $e->getMessage());
         }
     }
 }

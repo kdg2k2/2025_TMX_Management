@@ -3,37 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DeviceType\DeleteRequest;
-use App\Http\Requests\DeviceType\EditRequest;
-use App\Services\DeviceTypeService;
+use App\Http\Requests\Device\DeleteRequest;
+use App\Http\Requests\Device\EditRequest;
+use App\Services\DeviceService;
 
-class DeviceTypeController extends Controller
+class DeviceController extends Controller
 {
     public function __construct()
     {
-        $this->service = app(DeviceTypeService::class);
+        $this->service = app(DeviceService::class);
     }
 
     public function index()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.device.type.index');
+            return view('admin.pages.device.index', $this->service->getBaseDataForLCEView());
         });
     }
 
     public function create()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.device.type.create');
+            return view('admin.pages.device.create', $this->service->getBaseDataForLCEView());
         });
     }
 
     public function edit(EditRequest $request)
     {
         return $this->catchWeb(function () use ($request) {
-            return view('admin.pages.device.type.edit', [
-                'data' => $this->service->findById($request->validated()['id']),
-            ]);
+            return view('admin.pages.device.edit', $this->service->getBaseDataForLCEView($request->validated()['id']));
         });
     }
 
