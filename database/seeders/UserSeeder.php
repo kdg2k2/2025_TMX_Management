@@ -18,8 +18,6 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::truncate();
-
         $stringHandlerService = app(\App\Services\StringHandlerService::class);
         $arr = array_map(function ($item) use ($stringHandlerService) {
             if (!isset($item['department_id']))

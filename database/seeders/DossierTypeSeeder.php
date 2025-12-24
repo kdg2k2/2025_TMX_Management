@@ -88,7 +88,6 @@ class DossierTypeSeeder extends Seeder
                 ],
             ];
 
-        DossierType::truncate();
         app(\App\Services\DossierTypeService::class)->insert(array_map(function ($i) {
             $i['created_by'] = 1;
             return $i;

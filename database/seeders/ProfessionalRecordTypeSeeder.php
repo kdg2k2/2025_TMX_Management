@@ -50,7 +50,6 @@ class ProfessionalRecordTypeSeeder extends Seeder
             ],
         ];
 
-        \DB::table('professional_record_types')->truncate();
         app(\App\Services\ProfessionalRecordTypeService::class)->insert($arr);
     }
 }
