@@ -23,7 +23,7 @@ class UploadFileToDriveJob implements ShouldQueue
     protected $customFileName;
     protected $deleteAfterUpload;
     protected $overwrite;
-    protected $driveFilePathToDelete;  // ← THÊM
+    protected $driveFilePathToDelete;
 
     /**
      * @param string $localFilePath - Đường dẫn file local cần upload
@@ -39,16 +39,16 @@ class UploadFileToDriveJob implements ShouldQueue
         ?string $customFileName = null,
         bool $deleteAfterUpload = false,
         bool $overwrite = false,
-        ?string $driveFilePathToDelete = null  // ← THÊM
+        ?string $driveFilePathToDelete = null
     ) {
         $this->localFilePath = $localFilePath;
         $this->driveFolderPath = $driveFolderPath;
         $this->customFileName = $customFileName;
         $this->deleteAfterUpload = $deleteAfterUpload;
         $this->overwrite = $overwrite;
-        $this->driveFilePathToDelete = $driveFilePathToDelete;  // ← THÊM
+        $this->driveFilePathToDelete = $driveFilePathToDelete;
 
-        $this->onQueue('drive-uploads');
+        $this->onQueue('high');
     }
 
     public function handle()
@@ -124,13 +124,13 @@ class UploadFileToDriveJob implements ShouldQueue
     public function backoff()
     {
         return [
-            10,     // 10 giây
-            20,     // 20 giây
-            40,     // 40 giây
-            60,     // 1 phút
-            300,    // 5 phút
-            600,    // 10 phút
-            1800,   // 30 phút
+            10,  // 10 giây
+            20,  // 20 giây
+            40,  // 40 giây
+            60,  // 1 phút
+            300,  // 5 phút
+            600,  // 10 phút
+            1800,  // 30 phút
         ];
     }
 

@@ -19,50 +19,15 @@ class Kernel extends ConsoleKernel
 
     private function queueJobs(Schedule $schedule)
     {
-        // Queue EMAILS mỗi 5 giây
-        $schedule
-            ->command('queue:run-mail')
-            ->everyFiveSeconds()
-            ->withoutOverlapping(2)
-            ->after(function () {
-                logger('[Schedule] Processed EMAILS queue (5s interval)');
-            });
+        $workerMaxTime = 3600;  // 60 phút
+        $lockBuffer = 5;  // 5 phút buffer
+        $lockMinutes = ($workerMaxTime / 60) + $lockBuffer;  // 65 phút
 
-        // Queue DRIVE UPLOADS mỗi 10 giây
         $schedule
-            ->command('queue:run-drive')
-            ->everyTenSeconds()
-            ->withoutOverlapping(5)
-            ->after(function () {
-                logger('[Schedule] Processed DRIVE-UPLOADS queue (10s interval)');
-            });
-
-        // Queue DRIVE FOLDERS mỗi 30 giây
-        $schedule
-            ->command('queue:run-drive-folders')
-            ->everyThirtySeconds()
-            ->withoutOverlapping(10)
-            ->after(function () {
-                logger('[Schedule] Processed DRIVE-FOLDERS queue (30s interval)');
-            });
-
-        // Queue DRIVE DELETES mỗi 1 phút
-        $schedule
-            ->command('queue:run-drive-deletes')
-            ->everyMinute()
-            ->withoutOverlapping(5)
-            ->after(function () {
-                logger('[Schedule] Processed DRIVE-DELETES queue (1min interval)');
-            });
-
-        // Queue DEFAULT mỗi 10 giây
-        $schedule
-            ->command('queue:work --stop-when-empty --queue=default')
-            ->everyTenSeconds()
-            ->withoutOverlapping(2)
-            ->after(function () {
-                logger('[Schedule] Processed DEFAULT queue (10s interval)');
-            });
+            ->command("queue:work database --queue=high,default,low --max-time={$workerMaxTime} --sleep=3 --tries=3 --timeout=300")
+            ->hourly()
+            ->withoutOverlapping($lockMinutes)
+            ->runInBackground();
 
         // Retry failed jobs mỗi 6 giờ
         $schedule

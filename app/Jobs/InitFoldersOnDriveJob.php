@@ -36,7 +36,7 @@ class InitFoldersOnDriveJob implements ShouldQueue
         $this->rootParentId = $rootParentId;
         $this->jobName = $jobName ?? 'InitFolders-' . now()->format('YmdHis');
 
-        $this->onQueue('drive-folders');
+        $this->onQueue('high');
     }
 
     public function handle()

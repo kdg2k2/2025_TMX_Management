@@ -25,7 +25,7 @@ class DeleteFileFromDriveJob implements ShouldQueue
     public function __construct(string $filePath)
     {
         $this->filePath = $filePath;
-        $this->onQueue('drive-deletes');
+        $this->onQueue('low');
     }
 
     public function handle()

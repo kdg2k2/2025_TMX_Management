@@ -32,7 +32,7 @@ class SendMailJob implements ShouldQueue
         $this->files = $files;
 
         // Đặt queue trong constructor để tránh conflict với trait Queueable
-        $this->onQueue('emails');
+        $this->onQueue('high');
     }
 
     public function handle()
