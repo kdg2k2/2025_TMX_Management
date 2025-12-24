@@ -563,4 +563,46 @@ class GoogleDriveService
             'results' => $results
         ];
     }
+
+    /**
+     * Lấy share link của folder (tự động tạo permission nếu chưa có)
+     *
+     * @param string $folderId
+     * @param string $role reader|writer
+     * @param string $type anyone|user
+     * @return array
+     */
+    public function getFolderShareLink(
+        string $folderId,
+        string $role = 'reader',
+        string $type = 'anyone'
+    ): array {
+        // 1. Tạo permission share
+        $permission = new Drive\Permission([
+            'type' => $type,  // anyone | user
+            'role' => $role,  // reader | writer
+        ]);
+
+        try {
+            $this->service->permissions->create(
+                $folderId,
+                $permission,
+                ['sendNotificationEmail' => false]
+            );
+        } catch (\Exception $e) {
+            // Bỏ qua nếu permission đã tồn tại
+        }
+
+        // 2. Lấy thông tin folder để lấy link
+        $folder = $this->service->files->get($folderId, [
+            'fields' => 'id, name, webViewLink'
+        ]);
+
+        return [
+            'success' => true,
+            'folder_id' => $folder->id,
+            'folder_name' => $folder->name,
+            'share_link' => $folder->webViewLink,
+        ];
+    }
 }

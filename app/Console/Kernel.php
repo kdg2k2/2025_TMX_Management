@@ -56,6 +56,8 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping();
 
         $schedule->command('task-schedules:run')->everyMinute();
+
+        $schedule->command('app:update-contract-g-g-drive-link')->dailyAt('00:00');
     }
 
     /**

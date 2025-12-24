@@ -1,6 +1,7 @@
 @extends('admin.layout.master')
 @section('content')
     <x-breadcrumb :items="[['label' => 'Trang chủ', 'url' => route('dashboard')], ['label' => 'Hợp đồng', 'url' => null]]">
+        <x-button variant="info" size="sm" icon="ti ti-file-arrow-right" tooltip="Export" class="me-2" id="export-contract"/>
         <x-button variant="success" size="sm" icon="ti ti-plus" tooltip="Thêm mới" :href="route('contract.create')" />
     </x-breadcrumb>
 
@@ -360,6 +361,7 @@
         const showUrl = @json(route('api.contract.show'));
         const editUrl = @json(route('contract.edit'));
         const deleteUrl = @json(route('contract.delete'));
+        const exportUrl = @json(route('contract.export'));
 
         const listFileUrl = @json(route('api.contract.file.list'));
         const deleteFileUrl = @json(route('contract.file.delete'));

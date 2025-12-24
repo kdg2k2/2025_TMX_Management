@@ -95,6 +95,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::get('create', 'create')->name('contract.create');
             Route::get('edit', 'edit')->name('contract.edit');
             Route::delete('delete', 'delete')->name('contract.delete');
+            Route::get('export', 'export')->name('contract.export');
         });
 
         Route::prefix('file')->group(function () {

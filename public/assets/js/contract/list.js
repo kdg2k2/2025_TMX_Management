@@ -138,3 +138,10 @@ const renderActionButtons = (row) => {
         ${row.path_file_short ? createViewBtn(row.path_file_short) : ""}
     `;
 };
+
+document
+    .getElementById("export-contract")
+    .addEventListener("click", async () => {
+        const res = await http.get(exportUrl);
+        downloadFileHandler(res?.data);
+    });

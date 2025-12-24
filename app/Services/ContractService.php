@@ -298,4 +298,105 @@ class ContractService extends BaseService
     {
         return $this->repository->getYears();
     }
+
+    public function export()
+    {
+        return $this->tryThrow(function () {
+            $data = $this->list();
+            $folder = 'uploads/render/export_contract';
+            $this->handlerUploadFileService->cleanupOldOverlapFiles($folder);
+            return asset(app(ExcelService::class)->createExcel(
+                [
+                    (object) [
+                        'name' => 'data',
+                        'header' => [$this->renderExportExcelHeader($data)],
+                        'data' => $this->renderExportExcelData($data),
+                        'boldRows' => [1],
+                        'boldItalicRows' => [],
+                        'italicRows' => [],
+                        'centerColumns' => [],
+                        'centerRows' => [],
+                        'filterStartRow' => 1,
+                        'freezePane' => 'freezeTopRow',
+                    ]
+                ],
+                $folder,
+                'contracts_' . date('d-m-Y_H-i-s') . '.xlsx'
+            ));
+        });
+    }
+
+    private function renderExportExcelData($data)
+    {
+        return array_map(fn($i) => [
+            $i['id'],
+            $i['year'],
+            $i['contract_number'],
+            $i['name'],
+            $i['type']['name'] ?? '',
+            $i['investor']['name_vi'] ?? '',
+            implode(', ', array_column($i['scopes'], 'name')) ?? '',
+            $i['signed_date'],
+            $i['contract_value'],
+            ($i['contract_value'] ?? 0) - ($i['vat_amount'] ?? 0),
+            $i['contract_status']['converted'] ?? '',
+            $i['note'],
+            $i['name_en'],
+            $i['investor']['name_en'] ?? '',
+            $i['target_en'],
+            $i['main_activities_en'],
+            implode(', ', array_map(fn($d) => $d['user']['name'] ?? '', $i['professionals'])),
+            implode(', ', array_map(fn($d) => $d['user']['name'] ?? '', $i['disbursements'])),
+            $i['a_side'],
+            $i['b_side'],
+            $i['end_date'],
+            implode(', ', array_map(fn($d) => $d['user']['name'] ?? '', $i['instructors'])),
+            $i['accounting_contact']['name'] ?? '',
+            $i['inspector_user']['name'] ?? '',
+            $i['executor_user']['name'] ?? '',
+            implode(', ', array_map(fn($d) => $d['user']['name'] ?? '', $i['intermediate_collaborators'])),
+            $i['ggdrive_link'] ?? '',
+            $i['financial_status']['converted'] ?? '',
+            $i['intermediate_product_status']['converted'] ?? '',
+        ], $data);
+    }
+
+    private function renderExportExcelHeader($data)
+    {
+        return array_map(fn($i) => [
+            'name' => $i,
+            'rowspan' => 1,
+            'colspan' => 1,
+        ], [
+            'ID',
+            'Năm',
+            'Số HĐ',
+            'Tên HĐ',
+            'Loại HĐ',
+            'Chủ đầu tư',
+            'Địa điểm',
+            'Ngày ký',
+            'Giá trị HĐ',
+            'Doanh thu',
+            'Tình trạng',
+            'Ghi chú',
+            'Tên HĐ(EN)',
+            'Chủ đầu tư (EN)',
+            'Mục tiêu (EN)',
+            'Hoạt động chính(EN)',
+            'PT chuyên môn',
+            'PT giải ngân',
+            'Ben A',
+            'Bên B',
+            'Ngày kết thúc',
+            'Người HD',
+            'Đầu mối kế toán',
+            'Người Kiểm tra SP',
+            'Người hoàn thiện SPTG',
+            'Người Phối hợp SPTG',
+            'Link Driver',
+            'Tình trạng hồ sơ tài chính',
+            'Tình trạng SPTG',
+        ]);
+    }
 }

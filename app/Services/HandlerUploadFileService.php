@@ -37,7 +37,7 @@ class HandlerUploadFileService extends BaseService
         return "$folderSave/$fileName";
     }
 
-    public function getAbsolutePublicPath(string $filePath)
+    public function getAbsolutePublicPath(string $filePath, bool $createDirIfNotExists = true)
     {
         // Kiểm tra nếu đã là đường dẫn tuyệt đối (Windows hoặc Linux)
         if (
@@ -50,8 +50,8 @@ class HandlerUploadFileService extends BaseService
             $destinationPath = public_path($filePath);
         }
 
-        // Chỉ tạo thư mục nếu path không có extension (là folder)
-        if (!str_contains(basename($destinationPath), '.')) {
+        // Chỉ tạo thư mục nếu được yêu cầu VÀ path không có extension (là folder)
+        if ($createDirIfNotExists && !str_contains(basename($destinationPath), '.')) {
             if (!is_dir($destinationPath)) {
                 mkdir($destinationPath, 0777, true);
             }
@@ -79,12 +79,13 @@ class HandlerUploadFileService extends BaseService
             if (!$filePath)
                 return true;
 
-            $fullPath = $this->getAbsolutePublicPath($filePath);
+            // Không tạo thư mục khi đang xóa file
+            $fullPath = $this->getAbsolutePublicPath($filePath, false);
 
             // Kiểm tra file có tồn tại không
             if (!file_exists($fullPath)) {
                 Log::info("File không tồn tại: {$fullPath}");
-                return true;  // Coi như đã xóa thành công
+                return true;
             }
 
             // Kiểm tra quyền đọc/ghi
@@ -110,7 +111,7 @@ class HandlerUploadFileService extends BaseService
                 Log::info("Xóa file thành công: {$fullPath}");
                 return true;
             } else {
-                Log::error("Không thể xóa file: {$fullPath}. Error: " . error_get_last()['message'] ?? 'Unknown error');
+                Log::error("Không thể xóa file: {$fullPath}. Error: " . (error_get_last()['message'] ?? 'Unknown error'));
                 return false;
             }
         } catch (\Exception $e) {
@@ -158,18 +159,21 @@ class HandlerUploadFileService extends BaseService
 
     public function uploadChunk(array $request, string $parentFolder)
     {
-        $file = $request['file'];  // UploadedFile
-        $chunkIndex = (int) $request['dzchunkindex'];  // index của chunk
+        $file = $request['file'];
+        $chunkIndex = (int) $request['dzchunkindex'];
         $totalChunks = (int) $request['dztotalchunkcount'];
-        $fileName = $request['dzfilename'];  // tên file gốc
+        $fileName = $request['dzfilename'];
 
         // Tạo thư mục lưu các phần chunk
-        // uploads/xxx/chunks/filename/0
         $chunkDir = "{$parentFolder}/chunks/{$fileName}";
         $absoluteChunkDir = $this->getAbsolutePublicPath($chunkDir);
 
         // Lưu chunk vào đúng vị trí
+        $chunkPath = "{$absoluteChunkDir}/{$chunkIndex}";
         $file->move($absoluteChunkDir, $chunkIndex);
+
+        // QUAN TRỌNG: Đảm bảo file được ghi xong
+        clearstatcache(true, $chunkPath);
 
         // Nếu chưa phải chunk cuối → kết thúc
         if ($chunkIndex < $totalChunks - 1) {
@@ -179,44 +183,121 @@ class HandlerUploadFileService extends BaseService
             ];
         }
 
-        // Chunk cuối → tiến hành merge
+        // Chunk cuối → kiểm tra tất cả chunks trước khi merge
         return $this->mergeChunks($parentFolder, $fileName, $totalChunks, $chunkDir);
     }
 
     private function mergeChunks(string $parentFolder, string $fileName, int $totalChunks, string $chunkDir)
     {
-        // Đường dẫn file merge cuối
+        $absoluteChunkDir = $this->getAbsolutePublicPath($chunkDir);
+
+        // BƯỚC 1: Kiểm tra tất cả chunks có đủ không
+        $missingChunks = [];
+        for ($i = 0; $i < $totalChunks; $i++) {
+            $chunkPath = "{$absoluteChunkDir}/{$i}";
+            if (!file_exists($chunkPath) || filesize($chunkPath) === 0) {
+                $missingChunks[] = $i;
+            }
+        }
+
+        if (!empty($missingChunks)) {
+            \Log::error('Missing chunks: ' . implode(', ', $missingChunks));
+            throw new Exception('Thiếu chunks: ' . implode(', ', $missingChunks));
+        }
+
+        // BƯỚC 2: Tạo folder merge
         $mergedFolder = "{$parentFolder}/merged/" . date('d-m-Y');
         $absoluteMergedFolder = $this->getAbsolutePublicPath($mergedFolder);
 
-        // File merge cuối cùng
+        // BƯỚC 3: Tạo file tạm với tên unique để tránh conflict
+        $tempFileName = uniqid('temp_') . '_' . $fileName;
+        $tempFilePath = "{$absoluteMergedFolder}/{$tempFileName}";
         $finalFilePath = "{$absoluteMergedFolder}/{$fileName}";
-        $finalFile = fopen($finalFilePath, 'wb');
 
-        // Lấy đường dẫn folder chunks
-        $absoluteChunkDir = $this->getAbsolutePublicPath($chunkDir);
+        try {
+            // Mở file output với binary write mode
+            $finalFile = fopen($tempFilePath, 'wb');
 
-        // Merge tuần tự
-        for ($i = 0; $i < $totalChunks; $i++) {
-            $path = "{$absoluteChunkDir}/{$i}";
-            $chunk = fopen($path, 'rb');
+            if ($finalFile === false) {
+                throw new Exception("Không thể tạo file merge: {$tempFilePath}");
+            }
 
-            stream_copy_to_stream($chunk, $finalFile);
+            // BƯỚC 4: Merge từng chunk
+            for ($i = 0; $i < $totalChunks; $i++) {
+                $chunkPath = "{$absoluteChunkDir}/{$i}";
 
-            fclose($chunk);
-            $this->safeDeleteFile($path);
+                // Kiểm tra lại chunk trước khi đọc
+                if (!file_exists($chunkPath)) {
+                    fclose($finalFile);
+                    @unlink($tempFilePath);
+                    throw new Exception("Chunk {$i} bị mất trong quá trình merge");
+                }
+
+                // Mở chunk với read binary mode và lock
+                $chunk = fopen($chunkPath, 'rb');
+
+                if ($chunk === false) {
+                    fclose($finalFile);
+                    @unlink($tempFilePath);
+                    throw new Exception("Không thể đọc chunk {$i}");
+                }
+
+                // Lock file để tránh race condition
+                if (!flock($chunk, LOCK_SH)) {  // Shared lock for reading
+                    fclose($chunk);
+                    fclose($finalFile);
+                    @unlink($tempFilePath);
+                    throw new Exception("Không thể lock chunk {$i}");
+                }
+
+                // Copy data từ chunk vào file merge
+                $bytesCopied = stream_copy_to_stream($chunk, $finalFile);
+
+                // Unlock và close chunk
+                flock($chunk, LOCK_UN);
+                fclose($chunk);
+
+                // Log để debug
+                \Log::info("Merged chunk {$i}: {$bytesCopied} bytes");
+            }
+
+            // BƯỚC 5: Flush và close file merge
+            fflush($finalFile);
+            fclose($finalFile);
+
+            // BƯỚC 6: Đổi tên file tạm thành file chính thức
+            if (file_exists($finalFilePath)) {
+                @unlink($finalFilePath);
+            }
+            rename($tempFilePath, $finalFilePath);
+
+            // BƯỚC 7: Verify file merge
+            clearstatcache(true, $finalFilePath);
+            $mergedFileSize = filesize($finalFilePath);
+
+            \Log::info("Merge completed. Final file size: {$mergedFileSize} bytes");
+
+            // BƯỚC 8: Xóa folder chunks sau khi merge thành công
+            $this->removeFolder($absoluteChunkDir);
+
+            return [
+                'done' => true,
+                'merged_path' => "{$mergedFolder}/{$fileName}",
+                'file_size' => $mergedFileSize,
+                'message' => 'Tải lên thành công! Đang bắt đầu kiểm tra...'
+            ];
+        } catch (Exception $e) {
+            // Cleanup nếu có lỗi
+            if (isset($finalFile) && is_resource($finalFile)) {
+                fclose($finalFile);
+            }
+            if (file_exists($tempFilePath)) {
+                @unlink($tempFilePath);
+            }
+
+            \Log::error('Merge error: ' . $e->getMessage());
+            throw $e;
         }
-
-        fclose($finalFile);
-
-        // Xóa folder chunks sau khi merge
-        @rmdir($absoluteChunkDir);
-
-        return [
-            'done' => true,
-            'merged_path' => "{$mergedFolder}/{$fileName}",
-            'message' => 'Tải lên thành công! Đang bắt đầu kiểm tra...'
-        ];
     }
 
     /**

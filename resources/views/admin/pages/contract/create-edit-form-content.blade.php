@@ -62,25 +62,19 @@
             </div>
         </div>
         <div class="my-1 col-md-4">
-            <div class="form-group">
-                <label>
-                    Loại hợp đồng
-                </label>
-                <select class="form-control" name="type_id" required>
-                    {!! $renderOpt($types) !!}
-                </select>
-            </div>
+            <label>Loại hợp đồng</label>
+            <select class="form-control" name="type_id" required>
+                <x-select-options :items="$types" />
+            </select>
         </div>
+
         <div class="my-1 col-md-4">
-            <div class="form-group">
-                <label>
-                    Chủ đầu tư
-                </label>
-                <select class="form-control" name="investor_id" required>
-                    {!! $renderOpt($investors, true, 'id', ['name_vi', 'name_en']) !!}
-                </select>
-            </div>
+            <label>Chủ đầu tư</label>
+            <select class="form-control" name="investor_id" required>
+                <x-select-options :items="$investors" :value-fields="['name_vi', 'name_en']" />
+            </select>
         </div>
+
         <div class="my-1 col-md-4">
             <div class="form-group">
                 <label>
@@ -182,15 +176,12 @@
     </div>
     <div class="card-body row">
         <div class="my-1 col-md-3">
-            <div class="form-group">
-                <label>
-                    Địa điểm
-                </label>
-                <select name="scopes[]" class="form-control" required multiple>
-                    {!! $renderOpt($provinces, false, 'code', 'name') !!}
-                </select>
-            </div>
+            <label>Địa điểm</label>
+            <select name="scopes[]" class="form-control" multiple required>
+                <x-select-options :items="$provinces" key-field="code" value-fields="name" :empty-option="false" />
+            </select>
         </div>
+
         <div class="my-1 col-md-3">
             <div class="form-group">
                 <label>
@@ -292,74 +283,52 @@
     </div>
     <div class="card-body row">
         <div class="my-1 col-md-3">
-            <div class="form-group">
-                <label>
-                    Người hướng dẫn
-                </label>
-                <select class="form-control" name="instructors[]" multiple>
-                    {!! $renderOpt($users, false) !!}
-                </select>
-            </div>
+            <label>Người hướng dẫn</label>
+            <select class="form-control" name="instructors[]" multiple>
+                <x-select-options :items="$users" :empty-option="false" />
+            </select>
         </div>
+
         <div class="my-1 col-md-3">
-            <div class="form-group">
-                <label>
-                    Phụ trách chuyên môn
-                </label>
-                <select class="form-control" name="professionals[]" multiple>
-                    {!! $renderOpt($users, false) !!}
-                </select>
-            </div>
+            <label>Phụ trách chuyên môn</label>
+            <select class="form-control" name="professionals[]" multiple>
+                <x-select-options :items="$users" :empty-option="false" />
+            </select>
         </div>
+
         <div class="my-1 col-md-3">
-            <div class="form-group">
-                <label>
-                    Phụ trách giải ngân
-                </label>
-                <select class="form-control" name="disbursements[]" multiple>
-                    {!! $renderOpt($users, false) !!}
-                </select>
-            </div>
+            <label>Phụ trách giải ngân</label>
+            <select class="form-control" name="disbursements[]" multiple>
+                <x-select-options :items="$users" :empty-option="false" />
+            </select>
         </div>
+
         <div class="my-1 col-md-3">
-            <div class="form-group">
-                <label>
-                    Đầu mối kế toán
-                </label>
-                <select class="form-control" name="accounting_contact_id">
-                    {!! $renderOpt($users) !!}
-                </select>
-            </div>
+            <label>Đầu mối kế toán</label>
+            <select class="form-control" name="accounting_contact_id">
+                <x-select-options :items="$users" />
+            </select>
         </div>
+
         <div class="my-1 col-md-3">
-            <div class="form-group">
-                <label>
-                    Người thực hiện SPTG
-                </label>
-                <select class="form-control" name="executor_user_id">
-                    {!! $renderOpt($users) !!}
-                </select>
-            </div>
+            <label>Người thực hiện SPTG</label>
+            <select class="form-control" name="executor_user_id">
+                <x-select-options :items="$users" />
+            </select>
         </div>
+
         <div class="my-1 col-md-3">
-            <div class="form-group">
-                <label>
-                    Người kiểm tra SPTG
-                </label>
-                <select class="form-control" name="inspector_user_id">
-                    {!! $renderOpt($users) !!}
-                </select>
-            </div>
+            <label>Người kiểm tra SPTG</label>
+            <select class="form-control" name="inspector_user_id">
+                <x-select-options :items="$users" />
+            </select>
         </div>
+
         <div class="my-1 col-md-3">
-            <div class="form-group">
-                <label>
-                    Người hỗ trợ thực hiện SPTG
-                </label>
-                <select class="form-control" name="intermediate_collaborators[]" multiple>
-                    {!! $renderOpt($users, false) !!}
-                </select>
-            </div>
+            <label>Người hỗ trợ thực hiện SPTG</label>
+            <select class="form-control" name="intermediate_collaborators[]" multiple>
+                <x-select-options :items="$users" :empty-option="false" />
+            </select>
         </div>
     </div>
 </div>
@@ -372,35 +341,26 @@
     </div>
     <div class="card-body row">
         <div class="my-1 col-md-4">
-            <div class="form-group">
-                <label>
-                    Tình trạng hợp đồng
-                </label>
-                <select name="contract_status" class="form-control" required>
-                    {!! $renderOpt($contract_status, true, 'original', 'converted') !!}
-                </select>
-            </div>
+            <label>Tình trạng hợp đồng</label>
+            <select name="contract_status" class="form-control" required>
+                <x-select-options :items="$contract_status" key-field="original" value-fields="converted" />
+            </select>
         </div>
+
         <div class="my-1 col-md-4">
-            <div class="form-group">
-                <label>
-                    Tình trạng SPTG
-                </label>
-                <select name="intermediate_product_status" class="form-control" required>
-                    {!! $renderOpt($intermediate_product_status, true, 'original', 'converted') !!}
-                </select>
-            </div>
+            <label>Tình trạng SPTG</label>
+            <select name="intermediate_product_status" class="form-control" required>
+                <x-select-options :items="$intermediate_product_status" key-field="original" value-fields="converted" />
+            </select>
         </div>
+
         <div class="my-1 col-md-4">
-            <div class="form-group">
-                <label>
-                    Tình trạng hồ sơ tài chính
-                </label>
-                <select name="financial_status" class="form-control" required>
-                    {!! $renderOpt($financial_status, true, 'original', 'converted') !!}
-                </select>
-            </div>
+            <label>Tình trạng hồ sơ tài chính</label>
+            <select name="financial_status" class="form-control" required>
+                <x-select-options :items="$financial_status" key-field="original" value-fields="converted" />
+            </select>
         </div>
+
     </div>
 </div>
 
@@ -473,6 +433,15 @@
                     File Short (.pdf)
                 </label>
                 <input type="file" class="form-control" accept=".pdf" name="path_file_short">
+            </div>
+        </div>
+
+        <div class="my-1 col-md-4">
+            <div class="form-group">
+                <label>
+                    Link driver
+                </label>
+                <input type="text" class="form-control" name="ggdrive_link">
             </div>
         </div>
     </div>

@@ -46,4 +46,12 @@ class ContractController extends Controller
             ]);
         });
     }
+
+    public function export()
+    {
+        return $this->catchAPI(fn() => response()->json([
+            'data' => $this->service->export(),
+            'message' => config('message.render_file'),
+        ]));
+    }
 }

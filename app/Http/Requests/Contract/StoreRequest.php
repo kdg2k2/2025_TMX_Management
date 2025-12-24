@@ -67,6 +67,7 @@ class StoreRequest extends BaseRequest
             'disbursements.*' => 'nullable|exists:users,id',
             'intermediate_collaborators' => 'nullable|array',
             'intermediate_collaborators.*' => 'nullable|exists:users,id',
+            'ggdrive_link' => 'nullable|string|max:255',
         ];
     }
 }
