@@ -19,14 +19,10 @@ class Kernel extends ConsoleKernel
 
     private function queueJobs(Schedule $schedule)
     {
-        $workerMaxTime = 3600;  // 60 phút
-        $lockBuffer = 5;  // 5 phút buffer
-        $lockMinutes = ($workerMaxTime / 60) + $lockBuffer;  // 65 phút
-
         $schedule
-            ->command("queue:work database --queue=high,default,low --max-time={$workerMaxTime} --sleep=3 --tries=3 --timeout=300")
-            ->hourly()
-            ->withoutOverlapping($lockMinutes)
+            ->command('queue:work database --queue=high,default,low --once --timeout=300 --tries=3')
+            ->everyFiveSeconds()
+            ->withoutOverlapping()  // ← Không truyền số = lock đến khi xong
             ->runInBackground();
 
         // Retry failed jobs mỗi 6 giờ
