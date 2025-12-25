@@ -49,7 +49,8 @@ class ContractScanFileService extends BaseService
 
     public function getFolderOnGoogleDrive(ContractScanFile $data)
     {
-        return app(ContractService::class)->getFolderOnGoogleDrive($data['contract_id']) . '/Contracts/ScanFiles/' . $this->stringHandlerService->createPascalSlug($data['type']['name']);
+        $contractService = app(ContractService::class);
+        return $contractService->getFolderOnGoogleDrive($contractService->findById($data['contract_id'])) . '/Contracts/ScanFiles/' . $this->stringHandlerService->createPascalSlug($data['type']['name']);
     }
 
     private function handleFile(ContractScanFile $data, array $extracted, bool $isUpdate = false)
