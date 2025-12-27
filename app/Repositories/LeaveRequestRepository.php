@@ -55,7 +55,7 @@ class LeaveRequestRepository extends BaseRepository
         ];
     }
 
-    public function applyListFilters($query, array $request)
+    protected function applyListFilters($query, array $request)
     {
         foreach ([
             'created_by',

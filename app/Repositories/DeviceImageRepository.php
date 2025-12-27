@@ -11,4 +11,10 @@ class DeviceImageRepository extends BaseRepository
         $this->model = new DeviceImage();
         $this->relations = [];
     }
+
+    protected function applyListFilters($query, array $request)
+    {
+        if (isset($request['device_id']))
+            $query->where('device_id', $request['device_id']);
+    }
 }

@@ -16,7 +16,7 @@ class PersonnelRepository extends BaseRepository
         ];
     }
 
-    public function applyListFilters($query, array $request)
+    protected function applyListFilters($query, array $request)
     {
         if (isset($request['personnel_unit_id']))
             $query->where('personnel_unit_id', $request['personnel_unit_id']);

@@ -12,7 +12,7 @@ class UserSubEmailRepository extends BaseRepository
         $this->relations = [];
     }
 
-    public function applyListFilters($query, array $request)
+    protected function applyListFilters($query, array $request)
     {
         if (isset($request['user_id']))
             $query->where('user_id', $request['user_id']);
