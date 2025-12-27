@@ -69,7 +69,8 @@
         <label>
             Số cân hành lý ký gửi (kg)
         </label>
-        <input type="number" class="form-control" name="checked_baggage_allowances" required min="0" value="0">
+        <input type="number" class="form-control" name="checked_baggage_allowances" required min="0"
+            value="0">
     </div>
 </div>
 

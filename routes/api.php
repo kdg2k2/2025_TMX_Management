@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
 use App\Http\Controllers\Api\DeviceController;
 use App\Http\Controllers\Api\DeviceImageController;
+use App\Http\Controllers\Api\DeviceLoanController;
 use App\Http\Controllers\Api\DeviceTypeController;
 use App\Http\Controllers\Api\DossierHandoverController;
 use App\Http\Controllers\Api\DossierMinuteController;
@@ -549,6 +550,12 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::get('list', 'list')->name('api.device.image.list');
             Route::post('store', 'store')->name('api.device.image.store');
             Route::patch('update', 'update')->name('api.device.image.update');
+        });
+
+        Route::prefix('loan')->controller(DeviceLoanController::class)->group(function () {
+            Route::get('list', 'list')->name('api.device.loan.list');
+            Route::post('store', 'store')->name('api.device.loan.store');
+            Route::post('return', 'return')->name('api.device.loan.return');
         });
     });
 });

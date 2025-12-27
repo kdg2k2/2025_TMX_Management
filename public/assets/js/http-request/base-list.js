@@ -12,7 +12,7 @@ const createDataTableFilterParams = () => {
 
 window.loadList = () => {
     createDataTableServerSide(
-        table,
+        $("#datatable") || table,
         listUrl,
         renderColumns(),
         (item) => item,

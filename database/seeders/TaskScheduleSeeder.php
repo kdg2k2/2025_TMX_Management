@@ -107,6 +107,18 @@ class TaskScheduleSeeder extends Seeder
                 'manual_run' => false,
                 'user_ids' => $managerUserIds,
             ],
+            [
+                'code' => 'DEVICE_LOAN',
+                'name' => 'Mượn trả thiết bị.',
+                'subject' => null,
+                'content' => null,
+                'frequency' => 'daily',
+                'cron_expression' => null,
+                'description' => 'Tự chạy khi có đăng ký, duyệt...',
+                'is_active' => false,
+                'manual_run' => false,
+                'user_ids' => $managerUserIds,
+            ],
         ];
 
         foreach ($tasks as $task) {
