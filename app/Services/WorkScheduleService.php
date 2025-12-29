@@ -280,7 +280,8 @@ class WorkScheduleService extends BaseService
                 $data['createdBy']['id'] ?? null,
                 $data['approvedBy']['id'] ?? null,
                 $data['returnApprovedBy']['id'] ?? null,
-            ]
+            ],
+            app(TaskScheduleService::class)->getUserIdByScheduleKey('WORK_SCHEDULE')
         ));
 
         return Arr::flatten(array_merge($contractEmails,

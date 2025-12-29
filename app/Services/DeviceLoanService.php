@@ -125,7 +125,7 @@ class DeviceLoanService extends BaseService
     {
         return $this->userService->getEmails([
             collect([$data['created_by']['id'], $data['approved_by']['id'] ?? null])->unique()->filter()->toArray(),
-            app(TaskScheduleService::class)->findByKey('DEVICE_LOAN', 'code', false, false, ['emails'])['emails']->pluck('user_id')->unique()->filter()->toArray()
+            app(TaskScheduleService::class)->getUserIdByScheduleKey('DEVICE_LOAN')
         ]);
     }
 }

@@ -120,8 +120,6 @@ class TaskScheduleService extends BaseService
     {
         switch ($schedule['code']) {
             case 'WORK_TIMESHEET_REPORT':
-                app(WorkTimesheetService::class)->emailSchedule($schedule['is_active'], $schedule['code'], $schedule['subject'] ?? $schedule['name'], $flatEmails, $emailData);
-                break;
             case 'PAYROLL_REPORT':
                 app(WorkTimesheetService::class)->emailSchedule($schedule['is_active'], $schedule['code'], $schedule['subject'] ?? $schedule['name'], $flatEmails, $emailData);
                 break;
@@ -129,5 +127,10 @@ class TaskScheduleService extends BaseService
                 $this->sendMail($schedule['subject'] ?? $schedule['name'], $flatEmails = [], $emailData);
                 break;
         }
+    }
+
+    public function getUserIdByScheduleKey(string $key)
+    {
+        return $this->findByKey($key, 'code', false, false, ['emails'])['emails']->pluck('user_id')->unique()->filter()->toArray();
     }
 }

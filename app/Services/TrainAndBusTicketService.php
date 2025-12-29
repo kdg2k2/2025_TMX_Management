@@ -98,7 +98,7 @@ class TrainAndBusTicketService extends BaseService
             $data['created_by']['id'],
             $data['approved_by']['id'] ?? null,
             collect($data['details'])->pluck('user_id')->unique()->filter()->toArray(),
-            app(TaskScheduleService::class)->findByKey('TRAIN_AND_BUS_TICKET', 'code', false, false, ['emails'])['emails']->pluck('user_id')->unique()->filter()->toArray()
+            app(TaskScheduleService::class)->getUserIdByScheduleKey('TRAIN_AND_BUS_TICKET')
         ]);
     }
 }

@@ -119,6 +119,30 @@ class TaskScheduleSeeder extends Seeder
                 'manual_run' => false,
                 'user_ids' => $managerUserIds,
             ],
+            [
+                'code' => 'LEAVE_REQUEST',
+                'name' => 'Nghỉ phép',
+                'subject' => null,
+                'content' => null,
+                'frequency' => 'daily',
+                'cron_expression' => null,
+                'description' => 'Tự chạy khi có đăng ký, duyệt...',
+                'is_active' => false,
+                'manual_run' => false,
+                'user_ids' => $managerUserIds,
+            ],
+            [
+                'code' => 'WORK_SCHEDULE',
+                'name' => 'Công tác',
+                'subject' => null,
+                'content' => null,
+                'frequency' => 'daily',
+                'cron_expression' => null,
+                'description' => 'Tự chạy khi có đăng ký, duyệt...',
+                'is_active' => false,
+                'manual_run' => false,
+                'user_ids' => $managerUserIds,
+            ],
         ];
 
         foreach ($tasks as $task) {

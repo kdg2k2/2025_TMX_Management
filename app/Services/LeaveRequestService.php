@@ -238,7 +238,8 @@ class LeaveRequestService extends BaseService
                 $data['createdBy']['id'] ?? null,
                 $data['approvedBy']['id'] ?? null,
                 $data['adjustApprovedBy']['id'] ?? null,
-            ]
+            ],
+            app(TaskScheduleService::class)->getUserIdByScheduleKey('LEAVE_REQUEST')
         ));
 
         return Arr::flatten($recordMemberEmails);
