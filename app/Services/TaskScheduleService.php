@@ -105,7 +105,7 @@ class TaskScheduleService extends BaseService
         });
     }
 
-    private function calculateNextRun(string $cronExpression): Carbon
+    public function calculateNextRun(string $cronExpression): Carbon
     {
         $cron = new CronExpression($cronExpression);
         return Carbon::instance($cron->getNextRunDate());
@@ -122,6 +122,9 @@ class TaskScheduleService extends BaseService
             case 'WORK_TIMESHEET_REPORT':
             case 'PAYROLL_REPORT':
                 app(WorkTimesheetService::class)->emailSchedule($schedule['is_active'], $schedule['code'], $schedule['subject'] ?? $schedule['name'], $flatEmails, $emailData);
+                break;
+            case 'SET_COMPLETED_WORK_SCHEDULES':
+                app(WorkScheduleService::class)->setCompletedWorkSchedules();
                 break;
             default:
                 $this->sendMail($schedule['subject'] ?? $schedule['name'], $flatEmails = [], $emailData);

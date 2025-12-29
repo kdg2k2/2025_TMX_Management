@@ -47,14 +47,6 @@ class Kernel extends ConsoleKernel
 
     private function tasks(Schedule $schedule)
     {
-        $schedule
-            ->call(function () {
-                app(WorkScheduleService::class)->setCompletedWorkSchedules();
-            })
-            ->name('set-completed-work-schedules')
-            ->dailyAt('17:00')
-            ->withoutOverlapping();
-
         $schedule->command('task-schedules:run')->everyMinute();
 
         $schedule->command('app:update-contract-g-g-drive-link')->dailyAt('00:00');

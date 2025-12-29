@@ -37,8 +37,8 @@ class UpdateRequest extends FindByIdRequest
             [
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
-                'subject' => 'required|string|max:255',
-                'content' => 'required|string',
+                'subject' => 'nullable|string|max:255',
+                'content' => 'nullable|string',
                 'frequency' => 'required|in:daily,weekly,monthly',
                 'cron_expression' => [
                     'nullable',

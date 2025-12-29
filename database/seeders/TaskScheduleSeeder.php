@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Department;
 use App\Models\TaskSchedule;
 use App\Models\User;
+use App\Services\TaskScheduleService;
 use Carbon\Carbon;
 use Cron\CronExpression;
 use Illuminate\Database\Seeder;
@@ -143,12 +144,24 @@ class TaskScheduleSeeder extends Seeder
                 'manual_run' => false,
                 'user_ids' => $managerUserIds,
             ],
+            [
+                'code' => 'SET_COMPLETED_WORK_SCHEDULES',
+                'name' => 'Tự động kết thúc công tác',
+                'subject' => null,
+                'content' => null,
+                'frequency' => 'daily',
+                'cron_expression' => '0 17 * * *',
+                'description' => 'Tự chạy vào 5h chiều hàng ngày, kiểm tra lịch công tác có hạn trong ngày thì tự kết thúc công tác',
+                'is_active' => true,
+                'manual_run' => true,
+                'user_ids' => [],
+            ],
         ];
 
+        $taskScheduleService = app(TaskScheduleService::class);
         foreach ($tasks as $task) {
-            $cronExpression = $task['cron_expression'];
-            $cron = $cronExpression ? Carbon::instance((new CronExpression($cronExpression))->getNextRunDate()) : null;
-            $task['cron_expression'] = $cron;
+            if($task['cron_expression'])
+            $task['next_run_at'] = $taskScheduleService->calculateNextRun($task['cron_expression']);
             $userIds = $task['user_ids'] ?? [];
             unset($task['user_ids']);
 
