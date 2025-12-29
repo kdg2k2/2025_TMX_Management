@@ -16,7 +16,7 @@ class RunTaskSchedules extends Command
         $schedules = TaskSchedule::where('is_active', true)
             ->whereNotNull('cron_expression')
             ->where('manual_run', true)
-            // ->where('next_run_at', '<=', now())
+            ->where('next_run_at', '<=', now())
             ->get();
 
         foreach ($schedules as $schedule) {
