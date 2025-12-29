@@ -29,8 +29,8 @@ class StoreRequest extends BaseRequest
             'created_by' => 'required|exists:users,id',
             'details' => 'required|array|min:1',
             'details.*.user_type' => 'required|in:internal,external',
-            'details.*.user_id' => 'nullable|exists:users,id',
-            'details.*.external_user_name' => 'nullable|max:255',
+            'details.*.user_id' => 'nullable|exists:users,id|distinct',
+            'details.*.external_user_name' => 'nullable|max:255|distinct',
         ];
     }
 
