@@ -54,9 +54,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
-                    <div class="modal-body">
-                        {{ $body ?? $slot }}
-                    </div>
+                    @if ((isset($body) && trim($body) !== '') || (isset($slot) && trim((string) $slot) !== ''))
+                        <div class="modal-body">
+                            {{ $body ?? $slot }}
+                        </div>
+                    @endif
+
 
                     @if (isset($footer))
                         <div class="modal-footer">
@@ -72,9 +75,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <div class="modal-body">
-                    {{ $body ?? $slot }}
-                </div>
+                @if ((isset($body) && trim($body) !== '') || (isset($slot) && trim((string) $slot) !== ''))
+                    <div class="modal-body">
+                        {{ $body ?? $slot }}
+                    </div>
+                @endif
+
 
                 @if (isset($footer))
                     <div class="modal-footer">

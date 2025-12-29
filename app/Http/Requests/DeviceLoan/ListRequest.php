@@ -14,6 +14,7 @@ class ListRequest extends BaseListRequest
                 'device_id' => 'nullable|exists:devices,id',
                 'created_by' => 'nullable|exists:users,id',
                 'status' => 'nullable|in:pending,approved,rejected,returned',
+                'device_status_return' => 'nullable|in:normal,broken,faulty,lost',
             ]
         );
     }

@@ -9,6 +9,7 @@ class ReturnRequest extends FindByIdRequest
         parent::prepareForValidation();
         $this->merge([
             'returned_at' => date('Y-m-d H:i:s'),
+            'status' => 'returned',
         ]);
     }
 
@@ -18,6 +19,8 @@ class ReturnRequest extends FindByIdRequest
             parent::rules(),
             [
                 'returned_at' => 'required|date_format:Y-m-d H:i:s',
+                'status' => 'required|in:returned',
+                'device_status_return' => 'required|in:normal,broken,faulty,lost',
             ]
         );
     }

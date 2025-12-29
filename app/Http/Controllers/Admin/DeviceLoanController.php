@@ -24,14 +24,14 @@ class DeviceLoanController extends Controller
     public function create()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.device.loan.create', $this->service->getBaseDataForLCView());
+            return view('admin.pages.device.loan.create', $this->service->getBaseDataForLCView(false));
         });
     }
 
     public function approve(ApproveRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            'data' => $this->service->approve($request->validated()['id']),
+            'data' => $this->service->approve($request->validated()),
             'message' => config('message.approve'),
         ]));
     }
@@ -39,7 +39,7 @@ class DeviceLoanController extends Controller
     public function reject(RejectRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            'data' => $this->service->reject($request->validated()['id']),
+            'data' => $this->service->reject($request->validated()),
             'message' => config('message.reject'),
         ]));
     }

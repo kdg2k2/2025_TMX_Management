@@ -1,7 +1,9 @@
-const deviceId = document.getElementById("device-id");
-const status = document.getElementById("status");
-const createdBy = document.getElementById("created-by");
-[deviceId, status, createdBy].forEach((item) => {
+[
+    document.getElementById("device-id"),
+    document.getElementById("status"),
+    document.getElementById("device-status-return"),
+    document.getElementById("created-by"),
+].forEach((item) => {
     item.addEventListener("change", () => {
         customDataTableFilterParams[item.getAttribute("name")] =
             item.value || "";

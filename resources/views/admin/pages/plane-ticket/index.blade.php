@@ -25,6 +25,6 @@
         const planeTicketDetailIndex = @json(route('plane-ticket.detail.index'));
     </script>
     <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
-    <script src="assets/js/plane-ticket/modals.js?v={{ time() }}"></script>
+    <script src="assets/js/components/approve-reject-modal-event.js?v={{ time() }}"></script>
     <script src="assets/js/plane-ticket/list.js?v={{ time() }}"></script>
 @endsection

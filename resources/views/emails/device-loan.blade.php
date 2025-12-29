@@ -14,7 +14,18 @@
 </p>
 <p>
     Thiết bị mượn:
-    <b>{{ $data['device']['name'] ?? '' }}</b>
+    <b>{{ implode(
+        ' - ',
+        collect([$data['device']['device_type']['name'] ?? '', $data['device']['code'] ?? '', $data['device']['name'] ?? ''])->filter()->toArray(),
+    ) }}</b>
+</p>
+<p>
+    Sử dụng tại:
+    <b>{{ $data['use_location'] ?? '' }}</b>
+</p>
+<p>
+    Ghi chú:
+    <b>{{ $data['note'] ?? '' }}</b>
 </p>
 
 @if ($data['approved_at'])
@@ -45,6 +56,12 @@
         Thời gian trả:
         <span style="color: green">
             {{ $data['returned_at'] ?? '' }}
+        </span>
+    </p>
+    <p>
+        Trạng thái thiết bị khi trả:
+        <span style="color: green">
+            {{ $data['device_status_return']['converted'] ?? '' }}
         </span>
     </p>
 @endif

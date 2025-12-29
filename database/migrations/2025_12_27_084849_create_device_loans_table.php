@@ -15,13 +15,14 @@ return new class extends Migration {
             $table->timestamps();
             $table->foreignId('device_id')->comment('thiết bị')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('created_by')->comment('người mượn')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('approved_by')->comment('người phê duyệt')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('use_location')->comment('Vị trí sử dụng');
+            $table->foreignId('approved_by')->nullable()->comment('người phê duyệt')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->text('approval_note')->nullable()->comment('Ghi chú phê duyệt');
             $table->text('rejection_note')->nullable()->comment('Ghi chú từ chối phê duyệt');
             $table->date('borrowed_date')->comment('ngày mượn');
             $table->date('expected_return_at')->comment('ngày dự kiến trả');
-            $table->timestamp('approved_at')->comment('thời gian duyệt')->nullable();
-            $table->timestamp('returned_at')->comment('thời gian trả')->nullable();
+            $table->timestamp('approved_at')->nullable()->comment('thời gian duyệt');
+            $table->timestamp('returned_at')->nullable()->comment('thời gian trả');
             $table->enum('status', [
                 'pending',  // chờ phê duyệt
                 'approved',  // đã duyệt
@@ -29,6 +30,17 @@ return new class extends Migration {
                 'returned',  // đã trả
             ])->default('pending');
             $table->string('note')->comment('ghi chú')->nullable();
+            $table->enum('device_status_return', [
+                'normal',  // bình thường
+                'broken',  // hỏng
+                'faulty',  // lỗi
+                'lost',  // thất lạc
+            ])->nullable()->comment('tình trạng thiết bị khi trả');
+
+            $table->unique(
+                ['device_id', 'created_by', 'borrowed_date'],
+                'uniq_device_user_day'
+            );
         });
     }
 

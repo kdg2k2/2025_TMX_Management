@@ -38,7 +38,7 @@ class DeviceLoanController extends Controller
     public function return(ReturnRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            'data' => $this->service->return($request->validated()['id']),
+            'data' => $this->service->return($request->validated()),
             'message' => config('message.default'),
         ]));
     }

@@ -2,20 +2,6 @@ const renderColumns = () => {
     return [
         {
             data: null,
-            title: "Hình ảnh",
-            render: (data, type, row) => {
-                return `
-                    <div class="lh-1">
-                        ${renderCarousel(
-                            "carousel-" + row?.device.id,
-                            row?.device?.images
-                        )}
-                    </div>
-                `;
-            },
-        },
-        {
-            data: null,
             title: "Loại thiết bị",
             render: (data, type, row) => {
                 return row?.device?.device_type?.name || "";
@@ -26,6 +12,27 @@ const renderColumns = () => {
             title: "Tên thiết bị",
             render: (data, type, row) => {
                 return row?.device?.name || "";
+            },
+        },
+        {
+            data: null,
+            title: "Ngày mượn",
+            render: (data, type, row) => {
+                return row?.borrowed_date || "";
+            },
+        },
+        {
+            data: null,
+            title: "Ngày dự kiến trả",
+            render: (data, type, row) => {
+                return row?.expected_return_at || "";
+            },
+        },
+        {
+            data: null,
+            title: "Vị trí sử dụng",
+            render: (data, type, row) => {
+                return row?.use_location || "";
             },
         },
         {
@@ -41,6 +48,33 @@ const renderColumns = () => {
         },
         {
             data: null,
+            title: "Người mượn",
+            render: (data, type, row) => {
+                return row?.created_by?.name || "";
+            },
+        },
+        {
+            data: null,
+            title: "Trạng thái thiết bị khi trả",
+            render: (data, type, row) => {
+                return row?.status?.original == "returned"
+                    ? createBadge(
+                          row?.device_status_return?.converted,
+                          row?.device_status_return?.color,
+                          row?.device_status_return?.icon
+                      )
+                    : "";
+            },
+        },
+        {
+            data: null,
+            title: "Ngày trả",
+            render: (data, type, row) => {
+                return row?.returned_at || "";
+            },
+        },
+        {
+            data: null,
             title: "Người duyệt",
             render: (data, type, row) => {
                 return row?.approved_by?.name || "";
@@ -51,13 +85,6 @@ const renderColumns = () => {
             title: "Ghi chú duyệt",
             render: (data, type, row) => {
                 return row?.approval_note || row?.rejection_note || "";
-            },
-        },
-        {
-            data: null,
-            title: "Người mượn",
-            render: (data, type, row) => {
-                return row?.created_by?.name || "";
             },
         },
         {
@@ -101,8 +128,8 @@ const renderColumns = () => {
                                   "Trả thiết bị",
                                   `${apiDeviceLoanReturn}?id=${row.id}`,
                                   "loadList",
-                                  null,
-                                  "ti ti-x"
+                                  "showReturnModal",
+                                  "ti ti-arrow-back-up"
                               )
                             : ""
                     }
@@ -110,8 +137,4 @@ const renderColumns = () => {
             },
         },
     ];
-};
-
-const callbackAfterRenderLoadList = () => {
-    initGLightbox();
 };

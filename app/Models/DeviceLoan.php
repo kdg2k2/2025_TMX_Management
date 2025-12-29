@@ -39,6 +39,38 @@ class DeviceLoan extends Model
         ],
     ];
 
+    protected const STATUS_RETURN = [
+        'normal' => [
+            'original' => 'normal',
+            'converted' => 'Bình Thường',
+            'color' => 'success',
+            'icon' => 'ti ti-circle-check',
+        ],
+        'broken' => [
+            'original' => 'broken',
+            'converted' => 'Hỏng',
+            'color' => 'danger',
+            'icon' => 'ti ti-x',
+        ],
+        'faulty' => [
+            'original' => 'faulty',
+            'converted' => 'Lỗi',
+            'color' => 'warning',
+            'icon' => 'ti ti-alert-circle',
+        ],
+        'lost' => [
+            'original' => 'lost',
+            'converted' => 'Thất Lạc',
+            'color' => 'dark',
+            'icon' => 'ti ti-help',
+        ],
+    ];
+
+    public function getStatusReturn($key)
+    {
+        return $this->getValueFromArrayByKey(self::STATUS_RETURN, $key);
+    }
+
     public function getStatus($key)
     {
         return $this->getValueFromArrayByKey(self::STATUS, $key);
