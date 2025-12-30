@@ -114,9 +114,14 @@ class DeviceLoanService extends BaseService
     {
         $data = $this->findById($id, true, true);
         $emails = $this->getEmails($data);
-        dispatch(new \App\Jobs\SendMailJob('emails.device-loan', $subject . ' thiết bị', $emails, [
-            'data' => $data,
-        ]));
+        dispatch(new \App\Jobs\SendMailJob(
+            'emails.device-loan',
+            $subject . ' thiết bị',
+            $emails,
+            [
+                'data' => $data,
+            ]
+        ));
     }
 
     private function getEmails($data)
@@ -125,5 +130,18 @@ class DeviceLoanService extends BaseService
             collect([$data['created_by']['id'], $data['approved_by']['id'] ?? null])->unique()->filter()->toArray(),
             app(TaskScheduleService::class)->getUserIdByScheduleKey('DEVICE_LOAN')
         ]);
+    }
+
+    public function remindReturnDevice()
+    {
+        $data = $this->repository->getOverdueApprovedLoans();
+
+        if (count($data) == 0)
+            return;
+
+        foreach ($data as $item)
+            $this->sendMail($item['id'], 'Nhắc nhở trả thiết bị');
+
+        return count($data);
     }
 }

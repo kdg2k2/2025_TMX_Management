@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Carbon\Carbon;
 use App\Models\DeviceLoan;
 
 class DeviceLoanRepository extends BaseRepository
@@ -61,5 +62,16 @@ class DeviceLoanRepository extends BaseRepository
                 'approvedBy' => 'name',
             ]
         ];
+    }
+
+    public function getOverdueApprovedLoans()
+    {
+        return $this
+            ->model
+            ->where('status', 'approved')
+            ->whereNull('returned_at')
+            ->whereDate('expected_return_at', '<', Carbon::today())
+            ->with($this->relations)
+            ->get();
     }
 }

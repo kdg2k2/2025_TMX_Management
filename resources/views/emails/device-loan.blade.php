@@ -10,7 +10,7 @@
 </p>
 <p>
     Thời gian dự kiến trả:
-    <b>{{ $data['expected_return_at'] ?? '' }}</b>
+    <b style="color: red">{{ $data['expected_return_at'] ?? '' }}</b>
 </p>
 <p>
     Thiết bị mượn:

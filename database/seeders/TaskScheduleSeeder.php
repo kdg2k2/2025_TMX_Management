@@ -144,7 +144,7 @@ class TaskScheduleSeeder extends Seeder
             ],
             [
                 'code' => 'SET_COMPLETED_WORK_SCHEDULES',
-                'name' => 'Tự động kết thúc công tác',
+                'name' => 'Kết thúc công tác',
                 'subject' => null,
                 'content' => null,
                 'frequency' => 'daily',
@@ -189,6 +189,18 @@ class TaskScheduleSeeder extends Seeder
                 'is_active' => true,
                 'manual_run' => false,
                 'user_ids' => $baseUserIds,
+            ],
+            [
+                'code' => 'REMIND_RETURN_DEVICE',
+                'name' => 'Nhắc nhở trả thiết bị',
+                'subject' => null,
+                'content' => null,
+                'frequency' => 'daily',
+                'cron_expression' => '0 8 * * *',
+                'description' => 'Tự chạy vào 8h sáng hàng ngày, kiểm tra thiết bị nào chưa trả và quá hạn trả thì nhắc',
+                'is_active' => true,
+                'manual_run' => true,
+                'user_ids' => [],
             ],
         ];
 
