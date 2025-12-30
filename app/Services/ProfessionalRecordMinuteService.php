@@ -319,7 +319,7 @@ class ProfessionalRecordMinuteService extends BaseService
         $emails = app(UserService::class)->getEmails(
             [
                 $contractMemberIds,
-                json_decode(app(SystemConfigService::class)->getProfessionalRecordUserSendEmailIds()->value),
+                app(TaskScheduleService::class)->getUserIdByScheduleKey('PROFESSIONAL_RECORD_MINUTE')
             ]
         );
 
@@ -350,7 +350,7 @@ class ProfessionalRecordMinuteService extends BaseService
     public function sendMail(string $subject, array $data, ProfessionalRecordMinute $minute, bool $useJobQueue = true, bool $getContractMembers = true, bool $sendFile = true)
     {
         if (!isset($data['authUser']))
-            $data['authUser'] = auth()->user()->name;
+            $data['authUser'] = $this->getUser()->name;
 
         $emails = $this->getEmails($minute, $getContractMembers);
 
@@ -387,7 +387,7 @@ class ProfessionalRecordMinuteService extends BaseService
             // cập nhật trạng thái biên bản
             $minute->update([
                 'status' => 'approved',
-                'approved_by' => auth()->id(),
+                'approved_by' => $this->getUserId(),
                 'approved_at' => now(),
                 'approval_note' => $request['approval_note'] ?? null,
             ]);
@@ -454,7 +454,7 @@ class ProfessionalRecordMinuteService extends BaseService
         // tạo data bàn giao
         $handover = $professionalRecordHandoverService->store([
             'professional_record_plan_id' => $minute->plan->id,
-            'user_id' => auth()->id(),
+            'user_id' => $this->getUserId(),
             'handover_by' => $minute->plan->handover_by,
             'received_by' => $minute->plan->received_by,
             'type' => 'out',
@@ -590,7 +590,7 @@ class ProfessionalRecordMinuteService extends BaseService
 
             $minute->update([
                 'status' => 'rejected',
-                'approved_by' => auth()->id(),
+                'approved_by' => $this->getUserId(),
                 'approved_at' => now(),
                 'rejection_note' => $request['rejection_note'] ?? null,
             ]);

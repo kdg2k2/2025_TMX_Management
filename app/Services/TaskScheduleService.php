@@ -134,6 +134,9 @@ class TaskScheduleService extends BaseService
 
     public function getUserIdByScheduleKey(string $key)
     {
-        return $this->findByKey($key, 'code', false, false, ['emails'])['emails']->pluck('user_id')->unique()->filter()->toArray();
+        $schedule = $this->findByKey($key, 'code', false, false, ['emails']);
+        if ($schedule['is_active'] == 0)
+            return [];
+        return $schedule['emails']->pluck('user_id')->unique()->filter()->toArray();
     }
 }

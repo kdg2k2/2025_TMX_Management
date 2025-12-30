@@ -13,7 +13,6 @@ class SystemConfigSeeder extends Seeder
      */
     public function run(): void
     {
-        $userDoanhId = User::where('name', 'like', '%Lê Sỹ Doanh%')->first()->id;
         $userHuanId = User::where('name', 'like', '%Phạm Văn Huân%')->first()->id;
         $userOanhId = User::where('name', 'like', '%Vũ Thị Kim Oanh%')->first()->id;
         $arr = [
@@ -53,26 +52,6 @@ class SystemConfigSeeder extends Seeder
                     'value' => $userOanhId,
                     'unit' => 'int',
                     'description' => 'ID user bên nhận của biên bản bàn giao hồ sơ chuyên môn - Vũ Thị Kim Oanh',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]
-            ],
-            [
-                ['key' => 'dossier_user_send_email_ids'],
-                [
-                    'value' => json_encode([$userDoanhId, $userHuanId]),
-                    'unit' => 'array',
-                    'description' => 'IDs user nhận mail hồ sơ ngoại nghiệp',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]
-            ],
-            [
-                ['key' => 'professional_record_user_send_email_ids'],
-                [
-                    'value' => json_encode([$userDoanhId, $userOanhId]),
-                    'unit' => 'array',
-                    'description' => 'IDs user nhận mail hồ sơ chuyên môn',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]

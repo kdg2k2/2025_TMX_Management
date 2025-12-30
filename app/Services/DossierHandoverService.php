@@ -431,8 +431,8 @@ class DossierHandoverService extends BaseService
                 $handover = $this->repository->store([
                     'type' => 'in',
                     'dossier_plan_id' => $handoverOut['dossier_plan_id'],
-                    'user_id' => auth()->id(),
-                    'handover_by' => auth()->id(),
+                    'user_id' => $this->getUserId(),
+                    'handover_by' => $this->getUserId(),
                     'received_by' => app(SystemConfigService::class)->getDossierHandoverReceivedById()['value'],
                     'times' => $this->repository->getMaxTimeHandoverInByContractId($contractId) + 1,
                 ]);
@@ -726,8 +726,8 @@ class DossierHandoverService extends BaseService
         $lastMinute = $this->getLastMinute($handover);
 
         $handover->update([
-            'user_id' => auth()->id(),
-            'handover_by' => auth()->id(),
+            'user_id' => $this->getUserId(),
+            'handover_by' => $this->getUserId(),
         ]);
 
         return [

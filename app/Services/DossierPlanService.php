@@ -141,11 +141,11 @@ class DossierPlanService extends BaseService
             if (empty($plan)) {
                 $plan = $this->repository->store([
                     'contract_id' => $contractId,
-                    'user_id' => auth()->id()
+                    'user_id' => $this->getUserId()
                 ]);
             } else {
                 $plan->update([
-                    'user_id' => auth()->id()
+                    'user_id' => $this->getUserId()
                 ]);
             }
 

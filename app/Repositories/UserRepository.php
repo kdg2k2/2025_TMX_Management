@@ -25,6 +25,8 @@ class UserRepository extends BaseRepository
 
     protected function applyListFilters($query, array $request)
     {
+        if ($this->getUserId() != 1)
+            $query->where('id', '!=', 1);
         if (isset($request['department_id']))
             $query->where('department_id', $request['department_id']);
         if (isset($request['position_id']))

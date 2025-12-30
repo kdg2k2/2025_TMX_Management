@@ -121,7 +121,7 @@ class DossierTypeService extends BaseService
             if (!empty($errors))
                 throw new \Exception(implode('<br>', $errors));
 
-            $userId = auth()->id();  // Cache user ID
+            $userId = $this->getUserId();  // Cache user ID
 
             foreach ($data as $item) {
                 $itemData = [

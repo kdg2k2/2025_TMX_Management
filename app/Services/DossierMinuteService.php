@@ -54,10 +54,10 @@ class DossierMinuteService extends BaseService
                 'handover_by' => $this->systemConfigService->getDossierPlanHandoverId()->value,
                 'received_by' => $request['received_by'],
                 'handover_date' => $request['handover_date'],
-                'user_id' => auth()->id(),
+                'user_id' => $this->getUserId(),
             ]);
 
-            $prepareData = $this->prepareDataToRenderMinuteFile($plan->details->toArray(), $plan['handover_by'], $plan['received_by'], auth()->id());
+            $prepareData = $this->prepareDataToRenderMinuteFile($plan->details->toArray(), $plan['handover_by'], $plan['received_by'], $this->getUserId());
 
             // xóa các biên bản draft của gói thầu này trước
             $this->repository->deleteDraftByType($plan['id'], 'plan');
@@ -335,7 +335,7 @@ class DossierMinuteService extends BaseService
         $emails = app(UserService::class)->getEmails(
             [
                 $contractMemberIds,
-                json_decode(app(SystemConfigService::class)->getDossierUserSendEmailIds()->value),
+                app(TaskScheduleService::class)->getUserIdByScheduleKey('DOSSIER_MINUTE')
             ]
         );
 
@@ -366,7 +366,7 @@ class DossierMinuteService extends BaseService
     public function sendMail(string $subject, array $data, DossierMinute $minute, bool $useJobQueue = true, bool $getContractMembers = true, bool $sendFile = true)
     {
         if (!isset($data['authUser']))
-            $data['authUser'] = auth()->user()->name;
+            $data['authUser'] = $this->getUser()->name;
 
         $emails = $this->getEmails($minute, $getContractMembers);
 
@@ -403,7 +403,7 @@ class DossierMinuteService extends BaseService
             // cập nhật trạng thái biên bản
             $minute->update([
                 'status' => 'approved',
-                'approved_by' => auth()->id(),
+                'approved_by' => $this->getUserId(),
                 'approved_at' => now(),
                 'approval_note' => $request['approval_note'] ?? null,
             ]);
@@ -468,7 +468,7 @@ class DossierMinuteService extends BaseService
         // tạo data bàn giao
         $handover = $dossierHandoverService->store([
             'dossier_plan_id' => $minute->plan->id,
-            'user_id' => auth()->id(),
+            'user_id' => $this->getUserId(),
             'handover_by' => $minute->plan->handover_by,
             'received_by' => $minute->plan->received_by,
             'type' => 'out',
@@ -604,7 +604,7 @@ class DossierMinuteService extends BaseService
 
             $minute->update([
                 'status' => 'rejected',
-                'approved_by' => auth()->id(),
+                'approved_by' => $this->getUserId(),
                 'approved_at' => now(),
                 'rejection_note' => $request['rejection_note'] ?? null,
             ]);

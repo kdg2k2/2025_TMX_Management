@@ -30,14 +30,4 @@ class SystemConfigService extends BaseService
     {
         return $this->repository->getByKey('professional_record_handover_received_by');
     }
-
-    public function getDossierUserSendEmailIds()
-    {
-        return $this->repository->getByKey('dossier_user_send_email_ids');
-    }
-
-    public function getProfessionalRecordUserSendEmailIds()
-    {
-        return $this->repository->getByKey('professional_record_user_send_email_ids');
-    }
 }

@@ -337,7 +337,7 @@ class DossierUsageRegisterService extends BaseService
 
             $usageRegister = $this->repository->store([
                 'dossier_plan_id' => $this->getPlanMinute($contractId)->plan->id,
-                'registered_by' => auth()->id(),
+                'registered_by' => $this->getUserId(),
             ]);
 
             $validated = array_map(function ($item) use ($usageRegister) {
@@ -521,7 +521,7 @@ class DossierUsageRegisterService extends BaseService
             $this->dossierMinuteService->validateMinuteStatusWhenCreate($minute);
 
             $register->update([
-                'registered_by' => auth()->id(),
+                'registered_by' => $this->getUserId(),
                 'handover_date' => $request['handover_date'],
             ]);
 
@@ -531,7 +531,7 @@ class DossierUsageRegisterService extends BaseService
 
             $this->dossierMinuteService->sendMail(
                 'Yêu cầu phê duyệt đăng ký sử dụng chứng từ hồ sơ ngoại nghiệp',
-                ['type' => 6, 'name' => auth()->user()->name, 'sd_cho' => $register->plan->contract->name, 'ngaybangiao' => $request['handover_date']],
+                ['type' => 6, 'name' => $this->getUser()->name, 'sd_cho' => $register->plan->contract->name, 'ngaybangiao' => $request['handover_date']],
                 $minute
             );
         });

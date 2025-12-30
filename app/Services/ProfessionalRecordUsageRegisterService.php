@@ -336,7 +336,7 @@ class ProfessionalRecordUsageRegisterService extends BaseService
 
             $usageRegister = $this->repository->store([
                 'professional_record_plan_id' => $this->getPlanMinute($contractId)->plan->id,
-                'registered_by' => auth()->id(),
+                'registered_by' => $this->getUserId(),
             ]);
 
             $validated = array_map(function ($item) use ($usageRegister) {
@@ -520,7 +520,7 @@ class ProfessionalRecordUsageRegisterService extends BaseService
             $this->professionalRecordMinuteService->validateMinuteStatusWhenCreate($minute);
 
             $register->update([
-                'registered_by' => auth()->id(),
+                'registered_by' => $this->getUserId(),
                 'handover_date' => $request['handover_date'],
             ]);
 
@@ -530,7 +530,7 @@ class ProfessionalRecordUsageRegisterService extends BaseService
 
             $this->professionalRecordMinuteService->sendMail(
                 'Yêu cầu phê duyệt đăng ký sử dụng chứng từ hồ sơ chuyên môn',
-                ['type' => 6, 'name' => auth()->user()->name, 'sd_cho' => $register->plan->contract->name, 'ngaybangiao' => $request['handover_date']],
+                ['type' => 6, 'name' => $this->getUser()->name, 'sd_cho' => $register->plan->contract->name, 'ngaybangiao' => $request['handover_date']],
                 $minute
             );
         });

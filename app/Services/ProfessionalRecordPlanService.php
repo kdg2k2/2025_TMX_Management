@@ -143,13 +143,13 @@ class ProfessionalRecordPlanService extends BaseService
                     'contract_id' => $request['contract_id'],
                     'handover_date' => $request['handover_date'],
                     'received_by' => $request['received_by'],
-                    'handover_by' => auth()->id(),
-                    'user_id' => auth()->id(),
+                    'handover_by' => $this->getUserId(),
+                    'user_id' => $this->getUserId(),
                 ]);
             } else {
                 $plan->update([
-                    'handover_by' => auth()->id(),
-                    'user_id' => auth()->id()
+                    'handover_by' => $this->getUserId(),
+                    'user_id' => $this->getUserId()
                 ]);
             }
 

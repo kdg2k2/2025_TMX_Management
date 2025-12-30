@@ -25,7 +25,7 @@ class WorkTimesheetOvertimeDetailRepository extends BaseRepository
             });
         }
 
-        $query->whereHas('user', fn($q) => $q->where('department_id', auth()->user()->department_id));
+        $query->whereHas('user', fn($q) => $q->where('department_id', $this->getUser()->department_id));
 
         return $query;
     }

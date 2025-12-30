@@ -6,8 +6,6 @@ use App\Models\Department;
 use App\Models\TaskSchedule;
 use App\Models\User;
 use App\Services\TaskScheduleService;
-use Carbon\Carbon;
-use Cron\CronExpression;
 use Illuminate\Database\Seeder;
 
 class TaskScheduleSeeder extends Seeder
@@ -17,7 +15,7 @@ class TaskScheduleSeeder extends Seeder
      */
     public function run(): void
     {
-        $baseUserIds = User::whereIn('name', ['Lê Sỹ Doanh', 'Phạm Văn Huân'])->pluck('id')->unique()->filter()->toArray();
+        $baseUserIds = User::whereIn('name', ['Lê Sỹ Doanh', 'Phạm Văn Huân', 'Vũ Thị Kim Oanh'])->pluck('id')->unique()->filter()->toArray();
         $managerUserIds = collect(array_unique(array_merge(
             $baseUserIds,
             Department::pluck('manager_id')->toArray()
@@ -44,7 +42,7 @@ class TaskScheduleSeeder extends Seeder
                 'frequency' => 'monthly',
                 'cron_expression' => '0 8 9 * *',
                 'description' => 'Chạy lúc 8h sáng ngày 9 hàng tháng',
-                'is_active' => true,
+                'is_active' => false,
                 'manual_run' => true,
                 'user_ids' => $baseUserIds,
             ],
@@ -56,7 +54,7 @@ class TaskScheduleSeeder extends Seeder
                 'frequency' => 'monthly',
                 'cron_expression' => '0 8 1 * *',
                 'description' => 'Chạy lúc 8h sáng ngày 1 hàng tháng',
-                'is_active' => true,
+                'is_active' => false,
                 'manual_run' => true,
                 'user_ids' => $baseUserIds,
             ],
@@ -68,7 +66,7 @@ class TaskScheduleSeeder extends Seeder
                 'frequency' => 'monthly',
                 'cron_expression' => '0 8 6 * *',
                 'description' => 'Chạy lúc 8h sáng ngày 6 hàng tháng',
-                'is_active' => true,
+                'is_active' => false,
                 'manual_run' => true,
                 'user_ids' => $managerUserIds,
             ],
@@ -80,7 +78,7 @@ class TaskScheduleSeeder extends Seeder
                 'frequency' => 'monthly',
                 'cron_expression' => '0 8 7 * *',
                 'description' => 'Chạy lúc 8h sáng ngày 7 hàng tháng',
-                'is_active' => true,
+                'is_active' => false,
                 'manual_run' => true,
                 'user_ids' => $managerUserIds,
             ],
@@ -92,9 +90,9 @@ class TaskScheduleSeeder extends Seeder
                 'frequency' => 'daily',
                 'cron_expression' => null,
                 'description' => 'Tự chạy khi có đăng ký, duyệt...',
-                'is_active' => false,
+                'is_active' => true,
                 'manual_run' => false,
-                'user_ids' => $managerUserIds,
+                'user_ids' => $baseUserIds,
             ],
             [
                 'code' => 'PLANE_TICKET',
@@ -104,9 +102,9 @@ class TaskScheduleSeeder extends Seeder
                 'frequency' => 'daily',
                 'cron_expression' => null,
                 'description' => 'Tự chạy khi có đăng ký, duyệt...',
-                'is_active' => false,
+                'is_active' => true,
                 'manual_run' => false,
-                'user_ids' => $managerUserIds,
+                'user_ids' => $baseUserIds,
             ],
             [
                 'code' => 'DEVICE_LOAN',
@@ -116,9 +114,9 @@ class TaskScheduleSeeder extends Seeder
                 'frequency' => 'daily',
                 'cron_expression' => null,
                 'description' => 'Tự chạy khi có đăng ký, duyệt...',
-                'is_active' => false,
+                'is_active' => true,
                 'manual_run' => false,
-                'user_ids' => $managerUserIds,
+                'user_ids' => $baseUserIds,
             ],
             [
                 'code' => 'LEAVE_REQUEST',
@@ -128,9 +126,9 @@ class TaskScheduleSeeder extends Seeder
                 'frequency' => 'daily',
                 'cron_expression' => null,
                 'description' => 'Tự chạy khi có đăng ký, duyệt...',
-                'is_active' => false,
+                'is_active' => true,
                 'manual_run' => false,
-                'user_ids' => $managerUserIds,
+                'user_ids' => $baseUserIds,
             ],
             [
                 'code' => 'WORK_SCHEDULE',
@@ -140,9 +138,9 @@ class TaskScheduleSeeder extends Seeder
                 'frequency' => 'daily',
                 'cron_expression' => null,
                 'description' => 'Tự chạy khi có đăng ký, duyệt...',
-                'is_active' => false,
+                'is_active' => true,
                 'manual_run' => false,
-                'user_ids' => $managerUserIds,
+                'user_ids' => $baseUserIds,
             ],
             [
                 'code' => 'SET_COMPLETED_WORK_SCHEDULES',
@@ -155,6 +153,30 @@ class TaskScheduleSeeder extends Seeder
                 'is_active' => true,
                 'manual_run' => true,
                 'user_ids' => [],
+            ],
+            [
+                'code' => 'DOSSIER_MINUTE',
+                'name' => 'Biên bản hồ sơ ngoại nghiệp',
+                'subject' => null,
+                'content' => null,
+                'frequency' => 'daily',
+                'cron_expression' => null,
+                'description' => 'Tự chạy khi có yc duyệt, đăng ký, phê duyệt...',
+                'is_active' => true,
+                'manual_run' => false,
+                'user_ids' => $baseUserIds,
+            ],
+            [
+                'code' => 'PROFESSIONAL_RECORD_MINUTE',
+                'name' => 'Biên bản hồ sơ chuyên môn',
+                'subject' => null,
+                'content' => null,
+                'frequency' => 'daily',
+                'cron_expression' => null,
+                'description' => 'Tự chạy khi có yc duyệt, đăng ký, phê duyệt...',
+                'is_active' => true,
+                'manual_run' => false,
+                'user_ids' => $baseUserIds,
             ],
         ];
 

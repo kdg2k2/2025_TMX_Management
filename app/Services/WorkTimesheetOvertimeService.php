@@ -41,7 +41,7 @@ class WorkTimesheetOvertimeService extends BaseService
                 'order_by' => 'position_id',
                 'load_relations' => false,
                 'is_salary_counted' => true,
-                'department_id' => auth()->user()->department_id,
+                'department_id' => $this->getUser()->department_id,
                 'columns' => 'name',
             ]);
 
@@ -120,7 +120,7 @@ class WorkTimesheetOvertimeService extends BaseService
                 throw new Exception("Tháng {$request['month']}/{$request['year']} chưa có dữ liệu xuất lưới!");
 
             // Lấy department_id của auth user
-            $authDepartmentId = auth()->user()->department_id;
+            $authDepartmentId = $this->getUser()->department_id;
             if (!$authDepartmentId) {
                 throw new Exception('Tài khoản của bạn chưa được gán phòng ban!');
             }
