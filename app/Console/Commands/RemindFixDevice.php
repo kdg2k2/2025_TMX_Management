@@ -2,31 +2,31 @@
 
 namespace App\Console\Commands;
 
-use App\Services\DeviceLoanService;
+use App\Services\DeviceFixService;
 use Illuminate\Console\Command;
 
-class RemindReturnDevice extends Command
+class RemindFixDevice extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:remind-return-device';
+    protected $signature = 'app:remind-fix-device';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Nhắc nhở trả thiết bị';
+    protected $description = 'Nhắc nhở sửa thiết bị';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $count = app(DeviceLoanService::class)->remindReturnDevice() ?? 0;
-        $this->info("Đã nhắc nhở trả thiết bị $count bản ghi");
+        $count = app(DeviceFixService::class)->remindFixDevice() ?? 0;
+        $this->info("Đã nhắc nhở sửa thiết bị $count bản ghi");
     }
 }

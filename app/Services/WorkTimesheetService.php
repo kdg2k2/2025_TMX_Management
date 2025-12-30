@@ -1065,10 +1065,8 @@ class WorkTimesheetService extends BaseService
 
         $time = $this->workTimesheetOvertimeService->baseOvertimeUpload();
         $workTimesheet = $this->findByMonthYear($time['currentMonth'], $time['currentYear']);
-        if (!$workTimesheet) {
-            \Log::warning("Tháng {$time['currentMonth']}/{$time['currentYear']} chưa có dữ liệu xuất lưới!");
-            return;
-        }
+        if (!$workTimesheet)
+            throw new Exception("Tháng {$time['currentMonth']}/{$time['currentYear']} chưa có dữ liệu xuất lưới!");
 
         switch ($type) {
             case 'WORK_TIMESHEET_REPORT':

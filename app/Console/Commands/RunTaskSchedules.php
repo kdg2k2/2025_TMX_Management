@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use App\Models\TaskSchedule;
-use App\Services\TaskScheduleService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+use App\Services\TaskScheduleService;
 
 class RunTaskSchedules extends Command
 {
@@ -20,8 +22,13 @@ class RunTaskSchedules extends Command
             ->get();
 
         foreach ($schedules as $schedule) {
-            $this->info("Running schedule: {$schedule->name}");
-            $service->run($schedule->code);
+            try {
+                $this->info("Running schedule: {$schedule->name}");
+                $service->run($schedule->code);
+            } catch (Exception $e) {
+                Log::error("Run task schedules {$schedule->code} error: {$e->getMessage()}");
+                continue;
+            }
         }
 
         $this->info("Completed running {$schedules->count()} schedules");

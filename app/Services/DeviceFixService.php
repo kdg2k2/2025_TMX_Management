@@ -132,4 +132,19 @@ class DeviceFixService extends BaseService
             app(TaskScheduleService::class)->getUserIdByScheduleKey('DEVICE_FIX')
         ]);
     }
+
+    public function remindFixDevice()
+    {
+        $data = $this->repository->list([
+            'status' => 'approved',
+        ]);
+
+        if (count($data) == 0)
+            return;
+
+        foreach ($data as $item)
+            $this->sendMail($item['id'], 'Nhắc nhở sửa thiết bị');
+
+        return count($data);
+    }
 }

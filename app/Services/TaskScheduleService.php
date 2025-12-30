@@ -129,6 +129,9 @@ class TaskScheduleService extends BaseService
             case 'REMIND_RETURN_DEVICE':
                 app(DeviceLoanService::class)->remindReturnDevice();
                 break;
+            case 'REMIND_FIX_DEVICE':
+                app(DeviceFixService::class)->remindFixDevice();
+                break;
             default:
                 $this->sendMail($schedule['subject'] ?? $schedule['name'], $flatEmails = [], $emailData);
                 break;
