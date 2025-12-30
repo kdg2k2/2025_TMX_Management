@@ -24,6 +24,7 @@ return new class extends Migration
             $table->text('rejection_note')->nullable()->comment('Ghi chú từ chối phê duyệt');
             $table->timestamp('approved_at')->nullable()->comment('thời gian duyệt');
             $table->timestamp('fixed_at')->nullable()->comment('thời gian sửa xong');
+            $table->integer('repair_costs')->nullable()->comment('kinh phí sửa chữa');
             $table->enum('status', [
                 'pending',  // chờ phê duyệt
                 'approved',  // đã duyệt

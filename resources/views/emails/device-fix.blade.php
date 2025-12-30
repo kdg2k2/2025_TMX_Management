@@ -8,7 +8,11 @@
     Thiết bị sửa:
     <b>{{ implode(
         ' - ',
-        collect([$data['device']['device_type']['name'] ?? '', $data['device']['code'] ?? '', $data['device']['name'] ?? ''])->filter()->toArray(),
+        collect([
+            $data['device']['device_type']['name'] ?? '',
+            $data['device']['code'] ?? '',
+            $data['device']['name'] ?? '',
+        ])->filter()->toArray(),
     ) }}</b>
 </p>
 <p>
@@ -52,6 +56,12 @@
         Thời gian sửa xong:
         <span style="color: green">
             {{ $data['fixed_at'] ?? '' }}
+        </span>
+    </p>
+    <p>
+        Kinh phí sửa chữa (vnđ):
+        <span style="color: green">
+            {{ number_format($data['repair_costs'] ?? '', 0, ',', '.') }}
         </span>
     </p>
 @endif

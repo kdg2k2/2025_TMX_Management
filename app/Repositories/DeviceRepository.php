@@ -48,4 +48,17 @@ class DeviceRepository extends BaseRepository
         if (isset($request['statuses']))
             $query->whereIn('current_status', $request['statuses']);
     }
+
+    public function statistic()
+    {
+        return $this->model->selectRaw("
+            SUM(current_status = 'normal')        AS `normal`,
+            SUM(current_status = 'broken')        AS `broken`,
+            SUM(current_status = 'faulty')        AS `faulty`,
+            SUM(current_status = 'lost')          AS `lost`,
+            SUM(current_status = 'loaned')        AS `loaned`,
+            SUM(current_status = 'under_repair')  AS `under_repair`,
+            SUM(current_status = 'stored')        AS `stored`
+        ")->first()->toArray() ?? [];
+    }
 }

@@ -55,6 +55,13 @@ const renderColumns = () => {
         },
         {
             data: null,
+            title: "Kinh phí sửa chữa (vnđ)",
+            render: (data, type, row) => {
+                return fmNumber(row?.repair_costs);
+            },
+        },
+        {
+            data: null,
             title: "Người duyệt",
             render: (data, type, row) => {
                 return row?.approved_by?.name || "";

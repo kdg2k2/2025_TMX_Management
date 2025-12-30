@@ -28,7 +28,7 @@ class Device extends Model
         'faulty' => [
             'original' => 'faulty',
             'converted' => 'Lỗi',
-            'color' => 'warning',
+            'color' => 'orange',
             'icon' => 'ti ti-alert-circle',
         ],
         'lost' => [
@@ -40,14 +40,14 @@ class Device extends Model
         'loaned' => [
             'original' => 'loaned',
             'converted' => 'Cho Mượn',
-            'color' => 'outline-info',
-            'icon' => 'ti ti-arrows-exchange',
+            'color' => 'teal',
+            'icon' => 'ti ti-arrow-forward-up',
         ],
         'under_repair' => [
             'original' => 'under_repair',
             'converted' => 'Sửa Chữa',
-            'color' => 'outline-warning',
-            'icon' => 'ti ti-tool',
+            'color' => 'purple',
+            'icon' => 'ti ti-tools',
         ],
         'stored' => [
             'original' => 'stored',

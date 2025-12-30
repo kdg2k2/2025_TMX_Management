@@ -71,4 +71,8 @@ class DeviceService extends BaseService
         $request['code'] = $this->stringHandlerService->generateRandomString();
         return $request;
     }
+
+    public function statistic(){
+        return $this->repository->statistic();
+    }
 }

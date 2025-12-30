@@ -47,10 +47,39 @@ class DeviceFixRepository extends BaseRepository
                 'fixed_at',
             ],
             'relations' => [
-                'device' => 'name',
-                'createdBy' => 'name',
-                'approvedBy' => 'name',
+                'device' => ['name'],
+                'createdBy' => ['name'],
+                'approvedBy' => ['name'],
             ]
+        ];
+    }
+
+    public function statistic(array $request)
+    {
+        $query = $this->model->whereIn('status', [
+            'approved',
+            'fixed',
+        ]);
+        if (isset($request['year']))
+            $query->whereYear('created_at', $request['year']);
+        if (isset($request['month']))
+            $query->whereMonth('created_at', $request['month']);
+
+        return [
+            'total_fix' => [
+                'original' => 'total_fix',
+                'converted' => 'Tổng đăng ký sửa chữa',
+                'color' => 'info',
+                'icon' => 'ti ti-tools',
+                'value' => (clone $query)->count()
+            ],
+            'total_fix_cost' => [
+                'original' => 'total_fix_cost',
+                'converted' => 'Tổng kinh phí sửa chữa',
+                'color' => 'indigo',
+                'icon' => 'ti ti-coin',
+                'value' => (clone $query)->sum('repair_costs')
+            ],
         ];
     }
 }

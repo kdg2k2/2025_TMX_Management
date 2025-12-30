@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DeviceStatisticController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UnitController;
@@ -564,5 +565,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::post('store', 'store')->name('api.device.fix.store');
             Route::post('fixed', 'fixed')->name('api.device.fix.fixed');
         });
+
+        Route::get('statistic/data',[DeviceStatisticController::class, 'data'])->name('api.device.statistic.data');
     });
 });

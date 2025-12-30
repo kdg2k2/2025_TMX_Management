@@ -44,7 +44,10 @@
         noteName="rejection_note" buttonVariant="danger"></x-approve-modal>
     <x-modal id="fixed-modal" title="Xác nhận đã sửa thiết bị" size="md" method="POST" nested="true">
         <x-slot:body>
-            Chắc chắn xác nhận đã sửa thiết bị này?
+            <div class="my-1">
+                <label>Kinh phí sửa chữa (vnđ)</label>
+                <input type="number" class="form-control" name="repair_costs" required>
+            </div>
         </x-slot:body>
         <x-slot:footer>
             <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />

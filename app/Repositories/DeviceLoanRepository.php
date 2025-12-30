@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use Carbon\Carbon;
 use App\Models\DeviceLoan;
+use Carbon\Carbon;
 
 class DeviceLoanRepository extends BaseRepository
 {
@@ -57,9 +57,9 @@ class DeviceLoanRepository extends BaseRepository
                 'returned_at',
             ],
             'relations' => [
-                'device' => 'name',
-                'createdBy' => 'name',
-                'approvedBy' => 'name',
+                'device' => ['name'],
+                'createdBy' => ['name'],
+                'approvedBy' => ['name'],
             ]
         ];
     }
@@ -71,7 +71,60 @@ class DeviceLoanRepository extends BaseRepository
             ->where('status', 'approved')
             ->whereNull('returned_at')
             ->whereDate('expected_return_at', '<', Carbon::today())
+            ->get();
+    }
+
+    public function statistic(array $request)
+    {
+        $query = $this->model->whereIn('status', [
+            'approved',
+            'returned',
+        ]);
+        if (isset($request['year']))
+            $query->whereYear('created_at', $request['year']);
+        if (isset($request['month']))
+            $query->whereMonth('created_at', $request['month']);
+
+        // Số lượt mượn
+        $total_loans = (clone $query)->count();
+
+        // Số lượt chưa trả (approved và chưa có returned_at)
+        $not_returned = (clone $query)
+            ->where('status', 'approved')
+            ->whereNull('returned_at')
+            ->count();
+
+        // Số lượt trả nhưng thiết bị không normal
+        $returned_not_normal = (clone $query)
+            ->where('status', 'returned')
+            ->whereNotNull('device_status_return')
+            ->where('device_status_return', '!=', 'normal')
             ->with($this->relations)
             ->get();
+
+        return [
+            'total_loans' => [
+                'original' => 'total_loans',
+                'converted' => 'Tổng lượt mượn',
+                'color' => 'primary',
+                'icon' => 'ti ti-arrow-forward-up',
+                'value' => (clone $query)->count(),
+            ],
+            'not_returned' => [
+                'original' => 'not_returned',
+                'converted' => 'Đang mượn (chưa trả)',
+                'color' => 'warning',
+                'icon' => 'ti ti-clock-hour-4',
+                'value' => $not_returned,
+            ],
+            'returned_not_normal_count' => [
+                'original' => 'returned_not_normal_count',
+                'converted' => 'Trả về bị lỗi/hỏng',
+                'color' => 'pink',
+                'icon' => 'ti ti-alert-triangle',
+                'value' => $returned_not_normal->count(),
+            ],
+            'returned_not_normal_detail' => $returned_not_normal,
+        ];
     }
 }

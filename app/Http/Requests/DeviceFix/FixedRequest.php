@@ -20,6 +20,7 @@ class FixedRequest extends FindByIdRequest
             [
                 'fixed_at' => 'required|date_format:Y-m-d H:i:s',
                 'status' => 'required|in:fixed',
+                'repair_costs' => 'required|integer',
             ]
         );
     }
