@@ -12,12 +12,7 @@ class JobTitleSeeder extends Seeder
      */
     public function run(): void
     {
-        JobTitle::truncate();
-        JobTitle::insert(array_map(function ($item) {
-            $item['created_at'] = now();
-            $item['updated_at'] = now();
-            return $item;
-        }, [
+        foreach ([
             [
                 'name' => 'Chủ Tịch Hội Đồng Quản Trị',
                 'level' => 10,
@@ -82,6 +77,7 @@ class JobTitleSeeder extends Seeder
                 'name' => 'Cộng Tác Viên',
                 'level' => 160,
             ],
-        ]));
+        ] as $item)
+            JobTitle::updateOrCreate(['name' => $item['name']], $item);
     }
 }

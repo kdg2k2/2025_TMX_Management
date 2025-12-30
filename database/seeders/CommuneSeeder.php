@@ -13,8 +13,7 @@ class CommuneSeeder extends Seeder
      */
     public function run(): void
     {
-        Commune::truncate();
-        Commune::insert([
+        foreach ([
             [
                 'code' => '09784',
                 'name' => 'Xã Đan Phượng',
@@ -16620,6 +16619,7 @@ class CommuneSeeder extends Seeder
                 'name' => 'Xã Tân Tiến',
                 'province_code' => '34'
             ],
-        ]);
+        ] as $item)
+            Commune::updateOrCreate(['code' => $item['code']], $item);
     }
 }

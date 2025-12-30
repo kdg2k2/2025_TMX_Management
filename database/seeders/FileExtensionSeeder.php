@@ -12,8 +12,7 @@ class FileExtensionSeeder extends Seeder
      */
     public function run(): void
     {
-        FileExtension::truncate();
-        FileExtension::insert([
+        foreach ([
             [
                 'extension' => 'docx',
             ],
@@ -38,6 +37,7 @@ class FileExtensionSeeder extends Seeder
             [
                 'extension' => 'zip',
             ],
-        ]);
+        ] as $item)
+            FileExtension::updateOrCreate(['extension' => $item['extension']], $item);
     }
 }

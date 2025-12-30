@@ -13,8 +13,7 @@ class ProvinceSeeder extends Seeder
      */
     public function run(): void
     {
-        Province::truncate();
-        Province::insert([
+        foreach ([
             [
                 'code' => '01',
                 'name' => 'Thành phố Hà Nội',
@@ -151,6 +150,7 @@ class ProvinceSeeder extends Seeder
                 'code' => '34',
                 'name' => 'Tỉnh Cà Mau',
             ],
-        ]);
+        ] as $item)
+            Province::updateOrCreate(['code' => $item['code']], $item);
     }
 }

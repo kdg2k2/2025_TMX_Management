@@ -13,7 +13,6 @@ class ContractScanFileTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        ContractScanFileType::truncate();
         foreach ([
             [
                 'name' => 'Qđpd đề cương dự toán',
@@ -84,17 +83,23 @@ class ContractScanFileTypeSeeder extends Seeder
                 'extensions' => ['pdf', 'rar', 'zip']
             ],
         ] as $item) {
-            $type = ContractScanFileType::create([
-                'name' => $item['name'],
-            ]);
-            if (isset($item['extensions'])) {
-                $extensions = FileExtension::whereIn('extension', $item['extensions'])->pluck('id')->filter()->toArray() ?? [];
-                $type->extensions()->createMany(array_map(function ($i) use ($type) {
-                    return [
-                        'extension_id' => $i,
-                        'type_id' => $type['id'],
-                    ];
-                }, $extensions));
+            $type = ContractScanFileType::updateOrCreate(
+                ['name' => $item['name']],
+                []
+            );
+
+            $type->extensions()->delete();
+
+            if (!empty($item['extensions'])) {
+                $extensionIds = FileExtension::whereIn('extension', $item['extensions'])
+                    ->pluck('id')
+                    ->toArray();
+
+                $type->extensions()->createMany(
+                    array_map(fn($id) => [
+                        'extension_id' => $id,
+                    ], $extensionIds)
+                );
             }
         }
     }

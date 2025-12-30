@@ -10,7 +10,6 @@ class ContractFileTypeSeeder extends Seeder
 {
     public function run(): void
     {
-        ContractFileType::truncate();
         foreach ([
             [
                 'name' => 'Link Hồ Sơ Thầu',
@@ -116,18 +115,25 @@ class ContractFileTypeSeeder extends Seeder
                 'extensions' => ['doc', 'docx', 'xls', 'xlsx', 'zip', 'rar'],
             ],
         ] as $item) {
-            $type = ContractFileType::create([
-                'name' => $item['name'],
-                'type' => $item['type'],
-            ]);
-            if (isset($item['extensions'])) {
-                $extensions = FileExtension::whereIn('extension', $item['extensions'])->pluck('id')->filter()->toArray() ?? [];
-                $type->extensions()->createMany(array_map(function ($i) use ($type) {
-                    return [
-                        'extension_id' => $i,
-                        'type_id' => $type['id'],
-                    ];
-                }, $extensions));
+            $type = ContractFileType::updateOrCreate(
+                ['name' => $item['name']],
+                ['type' => $item['type']]
+            );
+
+            if (!empty($item['extensions'])) {
+                $extensionIds = FileExtension::whereIn('extension', $item['extensions'])
+                    ->pluck('id')
+                    ->toArray();
+
+                // Xóa cũ
+                $type->extensions()->delete();
+
+                // Tạo mới
+                $type->extensions()->createMany(
+                    array_map(fn($id) => [
+                        'extension_id' => $id,
+                    ], $extensionIds)
+                );
             }
         }
     }
