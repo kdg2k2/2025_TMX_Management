@@ -2,23 +2,18 @@
 
 namespace App\Repositories;
 
-use App\Models\DeviceLoan;
+use App\Models\DeviceFix;
 
-class DeviceLoanRepository extends BaseRepository
+class DeviceFixRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new DeviceLoan();
+        $this->model = new DeviceFix();
         $this->relations = [
             'device' => app(DeviceRepository::class)->relations,
             'createdBy:id,name,path',
             'approvedBy:id,name,path',
         ];
-    }
-
-    public function getStatusReturn($key = null)
-    {
-        return $this->model->getStatusReturn($key);
     }
 
     public function getStatus($key = null)
@@ -30,8 +25,6 @@ class DeviceLoanRepository extends BaseRepository
     {
         if (isset($request['device_id']))
             $query->where('device_id', $request['device_id']);
-        if (isset($request['device_status_return']))
-            $query->where('device_status_return', $request['device_status_return']);
         if (isset($request['status']))
             $query->where('status', $request['status']);
         if (isset($request['created_by']))
@@ -42,18 +35,16 @@ class DeviceLoanRepository extends BaseRepository
     {
         return [
             'text' => [
-                'use_location',
+                'suggested_content',
+                'device_status',
                 'approval_note',
                 'rejection_note',
                 'note',
             ],
-            'date' => [
-                'borrowed_date',
-                'expected_return_at',
-            ],
+            'date' => [],
             'datetime' => [
                 'approved_at',
-                'returned_at',
+                'fixed_at',
             ],
             'relations' => [
                 'device' => 'name',

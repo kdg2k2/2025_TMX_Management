@@ -4,44 +4,34 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        // mượn thiết bị
-        Schema::create('device_loans', function (Blueprint $table) {
+        // sửa chữa thiết bị
+        Schema::create('device_fixes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId('device_id')->comment('thiết bị')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('created_by')->comment('người mượn')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('use_location')->comment('Vị trí sử dụng');
+            $table->foreignId('created_by')->comment('người đăng ký')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('suggested_content')->comment('nội dung kiến nghị');
+            $table->string('device_status')->comment('hiện trạng thiết bị');
             $table->foreignId('approved_by')->nullable()->comment('người phê duyệt')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->text('approval_note')->nullable()->comment('Ghi chú phê duyệt');
             $table->text('rejection_note')->nullable()->comment('Ghi chú từ chối phê duyệt');
-            $table->date('borrowed_date')->comment('ngày mượn');
-            $table->date('expected_return_at')->comment('ngày dự kiến trả');
             $table->timestamp('approved_at')->nullable()->comment('thời gian duyệt');
-            $table->timestamp('returned_at')->nullable()->comment('thời gian trả');
+            $table->timestamp('fixed_at')->nullable()->comment('thời gian sửa xong');
             $table->enum('status', [
                 'pending',  // chờ phê duyệt
                 'approved',  // đã duyệt
                 'rejected',  // từ chối
-                'returned',  // đã trả
+                'fixed',  // đã sửa xong
             ])->default('pending');
+            $table->string('device_status_upon_registration')->comment('trạng thái thiết bị khi đăng ký sửa chữa');
             $table->string('note')->comment('ghi chú')->nullable();
-            $table->enum('device_status_return', [
-                'normal',  // bình thường
-                'broken',  // hỏng
-                'faulty',  // lỗi
-                'lost',  // thất lạc
-            ])->nullable()->comment('tình trạng thiết bị khi trả');
-
-            $table->unique(
-                ['device_id', 'created_by', 'borrowed_date'],
-                'uniq_device_user_day'
-            );
         });
     }
 
@@ -50,6 +40,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('device_loans');
+        Schema::dropIfExists('device_fixes');
     }
 };

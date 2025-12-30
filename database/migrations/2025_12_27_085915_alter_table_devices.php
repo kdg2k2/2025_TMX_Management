@@ -10,6 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // bỏ cột trạng thái trước đó (thừa)
         Schema::table('devices', function (Blueprint $table) {
             $table->dropColumn(['previous_status']);
         });

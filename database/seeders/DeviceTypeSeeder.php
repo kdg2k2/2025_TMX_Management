@@ -18,7 +18,8 @@ class DeviceTypeSeeder extends Seeder
             ['name' => 'Flycam'],
             ['name' => 'Khác'],
             ['name' => 'Máy in'],
-            ['name' => 'Máy tính'],
+            ['name' => 'Cây máy tính'],
+            ['name' => 'Màn máy tính'],
         ];
         foreach ($arr as $item) {
             DeviceType::updateOrCreate([

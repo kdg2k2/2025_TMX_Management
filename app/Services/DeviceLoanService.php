@@ -30,8 +30,6 @@ class DeviceLoanService extends BaseService
             $array['approved_at'] = $this->formatDateTimeForPreview($array['approved_at']);
         if (isset($array['returned_at']))
             $array['returned_at'] = $this->formatDateTimeForPreview($array['returned_at']);
-        if (isset($array['device']))
-            $array['device'] = $this->deviceService->formatRecord($array['device']);
 
         return $array;
     }

@@ -62,6 +62,6 @@
 <div class="d-flex justify-content-center">
     <h5>
         Không còn thiết bị nào sẵn sàng để đăng ký mượn!
-    </h3>
+    </h5>
 </div>
 @endif

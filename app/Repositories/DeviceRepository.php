@@ -45,5 +45,7 @@ class DeviceRepository extends BaseRepository
             $query->where('device_type_id', $request['device_type_id']);
         if (isset($request['current_status']))
             $query->where('current_status', $request['current_status']);
+        if (isset($request['statuses']))
+            $query->whereIn('current_status', $request['statuses']);
     }
 }

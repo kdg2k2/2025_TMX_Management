@@ -10,6 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // thêm cột lưu link drive cho hợp đồng
         Schema::table('contracts', function (Blueprint $table) {
             $table->string('ggdrive_link')->nullable()->comment('link gg drive');
         });
