@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\DeviceStatisticController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UnitController;
@@ -10,6 +9,7 @@ use App\Http\Controllers\Api\AirlineController;
 use App\Http\Controllers\Api\AirportController;
 use App\Http\Controllers\Api\BiddingController;
 use App\Http\Controllers\Api\PayrollController;
+use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\DeviceFixController;
 use App\Http\Controllers\Api\PersonnelController;
@@ -38,6 +38,7 @@ use App\Http\Controllers\Api\UserTimeTableController;
 use App\Http\Controllers\Api\WorkTimesheetController;
 use App\Http\Controllers\Api\ContractFinanceController;
 use App\Http\Controllers\Api\ContractPaymentController;
+use App\Http\Controllers\Api\DeviceStatisticController;
 use App\Http\Controllers\Api\DossierHandoverController;
 use App\Http\Controllers\Api\ContractAppendixController;
 use App\Http\Controllers\Api\ContractFileTypeController;
@@ -566,6 +567,15 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::post('fixed', 'fixed')->name('api.device.fix.fixed');
         });
 
-        Route::get('statistic/data',[DeviceStatisticController::class, 'data'])->name('api.device.statistic.data');
+        Route::get('statistic/data', [DeviceStatisticController::class, 'data'])->name('api.device.statistic.data');
+    });
+
+    // xe cộ
+    Route::prefix('vehicle')->group(function () {
+        Route::controller(VehicleController::class)->group(function () {
+            Route::get('list', 'list')->name('api.vehicle.list');
+            Route::post('store', 'store')->name('api.vehicle.store');
+            Route::patch('update', 'update')->name('api.vehicle.update');
+        });
     });
 });

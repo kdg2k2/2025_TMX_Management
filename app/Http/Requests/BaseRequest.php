@@ -76,27 +76,28 @@ class BaseRequest extends FormRequest
             return [];
         }
 
-        return Cache::remember("table_comments_{$table}", 3600, function () use ($table) {
-            try {
-                if (!Schema::hasTable($table)) {
-                    return [];
-                }
+        return Cache::remember("table_comments_{$table}", 3600,
+            function () use ($table) {
+                try {
+                    if (!Schema::hasTable($table)) {
+                        return [];
+                    }
 
-                $connection = DB::connection();
-                $driver = $connection->getDriverName();
-                $database = $connection->getDatabaseName();
+                    $connection = DB::connection();
+                    $driver = $connection->getDriverName();
+                    $database = $connection->getDatabaseName();
 
-                if (!in_array($driver, ['mysql', 'mariadb', 'pgsql'])) {
-                    return [];
-                }
+                    if (!in_array($driver, ['mysql', 'mariadb', 'pgsql'])) {
+                        return [];
+                    }
 
-                $query = match ($driver) {
-                    'mysql', 'mariadb' => '
+                    $query = match ($driver) {
+                        'mysql', 'mariadb' => '
                         SELECT COLUMN_NAME, COLUMN_COMMENT
                         FROM INFORMATION_SCHEMA.COLUMNS
                         WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?
                     ',
-                    'pgsql' => '
+                        'pgsql' => '
                         SELECT
                             a.attname AS column_name,
                             d.description AS column_comment
@@ -105,32 +106,32 @@ class BaseRequest extends FormRequest
                         LEFT JOIN pg_class c ON c.oid = a.attrelid
                         WHERE c.relname = ? AND a.attnum > 0 AND NOT a.attisdropped
                     ',
-                    default => null
-                };
+                        default => null
+                    };
 
-                if (!$query) {
+                    if (!$query) {
+                        return [];
+                    }
+
+                    $params = $driver === 'pgsql' ? [$table] : [$database, $table];
+                    $columns = DB::select($query, $params);
+
+                    $comments = [];
+                    foreach ($columns as $column) {
+                        $columnName = $column->column_name ?? $column->COLUMN_NAME ?? null;
+                        $columnComment = $column->column_comment ?? $column->COLUMN_COMMENT ?? null;
+
+                        if ($columnName && $columnComment) {
+                            $comment = explode('-', $columnComment)[0];
+                            $comments[$columnName] = trim($comment);
+                        }
+                    }
+
+                    return $comments;
+                } catch (\Exception $e) {
                     return [];
                 }
-
-                $params = $driver === 'pgsql' ? [$table] : [$database, $table];
-                $columns = DB::select($query, $params);
-
-                $comments = [];
-                foreach ($columns as $column) {
-                    $columnName = $column->column_name ?? $column->COLUMN_NAME ?? null;
-                    $columnComment = $column->column_comment ?? $column->COLUMN_COMMENT ?? null;
-
-                    if ($columnName && $columnComment) {
-                        $comment = explode('-', $columnComment)[0];
-                        $comments[$columnName] = trim($comment);
-                    }
-                }
-
-                return $comments;
-            } catch (\Exception $e) {
-                return [];
-            }
-        });
+            });
     }
 
     /**
