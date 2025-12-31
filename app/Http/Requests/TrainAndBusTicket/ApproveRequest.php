@@ -2,29 +2,15 @@
 
 namespace App\Http\Requests\TrainAndBusTicket;
 
-use App\Traits\HasApprovalData;
+use App\Http\Requests\BaseApproveRequest;
 
-class ApproveRequest extends FindByIdRequest
+class ApproveRequest extends BaseApproveRequest
 {
-    use HasApprovalData;
-    public function prepareForValidation()
-    {
-        parent::prepareForValidation();
-        $this->mergeApprovalData();
-        $this->merge([
-            'status' => 'approved',
-        ]);
-    }
-
     public function rules(): array
     {
         return array_merge(
             parent::rules(),
-            $this->getApprovalRules(),
-            [
-                'status' => 'required|in:approved',
-                'approval_note' => 'required|max:255',
-            ]
+            app(FindByIdRequest::class)->rules(),
         );
     }
 }

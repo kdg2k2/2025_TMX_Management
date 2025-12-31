@@ -17,7 +17,7 @@ class VehicleController extends Controller
     public function index()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.vehicle.index', $this->service->baseDataForLCEView());
+            return view('admin.pages.vehicle.index', $this->service->baseDataForLCEView(null, true));
         });
     }
 

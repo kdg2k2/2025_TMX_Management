@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\DeviceFix;
+namespace App\Http\Requests\VehicleLoan;
 
 use App\Http\Requests\BaseApproveRequest;
 

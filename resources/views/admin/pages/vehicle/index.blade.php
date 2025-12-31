@@ -4,6 +4,10 @@
         <x-button variant="success" size="sm" icon="ti ti-plus" tooltip="Thêm mới" :href="route('vehicle.create')" />
     </x-breadcrumb>
 
+    <div class="row">
+        @include('admin.pages.vehicle.filter-content')
+    </div>
+
     <div class="card custom-card">
         <div class="card-body">
             <table class="display w-100" id="datatable"></table>
@@ -18,5 +22,6 @@
         const deleteUrl = @json(route('vehicle.delete'));
     </script>
     <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
+    <script src="assets/js/vehicle/filter.js?v={{ time() }}"></script>
     <script src="assets/js/vehicle/list.js?v={{ time() }}"></script>
 @endsection

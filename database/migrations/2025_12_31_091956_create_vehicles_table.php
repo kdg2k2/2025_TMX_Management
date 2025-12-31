@@ -10,6 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // phương tiện
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
@@ -22,9 +23,13 @@ return new class extends Migration {
             $table->date('body_insurance_expired_at')->nullable()->comment('Hạn bảo hiểm thân vỏ');
             $table->enum('status', [
                 'ready', // sẵn sàng
+                'unwashed', // chưa rửa
+                'broken',  // hỏng
+                'faulty',  // lỗi
+                'lost',  // thất lạc
                 'loaned', // cho mượn
             ])->default('ready')->comment('Trạng thái xe');
-            $table->string('current_location')->nullable()->comment('Vị trí hiện tại');
+            $table->string('destination')->nullable()->comment('Điểm đến');
             $table->foreignId('user_id')->nullable()->comment('người sử dụng')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
         });
     }

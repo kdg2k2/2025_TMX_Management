@@ -9,7 +9,9 @@ class VehicleRepository extends BaseRepository
     public function __construct()
     {
         $this->model = new Vehicle();
-        $this->relations = [];
+        $this->relations = [
+            'user:id,name',
+        ];
     }
 
     public function getStatus($key = null)
@@ -25,6 +27,7 @@ class VehicleRepository extends BaseRepository
                 'license_plate',
                 'current_km',
                 'maintenance_km',
+                'destination'
             ],
             'date' => [
                 'inspection_expired_at',
@@ -32,7 +35,17 @@ class VehicleRepository extends BaseRepository
                 'body_insurance_expired_at',
             ],
             'datetime' => [],
-            'relations' => []
+            'relations' => [
+                'user' => ['name'],
+            ]
         ];
+    }
+
+    protected function applyListFilters($query, array $request)
+    {
+        if (isset($request['status']))
+            $query->where('status', $request['status']);
+        if (isset($request['statuses']))
+            $query->whereIn('status', $request['statuses']);
     }
 }

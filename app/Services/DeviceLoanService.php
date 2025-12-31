@@ -99,7 +99,7 @@ class DeviceLoanService extends BaseService
         return $this->tryThrow(function () use ($request) {
             $data = $this->repository->findById($request['id']);
             if (!in_array($this->getUserId(), [1, $data['created_by']]))
-                throw new Exception('Chỉ chính chủ mới có thể trả đồ!');
+                throw new Exception('Chỉ người mượn mới có thể trả đồ!');
             $data->update($request);
             $data->device()->update([
                 'current_status' => $request['device_status_return'],

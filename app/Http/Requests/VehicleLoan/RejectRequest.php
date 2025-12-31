@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\DeviceFix;
+namespace App\Http\Requests\VehicleLoan;
 
-use App\Http\Requests\BaseApproveRequest;
+use App\Http\Requests\BaseRejectRequest;
 
-class ApproveRequest extends BaseApproveRequest
+class RejectRequest extends BaseRejectRequest
 {
     public function rules(): array
     {

@@ -38,31 +38,27 @@ class DeviceService extends BaseService
         return $entity;
     }
 
-    public function getBaseDataForLCEView(int $id = null)
+    public function getBaseDataForLCEView(int $id = null, bool $fullStatus = false)
     {
-        $baseInfo = [
-            'load_relations' => false,
-            'columns' => [
-                'id',
-                'name',
-            ],
-        ];
-
         $data = $id ? $this->repository->findById($id) : null;
-        $status = $this->repository->getStatus();
 
-        if ($current = $data['current_status'] ?? null) {
-            $restricted = ['loaned', 'under_repair'];
-            $status = collect($status)->filter(fn($i) =>
-                in_array($current, $restricted)
-                    ? $i['original'] == $current
-                    : !in_array($i['original'], $restricted));
-        }
+        $current = $data['current_status'] ?? null;
+        $restricted = ['loaned', 'under_repair'];
+
+        $status = collect($this->repository->getStatus())
+            ->when(!$fullStatus, fn($q) =>
+                $q->filter(fn($i) =>
+                    in_array($current, $restricted, true)
+                        ? $i['original'] === $current
+                        : !in_array($i['original'], $restricted, true)));
 
         return [
             'data' => $data,
             'status' => $status,
-            'deviceTypes' => $this->deviceTypeService->list($baseInfo),
+            'deviceTypes' => $this->deviceTypeService->list([
+                'load_relations' => false,
+                'columns' => ['id', 'name'],
+            ]),
         ];
     }
 

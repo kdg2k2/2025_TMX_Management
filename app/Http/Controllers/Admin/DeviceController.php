@@ -17,7 +17,7 @@ class DeviceController extends Controller
     public function index()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.device.index', $this->service->getBaseDataForLCEView());
+            return view('admin.pages.device.index', $this->service->getBaseDataForLCEView(null, true));
         });
     }
 

@@ -25,10 +25,22 @@ class VehicleService extends BaseService
         return $array;
     }
 
-    public function baseDataForLCEView(int $id = null)
+    public function baseDataForLCEView(int $id = null, bool $fullStatus = false)
     {
-        if ($id)
-            return ['data' => $this->repository->findById($id)];
-        return ['status' => $this->repository->getStatus()];
+        $data = $id ? $this->repository->findById($id) : null;
+
+        $current = $data['status'] ?? null;
+
+        $status = collect($this->repository->getStatus())
+            ->when(!$fullStatus, fn($q) =>
+                $q->filter(fn($i) =>
+                    $current === 'loaned'
+                        ? $i['original'] === 'loaned'
+                        : $i['original'] !== 'loaned'));
+
+        return [
+            'data' => $data,
+            'status' => $status,
+        ];
     }
 }

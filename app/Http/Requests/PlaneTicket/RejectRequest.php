@@ -2,30 +2,15 @@
 
 namespace App\Http\Requests\PlaneTicket;
 
-use App\Traits\HasApprovalData;
+use App\Http\Requests\BaseRejectRequest;
 
-class RejectRequest extends FindByIdRequest
+class RejectRequest extends BaseRejectRequest
 {
-    use HasApprovalData;
-
-    public function prepareForValidation()
-    {
-        parent::prepareForValidation();
-        $this->mergeApprovalData();
-        $this->merge([
-            'status' => 'rejected',
-        ]);
-    }
-
     public function rules(): array
     {
         return array_merge(
             parent::rules(),
-            $this->getApprovalRules(),
-            [
-                'status' => 'required|in:rejected',
-                'rejection_note' => 'required|max:255',
-            ]
+            app(FindByIdRequest::class)->rules(),
         );
     }
 }

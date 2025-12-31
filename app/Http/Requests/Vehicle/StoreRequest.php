@@ -16,6 +16,7 @@ class StoreRequest extends BaseRequest
             'inspection_expired_at' => 'nullable|date_format:Y-m-d|after_or_equal:today',
             'liability_insurance_expired_at' => 'nullable|date_format:Y-m-d|after_or_equal:today',
             'body_insurance_expired_at' => 'nullable|date_format:Y-m-d|after_or_equal:today',
+            'status' => 'required|in:ready,unwashed,broken,faulty,lost,loaned',
         ];
     }
 }

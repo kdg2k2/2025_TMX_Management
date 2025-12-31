@@ -1,3 +1,8 @@
+@php
+    $setRequired = true;
+    $colClass = 'col-md-4';
+@endphp
+@include('admin.pages.vehicle.filter-content')
 <div class="my-1 col-md-4">
     <div class="form-group">
         <label for="brand">

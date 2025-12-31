@@ -23,9 +23,9 @@ const renderColumns = () => {
         },
         {
             data: null,
-            title: "Vị trí hiện tại",
+            title: "Điểm đến",
             render: (data, type, row) => {
-                return row?.current_location || "";
+                return row?.destination || "";
             },
         },
         {
