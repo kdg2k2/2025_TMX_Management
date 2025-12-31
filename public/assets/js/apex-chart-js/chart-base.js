@@ -972,7 +972,7 @@ const createStackedBarChart = (
         dataLabels: {
             enabled: false,
         },
-        colors: colors,
+        colors: colors || generateRandomColors(series.length),
         xaxis: {
             categories: categories,
             labels: {
@@ -1099,54 +1099,54 @@ const createMixedChart = (
         series: [
             {
                 name: series1Name,
-                type: 'column',
-                data: series1Data
+                type: "column",
+                data: series1Data,
             },
             {
                 name: series2Name,
-                type: 'line',
-                data: series2Data
-            }
+                type: "line",
+                data: series2Data,
+            },
         ],
         chart: {
             fontFamily: "inherit",
             height: height,
             width: width,
-            type: 'line',
+            type: "line",
             toolbar: defaultToolbar,
             parentHeightOffset: 0,
         },
         stroke: {
             width: [0, 4],
-            curve: 'smooth'
+            curve: "smooth",
         },
         plotOptions: {
             bar: {
                 borderRadius: 4,
-                columnWidth: '60%',
-            }
+                columnWidth: "60%",
+            },
         },
         colors: colors,
         dataLabels: {
             enabled: true,
             enabledOnSeries: [1],
-            formatter: function(val) {
+            formatter: function (val) {
                 return fmNumber(Math.round(val));
             },
             style: {
-                fontSize: '11px',
-                colors: ['#304758']
-            }
+                fontSize: "11px",
+                colors: ["#304758"],
+            },
         },
         labels: categories,
         xaxis: {
-            type: 'category',
+            type: "category",
             labels: {
                 style: {
-                    fontSize: '11px',
+                    fontSize: "11px",
                     fontFamily: "inherit",
-                }
-            }
+                },
+            },
         },
         yaxis: [
             {
@@ -1156,19 +1156,22 @@ const createMixedChart = (
                     text: yAxis1Title,
                     style: {
                         fontFamily: "inherit",
-                        fontSize: '12px',
-                    }
+                        fontSize: "12px",
+                    },
                 },
                 labels: {
-                    formatter: function(val) {
+                    formatter: function (val) {
                         // Làm tròn thành số nguyên
-                        return fmNumber(Math.round(val)) + (unit1 ? ' ' + unit1 : '');
+                        return (
+                            fmNumber(Math.round(val)) +
+                            (unit1 ? " " + unit1 : "")
+                        );
                     },
                     style: {
-                        fontSize: '11px',
+                        fontSize: "11px",
                         fontFamily: "inherit",
-                    }
-                }
+                    },
+                },
             },
             {
                 // Trục Y bên phải (Chi phí)
@@ -1178,33 +1181,36 @@ const createMixedChart = (
                     text: yAxis2Title,
                     style: {
                         fontFamily: "inherit",
-                        fontSize: '12px',
-                    }
+                        fontSize: "12px",
+                    },
                 },
                 labels: {
                     formatter: function (val) {
                         // Làm tròn thành số nguyên
-                        return fmNumber(Math.round(val)) + (unit2 ? ' ' + unit2 : '');
+                        return (
+                            fmNumber(Math.round(val)) +
+                            (unit2 ? " " + unit2 : "")
+                        );
                     },
                     style: {
-                        fontSize: '11px',
+                        fontSize: "11px",
                         fontFamily: "inherit",
-                    }
-                }
-            }
+                    },
+                },
+            },
         ],
         legend: {
-            position: 'top',
-            horizontalAlign: 'center',
-            fontSize: '12px',
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "12px",
             fontFamily: "inherit",
             itemMargin: {
                 horizontal: 10,
                 vertical: 5,
-            }
+            },
         },
         fill: {
-            opacity: 1
+            opacity: 1,
         },
         tooltip: {
             shared: true,
@@ -1212,30 +1218,36 @@ const createMixedChart = (
             y: [
                 {
                     formatter: function (val) {
-                        return fmNumber(Math.round(val)) + (unit1 ? ' ' + unit1 : '');
-                    }
+                        return (
+                            fmNumber(Math.round(val)) +
+                            (unit1 ? " " + unit1 : "")
+                        );
+                    },
                 },
                 {
                     formatter: function (val) {
-                        return fmNumber(Math.round(val)) + (unit2 ? ' ' + unit2 : '');
-                    }
-                }
-            ]
+                        return (
+                            fmNumber(Math.round(val)) +
+                            (unit2 ? " " + unit2 : "")
+                        );
+                    },
+                },
+            ],
         },
         title: {
             text: chartName,
-            align: 'center',
+            align: "center",
             style: {
-                fontSize: '16px',
-                fontWeight: 'bold',
-                color: '#333',
+                fontSize: "16px",
+                fontWeight: "bold",
+                color: "#333",
                 fontFamily: "inherit",
             },
         },
         grid: {
-            borderColor: '#e7e7e7',
+            borderColor: "#e7e7e7",
             row: {
-                colors: ['#f3f3f3', 'transparent'],
+                colors: ["#f3f3f3", "transparent"],
                 opacity: 0.5,
             },
         },
@@ -1248,18 +1260,18 @@ const createMixedChart = (
                     },
                     plotOptions: {
                         bar: {
-                            columnWidth: '80%',
-                        }
+                            columnWidth: "80%",
+                        },
                     },
                     legend: {
-                        position: 'bottom',
-                        fontSize: '11px',
+                        position: "bottom",
+                        fontSize: "11px",
                     },
                     dataLabels: {
                         style: {
-                            fontSize: '10px',
-                        }
-                    }
+                            fontSize: "10px",
+                        },
+                    },
                 },
             },
         ],

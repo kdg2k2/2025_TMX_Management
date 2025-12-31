@@ -141,7 +141,7 @@ const renderCharts = (charts) => {
             "100%",
             "100%",
             "lượt",
-            "₫"
+            "vnđ"
         );
     }
 };
@@ -236,5 +236,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Reset button
     document.getElementById("btn-reset")?.addEventListener("click", () => {
         resetFilter();
+        refreshSumoSelect();
     });
 });

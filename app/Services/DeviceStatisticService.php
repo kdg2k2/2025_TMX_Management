@@ -173,7 +173,10 @@ class DeviceStatisticService extends BaseService
             ['name' => 'Bình thường', 'data' => []],
             ['name' => 'Đang mượn', 'data' => []],
             ['name' => 'Sửa chữa', 'data' => []],
-            ['name' => 'Hỏng/Lỗi', 'data' => []],
+            ['name' => 'Hỏng', 'data' => []],
+            ['name' => 'Lỗi', 'data' => []],
+            ['name' => 'Thất Lạc', 'data' => []],
+            ['name' => 'Lưu kho', 'data' => []],
         ];
 
         foreach ($data as $item) {
@@ -181,7 +184,10 @@ class DeviceStatisticService extends BaseService
             $series[0]['data'][] = (int)$item->normal;
             $series[1]['data'][] = (int)$item->loaned;
             $series[2]['data'][] = (int)$item->under_repair;
-            $series[3]['data'][] = (int)($item->broken + $item->faulty + $item->lost);
+            $series[3]['data'][] = (int)$item->broken;
+            $series[4]['data'][] = (int)$item->faulty;
+            $series[5]['data'][] = (int)$item->lost;
+            $series[6]['data'][] = (int)$item->stored;
         }
 
         return [
