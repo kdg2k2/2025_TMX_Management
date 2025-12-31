@@ -108,7 +108,7 @@ class DeviceLoanRepository extends BaseRepository
                 'converted' => 'Tổng lượt mượn',
                 'color' => 'primary',
                 'icon' => 'ti ti-arrow-forward-up',
-                'value' => (clone $query)->count(),
+                'value' => $total_loans,
             ],
             'not_returned' => [
                 'original' => 'not_returned',
@@ -126,5 +126,31 @@ class DeviceLoanRepository extends BaseRepository
             ],
             'returned_not_normal_detail' => $returned_not_normal,
         ];
+    }
+
+    public function statisticByMonth(array $request)
+    {
+        $query = $this->model->whereIn('status', [
+            'approved',
+            'returned',
+        ]);
+
+        if (isset($request['year']))
+            $query->whereYear('created_at', $request['year']);
+        if (isset($request['month']))
+            $query->whereMonth('created_at', $request['month']);
+
+        return $query
+            ->selectRaw('
+        MONTH(created_at) as month,
+        COUNT(*) as total
+    ')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->map(fn($item) => [
+                'month' => $item->month,
+                'total' => $item->total,
+            ]);
     }
 }

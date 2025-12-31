@@ -61,4 +61,38 @@ class DeviceRepository extends BaseRepository
             SUM(current_status = 'stored')        AS `stored`
         ")->first()->toArray() ?? [];
     }
+
+    public function statisticByType()
+    {
+        return $this
+            ->model
+            ->selectRaw('device_type_id, COUNT(*) as total')
+            ->groupBy('device_type_id')
+            ->with('deviceType:id,name')
+            ->get()
+            ->map(fn($item) => [
+                'device_type_id' => $item->device_type_id,
+                'device_type_name' => $item->deviceType->name ?? 'N/A',
+                'total' => $item->total,
+            ]);
+    }
+
+    public function statisticStatusByType()
+    {
+        return $this
+            ->model
+            ->selectRaw("
+            device_type_id,
+            SUM(current_status = 'normal') as `normal`,
+            SUM(current_status = 'broken') as `broken`,
+            SUM(current_status = 'faulty') as `faulty`,
+            SUM(current_status = 'lost') as `lost`,
+            SUM(current_status = 'loaned') as `loaned`,
+            SUM(current_status = 'under_repair') as `under_repair`,
+            SUM(current_status = 'stored') as `stored`
+        ")
+            ->groupBy('device_type_id')
+            ->with('deviceType:id,name')
+            ->get();
+    }
 }

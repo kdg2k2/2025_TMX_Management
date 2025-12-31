@@ -148,7 +148,13 @@ class DeviceFixService extends BaseService
         return count($data);
     }
 
-    public function statistic(array $request){
+    public function statistic(array $request)
+    {
         return $this->repository->statistic($request);
+    }
+
+    public function statisticCostByMonth(array $request)
+    {
+        return $this->repository->statisticCostByMonth($request);
     }
 }

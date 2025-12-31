@@ -82,4 +82,32 @@ class DeviceFixRepository extends BaseRepository
             ],
         ];
     }
+
+    public function statisticCostByMonth(array $request)
+    {
+        $query = $this->model->whereIn('status', [
+            'approved',
+            'fixed',
+        ]);
+
+        if (isset($request['year']))
+            $query->whereYear('created_at', $request['year']);
+        if (isset($request['month']))
+            $query->whereMonth('created_at', $request['month']);
+
+        return $query
+            ->selectRaw('
+        MONTH(created_at) as month,
+        COUNT(*) as total,
+        SUM(repair_costs) as total_cost
+    ')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->map(fn($item) => [
+                'month' => $item->month,
+                'total' => $item->total,
+                'total_cost' => $item->total_cost ?? 0,
+            ]);
+    }
 }

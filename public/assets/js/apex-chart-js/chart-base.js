@@ -927,3 +927,347 @@ function createComparisonBarChart(
     const chart = new ApexCharts(element, options);
     chart.render();
 }
+
+/**
+ * Tạo biểu đồ cột chồng (Stacked Bar Chart)
+ */
+const createStackedBarChart = (
+    elementId,
+    categories,
+    series,
+    chartName = "",
+    height = 350,
+    width = "100%",
+    unit = "",
+    colors
+) => {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    // Hủy chart cũ nếu tồn tại
+    if (chartInstances[elementId]) {
+        chartInstances[elementId].destroy();
+        delete chartInstances[elementId];
+    }
+
+    const options = {
+        fontFamily: "inherit",
+        series: series,
+        chart: {
+            fontFamily: "inherit",
+            type: "bar",
+            height: height,
+            width: width,
+            stacked: true,
+            toolbar: defaultToolbar,
+            parentHeightOffset: 0,
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                borderRadius: 4,
+                columnWidth: "70%",
+            },
+        },
+        dataLabels: {
+            enabled: false,
+        },
+        colors: colors,
+        xaxis: {
+            categories: categories,
+            labels: {
+                style: {
+                    fontSize: "12px",
+                    fontFamily: "inherit",
+                },
+            },
+        },
+        yaxis: {
+            title: {
+                text: unit ? `Số lượng (${unit})` : "Số lượng",
+                style: {
+                    fontFamily: "inherit",
+                    fontSize: "12px",
+                },
+            },
+            labels: {
+                formatter: function (val) {
+                    return fmNumber(Math.round(val));
+                },
+                style: {
+                    fontSize: "11px",
+                    fontFamily: "inherit",
+                },
+            },
+        },
+        legend: {
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "12px",
+            fontFamily: "inherit",
+            itemMargin: {
+                horizontal: 10,
+                vertical: 5,
+            },
+        },
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return `${fmNumber(val)} ${unit}`;
+                },
+            },
+        },
+        title: {
+            text: chartName,
+            align: "center",
+            style: {
+                fontSize: "16px",
+                fontWeight: "bold",
+                color: "#333",
+                fontFamily: "inherit",
+            },
+        },
+        grid: {
+            borderColor: "#e7e7e7",
+            row: {
+                colors: ["#f3f3f3", "transparent"],
+                opacity: 0.5,
+            },
+        },
+        responsive: [
+            {
+                breakpoint: 768,
+                options: {
+                    chart: {
+                        height: 300,
+                    },
+                    plotOptions: {
+                        bar: {
+                            columnWidth: "80%",
+                        },
+                    },
+                    legend: {
+                        position: "bottom",
+                        fontSize: "11px",
+                    },
+                },
+            },
+        ],
+    };
+
+    const chart = new ApexCharts(element, options);
+    chart.render();
+    chartInstances[elementId] = chart;
+
+    return chart;
+};
+
+/**
+ * Tạo biểu đồ kết hợp cột và đường (Mixed Chart)
+ * Phù hợp cho việc hiển thị 2 loại dữ liệu khác nhau trên cùng 1 biểu đồ
+ */
+const createMixedChart = (
+    elementId,
+    categories,
+    series1Data,
+    series2Data,
+    series1Name = "Series 1",
+    series2Name = "Series 2",
+    chartName = "",
+    yAxis1Title = "",
+    yAxis2Title = "",
+    height = 350,
+    width = "100%",
+    unit1 = "",
+    unit2 = "",
+    colors
+) => {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    // Hủy chart cũ nếu tồn tại
+    if (chartInstances[elementId]) {
+        chartInstances[elementId].destroy();
+        delete chartInstances[elementId];
+    }
+
+    const options = {
+        fontFamily: "inherit",
+        series: [
+            {
+                name: series1Name,
+                type: 'column',
+                data: series1Data
+            },
+            {
+                name: series2Name,
+                type: 'line',
+                data: series2Data
+            }
+        ],
+        chart: {
+            fontFamily: "inherit",
+            height: height,
+            width: width,
+            type: 'line',
+            toolbar: defaultToolbar,
+            parentHeightOffset: 0,
+        },
+        stroke: {
+            width: [0, 4],
+            curve: 'smooth'
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 4,
+                columnWidth: '60%',
+            }
+        },
+        colors: colors,
+        dataLabels: {
+            enabled: true,
+            enabledOnSeries: [1],
+            formatter: function(val) {
+                return fmNumber(Math.round(val));
+            },
+            style: {
+                fontSize: '11px',
+                colors: ['#304758']
+            }
+        },
+        labels: categories,
+        xaxis: {
+            type: 'category',
+            labels: {
+                style: {
+                    fontSize: '11px',
+                    fontFamily: "inherit",
+                }
+            }
+        },
+        yaxis: [
+            {
+                // Trục Y bên trái (Số lượt sửa)
+                decimalsInFloat: 0, // QUAN TRỌNG: Không hiển thị số thập phân
+                title: {
+                    text: yAxis1Title,
+                    style: {
+                        fontFamily: "inherit",
+                        fontSize: '12px',
+                    }
+                },
+                labels: {
+                    formatter: function(val) {
+                        // Làm tròn thành số nguyên
+                        return fmNumber(Math.round(val)) + (unit1 ? ' ' + unit1 : '');
+                    },
+                    style: {
+                        fontSize: '11px',
+                        fontFamily: "inherit",
+                    }
+                }
+            },
+            {
+                // Trục Y bên phải (Chi phí)
+                opposite: true,
+                decimalsInFloat: 0, // QUAN TRỌNG: Không hiển thị số thập phân
+                title: {
+                    text: yAxis2Title,
+                    style: {
+                        fontFamily: "inherit",
+                        fontSize: '12px',
+                    }
+                },
+                labels: {
+                    formatter: function (val) {
+                        // Làm tròn thành số nguyên
+                        return fmNumber(Math.round(val)) + (unit2 ? ' ' + unit2 : '');
+                    },
+                    style: {
+                        fontSize: '11px',
+                        fontFamily: "inherit",
+                    }
+                }
+            }
+        ],
+        legend: {
+            position: 'top',
+            horizontalAlign: 'center',
+            fontSize: '12px',
+            fontFamily: "inherit",
+            itemMargin: {
+                horizontal: 10,
+                vertical: 5,
+            }
+        },
+        fill: {
+            opacity: 1
+        },
+        tooltip: {
+            shared: true,
+            intersect: false,
+            y: [
+                {
+                    formatter: function (val) {
+                        return fmNumber(Math.round(val)) + (unit1 ? ' ' + unit1 : '');
+                    }
+                },
+                {
+                    formatter: function (val) {
+                        return fmNumber(Math.round(val)) + (unit2 ? ' ' + unit2 : '');
+                    }
+                }
+            ]
+        },
+        title: {
+            text: chartName,
+            align: 'center',
+            style: {
+                fontSize: '16px',
+                fontWeight: 'bold',
+                color: '#333',
+                fontFamily: "inherit",
+            },
+        },
+        grid: {
+            borderColor: '#e7e7e7',
+            row: {
+                colors: ['#f3f3f3', 'transparent'],
+                opacity: 0.5,
+            },
+        },
+        responsive: [
+            {
+                breakpoint: 768,
+                options: {
+                    chart: {
+                        height: 300,
+                    },
+                    plotOptions: {
+                        bar: {
+                            columnWidth: '80%',
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        fontSize: '11px',
+                    },
+                    dataLabels: {
+                        style: {
+                            fontSize: '10px',
+                        }
+                    }
+                },
+            },
+        ],
+    };
+
+    const chart = new ApexCharts(element, options);
+    chart.render();
+    chartInstances[elementId] = chart;
+
+    return chart;
+};

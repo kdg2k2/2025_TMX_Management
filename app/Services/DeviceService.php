@@ -72,7 +72,18 @@ class DeviceService extends BaseService
         return $request;
     }
 
-    public function statistic(){
+    public function statistic()
+    {
         return $this->repository->statistic();
+    }
+
+    public function statisticByType()
+    {
+        return $this->repository->statisticByType();
+    }
+
+    public function statisticStatusByType()
+    {
+        return $this->repository->statisticStatusByType();
     }
 }

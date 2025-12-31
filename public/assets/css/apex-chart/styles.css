@@ -1,0 +1,30 @@
+/* Đảm bảo các card chart có height bằng nhau */
+.chart-card-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.chart-card-row>[class*='col-'] {
+    display: flex;
+}
+
+.chart-card-row .card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-card-row .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-card-row .card-body>div {
+    flex: 1;
+}
+
+/* Height cố định cho các biểu đồ */
+.chart-row .card {
+    min-height: 400px;
+}

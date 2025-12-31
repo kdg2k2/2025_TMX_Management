@@ -145,7 +145,13 @@ class DeviceLoanService extends BaseService
         return count($data);
     }
 
-    public function statistic(array $request){
+    public function statistic(array $request)
+    {
         return $this->repository->statistic($request);
+    }
+
+    public function statisticByMonth(array $request)
+    {
+        return $this->repository->statisticByMonth($request);
     }
 }
