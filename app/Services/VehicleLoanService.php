@@ -193,4 +193,9 @@ class VehicleLoanService extends BaseService
             app(TaskScheduleService::class)->getUserIdByScheduleKey('VEHICLE_LOAN')
         ]);
     }
+
+    public function statistic(array $request)
+    {
+        return $this->repository->statistic($request);
+    }
 }

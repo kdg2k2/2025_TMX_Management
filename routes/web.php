@@ -49,6 +49,7 @@ use App\Http\Controllers\Admin\ContractScanFileController;
 use App\Http\Controllers\Admin\DossierSyntheticController;
 use App\Http\Controllers\Admin\InternalBulletinController;
 use App\Http\Controllers\Admin\PlaneTicketClassController;
+use App\Http\Controllers\Admin\VehicleStatisticController;
 use App\Http\Controllers\Admin\PersonnelFileTypeController;
 use App\Http\Controllers\Admin\PlaneTicketDetailController;
 use App\Http\Controllers\Admin\SoftwareOwnershipController;
@@ -518,5 +519,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::post('approve', 'approve')->name('vehicle.loan.approve');
             Route::post('reject', 'reject')->name('vehicle.loan.reject');
         });
+
+        Route::get('statistic/index', [VehicleStatisticController::class, 'index'])->name('vehicle.statistic.index');
     });
 });

@@ -11,6 +11,11 @@ class VehicleService extends BaseService
         $this->repository = app(VehicleRepository::class);
     }
 
+    public function getStatus($key = null)
+    {
+        return $this->repository->getStatus($key);
+    }
+
     public function formatRecord(array $array)
     {
         $array = parent::formatRecord($array);
@@ -51,5 +56,10 @@ class VehicleService extends BaseService
             throw new \Exception('Không thể xóa phương tiện đang có phiếu mượn.');
 
         return $vehicle;
+    }
+
+    public function statistic()
+    {
+        return $this->repository->statistic();
     }
 }

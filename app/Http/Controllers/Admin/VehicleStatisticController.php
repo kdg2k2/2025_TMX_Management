@@ -3,19 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\DeviceStatisticService;
+use App\Services\VehicleStatisticService;
 
-class DeviceStatisticController extends Controller
+class VehicleStatisticController extends Controller
 {
     public function __construct()
     {
-        $this->service = app(DeviceStatisticService::class);
+        $this->service = app(VehicleStatisticService::class);
     }
 
     public function index()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.device.statistic.index');
+            return view('admin.pages.vehicle.statistic.index');
         });
     }
 }

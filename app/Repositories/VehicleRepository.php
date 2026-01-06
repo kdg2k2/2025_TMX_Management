@@ -48,4 +48,16 @@ class VehicleRepository extends BaseRepository
         if (isset($request['statuses']))
             $query->whereIn('status', $request['statuses']);
     }
+
+    public function statistic()
+    {
+        return $this->model->selectRaw("
+            SUM(status = 'ready')        AS `ready`,
+            SUM(status = 'unwashed')        AS `unwashed`,
+            SUM(status = 'broken')        AS `broken`,
+            SUM(status = 'faulty')        AS `faulty`,
+            SUM(status = 'lost')          AS `lost`,
+            SUM(status = 'loaned')        AS `loaned`
+        ")->first()->toArray() ?? [];
+    }
 }

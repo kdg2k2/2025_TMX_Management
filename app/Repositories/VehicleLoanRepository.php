@@ -69,4 +69,58 @@ class VehicleLoanRepository extends BaseRepository
             ]
         ];
     }
+
+    public function statistic(array $request)
+    {
+        $query = $this->model->whereIn('status', [
+            'approved',
+            'returned',
+        ]);
+        if (isset($request['year']))
+            $query->whereYear('created_at', $request['year']);
+        if (isset($request['month']))
+            $query->whereMonth('created_at', $request['month']);
+
+        // Số lượt mượn
+        $total_loans = (clone $query)->count();
+
+        // Số lượt chưa trả (approved và chưa có returned_at)
+        $not_returned = (clone $query)
+            ->where('status', 'approved')
+            ->whereNull('returned_at')
+            ->count();
+
+        // Số lượt trả nhưng phương tiện không ready
+        $returned_not_ready = (clone $query)
+            ->where('status', 'returned')
+            ->whereNotNull('vehicle_status_return')
+            ->where('vehicle_status_return', '!=', 'ready')
+            ->with($this->relations)
+            ->get();
+
+        return [
+            'total_loans' => [
+                'original' => 'total_loans',
+                'converted' => 'Tổng lượt mượn',
+                'color' => 'primary',
+                'icon' => 'ti ti-arrow-forward-up',
+                'value' => $total_loans,
+            ],
+            'not_returned' => [
+                'original' => 'not_returned',
+                'converted' => 'Đang mượn (chưa trả)',
+                'color' => 'warning',
+                'icon' => 'ti ti-clock-hour-4',
+                'value' => $not_returned,
+            ],
+            'returned_not_ready_count' => [
+                'original' => 'returned_not_ready_count',
+                'converted' => 'Trả về chưa rửa/lỗi/hỏng',
+                'color' => 'pink',
+                'icon' => 'ti ti-alert-triangle',
+                'value' => $returned_not_ready->count(),
+            ],
+            'returned_not_ready_detail' => $returned_not_ready,
+        ];
+    }
 }
