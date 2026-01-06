@@ -7,6 +7,22 @@ use Exception;
 
 class VehicleLoanService extends BaseService
 {
+    private $beforeImages = [
+        'before_front_image',
+        'before_rear_image',
+        'before_left_image',
+        'before_right_image',
+        'before_odometer_image',
+    ];
+
+    private $returnImages = [
+        'return_front_image',
+        'return_rear_image',
+        'return_left_image',
+        'return_right_image',
+        'return_odometer_image',
+    ];
+
     public function __construct(
         private VehicleService $vehicleService,
         private UserService $userService,
@@ -34,18 +50,7 @@ class VehicleLoanService extends BaseService
             if (isset($array[$item]))
                 $array[$item] = $this->formatDateTimeForPreview($array[$item]);
 
-        foreach ([
-            'before_front_image',
-            'before_rear_image',
-            'before_left_image',
-            'before_right_image',
-            'before_odometer_image',
-            'return_front_image',
-            'return_rear_image',
-            'return_left_image',
-            'return_right_image',
-            'return_odometer_image',
-        ] as $item)
+        foreach (array_merge($this->beforeImages, $this->returnImages) as $item)
             if (isset($array[$item]))
                 $array[$item] = $this->getAssetUrl($array[$item]);
 
@@ -57,12 +62,12 @@ class VehicleLoanService extends BaseService
         return [
             'status' => $this->repository->getStatus(),
             'statusReturn' => $this->repository->getStatusReturn(),
-            'users' => $this->userService->list([
+            'users' => $listView ? $this->userService->list([
                 'load_relations' => false,
                 'columns' => ['id', 'name'],
-            ]),
+            ]) : [],
             'vehicles' => $this->vehicleService->list(!$listView ? [
-                'status' => 'normal'
+                'statuses' => ['ready', 'unwashed']
             ] : []),
         ];
     }
@@ -70,37 +75,38 @@ class VehicleLoanService extends BaseService
     public function store(array $request)
     {
         return $this->tryThrow(function () use ($request) {
-            foreach ($request['details'] as $item) {
-                $data = $this->repository->store([
-                    'created_by' => $request['created_by'],
-                    'vehicle_id' => $item['vehicle_id'],
-                    'vehicle_pickup_time' => $request['vehicle_pickup_time'],
-                    'estimated_vehicle_return_date' => $item['estimated_vehicle_return_date'],
-                    'destination' => $item['destination'],
-                    'note' => $item['note'],
-                    ...collect([
-                        'before_front_image',
-                        'before_rear_image',
-                        'before_left_image',
-                        'before_right_image',
-                        'before_odometer_image',
-                    ])->mapWithKeys(fn($i) => [
-                        $i => $this->handlerUploadFileService->storeAndRemoveOld(
-                            $item[$i],
-                            $this->repository->model->getTable(),
-                            'before'
-                        )
-                    ])->all()
-                ]);
+            $vehicle = $this->vehicleService->findById($request['vehicle_id'], false);
+            if (!in_array($vehicle['status'], ['ready', 'unwashed']))
+                throw new Exception('Phương tiện hiện không có sẵn để mượn!');
 
-                $data->vehicle()->update([
-                    'status' => 'loaned',
-                    'user_id' => $request['created_by'],
-                    'destination' => $item['destination'],
-                ]);
+            $data = $this->repository->store([
+                'created_by' => $request['created_by'],
+                'vehicle_id' => $request['vehicle_id'],
+                'vehicle_pickup_time' => $request['vehicle_pickup_time'],
+                'estimated_vehicle_return_date' => $request['estimated_vehicle_return_date'],
+                'destination' => $request['destination'],
+                'work_content' => $request['work_content'],
+                'current_km' => $request['current_km'],
+                'registration_status' => $vehicle['status'],
+                ...collect($this->beforeImages)->mapWithKeys(fn($i) => [
+                    $i => $this->handlerUploadFileService->storeAndRemoveOld(
+                        $request[$i],
+                        $this->repository->model->getTable(),
+                        'before'
+                    )
+                ])->all()
+            ]);
 
-                $this->sendMail($data['id'], 'Yêu cầu mượn');
-            }
+            $data->vehicle()->update([
+                'status' => 'loaned',
+                'user_id' => $request['created_by'],
+                'destination' => $request['destination'],
+            ]);
+
+            $this->sendMail(
+                $data['id'],
+                'Yêu cầu mượn'
+            );
         }, true);
     }
 
@@ -108,7 +114,10 @@ class VehicleLoanService extends BaseService
     {
         return $this->tryThrow(function () use ($request) {
             $data = $this->repository->update($request);
-            $this->sendMail($data['id'], 'Phê duyệt mượn');
+            $this->sendMail(
+                $data['id'],
+                'Phê duyệt mượn'
+            );
         }, true);
     }
 
@@ -117,7 +126,7 @@ class VehicleLoanService extends BaseService
         return $this->tryThrow(function () use ($request) {
             $data = $this->repository->update($request);
             $data->vehicle()->update([
-                'status' => 'normal',
+                'status' => $data['registration_status'],
                 'user_id' => null,
                 'destination' => null,
             ]);
@@ -130,43 +139,50 @@ class VehicleLoanService extends BaseService
         return $this->tryThrow(function () use ($request) {
             $data = $this->repository->findById($request['id']);
             if (!in_array($this->getUserId(), [1, $data['created_by']]))
-                throw new Exception('Chỉ người mượn mới có thể trả xe!');
+                throw new Exception('Chỉ người mượn mới có thể trả phương tiện!');
+            if($data['status'] != 'approved')
+                throw new Exception('Chỉ những phiếu mượn đã được phê duyệt mới có thể trả phương tiện!');
+            if($data['current_km'] > $request['return_km'])
+                throw new Exception('Số km khi trả không được nhỏ hơn số km hiện trạng khi mượn!');
 
-            foreach ([
-                'return_front_image',
-                'return_rear_image',
-                'return_left_image',
-                'return_right_image',
-                'return_odometer_image',
-            ] as $item) {
+            foreach ($this->returnImages as $item)
                 $request[$item] = $this->handlerUploadFileService->storeAndRemoveOld(
                     $request[$item],
                     $this->repository->model->getTable(),
                     'return'
                 );
-            }
             $data->update($request);
 
             $data->vehicle()->update([
                 'status' => $request['vehicle_status_return'],
                 'user_id' => null,
                 'destination' => null,
+                'current_km' => $request['return_km'],
             ]);
-            $this->sendMail($data['id'], 'Trả');
+            $this->sendMail(
+                $data['id'],
+                'Trả',
+                collect($this->returnImages)->map(fn($i) => public_path($data[$i]))->filter()->toArray()
+            );
         }, true);
     }
 
-    private function sendMail(int $id, string $subject)
+    private function sendMail(int $id, string $subject, array $attachments = [])
     {
-        $data = $this->findById($id, true, true);
+        $data = $this->findById($id, true);
+        if (empty($attachments))
+            $attachments = collect($this->beforeImages)->map(fn($i) => public_path($data[$i]))->filter()->toArray();
+        $data = $this->formatRecord($data->toArray());
+
         $emails = $this->getEmails($data);
         dispatch(new \App\Jobs\SendMailJob(
             'emails.vehicle-loan',
-            $subject . ' xe',
+            $subject . ' phương tiện',
             $emails,
             [
                 'data' => $data,
-            ]
+            ],
+            $attachments
         ));
     }
 

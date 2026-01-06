@@ -8,6 +8,7 @@ class ReturnRequest extends FindByIdRequest
     {
         $this->merge([
             'returned_at' => date('Y-m-d H:i:s'),
+            'status' => 'returned',
         ]);
     }
 
@@ -28,6 +29,8 @@ class ReturnRequest extends FindByIdRequest
                 'fuel_cost_paid_by' => 'nullable|exists:users,id',
                 'maintenance_cost' => 'nullable|integer|min:1',
                 'maintenance_cost_paid_by' => 'nullable|exists:users,id',
+                'note' => 'nullable|max:255',
+                'status' => 'required|in:returned',
             ]
         );
     }

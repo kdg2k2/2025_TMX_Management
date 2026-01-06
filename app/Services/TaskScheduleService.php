@@ -6,6 +6,7 @@ use App\Models\TaskSchedule;
 use App\Repositories\TaskScheduleRepository;
 use Carbon\Carbon;
 use Cron\CronExpression;
+use Exception;
 
 class TaskScheduleService extends BaseService
 {
@@ -141,6 +142,8 @@ class TaskScheduleService extends BaseService
     public function getUserIdByScheduleKey(string $key)
     {
         $schedule = $this->findByKey($key, 'code', false, false, ['emails']);
+        if(!$schedule)
+            throw new Exception("Schedule with key {$key} not found");
         if ($schedule['is_active'] == 0)
             return [];
         return $schedule['emails']->pluck('user_id')->unique()->filter()->toArray();

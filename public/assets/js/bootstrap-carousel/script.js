@@ -8,9 +8,11 @@ const renderCarousel = (carouselId, images) => {
                     <div class="carousel-item ${idx === 0 ? "active" : ""}">
                          <div class="carousel-image-wrapper">
                             <a href="${
-                                img.path || getDefaultImage()
+                                img?.path || img || getDefaultImage()
                             }" class="glightbox d-block" data-gallery="gallery1">
-                                <img src="${img.path}" class="d-block w-100"
+                                <img src="${
+                                    img?.path || img
+                                }" class="d-block w-100"
                                 onerror="this.src='${getDefaultImage()}'">
                             </a>
 

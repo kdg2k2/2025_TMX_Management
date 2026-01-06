@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\DossierTypeController;
 use App\Http\Controllers\Admin\EligibilityController;
 use App\Http\Controllers\Admin\GoogleDriveController;
 use App\Http\Controllers\Admin\PlaneTicketController;
+use App\Http\Controllers\Admin\VehicleLoanController;
 use App\Http\Controllers\Admin\ContractBillController;
 use App\Http\Controllers\Admin\ContractFileController;
 use App\Http\Controllers\Admin\ContractTypeController;
@@ -509,6 +510,13 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::get('create', 'create')->name('vehicle.create');
             Route::get('edit', 'edit')->name('vehicle.edit');
             Route::delete('delete', 'delete')->name('vehicle.delete');
+        });
+
+        Route::prefix('loan')->controller(VehicleLoanController::class)->group(function () {
+            Route::get('index', 'index')->name('vehicle.loan.index');
+            Route::get('create', 'create')->name('vehicle.loan.create');
+            Route::post('approve', 'approve')->name('vehicle.loan.approve');
+            Route::post('reject', 'reject')->name('vehicle.loan.reject');
         });
     });
 });

@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('destination')->nullable()->comment('Điểm đến');
             $table->string('work_content')->nullable()->comment('Nội dung công việc');
             $table->dateTime('vehicle_pickup_time')->comment('thời gian lấy xe');
-            $table->date('estimated_vehicle_return_date')->comment('ngày dự kiến trả trả');
+            $table->date('estimated_vehicle_return_date')->comment('ngày dự kiến trả');
 
             $table->timestamp('approved_at')->nullable()->comment('thời gian duyệt');
             $table->foreignId('approved_by')->nullable()->comment('người phê duyệt')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
@@ -60,6 +60,8 @@ return new class extends Migration {
             $table->foreignId('fuel_cost_paid_by')->nullable()->comment('Người trả chi phí xăng xe')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->integer('maintenance_cost')->nullable()->comment('Chi phí bảo dưỡng');
             $table->foreignId('maintenance_cost_paid_by')->nullable()->comment('Người trả chi phí bảo dưỡng')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+
+            $table->string('registration_status')->comment('trạng thái khi đăng ký');
         });
     }
 

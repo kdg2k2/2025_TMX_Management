@@ -43,4 +43,13 @@ class VehicleService extends BaseService
             'status' => $status,
         ];
     }
+
+    protected function beforeDelete(int $id)
+    {
+        $vehicle = $this->repository->findById($id);
+        if ($vehicle->loans()->exists())
+            throw new \Exception('Không thể xóa phương tiện đang có phiếu mượn.');
+
+        return $vehicle;
+    }
 }

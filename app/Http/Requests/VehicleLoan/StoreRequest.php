@@ -24,7 +24,6 @@ class StoreRequest extends BaseRequest
             'work_content' => 'required|max:255',
             'vehicle_pickup_time' => 'required|date_format:Y-m-d H:i',
             'estimated_vehicle_return_date' => 'required|date_format:Y-m-d',
-            'note' => 'nullable|max:255',
             'before_front_image' => 'required|file|mimes:png,jpg,jpeg',
             'before_rear_image' => 'required|file|mimes:png,jpg,jpeg',
             'before_left_image' => 'required|file|mimes:png,jpg,jpeg',

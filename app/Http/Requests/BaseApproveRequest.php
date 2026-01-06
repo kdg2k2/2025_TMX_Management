@@ -12,7 +12,7 @@ class BaseApproveRequest extends BaseRequest
     {
         $this->mergeApprovalData();
         $this->merge([
-            'status' => 'rejected',
+            'status' => 'approved',
         ]);
     }
 
@@ -21,8 +21,8 @@ class BaseApproveRequest extends BaseRequest
         return array_merge(
             $this->getApprovalRules(),
             [
-                'status' => 'required|in:rejected',
-                'rejection_note' => 'required|max:255',
+                'status' => 'required|in:approved',
+                'approval_note' => 'required|max:255',
             ]
         );
     }

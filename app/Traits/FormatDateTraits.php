@@ -8,7 +8,7 @@ trait FormatDateTraits
     {
         if (empty($time))
             return null;
-        return date('d/m/Y H:i:s', strtotime($time));
+        return date('d/m/Y H:i', strtotime($time));
     }
 
     public function formatDateForPreview($date)

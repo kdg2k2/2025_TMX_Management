@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 
 class EmailService extends BaseService
 {
@@ -20,9 +20,9 @@ class EmailService extends BaseService
             });
             $emails = $this->checkLocalMail($emails);
 
-            if($emails == [])
+            if ($emails == [])
                 return true;
-
+            
             // gửi mail
             Mail::send(
                 $view,

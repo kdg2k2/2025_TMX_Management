@@ -542,14 +542,14 @@
                     <a href="javascript:void(0);" class="side-menu__item">
                         <i class="side-menu__icon ti ti-tools"></i>
                         <span class="side-menu__label">
-                            Thiết bị/ô tô
+                            Thiết bị/phương tiện
                         </span>
                         <i class="ri-arrow-right-s-line side-menu__angle"></i>
                     </a>
                     <ul class="slide-menu child1">
                         <li class="slide side-menu__label1">
                             <a href="javascript:void(0)">
-                                Thiết bị/ô tô
+                                Thiết bị/phương tiện
                             </a>
                         </li>
                         <li class="slide has-sub">
@@ -607,7 +607,7 @@
                                     </a>
                                 </li>
                                 <li class="slide">
-                                    <a href="javascript:void(0);" class="side-menu__item">
+                                    <a href="{{ route('vehicle.loan.index') }}" class="side-menu__item">
                                         <i
                                             class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-arrows-exchange"></i>
                                         Mượn/Trả/Phê duyệt
