@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Vehicle;
 use App\Repositories\VehicleRepository;
 
 class VehicleService extends BaseService
@@ -66,5 +67,49 @@ class VehicleService extends BaseService
     public function getExpiryWarnings(int $days = 10)
     {
         return $this->repository->getExpiryWarnings($days);
+    }
+
+    public function vehicleMaintenanceWarnings(): void
+    {
+        $emails = app(UserService::class)->getEmails(app(TaskScheduleService::class)
+            ->getUserIdByScheduleKey('VEHICLE_MAINTENANCE_WARNING') ?? []);
+        if (empty($emails))
+            return;
+
+        $warnings = [
+            [
+                'data' => $this->repository->getVehiclesNearMaintenance(200),
+                'subject' => 'bảo dưỡng km',
+            ],
+            [
+                'data' => $this->repository->getInspectionExpiryWarnings(15),
+                'subject' => 'đăng kiểm',
+            ],
+            [
+                'data' => $this->repository->getLiabilityInsuranceExpiryWarnings(30),
+                'subject' => 'bảo hiểm trách nhiệm dân sự',
+            ],
+            [
+                'data' => $this->repository->getBodyInsuranceExpiryWarnings(30),
+                'subject' => 'bảo hiểm thân vỏ',
+            ],
+        ];
+
+        foreach ($warnings as $w)
+            $w['data']->each(
+                fn($v) => $this->sendMailVehicleMaintenanceWarning($emails, $w['subject'], $v)
+            );
+    }
+
+    private function sendMailVehicleMaintenanceWarning(array $emails, string $subject, Vehicle $vehicle)
+    {
+        dispatch(new \App\Jobs\SendMailJob(
+            'emails.vehicle-info',
+            "Nhắc nhở phương tiện sắp đến hạn $subject",
+            $emails,
+            [
+                'data' => $this->formatRecord($vehicle->toArray()),
+            ]
+        ));
     }
 }

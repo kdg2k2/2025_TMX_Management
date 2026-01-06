@@ -62,27 +62,49 @@ class VehicleRepository extends BaseRepository
         ")->first()->toArray() ?? [];
     }
 
-    // Cảnh báo sắp hết hạn
+    protected function getExpiredByColumn(string $column, int $days)
+    {
+        $fromDate = Carbon::now();
+        $toDate = Carbon::now()->addDays($days);
+
+        return $this
+            ->model
+            ->whereDate($column, '<=', $toDate)
+            ->whereDate($column, '>=', $fromDate)
+            ->get();
+    }
+
+    public function getInspectionExpiryWarnings(int $days = 10)
+    {
+        return $this->getExpiredByColumn('inspection_expired_at', $days);
+    }
+
+    public function getLiabilityInsuranceExpiryWarnings(int $days = 10)
+    {
+        return $this->getExpiredByColumn('liability_insurance_expired_at', $days);
+    }
+
+    public function getBodyInsuranceExpiryWarnings(int $days = 10)
+    {
+        return $this->getExpiredByColumn('body_insurance_expired_at', $days);
+    }
+
     public function getExpiryWarnings(int $days = 10)
     {
-        $date = Carbon::now()->addDays($days);
-
         return [
-            'inspection' => $this
-                ->model
-                ->whereDate('inspection_expired_at', '<=', $date)
-                ->whereDate('inspection_expired_at', '>=', Carbon::now())
-                ->get(),
-            'liability_insurance' => $this
-                ->model
-                ->whereDate('liability_insurance_expired_at', '<=', $date)
-                ->whereDate('liability_insurance_expired_at', '>=', Carbon::now())
-                ->get(),
-            'body_insurance' => $this
-                ->model
-                ->whereDate('body_insurance_expired_at', '<=', $date)
-                ->whereDate('body_insurance_expired_at', '>=', Carbon::now())
-                ->get(),
+            'inspection' => $this->getInspectionExpiryWarnings($days),
+            'liability_insurance' => $this->getLiabilityInsuranceExpiryWarnings($days),
+            'body_insurance' => $this->getBodyInsuranceExpiryWarnings($days),
         ];
+    }
+
+    public function getVehiclesNearMaintenance(int $warningKm = 200)
+    {
+        return $this
+            ->model
+            ->whereNotNull('maintenance_km')
+            ->whereRaw('(maintenance_km - current_km) <= ?', [$warningKm])
+            ->whereRaw('(maintenance_km - current_km) >= 0')
+            ->get();
     }
 }

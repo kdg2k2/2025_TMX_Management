@@ -15,7 +15,7 @@ class TaskScheduleSeeder extends Seeder
      */
     public function run(): void
     {
-        $baseUserIds = User::whereIn('name', ['Lê Sỹ Doanh', 'Phạm Văn Huân', 'Vũ Thị Kim Oanh'])->pluck('id')->unique()->filter()->toArray();
+        $baseUserIds = User::whereIn('name', ['Lê Sỹ Doanh', 'Phạm Văn Huân', 'Vũ Thị Kim Oanh', 'Kiều Đăng Anh'])->pluck('id')->unique()->filter()->toArray();
         $managerUserIds = collect(array_unique(array_merge(
             $baseUserIds,
             Department::pluck('manager_id')->toArray()
@@ -224,6 +224,18 @@ class TaskScheduleSeeder extends Seeder
                 'description' => 'Tự chạy khi có đăng ký, duyệt...',
                 'is_active' => true,
                 'manual_run' => false,
+                'user_ids' => $baseUserIds,
+            ],
+            [
+                'code' => 'VEHICLE_MAINTENANCE_WARNING',
+                'name' => 'Nhắc nhở bảo dưỡng phương tiện',
+                'subject' => null,
+                'content' => null,
+                'frequency' => 'daily',
+                'cron_expression' => '0 7 * * *',
+                'description' => 'Tự chạy vào 7h sáng hàng ngày, kiểm tra danh sách phương tiện sắp đến hạn bảo dưỡng, đăng kiểm, bảo hiểm để gửi mail nhắc nhở',
+                'is_active' => true,
+                'manual_run' => true,
                 'user_ids' => $baseUserIds,
             ],
         ];

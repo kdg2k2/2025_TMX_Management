@@ -133,6 +133,9 @@ class TaskScheduleService extends BaseService
             case 'REMIND_FIX_DEVICE':
                 app(DeviceFixService::class)->remindFixDevice();
                 break;
+            case 'VEHICLE_MAINTENANCE_WARNING':
+                app(VehicleService::class)->vehicleMaintenanceWarnings();
+                break;
             default:
                 $this->sendMail($schedule['subject'] ?? $schedule['name'], $flatEmails = [], $emailData);
                 break;
@@ -142,7 +145,7 @@ class TaskScheduleService extends BaseService
     public function getUserIdByScheduleKey(string $key)
     {
         $schedule = $this->findByKey($key, 'code', false, false, ['emails']);
-        if(!$schedule)
+        if (!$schedule)
             throw new Exception("Schedule with key {$key} not found");
         if ($schedule['is_active'] == 0)
             return [];
