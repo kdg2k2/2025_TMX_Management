@@ -53,6 +53,10 @@ class DeviceLoanService extends BaseService
     {
         return $this->tryThrow(function () use ($request) {
             foreach ($request['details'] as $item) {
+                $device = $this->deviceService->findById($item['device_id'], false);
+                if ($device['current_status'] != 'normal')
+                    throw new Exception("Thiết bị {$device['code']} - {$device['name']} không có sẵn để mượn!");
+
                 $data = $this->repository->store([
                     'created_by' => $request['created_by'],
                     'borrowed_date' => $request['borrowed_date'],
