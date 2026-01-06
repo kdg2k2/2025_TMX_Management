@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Vehicle;
+use Carbon\Carbon;
 
 class VehicleRepository extends BaseRepository
 {
@@ -53,11 +54,30 @@ class VehicleRepository extends BaseRepository
     {
         return $this->model->selectRaw("
             SUM(status = 'ready')        AS `ready`,
-            SUM(status = 'unwashed')        AS `unwashed`,
-            SUM(status = 'broken')        AS `broken`,
-            SUM(status = 'faulty')        AS `faulty`,
-            SUM(status = 'lost')          AS `lost`,
-            SUM(status = 'loaned')        AS `loaned`
+            SUM(status = 'unwashed')     AS `unwashed`,
+            SUM(status = 'broken')       AS `broken`,
+            SUM(status = 'faulty')       AS `faulty`,
+            SUM(status = 'lost')         AS `lost`,
+            SUM(status = 'loaned')       AS `loaned`
         ")->first()->toArray() ?? [];
+    }
+
+    // Cảnh báo sắp hết hạn
+    public function getExpiryWarnings(int $days = 30)
+    {
+        $date = Carbon::now()->addDays($days);
+
+        return [
+            'inspection' => $this
+                ->model
+                ->whereDate('inspection_expired_at', '<=', $date)
+                ->whereDate('inspection_expired_at', '>=', Carbon::now())
+                ->get(),
+            'liability_insurance' => $this
+                ->model
+                ->whereDate('liability_insurance_expired_at', '<=', $date)
+                ->whereDate('liability_insurance_expired_at', '>=', Carbon::now())
+                ->get(),
+        ];
     }
 }

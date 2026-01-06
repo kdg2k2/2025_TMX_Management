@@ -62,4 +62,9 @@ class VehicleService extends BaseService
     {
         return $this->repository->statistic();
     }
+
+    public function getExpiryWarnings(int $days = 30)
+    {
+        return $this->repository->getExpiryWarnings($days);
+    }
 }

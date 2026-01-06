@@ -140,9 +140,9 @@ class VehicleLoanService extends BaseService
             $data = $this->repository->findById($request['id']);
             if (!in_array($this->getUserId(), [1, $data['created_by']]))
                 throw new Exception('Chỉ người mượn mới có thể trả phương tiện!');
-            if($data['status'] != 'approved')
+            if ($data['status'] != 'approved')
                 throw new Exception('Chỉ những phiếu mượn đã được phê duyệt mới có thể trả phương tiện!');
-            if($data['current_km'] > $request['return_km'])
+            if ($data['current_km'] > $request['return_km'])
                 throw new Exception('Số km khi trả không được nhỏ hơn số km hiện trạng khi mượn!');
 
             foreach ($this->returnImages as $item)
@@ -197,5 +197,15 @@ class VehicleLoanService extends BaseService
     public function statistic(array $request)
     {
         return $this->repository->statistic($request);
+    }
+
+    public function statisticByMonth(array $request)
+    {
+        return $this->repository->statisticByMonth($request);
+    }
+
+    public function topVehicles(array $request, int $limit = 5)
+    {
+        return $this->repository->topVehicles($request, $limit);
     }
 }
