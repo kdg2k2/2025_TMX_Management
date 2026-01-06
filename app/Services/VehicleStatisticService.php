@@ -22,8 +22,8 @@ class VehicleStatisticService extends BaseService
                 ->map(fn($v, $k) => [
                     ...$this->vehicleService->getStatus($k),
                     'value' => $v,
-                    'detail_key' => 'vehicle_status',  // Key để load detail
-                    'detail_filter' => $k  // Filter value
+                    'detail_key' => 'vehicle_status',
+                    'detail_filter' => $k
                 ])
                 ->values()
                 ->toArray();
@@ -45,10 +45,9 @@ class VehicleStatisticService extends BaseService
             $warningCounter = $this->getWarningCounter($expiryWarnings);
 
             // Charts data
-            $statusChart = $this->getStatusChartData($vehicleStatistic);
-            $loanByMonthChart = $this->getLoanByMonthChart($request);
-            $costByMonthChart = $this->getCostByMonthChart($request);
-            $kmByMonthChart = $this->getKmByMonthChart($request);
+            $loanByMonthChart = $this->buildMonthlyChart($request, 'loan');
+            $costByMonthChart = $this->buildMonthlyChart($request, 'cost');
+            $kmByMonthChart = $this->buildMonthlyChart($request, 'km');
             $topVehiclesChart = $this->getTopVehiclesChart($request);
 
             return [
@@ -58,7 +57,6 @@ class VehicleStatisticService extends BaseService
                 'loan_returned_not_ready_detail' => $loanDetail,
                 'expiry_warnings' => $expiryWarnings,
                 'charts' => [
-                    'status_pie' => $statusChart,
                     'loan_by_month' => $loanByMonthChart,
                     'cost_by_month' => $costByMonthChart,
                     'km_by_month' => $kmByMonthChart,
@@ -70,173 +68,106 @@ class VehicleStatisticService extends BaseService
 
     private function getWarningCounter($warnings)
     {
-        return [
-            [
-                'original' => 'inspection_warning',
+        $config = [
+            'inspection' => [
                 'converted' => 'Sắp hết hạn đăng kiểm',
                 'color' => 'danger',
                 'icon' => 'ti ti-calendar-exclamation',
-                'value' => $warnings['inspection']->count(),
-                'detail_key' => 'warning',
-                'detail_filter' => 'inspection',
             ],
-            [
-                'original' => 'liability_insurance_warning',
+            'liability_insurance' => [
                 'converted' => 'Sắp hết hạn BH trách nhiệm',
                 'color' => 'orange',
                 'icon' => 'ti ti-shield-exclamation',
-                'value' => $warnings['liability_insurance']->count(),
-                'detail_key' => 'warning',
-                'detail_filter' => 'liability_insurance',
             ],
-            [
-                'original' => 'body_insurance_warning',
+            'body_insurance' => [
                 'converted' => 'Sắp hết hạn BH thân vỏ',
                 'color' => 'info',
                 'icon' => 'ti ti-shield-check',
-                'value' => $warnings['body_insurance']->count(),
+            ],
+        ];
+
+        return collect($config)->map(function($item, $key) use ($warnings) {
+            return [
+                'original' => "{$key}_warning",
+                'converted' => $item['converted'],
+                'color' => $item['color'],
+                'icon' => $item['icon'],
+                'value' => $warnings[$key]->count(),
                 'detail_key' => 'warning',
-                'detail_filter' => 'body_insurance',
-            ],
-        ];
+                'detail_filter' => $key,
+            ];
+        })->values()->toArray();
     }
 
-    private function getStatusChartData($statistic)
+    /**
+     * Build monthly chart data with configuration
+     *
+     * @param array $request
+     * @param string $type - 'loan', 'cost', 'km'
+     * @return array
+     */
+    private function buildMonthlyChart(array $request, string $type)
     {
-        $labels = [];
-        $series = [];
+        $data = $this->vehicleLoanService->statisticByMonth($request);
 
-        foreach ($statistic as $key => $value) {
-            if ($value > 0) {
-                $status = $this->vehicleService->getStatus($key);
-                $labels[] = $status['converted'];
-                $series[] = (int) $value;
+        // Configuration cho từng loại chart
+        $config = [
+            'loan' => [
+                'series' => [
+                    ['name' => 'Số lượt mượn', 'field' => 'total']
+                ]
+            ],
+            'cost' => [
+                'series' => [
+                    ['name' => 'Chi phí xăng', 'field' => 'total_fuel_cost'],
+                    ['name' => 'Chi phí bảo dưỡng', 'field' => 'total_maintenance_cost']
+                ]
+            ],
+            'km' => [
+                'series' => [
+                    ['name' => 'Tổng km', 'field' => 'total_km']
+                ]
+            ],
+        ];
+
+        $chartConfig = $config[$type] ?? $config['loan'];
+
+        // Nếu filter theo tháng cụ thể
+        if (isset($request['month'])) {
+            $monthData = $data->firstWhere('month', $request['month']);
+
+            return [
+                'categories' => [$this->monthNames[$request['month']]],
+                'series' => collect($chartConfig['series'])->map(function($series) use ($monthData) {
+                    return [
+                        'name' => $series['name'],
+                        'data' => [$monthData[$series['field']] ?? 0]
+                    ];
+                })->toArray()
+            ];
+        }
+
+        // Hiển thị tất cả 12 tháng
+        $result = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $monthData = $data->firstWhere('month', $month);
+            $monthResult = ['category' => $this->monthNames[$month]];
+
+            foreach ($chartConfig['series'] as $series) {
+                $monthResult[$series['field']] = $monthData[$series['field']] ?? 0;
             }
-        }
 
-        return [
-            'labels' => $labels,
-            'series' => $series,
-        ];
-    }
-
-    private function getLoanByMonthChart(array $request)
-    {
-        $data = $this->vehicleLoanService->statisticByMonth($request);
-
-        if (isset($request['month'])) {
-            $monthData = $data->firstWhere('month', $request['month']);
-            return [
-                'categories' => [$this->monthNames[$request['month']]],
-                'series' => [
-                    [
-                        'name' => 'Số lượt mượn',
-                        'data' => [$monthData['total'] ?? 0],
-                    ]
-                ],
-            ];
-        }
-
-        $result = [];
-        for ($month = 1; $month <= 12; $month++) {
-            $monthData = $data->firstWhere('month', $month);
-            $result[] = [
-                'category' => $this->monthNames[$month],
-                'total' => $monthData['total'] ?? 0,
-            ];
+            $result[] = $monthResult;
         }
 
         return [
             'categories' => array_column($result, 'category'),
-            'series' => [
-                [
-                    'name' => 'Số lượt mượn',
-                    'data' => array_column($result, 'total'),
-                ]
-            ],
-        ];
-    }
-
-    private function getCostByMonthChart(array $request)
-    {
-        $data = $this->vehicleLoanService->statisticByMonth($request);
-
-        if (isset($request['month'])) {
-            $monthData = $data->firstWhere('month', $request['month']);
-            return [
-                'categories' => [$this->monthNames[$request['month']]],
-                'series' => [
-                    [
-                        'name' => 'Chi phí xăng',
-                        'data' => [$monthData['total_fuel_cost'] ?? 0],
-                    ],
-                    [
-                        'name' => 'Chi phí bảo dưỡng',
-                        'data' => [$monthData['total_maintenance_cost'] ?? 0],
-                    ]
-                ],
-            ];
-        }
-
-        $result = [];
-        for ($month = 1; $month <= 12; $month++) {
-            $monthData = $data->firstWhere('month', $month);
-            $result[] = [
-                'category' => $this->monthNames[$month],
-                'fuel' => $monthData['total_fuel_cost'] ?? 0,
-                'maintenance' => $monthData['total_maintenance_cost'] ?? 0,
-            ];
-        }
-
-        return [
-            'categories' => array_column($result, 'category'),
-            'series' => [
-                [
-                    'name' => 'Chi phí xăng',
-                    'data' => array_column($result, 'fuel'),
-                ],
-                [
-                    'name' => 'Chi phí bảo dưỡng',
-                    'data' => array_column($result, 'maintenance'),
-                ]
-            ],
-        ];
-    }
-
-    private function getKmByMonthChart(array $request)
-    {
-        $data = $this->vehicleLoanService->statisticByMonth($request);
-
-        if (isset($request['month'])) {
-            $monthData = $data->firstWhere('month', $request['month']);
-            return [
-                'categories' => [$this->monthNames[$request['month']]],
-                'series' => [
-                    [
-                        'name' => 'Tổng km',
-                        'data' => [$monthData['total_km'] ?? 0],
-                    ]
-                ],
-            ];
-        }
-
-        $result = [];
-        for ($month = 1; $month <= 12; $month++) {
-            $monthData = $data->firstWhere('month', $month);
-            $result[] = [
-                'category' => $this->monthNames[$month],
-                'km' => $monthData['total_km'] ?? 0,
-            ];
-        }
-
-        return [
-            'categories' => array_column($result, 'category'),
-            'series' => [
-                [
-                    'name' => 'Tổng km',
-                    'data' => array_column($result, 'km'),
-                ]
-            ],
+            'series' => collect($chartConfig['series'])->map(function($series) use ($result) {
+                return [
+                    'name' => $series['name'],
+                    'data' => array_column($result, $series['field'])
+                ];
+            })->toArray()
         ];
     }
 

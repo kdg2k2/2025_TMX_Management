@@ -10,9 +10,6 @@
     ]">
     </x-breadcrumb>
 
-    {{-- THỐNG KÊ HIỆN TẠI (không filter) --}}
-
-    {{-- Cards trạng thái phương tiện hiện tại --}}
     <div class="card custom-card mb-3">
         <div class="card-header">
             <div class="card-title">Trạng thái phương tiện hiện tại</div>
@@ -22,7 +19,6 @@
         </div>
     </div>
 
-    {{-- Cards cảnh báo --}}
     <div class="card custom-card mb-3">
         <div class="card-header">
             <div class="card-title">Cảnh báo hết hạn (10 ngày tới)</div>
@@ -32,33 +28,6 @@
         </div>
     </div>
 
-    {{-- Biểu đồ trạng thái hiện tại --}}
-    <div class="row mb-3 chart-card-row chart-row">
-        <div class="col-md-6">
-            <div class="card custom-card">
-                <div class="card-header">
-                    <div class="card-title">Tỷ lệ trạng thái phương tiện</div>
-                </div>
-                <div class="card-body">
-                    <div id="chart-status-pie"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card custom-card">
-                <div class="card-header">
-                    <div class="card-title">Top 5 xe được mượn nhiều nhất</div>
-                </div>
-                <div class="card-body">
-                    <div id="chart-top-vehicles"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- BỘ LỌC THỐNG KÊ THEO THỜI GIAN --}}
-
-    {{-- Filter --}}
     <div class="card custom-card mb-3">
         <div class="card-header bg-light">
             <div class="card-title">Lọc theo thời gian</div>
@@ -100,9 +69,7 @@
         </div>
     </div>
 
-    {{-- THỐNG KÊ THEO THỜI GIAN (có filter) --}}
 
-    {{-- Cards thống kê hoạt động --}}
     <div class="card custom-card mb-3">
         <div class="card-header">
             <div class="card-title">Thống kê hoạt động</div>
@@ -112,7 +79,6 @@
         </div>
     </div>
 
-    {{-- Biểu đồ theo thời gian --}}
     <div class="row mb-3 chart-card-row chart-row">
         <div class="col-md-6">
             <div class="card custom-card">
@@ -136,9 +102,18 @@
         </div>
     </div>
 
-    {{-- Biểu đồ theo thời gian --}}
     <div class="row mb-3 chart-card-row chart-row">
-        <div class="col-md-12">
+        <div class="col-md-6">
+            <div class="card custom-card">
+                <div class="card-header">
+                    <div class="card-title">Top 5 xe được mượn nhiều nhất</div>
+                </div>
+                <div class="card-body">
+                    <div id="chart-top-vehicles"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
             <div class="card custom-card">
                 <div class="card-header">
                     <div class="card-title">Tổng số km đã chạy theo tháng</div>
