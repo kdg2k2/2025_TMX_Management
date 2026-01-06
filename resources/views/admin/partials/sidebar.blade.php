@@ -1,3 +1,27 @@
+@php
+    $showBadge = fn(int $count) => $count > 0
+        ? view('components.badge', [
+            'text' => $count,
+            'color' => 'danger',
+            'class' => 'ms-1',
+        ])->render()
+        : '';
+
+    $pendingWorkScheduleFlag = app(\App\Models\WorkSchedule::class)->where('approval_status', 'pending')->count();
+    $pendingLeaveRequestFlag = app(\App\Models\LeaveRequest::class)->where('approval_status', 'pending')->count();
+    $pendingDossierMinuteFlag = app(\App\Models\DossierMinute::class)->where('status', 'pending_approval')->count();
+    $pendingProfessionalRecordMinuteFlag = app(\App\Models\ProfessionalRecordMinute::class)
+        ->where('status', 'pending_approval')
+        ->count();
+    $pendingBuildSoftwareFlag = app(\App\Models\BuildSoftware::class)->where('status', 'pending')->count();
+    $pendingPlaneTicketFlag = app(\App\Models\PlaneTicket::class)->where('status', 'pending_approval')->count();
+    $pendingTrainAndBusTicketFlag = app(\App\Models\TrainAndBusTicket::class)
+        ->where('status', 'pending_approval')
+        ->count();
+    $pendingDeviceLoanFlag = app(\App\Models\DeviceLoan::class)->where('status', 'pending')->count();
+    $pendingDeviceFixFlag = app(\App\Models\DeviceFix::class)->where('status', 'pending')->count();
+    $pendingVehicleLoanFlag = app(\App\Models\VehicleLoan::class)->where('status', 'pending')->count();
+@endphp
 <aside class="app-sidebar sticky" id="sidebar">
     <div class="main-sidebar-header">
         <a href="index" class="header-logo">
@@ -138,12 +162,14 @@
                     <a href="{{ route('work-schedule.index') }}" class="side-menu__item">
                         <i class="side-menu__icon ti ti-calendar-event"></i>
                         <span class="side-menu__label">Lịch công tác</span>
+                        {!! $showBadge($pendingWorkScheduleFlag) !!}
                     </a>
                 </li>
                 <li class="slide">
                     <a href="{{ route('leave-request.index') }}" class="side-menu__item">
                         <i class="side-menu__icon ti ti-calendar-off"></i>
                         <span class="side-menu__label">Nghỉ phép</span>
+                        {!! $showBadge($pendingLeaveRequestFlag) !!}
                     </a>
                 </li>
                 <li class="slide">
@@ -256,24 +282,12 @@
                         Hồ sơ - Biên bản - Công văn
                     </span>
                 </li>
-                @php
-                    $pendingDossierMinuteFlag =
-                        app(\App\Models\DossierMinute::class)->where('status', 'pending_approval')->count() > 0
-                            ? 'text-danger'
-                            : '';
-                    $pendingProfessionalRecordMinuteFlag =
-                        app(\App\Models\ProfessionalRecordMinute::class)->where('status', 'pending_approval')->count() >
-                        0
-                            ? 'text-danger'
-                            : '';
-                @endphp
                 <li class="slide has-sub">
                     <a href="javascript:void(0);" class="side-menu__item">
-                        <i
-                            class="side-menu__icon ti ti-folders {{ $pendingDossierMinuteFlag }} {{ $pendingProfessionalRecordMinuteFlag }}"></i>
-                        <span
-                            class="side-menu__label {{ $pendingDossierMinuteFlag }} {{ $pendingProfessionalRecordMinuteFlag }}">
+                        <i class="side-menu__icon ti ti-folders"></i>
+                        <span class="side-menu__label">
                             HSNN/HSCM
+                            {!! $showBadge($pendingDossierMinuteFlag + $pendingProfessionalRecordMinuteFlag) !!}
                         </span>
                         <i class="ri-arrow-right-s-line side-menu__angle"></i>
                     </a>
@@ -284,10 +298,11 @@
                             </a>
                         </li>
                         <li class="slide has-sub">
-                            <a href="javascript:void(0);" class="side-menu__item {{ $pendingDossierMinuteFlag }}">
+                            <a href="javascript:void(0);" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-folder"></i>
                                 HS ngoại nghiệp
                                 <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                                {!! $showBadge($pendingDossierMinuteFlag) !!}
                             </a>
                             <ul class="slide-menu child2">
                                 <li class="slide">
@@ -316,10 +331,10 @@
                                     </a>
                                 </li>
                                 <li class="slide">
-                                    <a href="{{ route('dossier.minute.index') }}"
-                                        class="side-menu__item {{ $pendingDossierMinuteFlag }}">
+                                    <a href="{{ route('dossier.minute.index') }}" class="side-menu__item">
                                         <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-file-check"></i>
                                         Phê duyệt biên bản
+                                        {!! $showBadge($pendingDossierMinuteFlag) !!}
                                     </a>
                                 </li>
                                 <li class="slide">
@@ -331,11 +346,11 @@
                             </ul>
                         </li>
                         <li class="slide has-sub">
-                            <a href="javascript:void(0);"
-                                class="side-menu__item {{ $pendingProfessionalRecordMinuteFlag }}">
+                            <a href="javascript:void(0);" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-folder-share"></i>
                                 HS chuyên môn
                                 <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                                {!! $showBadge($pendingProfessionalRecordMinuteFlag) !!}
                             </a>
                             <ul class="slide-menu child2">
                                 <li class="slide">
@@ -367,9 +382,10 @@
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('professional-record.minute.index') }}"
-                                        class="side-menu__item {{ $pendingProfessionalRecordMinuteFlag }}">
+                                        class="side-menu__item">
                                         <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-file-check"></i>
                                         Phê duyệt biên bản
+                                        {!! $showBadge($pendingProfessionalRecordMinuteFlag) !!}
                                     </a>
                                 </li>
                                 <li class="slide">
@@ -480,6 +496,7 @@
                         <span class="side-menu__label">
                             ĐXXD Phần mềm
                         </span>
+                        {!! $showBadge($pendingBuildSoftwareFlag) !!}
                     </a>
                 </li>
                 <li class="slide has-sub">
@@ -489,11 +506,13 @@
                             Vé máy bay/tàu xe
                         </span>
                         <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                        {!! $showBadge($pendingPlaneTicketFlag + $pendingTrainAndBusTicketFlag) !!}
                     </a>
                     <ul class="slide-menu child1">
                         <li class="slide side-menu__label1">
                             <a href="javascript:void(0)">
                                 Vé máy bay/tàu xe
+                                {!! $showBadge($pendingPlaneTicketFlag + $pendingTrainAndBusTicketFlag) !!}
                             </a>
                         </li>
                         <li class="slide has-sub">
@@ -501,6 +520,7 @@
                                 <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-plane-departure"></i>
                                 Vé máy bay
                                 <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                                {!! $showBadge($pendingPlaneTicketFlag) !!}
                             </a>
                             <ul class="slide-menu child2">
                                 <li class="slide">
@@ -526,6 +546,7 @@
                                     <a href="{{ route('plane-ticket.index') }}" class="side-menu__item">
                                         <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-ticket"></i>
                                         Vé máy bay
+                                        {!! $showBadge($pendingPlaneTicketFlag) !!}
                                     </a>
                                 </li>
                             </ul>
@@ -534,6 +555,7 @@
                             <a href="{{ route('train-and-bus-ticket.index') }}" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon me-2 d-block ti ti-bus"></i>
                                 Vé tàu xe
+                                {!! $showBadge($pendingTrainAndBusTicketFlag) !!}
                             </a>
                         </li>
                     </ul>
@@ -545,11 +567,13 @@
                             Thiết bị/phương tiện
                         </span>
                         <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                        {!! $showBadge($pendingDeviceLoanFlag + $pendingDeviceFixFlag + $pendingVehicleLoanFlag) !!}
                     </a>
                     <ul class="slide-menu child1">
                         <li class="slide side-menu__label1">
                             <a href="javascript:void(0)">
                                 Thiết bị/phương tiện
+                                {!! $showBadge($pendingDeviceLoanFlag + $pendingDeviceFixFlag + $pendingVehicleLoanFlag) !!}
                             </a>
                         </li>
                         <li class="slide has-sub">
@@ -557,6 +581,7 @@
                                 <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-devices"></i>
                                 Thiết bị
                                 <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                                {!! $showBadge($pendingDeviceLoanFlag + $pendingDeviceFixFlag) !!}
                             </a>
                             <ul class="slide-menu child2">
                                 <li class="slide">
@@ -577,12 +602,14 @@
                                         <i
                                             class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-arrows-exchange"></i>
                                         Đăng ký mượn/Trả/Phê duyệt
+                                        {!! $showBadge($pendingDeviceLoanFlag) !!}
                                     </a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('device.fix.index') }}" class="side-menu__item">
                                         <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-tool"></i>
                                         Đăng ký sửa chữa/Phê duyệt
+                                        {!! $showBadge($pendingDeviceFixFlag) !!}
                                     </a>
                                 </li>
                                 <li class="slide">
@@ -596,8 +623,9 @@
                         <li class="slide has-sub">
                             <a href="javascript:void(0);" class="side-menu__item ">
                                 <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-car"></i>
-                                Ô tô
+                                Phương tiện
                                 <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                                {!! $showBadge($pendingVehicleLoanFlag) !!}
                             </a>
                             <ul class="slide-menu child2">
                                 <li class="slide">
@@ -611,6 +639,7 @@
                                         <i
                                             class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-arrows-exchange"></i>
                                         Mượn/Trả/Phê duyệt
+                                        {!! $showBadge($pendingVehicleLoanFlag) !!}
                                     </a>
                                 </li>
                                 <li class="slide">
