@@ -63,7 +63,7 @@ class VehicleRepository extends BaseRepository
     }
 
     // Cảnh báo sắp hết hạn
-    public function getExpiryWarnings(int $days = 30)
+    public function getExpiryWarnings(int $days = 10)
     {
         $date = Carbon::now()->addDays($days);
 
@@ -77,6 +77,11 @@ class VehicleRepository extends BaseRepository
                 ->model
                 ->whereDate('liability_insurance_expired_at', '<=', $date)
                 ->whereDate('liability_insurance_expired_at', '>=', Carbon::now())
+                ->get(),
+            'body_insurance' => $this
+                ->model
+                ->whereDate('body_insurance_expired_at', '<=', $date)
+                ->whereDate('body_insurance_expired_at', '>=', Carbon::now())
                 ->get(),
         ];
     }

@@ -33,12 +33,30 @@ class VehicleLoanRepository extends BaseRepository
     {
         if (isset($request['status']))
             $query->where('status', $request['status']);
+        if (isset($request['statuses']))
+            $query->whereIn('status', $request['statuses']);
         if (isset($request['vehicle_status_return']))
             $query->where('vehicle_status_return', $request['vehicle_status_return']);
+        if (isset($request['vehicle_status_return_not']))
+            $query->where('vehicle_status_return', '!=', $request['vehicle_status_return_not']);
         if (isset($request['created_by']))
             $query->where('created_by', $request['created_by']);
         if (isset($request['vehicle_id']))
             $query->where('vehicle_id', $request['vehicle_id']);
+        if (isset($request['returned_at']) && $request['returned_at'] === 'null')
+            $query->whereNull('returned_at');
+        if (isset($request['year']))
+            $query->whereYear('created_at', $request['year']);
+        if (isset($request['month']))
+            $query->whereMonth('created_at', $request['month']);
+
+        // Filter có chi phí xăng
+        if (isset($request['has_fuel_cost']) && $request['has_fuel_cost'])
+            $query->whereNotNull('fuel_cost')->where('fuel_cost', '>', 0);
+
+        // Filter có chi phí bảo dưỡng
+        if (isset($request['has_maintenance_cost']) && $request['has_maintenance_cost'])
+            $query->whereNotNull('maintenance_cost')->where('maintenance_cost', '>', 0);
     }
 
     protected function getSearchConfig(): array
@@ -159,23 +177,24 @@ class VehicleLoanRepository extends BaseRepository
         if (isset($request['month']))
             $query->whereMonth('created_at', $request['month']);
 
-        return $query->selectRaw('
+        return $query
+            ->selectRaw('
             MONTH(created_at) as month,
             COUNT(*) as total,
             SUM(CASE WHEN status = "returned" THEN fuel_cost ELSE 0 END) as total_fuel_cost,
             SUM(CASE WHEN status = "returned" THEN maintenance_cost ELSE 0 END) as total_maintenance_cost,
             SUM(CASE WHEN status = "returned" THEN (return_km - current_km) ELSE 0 END) as total_km
         ')
-        ->groupBy('month')
-        ->orderBy('month')
-        ->get()
-        ->map(fn($item) => [
-            'month' => $item->month,
-            'total' => $item->total,
-            'total_fuel_cost' => $item->total_fuel_cost ?? 0,
-            'total_maintenance_cost' => $item->total_maintenance_cost ?? 0,
-            'total_km' => $item->total_km ?? 0,
-        ]);
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->map(fn($item) => [
+                'month' => $item->month,
+                'total' => $item->total,
+                'total_fuel_cost' => $item->total_fuel_cost ?? 0,
+                'total_maintenance_cost' => $item->total_maintenance_cost ?? 0,
+                'total_km' => $item->total_km ?? 0,
+            ]);
     }
 
     // Top xe được mượn nhiều nhất

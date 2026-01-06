@@ -4,10 +4,13 @@
     <link rel="stylesheet" href="assets/css/apex-chart/styles.css">
 @endsection
 @section('content')
-    <x-breadcrumb :items="[['label' => 'Trang chủ', 'url' => route('dashboard')], ['label' => 'Thống kê phương tiện', 'url' => null]]">
+    <x-breadcrumb :items="[
+        ['label' => 'Trang chủ', 'url' => route('dashboard')],
+        ['label' => 'Thống kê phương tiện', 'url' => null],
+    ]">
     </x-breadcrumb>
 
-    {{-- PHẦN 1: THỐNG KÊ HIỆN TẠI (không filter) --}}
+    {{-- THỐNG KÊ HIỆN TẠI (không filter) --}}
 
     {{-- Cards trạng thái phương tiện hiện tại --}}
     <div class="card custom-card mb-3">
@@ -22,7 +25,7 @@
     {{-- Cards cảnh báo --}}
     <div class="card custom-card mb-3">
         <div class="card-header">
-            <div class="card-title">Cảnh báo hết hạn (30 ngày tới)</div>
+            <div class="card-title">Cảnh báo hết hạn (10 ngày tới)</div>
         </div>
         <div class="card-body">
             <div id="stats-container-warnings" class="row"></div>
@@ -53,7 +56,7 @@
         </div>
     </div>
 
-    {{-- PHẦN 2: BỘ LỌC THỐNG KÊ THEO THỜI GIAN --}}
+    {{-- BỘ LỌC THỐNG KÊ THEO THỜI GIAN --}}
 
     {{-- Filter --}}
     <div class="card custom-card mb-3">
@@ -97,7 +100,7 @@
         </div>
     </div>
 
-    {{-- PHẦN 3: THỐNG KÊ THEO THỜI GIAN (có filter) --}}
+    {{-- THỐNG KÊ THEO THỜI GIAN (có filter) --}}
 
     {{-- Cards thống kê hoạt động --}}
     <div class="card custom-card mb-3">
@@ -109,7 +112,7 @@
         </div>
     </div>
 
-    {{-- Biểu đồ theo thời gian - Hàng 1 --}}
+    {{-- Biểu đồ theo thời gian --}}
     <div class="row mb-3 chart-card-row chart-row">
         <div class="col-md-6">
             <div class="card custom-card">
@@ -133,7 +136,7 @@
         </div>
     </div>
 
-    {{-- Biểu đồ theo thời gian - Hàng 2 --}}
+    {{-- Biểu đồ theo thời gian --}}
     <div class="row mb-3 chart-card-row chart-row">
         <div class="col-md-12">
             <div class="card custom-card">
@@ -146,47 +149,26 @@
             </div>
         </div>
     </div>
-
-    {{-- Bảng chi tiết phương tiện trả về không ready --}}
-    <div class="card custom-card mb-3">
-        <div class="card-header">
-            <div class="card-title">Chi tiết phương tiện trả về chưa rửa/lỗi/hỏng</div>
-        </div>
-        <div class="card-body">
-            <div id="table-returned-not-ready"></div>
-        </div>
-    </div>
-
-    {{-- Bảng cảnh báo hết hạn --}}
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <div class="card custom-card">
-                <div class="card-header">
-                    <div class="card-title">Xe sắp hết hạn đăng kiểm</div>
-                </div>
-                <div class="card-body">
-                    <div id="table-inspection-expiry"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card custom-card">
-                <div class="card-header">
-                    <div class="card-title">Xe sắp hết hạn bảo hiểm TNDS</div>
-                </div>
-                <div class="card-body">
-                    <div id="table-insurance-expiry"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
-
+@section('modals')
+    <x-modal id="modal-stat-detail" title="Chi tiết" size="xl">
+        <x-slot:body>
+            <div id="modal-stat-detail-content">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </x-slot:body>
+    </x-modal>
+@endsection
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.min.js?v={{ time() }}"></script>
     <script src="assets/js/apex-chart-js/chart-base.js?v={{ time() }}"></script>
     <script>
         const apiVehicleStatisticData = @json(route('api.vehicle.statistic.data'));
+        const apiVehicleStatisticDetail = @json(route('api.vehicle.statistic.detail'));
     </script>
     <script src="assets/js/vehicle/statistic/script.js?v={{ time() }}"></script>
 @endsection

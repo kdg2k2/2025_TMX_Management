@@ -13,9 +13,9 @@ class StoreRequest extends BaseRequest
             'license_plate' => 'required|max:255|unique:vehicles,license_plate',
             'current_km' => 'required|integer|min:0',
             'maintenance_km' => 'nullable|integer|gte:current_km',
-            'inspection_expired_at' => 'nullable|date_format:Y-m-d|after_or_equal:today',
-            'liability_insurance_expired_at' => 'nullable|date_format:Y-m-d|after_or_equal:today',
-            'body_insurance_expired_at' => 'nullable|date_format:Y-m-d|after_or_equal:today',
+            'inspection_expired_at' => 'nullable|date_format:Y-m-d',
+            'liability_insurance_expired_at' => 'nullable|date_format:Y-m-d',
+            'body_insurance_expired_at' => 'nullable|date_format:Y-m-d',
             'status' => 'required|in:ready,unwashed,broken,faulty,lost,loaned',
         ];
     }

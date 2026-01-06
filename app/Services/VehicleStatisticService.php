@@ -4,6 +4,8 @@ namespace App\Services;
 
 class VehicleStatisticService extends BaseService
 {
+    private $monthNames = ['', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
+
     public function __construct(
         private VehicleService $vehicleService,
         private VehicleLoanService $vehicleLoanService
@@ -17,7 +19,12 @@ class VehicleStatisticService extends BaseService
 
             // Counter cards cho trạng thái hiện tại
             $currentStatusCounter = collect($vehicleStatistic)
-                ->map(fn($v, $k) => [...$this->vehicleService->getStatus($k), 'value' => $v])
+                ->map(fn($v, $k) => [
+                    ...$this->vehicleService->getStatus($k),
+                    'value' => $v,
+                    'detail_key' => 'vehicle_status',  // Key để load detail
+                    'detail_filter' => $k  // Filter value
+                ])
                 ->values()
                 ->toArray();
 
@@ -25,6 +32,13 @@ class VehicleStatisticService extends BaseService
             $loanStats = $this->vehicleLoanService->statistic($request);
             $loanDetail = $loanStats['returned_not_ready_detail'] ?? [];
             unset($loanStats['returned_not_ready_detail']);
+
+            // Thêm detail_key cho loan stats
+            $activityCounter = collect($loanStats)->map(function ($item) {
+                $item['detail_key'] = 'vehicle_loan';
+                $item['detail_filter'] = $item['original'];
+                return $item;
+            })->values()->toArray();
 
             // Cảnh báo sắp hết hạn
             $expiryWarnings = $this->vehicleService->getExpiryWarnings();
@@ -39,7 +53,7 @@ class VehicleStatisticService extends BaseService
 
             return [
                 'counter_current_status' => $currentStatusCounter,
-                'counter_activity' => array_values($loanStats),
+                'counter_activity' => $activityCounter,
                 'counter_warnings' => $warningCounter,
                 'loan_returned_not_ready_detail' => $loanDetail,
                 'expiry_warnings' => $expiryWarnings,
@@ -63,13 +77,26 @@ class VehicleStatisticService extends BaseService
                 'color' => 'danger',
                 'icon' => 'ti ti-calendar-exclamation',
                 'value' => $warnings['inspection']->count(),
+                'detail_key' => 'warning',
+                'detail_filter' => 'inspection',
             ],
             [
-                'original' => 'insurance_warning',
-                'converted' => 'Sắp hết hạn bảo hiểm',
+                'original' => 'liability_insurance_warning',
+                'converted' => 'Sắp hết hạn BH trách nhiệm',
                 'color' => 'orange',
                 'icon' => 'ti ti-shield-exclamation',
                 'value' => $warnings['liability_insurance']->count(),
+                'detail_key' => 'warning',
+                'detail_filter' => 'liability_insurance',
+            ],
+            [
+                'original' => 'body_insurance_warning',
+                'converted' => 'Sắp hết hạn BH thân vỏ',
+                'color' => 'info',
+                'icon' => 'ti ti-shield-check',
+                'value' => $warnings['body_insurance']->count(),
+                'detail_key' => 'warning',
+                'detail_filter' => 'body_insurance',
             ],
         ];
     }
@@ -83,7 +110,7 @@ class VehicleStatisticService extends BaseService
             if ($value > 0) {
                 $status = $this->vehicleService->getStatus($key);
                 $labels[] = $status['converted'];
-                $series[] = (int)$value;
+                $series[] = (int) $value;
             }
         }
 
@@ -96,12 +123,11 @@ class VehicleStatisticService extends BaseService
     private function getLoanByMonthChart(array $request)
     {
         $data = $this->vehicleLoanService->statisticByMonth($request);
-        $monthNames = ['', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
 
         if (isset($request['month'])) {
             $monthData = $data->firstWhere('month', $request['month']);
             return [
-                'categories' => [$monthNames[$request['month']]],
+                'categories' => [$this->monthNames[$request['month']]],
                 'series' => [
                     [
                         'name' => 'Số lượt mượn',
@@ -115,7 +141,7 @@ class VehicleStatisticService extends BaseService
         for ($month = 1; $month <= 12; $month++) {
             $monthData = $data->firstWhere('month', $month);
             $result[] = [
-                'category' => $monthNames[$month],
+                'category' => $this->monthNames[$month],
                 'total' => $monthData['total'] ?? 0,
             ];
         }
@@ -134,12 +160,11 @@ class VehicleStatisticService extends BaseService
     private function getCostByMonthChart(array $request)
     {
         $data = $this->vehicleLoanService->statisticByMonth($request);
-        $monthNames = ['', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
 
         if (isset($request['month'])) {
             $monthData = $data->firstWhere('month', $request['month']);
             return [
-                'categories' => [$monthNames[$request['month']]],
+                'categories' => [$this->monthNames[$request['month']]],
                 'series' => [
                     [
                         'name' => 'Chi phí xăng',
@@ -157,7 +182,7 @@ class VehicleStatisticService extends BaseService
         for ($month = 1; $month <= 12; $month++) {
             $monthData = $data->firstWhere('month', $month);
             $result[] = [
-                'category' => $monthNames[$month],
+                'category' => $this->monthNames[$month],
                 'fuel' => $monthData['total_fuel_cost'] ?? 0,
                 'maintenance' => $monthData['total_maintenance_cost'] ?? 0,
             ];
@@ -181,12 +206,11 @@ class VehicleStatisticService extends BaseService
     private function getKmByMonthChart(array $request)
     {
         $data = $this->vehicleLoanService->statisticByMonth($request);
-        $monthNames = ['', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
 
         if (isset($request['month'])) {
             $monthData = $data->firstWhere('month', $request['month']);
             return [
-                'categories' => [$monthNames[$request['month']]],
+                'categories' => [$this->monthNames[$request['month']]],
                 'series' => [
                     [
                         'name' => 'Tổng km',
@@ -200,7 +224,7 @@ class VehicleStatisticService extends BaseService
         for ($month = 1; $month <= 12; $month++) {
             $monthData = $data->firstWhere('month', $month);
             $result[] = [
-                'category' => $monthNames[$month],
+                'category' => $this->monthNames[$month],
                 'km' => $monthData['total_km'] ?? 0,
             ];
         }
