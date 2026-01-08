@@ -40,7 +40,7 @@ const validateUrl = (url) => {
 const createLinkPreviewFileOnline = (url, type) => {
     if (!url) return null;
 
-    const encodedUrl = encodeURIComponent(url);
+    const encodedUrl = encodeURIComponent(url) + `?v=${Date.now()}`;
     switch (type) {
         case 1:
             return `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}&embedded=true`;
