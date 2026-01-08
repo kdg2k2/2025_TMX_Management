@@ -58,6 +58,7 @@ class UserRepository extends BaseRepository
                 'department' => ['name'],
                 'position' => ['name'],
                 'jobTitle' => ['name'],
+                'subEmails' => ['email'],
             ]
         ];
     }

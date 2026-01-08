@@ -40,6 +40,7 @@ class StoreRequest extends BaseRequest
             'address' => 'nullable|max:255',
             'salary_level' => 'nullable|integer|min:0',
             'violation_penalty' => 'nullable|integer|min:0',
+            'allowance_meal' => 'nullable|integer|min:0',
             'allowance_contact' => 'nullable|integer|min:0',
             'allowance_position' => 'nullable|integer|min:0',
             'allowance_fuel' => 'nullable|integer|min:0',

@@ -97,55 +97,69 @@
 <div class="my-1 col-md-4">
     <div class="form-group">
         <label>
-            Mức lương
+            Mức lương(vnđ)
         </label>
-        <input class="form-control" type="number" name="salary_level">
+        <input class="form-control" type="number" name="salary_level" id="salary-level">
     </div>
 </div>
 <div class="my-1 col-md-4">
     <div class="form-group">
         <label>
-            Mức tiêu chí (số tiền phạt khi vi phạm quy chế)
+            Mức tiêu chí(vnđ)
+            <small class="text-primary">
+                (số tiền phạt khi vi phạm quy chế)
+            </small>
         </label>
-        <input class="form-control" type="number" name="violation_penalty">
+        <input class="form-control" type="number" name="violation_penalty" id="violation-penalty">
     </div>
 </div>
 <div class="my-1 col-md-4">
     <div class="form-group">
         <label>
-            Phụ cấp liên lạc
+            Phụ cấp ăn ca(vnđ)
         </label>
-        <input class="form-control" type="number" name="allowance_contact">
+        <input class="form-control" type="number" name="allowance_meal" id="allowance-meal">
     </div>
 </div>
 <div class="my-1 col-md-4">
     <div class="form-group">
         <label>
-            Phụ cấp chức vụ
+            Phụ cấp liên lạc(vnđ)
         </label>
-        <input class="form-control" type="number" name="allowance_position">
+        <input class="form-control" type="number" name="allowance_contact" id="allowance-contact">
     </div>
 </div>
 <div class="my-1 col-md-4">
     <div class="form-group">
         <label>
-            Phụ cấp xăng xe
+            Phụ cấp chức vụ(vnđ)
         </label>
-        <input class="form-control" type="number" name="allowance_fuel">
+        <input class="form-control" type="number" name="allowance_position" id="allowance-position">
     </div>
 </div>
 <div class="my-1 col-md-4">
     <div class="form-group">
         <label>
-            Phụ cấp đi lại
+            Phụ cấp xăng xe(vnđ)
         </label>
-        <input class="form-control" type="number" name="allowance_transport">
+        <input class="form-control" type="number" name="allowance_fuel" id="allowance-fuel">
     </div>
 </div>
 <div class="my-1 col-md-4">
     <div class="form-group">
         <label>
-            Ngày bắt đầu đi làm (Để tính công, tính lương)
+            Phụ cấp đi lại(vnđ)
+        </label>
+        <input class="form-control" type="number" name="allowance_transport" id="allowance-transport">
+    </div>
+</div>
+<div class="my-1 col-md-4">
+    <div class="form-group">
+        <label>
+            Ngày bắt đầu đi làm
+            <small class="text-primary">
+                (Để tính công, tính lương)
+            </small>
         </label>
         <input class="form-control" type="date" name="work_start_date">
     </div>
@@ -153,7 +167,10 @@
 <div class="my-1 col-md-4">
     <div class="form-group">
         <label>
-            Ngày kết thúc đi làm (Để tính công, tính lương)
+            Ngày kết thúc đi làm
+            <small class="text-primary">
+                (Để tính công, tính lương)
+            </small>
         </label>
         <input class="form-control" type="date" name="work_end_date">
     </div>
