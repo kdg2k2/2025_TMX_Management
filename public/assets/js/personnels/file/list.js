@@ -17,20 +17,8 @@ const renderColumns = () => {
                 return row?.type?.name;
             },
         },
-        {
-            data: null,
-            title: "Người tạo - Cập nhật",
-            render: (data, type, row) => {
-                return row?.created_by?.name;
-            },
-        },
-        {
-            data: null,
-            title: "Thời gian tạo",
-            render: (data, type, row) => {
-                return row.created_at;
-            },
-        },
+        createCreatedByAtColumn(),
+        createCreatedUpdatedColumn(),
         {
             data: null,
             orderable: false,

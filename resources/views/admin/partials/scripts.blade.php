@@ -12,6 +12,9 @@
 
 <script src="assets/js/components/button.js?v={{ time() }}"></script>
 <script src="assets/js/components/badge.js?v={{ time() }}"></script>
+<script src="assets/js/components/action-buttons.js?v={{ time() }}"></script>
+<script src="assets/js/components/created-updated-at-column.js?v={{ time() }}"></script>
+<script src="assets/js/components/created-by-at-column.js?v={{ time() }}"></script>
 
 <script src="assets/js/auth/logout.js?v={{ time() }}"></script>
 
@@ -27,7 +30,6 @@
 
 <script src="assets/js/http-request/handle-form-submit.js?v={{ time() }}"></script>
 <script src="assets/js/http-request/auto-fill-form-patch.js?v={{ time() }}"></script>
-<script src="assets/js/components/action-buttons.js?v={{ time() }}"></script>
 <script src="assets/js/http-request/delete.js?v={{ time() }}"></script>
 <script src="assets/js/http-request/view-or-download-file.js?v={{ time() }}"></script>
 <script src="assets/js/http-request/form-modal.js?v={{ time() }}"></script>

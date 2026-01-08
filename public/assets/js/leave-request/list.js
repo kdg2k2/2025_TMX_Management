@@ -97,18 +97,7 @@ const renderColumns = () => {
                 return row?.adjust_approved_by?.name || "";
             },
         },
-        {
-            data: null,
-            title: "Thời gian tạo/cập nhật",
-            render: (data, type, row) => {
-                return `
-                    <ul class="m-0">
-                        <li>${row.created_at}</li>
-                        <li>${row.updated_at}</li>
-                    </ul>
-                `;
-            },
-        },
+        createCreatedUpdatedColumn(),
         {
             data: null,
             orderable: false,
@@ -209,7 +198,8 @@ const setFilterParams = () => {
             adjustApprovalStatus.value;
     if (fromDateFilter.value)
         customDataTableFilterParams["from_date"] = fromDateFilter.value;
-    if (toDateFilter.value) customDataTableFilterParams["to_date"] = toDateFilter.value;
+    if (toDateFilter.value)
+        customDataTableFilterParams["to_date"] = toDateFilter.value;
 };
 
 [

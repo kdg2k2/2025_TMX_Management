@@ -40,9 +40,11 @@ use App\Http\Controllers\Api\DossierUsageRegisterController;
 use App\Http\Controllers\Api\EligibilityController;
 use App\Http\Controllers\Api\EmploymentContractPersonnelController;
 use App\Http\Controllers\Api\EmploymentContractPersonnelCustomFieldController;
+use App\Http\Controllers\Api\IncomingOfficialDocumentController;
 use App\Http\Controllers\Api\InternalBulletinController;
 use App\Http\Controllers\Api\InternalMeetingMinuteController;
 use App\Http\Controllers\Api\LeaveRequestController;
+use App\Http\Controllers\Api\OfficialDocumentTypeController;
 use App\Http\Controllers\Api\PayrollController;
 use App\Http\Controllers\Api\PersonnelController;
 use App\Http\Controllers\Api\PersonnelCustomFieldController;
@@ -589,6 +591,21 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::controller(VehicleStatisticController::class)->group(function () {
             Route::get('statistic/data', 'data')->name('api.vehicle.statistic.data');
             Route::get('vehicle/statistic/detail', 'detail')->name('api.vehicle.statistic.detail');
+        });
+    });
+
+    // công văn quyết định
+    Route::prefix('official-document')->group(function () {
+        Route::prefix('type')->controller(OfficialDocumentTypeController::class)->group(function () {
+            Route::get('list', 'list')->name('api.official-document.type.list');
+            Route::post('store', 'store')->name('api.official-document.type.store');
+            Route::patch('update', 'update')->name('api.official-document.type.update');
+        });
+
+        Route::prefix('incoming')->controller(IncomingOfficialDocumentController::class)->group(function () {
+            Route::get('list', 'list')->name('api.official-document.incoming.list');
+            Route::post('store', 'store')->name('api.official-document.incoming.store');
+            Route::patch('update', 'update')->name('api.official-document.incoming.update');
         });
     });
 });

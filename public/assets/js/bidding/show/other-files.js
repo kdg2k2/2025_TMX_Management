@@ -12,25 +12,8 @@ window.loadTableOrtherFile = (table = tableOrtherFile) => {
                 data: "content",
                 title: "Nội dung",
             },
-            {
-                data: null,
-                title: "Người tạo - Cập nhật",
-                render: (data, type, row) => {
-                    return row?.created_by?.name || "";
-                },
-            },
-            {
-                data: null,
-                title: "Thời gian tạo/cập nhật",
-                render: (data, type, row) => {
-                    return `
-                    <ul class="m-0">
-                        <li>${row.created_at}</li>
-                        <li>${row.updated_at}</li>
-                    </ul>
-                `;
-                },
-            },
+            createCreatedByAtColumn(),
+            createCreatedUpdatedColumn(),
             {
                 data: null,
                 orderable: false,

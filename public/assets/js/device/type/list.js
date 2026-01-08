@@ -4,18 +4,7 @@ const renderColumns = () => {
             data: "name",
             title: "Tên loại thiết bị",
         },
-        {
-            data: null,
-            title: "Thời gian tạo/cập nhật",
-            render: (data, type, row) => {
-                return `
-                    <ul class="m-0">
-                        <li>${row.created_at}</li>
-                        <li>${row.updated_at}</li>
-                    </ul>
-                `;
-            },
-        },
+        createCreatedUpdatedColumn(),
         {
             data: null,
             orderable: false,

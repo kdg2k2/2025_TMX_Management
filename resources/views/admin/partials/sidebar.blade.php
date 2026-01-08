@@ -282,6 +282,45 @@
                         Hồ sơ - Biên bản - Công văn
                     </span>
                 </li>
+
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-file-text"></i>
+                        <span class="side-menu__label">
+                            Công văn/Quyết định
+                        </span>
+                        <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                    </a>
+
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="javascript:void(0)">
+                                Công văn/Quyết định
+                            </a>
+                        </li>
+
+                        <li class="slide">
+                            <a href="{{ route('official-document.type.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-category"></i>
+                                Loại văn bản
+                            </a>
+                        </li>
+
+                        <li class="slide">
+                            <a href="{{ route('official-document.incoming.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-file-arrow-left"></i>
+                                Văn bản đến/Giao nv
+                            </a>
+                        </li>
+
+                        <li class="slide">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-file-check"></i>
+                                Đề nghị/Phát hành
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="slide has-sub">
                     <a href="javascript:void(0);" class="side-menu__item">
                         <i class="side-menu__icon ti ti-folders"></i>

@@ -8,18 +8,7 @@ const renderColumns = () => {
             data: "email",
             title: "Email",
         },
-        {
-            data: null,
-            title: "Thời gian tạo/cập nhật",
-            render: (data, type, row) => {
-                return `
-                    <ul class="m-0">
-                        <li>${row.created_at}</li>
-                        <li>${row.updated_at}</li>
-                    </ul>
-                `;
-            },
-        },
+        createCreatedUpdatedColumn(),
         {
             data: null,
             orderable: false,
@@ -29,8 +18,9 @@ const renderColumns = () => {
             render: (data, type, row) => {
                 return `
                     ${
-                        createEditBtn(`${editUrl}?id=${row.id}&user_id=${row.user_id}`) +
-                        createDeleteBtn(`${deleteUrl}?id=${row.id}`)
+                        createEditBtn(
+                            `${editUrl}?id=${row.id}&user_id=${row.user_id}`
+                        ) + createDeleteBtn(`${deleteUrl}?id=${row.id}`)
                     }
                 `;
             },

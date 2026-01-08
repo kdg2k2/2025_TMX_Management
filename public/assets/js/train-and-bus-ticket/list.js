@@ -84,13 +84,7 @@ const renderColumns = () => {
                 return row?.created_by?.name || "";
             },
         },
-        {
-            data: null,
-            title: "Thời gian tạo",
-            render: (data, type, row) => {
-                return row.created_at || "";
-            },
-        },
+        createCreatedUpdatedColumn(),
         {
             data: null,
             orderable: false,

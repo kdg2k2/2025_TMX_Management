@@ -102,13 +102,7 @@ const renderColumns = () => {
                 `;
             },
         },
-        {
-            data: null,
-            title: "Người tạo - Cập nhật",
-            render: (data, type, row) => {
-                return row?.created_by?.name || "";
-            },
-        },
+        createCreatedByAtColumn(),
         {
             data: null,
             title: "Người phê duyệt",
@@ -140,18 +134,7 @@ const renderColumns = () => {
             data: "start_date",
             title: "Ngày bắt đầu",
         },
-        {
-            data: null,
-            title: "Thời gian tạo/cập nhật",
-            render: (data, type, row) => {
-                return `
-                    <ul class="m-0">
-                        <li>${row.created_at}</li>
-                        <li>${row.updated_at}</li>
-                    </ul>
-                `;
-            },
-        },
+        createCreatedUpdatedColumn(),
         {
             data: null,
             orderable: false,
