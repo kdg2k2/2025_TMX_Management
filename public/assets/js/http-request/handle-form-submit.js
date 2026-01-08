@@ -1,6 +1,6 @@
 const handleSubmitForm = async (
     e,
-    callbackAfterSubmit = () => {},
+    callbackAfterFormSubmit = () => {},
     resetForm = true,
     formData = null
 ) => {
@@ -15,15 +15,18 @@ const handleSubmitForm = async (
     try {
         setButtonLoading(btnSubmit, true);
 
-        await http[method](action, formData);
+        if (typeof beforeFormSubmit == "function") beforeFormSubmit(formData);
+
+        const res = await http[method](action, formData);
 
         if (resetForm && method === "post") resetFormAfterSubmit(form);
 
         if (typeof window[onSuccess] == "function") window[onSuccess]();
 
-        if (typeof afterSubmitDone == "function") afterSubmitDone();
+        if (typeof afterFormSubmitDone == "function") afterFormSubmitDone();
 
-        if (typeof callbackAfterSubmit == "function") callbackAfterSubmit();
+        if (typeof callbackAfterFormSubmit == "function")
+            callbackAfterFormSubmit(res);
     } catch (error) {
     } finally {
         setButtonLoading(btnSubmit, false);

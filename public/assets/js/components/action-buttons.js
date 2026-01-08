@@ -16,7 +16,7 @@ const createViewBtn = (url) => {
         false,
         {},
         "ti ti-eye-search",
-        `viewHandler('${url}')`
+        `viewFileHandler('${url}')`
     )?.outerHTML;
 };
 
@@ -27,7 +27,7 @@ const createDownloadBtn = (url) => {
         false,
         {},
         "ti ti-download",
-        `downloadHandler('${url}')`
+        `downloadFileHandler('${url}')`
     )?.outerHTML;
 };
 

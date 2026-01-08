@@ -8,7 +8,7 @@
         <label>
             Loại văn bản
         </label>
-        <select name="official_document_type_id" class="form-control" {{ $setRequired ? 'required' : '' }}>
+        <select name="official_document_type_id" id="official-document-type-id" class="form-control" {{ $setRequired ? 'required' : '' }}>
             <x-select-options :items="$officialDocumentTypes" />
         </select>
     </div>
@@ -18,7 +18,7 @@
         <label>
             Loại chương trình
         </label>
-        <select name="program_type" class="form-control" {{ $setRequired ? 'required' : '' }}>
+        <select name="program_type" id="program-type" class="form-control" {{ $setRequired ? 'required' : '' }}>
             <x-select-options :items="$programTypes" :emptyOption="$emptyOpt" keyField="original" valueFields="converted"/>
         </select>
     </div>

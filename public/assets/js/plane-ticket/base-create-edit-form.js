@@ -8,39 +8,26 @@ const cloneRowElement = document.getElementById("clone-row");
 const btnAddRow = cloneRowElement.querySelector("button");
 
 const toggleSelectType = (e) => {
-    const element = e?.target;
-    if (!element) return;
+    const el = e?.target;
+    if (!el) return;
+    const parentClass = ".col-md-4";
 
-    setHiddenAndRequired(
-        selectContract,
-        false,
-        selectContract.closest(".col-md-4")
-    );
-    setHiddenAndRequired(
-        inputOtherProgramName,
-        false,
-        inputOtherProgramName.closest(".col-md-4")
-    );
+    const reset = (field) => {
+        setHiddenAndRequired(field, false, field.closest(parentClass));
+        destroySumoSelect($(field));
+        field.value = "";
+    };
 
-    destroySumoSelect($(selectContract));
-    selectContract.value = "";
-    inputOtherProgramName.value = "";
+    reset(selectContract);
+    reset(inputOtherProgramName);
 
-    if (element.value == "contract") {
-        setHiddenAndRequired(
-            selectContract,
-            true,
-            selectContract.closest(".col-md-4")
-        );
-        initSumoSelect($(selectContract));
-    } else {
-        setHiddenAndRequired(
-            inputOtherProgramName,
-            true,
-            inputOtherProgramName.closest(".col-md-4")
-        );
-    }
+    const isContract = el.value === "contract";
+    const field = isContract ? selectContract : inputOtherProgramName;
+
+    setHiddenAndRequired(field, true, field.closest(parentClass));
+    if (isContract) initSumoSelect($(selectContract));
 };
+
 
 const toggleSelectUserType = (e) => {
     const element = e.target;

@@ -25,4 +25,6 @@
         const $data = @json($data ?? null);
     </script>
     <script src="assets/js/http-request/base-store-and-update.js?v={{ time() }}"></script>
+    <script src="assets/js/set-hide-and-required/script.js?v={{ time() }}"></script>
+    <script src="assets/js/official-document/incoming/base-store-and-update.js?v={{ time() }}"></script>
 @endsection

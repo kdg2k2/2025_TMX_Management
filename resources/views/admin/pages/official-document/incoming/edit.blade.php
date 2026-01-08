@@ -10,7 +10,8 @@
 
     <div class="card custom-card">
         <div class="card-body">
-            <form id="submit-form" class="row" action="{{ route('api.official-document.incoming.update', ['id' => $data['id']]) }}">
+            <form id="submit-form" class="row"
+                action="{{ route('api.official-document.incoming.update', ['id' => $data['id']]) }}">
                 @method('patch')
                 @include('admin.pages.official-document.incoming.create-edit-form-content')
                 <div class="my-1 col-12 text-center">
@@ -25,4 +26,6 @@
         const $data = @json($data ?? null);
     </script>
     <script src="assets/js/http-request/base-store-and-update.js?v={{ time() }}"></script>
+    <script src="assets/js/set-hide-and-required/script.js?v={{ time() }}"></script>
+    <script src="assets/js/official-document/incoming/base-store-and-update.js?v={{ time() }}"></script>
 @endsection

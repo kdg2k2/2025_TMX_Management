@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\IncomingOfficialDocumentRepository;
+use DateTime;
 
 class IncomingOfficialDocumentService extends BaseService
 {
@@ -18,16 +19,41 @@ class IncomingOfficialDocumentService extends BaseService
     public function formatRecord(array $array)
     {
         $array = parent::formatRecord($array);
+
         $array['status'] = $this->repository->getStatus($array['status']);
-        if (isset($array['issuing_date']))
-            $array['issuing_date'] = $this->formatDateForPreview($array['issuing_date']);
-        if (isset($array['received_date']))
-            $array['received_date'] = $this->formatDateForPreview($array['received_date']);
-        if (isset($array['task_completion_deadline']))
+
+        foreach (['issuing_date', 'received_date'] as $field)
+            if (!empty($array[$field]))
+                $array[$field] = $this->formatDateForPreview($array[$field]);
+
+        foreach (['assign_at', 'complete_at'] as $field)
+            if (!empty($array[$field]))
+                $array[$field] = $this->formatDateTimeForPreview($array[$field]);
+
+        if (!empty($array['task_completion_deadline'])) {
+            $array = array_merge($array, $this->checkDatelineExpired($array['task_completion_deadline']));
             $array['task_completion_deadline'] = $this->formatDateForPreview($array['task_completion_deadline']);
-        if (isset($array['attachment_file']))
+        }
+
+        if (!empty($array['attachment_file']))
             $array['attachment_file'] = $this->getAssetUrl($array['attachment_file']);
+
         return $array;
+    }
+
+    public function checkDatelineExpired(string $date)
+    {
+        $deadline = new DateTime($date);
+        $today = new DateTime();
+
+        $diff = $today->diff($deadline)->days;
+        $expired = $deadline < $today;
+
+        return [
+            'expired' => $expired,
+            'expired_color' => $expired ? 'danger' : ($diff >= 3 ? 'primary' : 'warning'),
+            'expired_message' => $expired ? 'Đã quá hạn' : ($diff >= 3 ? 'Còn thời gian' : 'Sắp đến hạn'),
+        ];
     }
 
     public function beforeStore(array $request)
@@ -64,6 +90,26 @@ class IncomingOfficialDocumentService extends BaseService
         $res['users'] = $this->userService->list($baseRequest);
         $res['programTypes'] = $this->repository->getProgramType();
         $res['contracts'] = $this->contractService->list($baseRequest);
+        $res['status'] = $this->repository->getStatus();
         return $res;
+    }
+
+    public function assign(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $users = $request['users'] ?? [];
+            unset($request['users']);
+            $data = $this->repository->update($request);
+            $data->users()->sync($users);
+            
+            return $data;
+        }, true);
+    }
+
+    public function complete(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            return $this->repository->update($request);
+        }, true);
     }
 }

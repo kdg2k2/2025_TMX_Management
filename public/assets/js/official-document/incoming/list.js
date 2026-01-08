@@ -93,6 +93,48 @@ const renderColumns = () => {
                 return row?.notes || "";
             },
         },
+        {
+            data: null,
+            title: "Trạng thái nhiệm vụ",
+            render: (data, type, row) => {
+                return createBadge(row?.status?.converted, row?.status?.color);
+            },
+        },
+        {
+            data: null,
+            title: "Người thực hiện nhiệm vụ",
+            render: (data, type, row) => {
+                return row?.task_assignee?.name || "";
+            },
+        },
+        {
+            data: null,
+            title: "Hạn hoàn thành nhiệm vụ",
+            render: (data, type, row) => {
+                return row?.task_completion_deadline || "";
+            },
+        },
+        {
+            data: null,
+            title: "Ghi chú nhiệm vụ",
+            render: (data, type, row) => {
+                return row?.task_notes || "";
+            },
+        },
+        {
+            data: null,
+            title: "Thời gian giao nhiệm vụ",
+            render: (data, type, row) => {
+                return row?.assign_at || "";
+            },
+        },
+        {
+            data: null,
+            title: "Thời gian hoàn thành nhiệm vụ",
+            render: (data, type, row) => {
+                return row?.complete_at || "";
+            },
+        },
         createCreatedByAtColumn(),
         createCreatedUpdatedColumn(),
         {
@@ -109,9 +151,29 @@ const renderColumns = () => {
                             : ""
                     }
                     ${
-                        createEditBtn(`${editUrl}?id=${row.id}`) +
-                        createDeleteBtn(`${deleteUrl}?id=${row.id}`)
+                        row?.status?.original === "new"
+                            ? createActionBtn(
+                                  "primary",
+                                  "Giao nhiệm vụ",
+                                  `${assignUrl}?id=${row.id}`,
+                                  "loadList",
+                                  "showAssignModal",
+                                  "ti ti-clipboard-plus"
+                              ) +
+                              createEditBtn(`${editUrl}?id=${row.id}`) +
+                              createDeleteBtn(`${deleteUrl}?id=${row.id}`)
+                            : row?.status?.original === "in_progress"
+                            ? createActionBtn(
+                                  "success",
+                                  "Hoàn thành nhiệm vụ",
+                                  `${completeUrl}?id=${row.id}`,
+                                  "loadList",
+                                  "showCompleteModal",
+                                  "ti ti-circle-check"
+                              )
+                            : ""
                     }
+
                 `;
             },
         },

@@ -1,3 +1,3 @@
-const afterSubmitDone = () => {
+const afterFormSubmitDone = () => {
     refreshSumoSelect();
 };

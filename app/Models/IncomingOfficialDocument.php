@@ -15,11 +15,11 @@ class IncomingOfficialDocument extends Model
     protected const STATUS = [
         'new' => [
             'original' => 'new',
-            'converted' => 'Mới tạo',
+            'converted' => 'Chưa giao',
             'color' => 'primary'
         ],
-        'processing' => [
-            'original' => 'processing',
+        'in_progress' => [
+            'original' => 'in_progress',
             'converted' => 'Đang xử lý',
             'color' => 'warning'
         ],
@@ -56,6 +56,11 @@ class IncomingOfficialDocument extends Model
         return $this->hasMany(IncomingOfficialDocumentUser::class, 'incoming_official_document_id');
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, IncomingOfficialDocumentUser::class);
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -74,5 +79,10 @@ class IncomingOfficialDocument extends Model
     public function taskAssignee()
     {
         return $this->belongsTo(User::class, 'task_assignee_id');
+    }
+
+    public function assingedBy()
+    {
+        return $this->belongsTo(User::class, 'assinged_by');
     }
 }
