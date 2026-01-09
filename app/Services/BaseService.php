@@ -139,13 +139,15 @@ abstract class BaseService
     {
         return $this->tryThrow(function () use ($request) {
             // Pre-processing hook
-            $request = $this->beforeStore($request);
+            $request = $this->beforeStore(request: $request);
+            $extract = $this->extractBefore($request);
 
             // Store entity
-            $data = $this->repository->store($request);
+            $data = $this->repository->store($extract['request']);
 
             // Post-processing hook
-            $this->afterStore($data, $request);
+            $this->afterStore($data, $extract['request']);
+            $this->handleExtractAfter($extract, $data);
 
             return $data;
         }, true);
@@ -159,12 +161,14 @@ abstract class BaseService
         return $this->tryThrow(function () use ($request) {
             // Pre-processing hook
             $request = $this->beforeUpdate($request);
+            $extract = $this->extractBefore($request);
 
             // Update entity
-            $data = $this->repository->update($request);
+            $data = $this->repository->update($extract['request']);
 
             // Post-processing hook
-            $this->afterUpdate($data, $request);
+            $this->afterUpdate($data, $extract['request']);
+            $this->handleExtractAfter($extract, $data);
 
             return $data;
         }, true);
@@ -292,4 +296,13 @@ abstract class BaseService
         if (!empty($data))
             $model->$relation()->insert($data);
     }
+
+    protected function extractBefore(array $request)
+    {
+        return [
+            'request' => $request,
+        ];
+    }
+
+    protected function handleExtractAfter(array $extract, $data) {}
 }

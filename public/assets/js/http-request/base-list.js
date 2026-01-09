@@ -11,8 +11,9 @@ const createDataTableFilterParams = () => {
 };
 
 window.loadList = () => {
+    const dataTable = $("#datatable") || table;
     createDataTableServerSide(
-        $("#datatable") || table,
+        dataTable,
         listUrl,
         renderColumns(),
         (item) => item,

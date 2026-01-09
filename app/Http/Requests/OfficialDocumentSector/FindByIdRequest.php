@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\OfficialDocument;
+namespace App\Http\Requests\OfficialDocumentSector;
 
 use App\Http\Requests\BaseFindByIdRequest;
 
@@ -9,7 +9,7 @@ class FindByIdRequest extends BaseFindByIdRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:official_documents,id'
+            'id' => 'required|integer|exists:official_document_sectors,id'
         ];
     }
 }

@@ -1,9 +1,12 @@
-const createCreatedByAtColumn = () => {
+const createCreatedByAtColumn = (
+    title = "Người tạo/cập nhật",
+    fieldInfo = "created_by"
+) => {
     return {
         data: null,
-        title: "Người tạo/cập nhật",
+        title: title,
         render: (data, type, row) => {
-            return row?.created_by?.name || "";
+            return row?.[fieldInfo]?.name || "";
         },
     };
 };

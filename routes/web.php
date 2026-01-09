@@ -39,6 +39,8 @@ use App\Http\Controllers\Admin\IncomingOfficialDocumentController;
 use App\Http\Controllers\Admin\InternalBulletinController;
 use App\Http\Controllers\Admin\InternalMeetingMinuteController;
 use App\Http\Controllers\Admin\LeaveRequestController;
+use App\Http\Controllers\Admin\OfficialDocumentController;
+use App\Http\Controllers\Admin\OfficialDocumentSectorController;
 use App\Http\Controllers\Admin\OfficialDocumentTypeController;
 use App\Http\Controllers\Admin\PayrollController;
 use App\Http\Controllers\Admin\PersonnelController;
@@ -534,6 +536,13 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::delete('delete', 'delete')->name('official-document.type.delete');
         });
 
+        Route::prefix('sector')->controller(OfficialDocumentSectorController::class)->group(function () {
+            Route::get('index', 'index')->name('official-document.sector.index');
+            Route::get('create', 'create')->name('official-document.sector.create');
+            Route::get('edit', 'edit')->name('official-document.sector.edit');
+            Route::delete('delete', 'delete')->name('official-document.sector.delete');
+        });
+
         Route::prefix('incoming')->controller(IncomingOfficialDocumentController::class)->group(function () {
             Route::get('index', 'index')->name('official-document.incoming.index');
             Route::get('create', 'create')->name('official-document.incoming.create');
@@ -541,6 +550,18 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::delete('delete', 'delete')->name('official-document.incoming.delete');
             Route::post('assign', 'assign')->name('official-document.incoming.assign');
             Route::post('complete', 'complete')->name('official-document.incoming.complete');
+        });
+
+        Route::controller(OfficialDocumentController::class)->group(function () {
+            Route::get('index', 'index')->name('official-document.index');
+            Route::get('create', 'create')->name('official-document.create');
+            Route::get('edit', 'edit')->name('official-document.edit');
+            Route::delete('delete', 'delete')->name('official-document.delete');
+            Route::post('review-approve', 'reviewApprove')->name('official-document.review-approve');
+            Route::post('review-reject', 'reviewReject')->name('official-document.review-reject');
+            Route::post('approve', 'approve')->name('official-document.approve');
+            Route::post('reject', 'reject')->name('official-document.reject');
+            Route::post('release', 'release')->name('official-document.release');
         });
     });
 });

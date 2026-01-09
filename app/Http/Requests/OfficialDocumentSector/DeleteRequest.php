@@ -1,5 +1,5 @@
 <?php
 
-namespace App\Http\Requests\OfficialDocument;
+namespace App\Http\Requests\OfficialDocumentSector;
 
 class DeleteRequest extends FindByIdRequest {}

@@ -21,6 +21,9 @@
     $pendingDeviceLoanFlag = app(\App\Models\DeviceLoan::class)->where('status', 'pending')->count();
     $pendingDeviceFixFlag = app(\App\Models\DeviceFix::class)->where('status', 'pending')->count();
     $pendingVehicleLoanFlag = app(\App\Models\VehicleLoan::class)->where('status', 'pending')->count();
+    $pendingOfficialDocumentFlag = app(\App\Models\OfficialDocument::class)
+        ->whereNotIn('status', ['rejected', 'released'])
+        ->count();
 @endphp
 <aside class="app-sidebar sticky" id="sidebar">
     <div class="main-sidebar-header">
@@ -289,6 +292,7 @@
                         <span class="side-menu__label">
                             Công văn/Quyết định
                         </span>
+                        {!! $showBadge($pendingOfficialDocumentFlag) !!}
                         <i class="ri-arrow-right-s-line side-menu__angle"></i>
                     </a>
 
@@ -297,26 +301,42 @@
                             <a href="javascript:void(0)">
                                 Công văn/Quyết định
                             </a>
+                            {!! $showBadge($pendingOfficialDocumentFlag) !!}
                         </li>
 
-                        <li class="slide">
-                            <a href="{{ route('official-document.type.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-category"></i>
-                                Loại văn bản
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-settings"></i>
+                                Thiết lập
+                                <i class="ri-arrow-right-s-line side-menu__angle"></i>
                             </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="{{ route('official-document.type.index') }}" class="side-menu__item">
+                                        <i
+                                            class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-file-description"></i>
+                                        Loại văn bản
+                                    </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('official-document.sector.index') }}" class="side-menu__item">
+                                        <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-briefcase"></i>
+                                        Loại lĩnh vực
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-
                         <li class="slide">
                             <a href="{{ route('official-document.incoming.index') }}" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon me-2 d-block ti ti-file-arrow-left"></i>
                                 Văn bản đến/Giao nv
                             </a>
                         </li>
-
                         <li class="slide">
-                            <a href="javascript:void(0);" class="side-menu__item">
+                            <a href="{{ route('official-document.index') }}" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon me-2 d-block ti ti-file-check"></i>
                                 Đề nghị/Phát hành
+                                {!! $showBadge($pendingOfficialDocumentFlag) !!}
                             </a>
                         </li>
                     </ul>

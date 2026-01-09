@@ -69,6 +69,7 @@ class IncomingOfficialDocumentRepository extends BaseRepository
     protected function applyListFilters($query, array $request)
     {
         foreach ([
+            'task_assignee_id',
             'official_document_type_id',
             'program_type',
             'status',

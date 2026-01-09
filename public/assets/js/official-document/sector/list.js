@@ -14,6 +14,16 @@ const renderColumns = () => {
                 return row?.description || "";
             },
         },
+        {
+            data: null,
+            title: "Người nhận mail",
+            render: (data, type, row) => {
+                return row?.users
+                    ?.map((value, index) => value?.name || "")
+                    ?.filter(Boolean)
+                    ?.join(", ");
+            },
+        },
         createCreatedByAtColumn(),
         createCreatedUpdatedColumn(),
         {

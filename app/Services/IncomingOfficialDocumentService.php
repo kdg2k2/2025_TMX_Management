@@ -39,6 +39,8 @@ class IncomingOfficialDocumentService extends BaseService
 
         $array['status'] = $this->repository->getStatus($array['status']);
 
+        $array['name'] = $array['program_type'] == 'contract' ? ($array['contract']['name'] ?? null) : $array['other_program_name'];
+
         return $array;
     }
 

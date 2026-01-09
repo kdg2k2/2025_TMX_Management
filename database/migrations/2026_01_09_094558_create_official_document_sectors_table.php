@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // công văn quyết định
-        Schema::create('official_documents', function (Blueprint $table) {
+        // lĩnh vực của văn bản
+        Schema::create('official_document_sectors', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('official_document_type_id')->comment('loại văn bản')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('name')->comment('Tên loại văn bản')->unique();
+            $table->string('description')->comment('Mô tả loại văn bản')->nullable();
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('official_documents');
+        Schema::dropIfExists('official_document_sectors');
     }
 };
