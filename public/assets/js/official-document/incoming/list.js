@@ -189,3 +189,17 @@ const renderColumns = () => {
         },
     ];
 };
+
+const callbackAfterRenderLoadList = () => {
+    const table = ($("#datatable") || table).DataTable();
+    table.rows().every(function () {
+        const data = this.data();
+        const rowNode = this.node();
+
+        if (typeof data?.expired != undefined) {
+            const className = `text-${data.expired_color}`;
+            $(rowNode).addClass(className);
+            $(rowNode).attr("title", data.expired_message);
+        }
+    });
+};

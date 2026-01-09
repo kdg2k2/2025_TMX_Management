@@ -1,5 +1,5 @@
 var $tooltips =
-    '[data-bs-toggle="tooltip"], [data-toggle="tooltip"], button[title], [data-bs-original-title], button[aria-label]';
+    '[data-bs-toggle="tooltip"], [data-toggle="tooltip"], button[title], [data-bs-original-title], button[aria-label], tr[title]';
 var $customTooltips =
     "calcite-button[title], calcite-button[data-bs-original-title], calcite-button[aria-label], calcite-action[title], calcite-action[data-bs-original-title], calcite-action[aria-label]";
 var tooltipObserver = null; // Lưu observer để tránh tạo nhiều lần

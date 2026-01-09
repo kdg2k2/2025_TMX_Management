@@ -20,8 +20,6 @@ class IncomingOfficialDocumentService extends BaseService
     {
         $array = parent::formatRecord($array);
 
-        $array['status'] = $this->repository->getStatus($array['status']);
-
         foreach (['issuing_date', 'received_date'] as $field)
             if (!empty($array[$field]))
                 $array[$field] = $this->formatDateForPreview($array[$field]);
@@ -31,28 +29,51 @@ class IncomingOfficialDocumentService extends BaseService
                 $array[$field] = $this->formatDateTimeForPreview($array[$field]);
 
         if (!empty($array['task_completion_deadline'])) {
-            $array = array_merge($array, $this->checkDatelineExpired($array['task_completion_deadline']));
+            if ($array['status'] == 'in_progress')
+                $array = array_merge($array, $this->checkDatelineExpired($array['task_completion_deadline']));
             $array['task_completion_deadline'] = $this->formatDateForPreview($array['task_completion_deadline']);
         }
 
         if (!empty($array['attachment_file']))
             $array['attachment_file'] = $this->getAssetUrl($array['attachment_file']);
 
+        $array['status'] = $this->repository->getStatus($array['status']);
+
         return $array;
     }
 
-    public function checkDatelineExpired(string $date)
+    public function checkDatelineExpired(string $date): array
     {
         $deadline = new DateTime($date);
-        $today = new DateTime();
+        $today = new DateTime('today');
 
-        $diff = $today->diff($deadline)->days;
+        $interval = $today->diff($deadline);
+        $days = $interval->days;
         $expired = $deadline < $today;
 
+        if ($expired) {
+            return [
+                'expired' => true,
+                'expired_color' => 'danger',
+                'expired_message' => "Quá hạn {$days} ngày",
+                'days' => -$days,
+            ];
+        }
+
+        if ($days >= 3) {
+            return [
+                'expired' => false,
+                'expired_color' => 'primary',
+                'expired_message' => "Còn {$days} ngày",
+                'days' => $days,
+            ];
+        }
+
         return [
-            'expired' => $expired,
-            'expired_color' => $expired ? 'danger' : ($diff >= 3 ? 'primary' : 'warning'),
-            'expired_message' => $expired ? 'Đã quá hạn' : ($diff >= 3 ? 'Còn thời gian' : 'Sắp đến hạn'),
+            'expired' => false,
+            'expired_color' => 'warning',
+            'expired_message' => "Sắp đến hạn (còn {$days} ngày)",
+            'days' => $days,
         ];
     }
 
