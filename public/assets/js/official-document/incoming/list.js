@@ -109,6 +109,16 @@ const renderColumns = () => {
         },
         {
             data: null,
+            title: "Thành viên hỗ trợ nhiệm vụ",
+            render: (data, type, row) => {
+                return row?.incoming_official_document_users
+                    ?.map((value, index) => value?.user?.name || "")
+                    ?.filter(Boolean)
+                    ?.join(", ");
+            },
+        },
+        {
+            data: null,
             title: "Hạn hoàn thành nhiệm vụ",
             render: (data, type, row) => {
                 return row?.task_completion_deadline || "";

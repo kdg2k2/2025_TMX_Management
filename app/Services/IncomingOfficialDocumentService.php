@@ -101,7 +101,7 @@ class IncomingOfficialDocumentService extends BaseService
             unset($request['users']);
             $data = $this->repository->update($request);
             $data->users()->sync($users);
-            
+            $this->sendMail($data['id'], 'Giao');
             return $data;
         }, true);
     }
@@ -109,7 +109,36 @@ class IncomingOfficialDocumentService extends BaseService
     public function complete(array $request)
     {
         return $this->tryThrow(function () use ($request) {
-            return $this->repository->update($request);
+            $data = $this->repository->update($request);
+            $this->sendMail($data['id'], 'Hoàn thành');
+            return $data;
         }, true);
+    }
+
+    private function sendMail(int $id, string $subject)
+    {
+        $data = $this->findById($id, true, false);
+        $files = [$this->handlerUploadFileService->getAbsolutePublicPath($data['attachment_file'])];
+        $data = $this->formatRecord($data->load($this->repository->relations)->toArray());
+        $emails = $this->getEmails($data);
+        dispatch(new \App\Jobs\SendMailJob('emails.incoming-official-document', $subject . ' nhiệm vụ từ văn bản đến', $emails, [
+            'data' => $data,
+        ], $files));
+    }
+
+    private function getEmails(array $data)
+    {
+        return $this->userService->getEmails([
+            $data['created_by']['id'],
+            $data['task_assignee_id']['id'] ?? null,
+            $data['assinged_by']['id'] ?? null,
+            $data['contract_id'] ? $this->contractService->getMemberEmails($data['contract_id'], [
+                'executor_user',
+                'instructors',
+                'professionals',
+            ]) : [],
+            collect($data['incoming_official_document_users'])->pluck('user_id')->unique()->filter()->toArray(),
+            app(TaskScheduleService::class)->getUserIdByScheduleKey('INCOMING_OFFICIAL_DOCUMENT')
+        ]);
     }
 }
