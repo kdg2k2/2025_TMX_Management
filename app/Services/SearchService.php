@@ -120,11 +120,11 @@ class SearchService
     /**
      * Apply text search với support tiếng Việt
      */
-    protected function applyTextSearch($query, array $columns, string $searchTerm)
+    protected function applyTextSearch($query, array $columns, string $searchTerm, string $searchTermNoAccent)
     {
         foreach ($columns as $column) {
             $sqlExpr = $this->stringHandlerService->buildSqlUnaccentExpression($column);
-            $query->orWhereRaw("LOWER($sqlExpr) LIKE ?", ["%{$searchTerm}%"]);
+            $query->orWhereRaw("LOWER($sqlExpr) LIKE ?", ['%' . strtolower($searchTermNoAccent) . '%']);
         }
     }
 
