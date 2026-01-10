@@ -4,6 +4,25 @@
         <x-button variant="success" size="sm" icon="ti ti-plus" tooltip="Thêm mới" :href="route('official-document.create')" />
     </x-breadcrumb>
 
+    <div class="row mb-2">
+        @php
+            $colClass ??= 'col-lg-2 col-6';
+            $setRequired ??= false;
+            $setEmptyOption ??= true;
+        @endphp
+        @include('admin.pages.official-document.base-inputs')
+        <div class="{{ $colClass }} my-1">
+            <div class="form-group">
+                <label>
+                    Trạng thái
+                </label>
+                <select name="status" id="status" class="form-control" {{ $setRequired ? 'required' : '' }}>
+                    <x-select-options :items="$statuses" :emptyOption="$setEmptyOption" keyField="original" valueFields="converted" />
+                </select>
+            </div>
+        </div>
+    </div>
+
     <div class="card custom-card">
         <div class="card-body">
             <table class="display w-100" id="datatable"></table>
@@ -118,6 +137,7 @@
 @section('scripts')
     <script>
         const table = $('#datatable');
+        const authId = @json(auth()->id());
         const listUrl = @json(route('api.official-document.list'));
         const editUrl = @json(route('official-document.edit'));
         const deleteUrl = @json(route('official-document.delete'));
@@ -131,4 +151,5 @@
     <script src="assets/js/official-document/modals.js?v={{ time() }}"></script>
     <script src="assets/js/components/approve-reject-modal-event.js?v={{ time() }}"></script>
     <script src="assets/js/official-document/list.js?v={{ time() }}"></script>
+    <script src="assets/js/official-document/filter.js?v={{ time() }}"></script>
 @endsection

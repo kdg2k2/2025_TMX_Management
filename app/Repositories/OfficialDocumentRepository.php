@@ -90,6 +90,7 @@ class OfficialDocumentRepository extends BaseRepository
             'release_type',
             'program_type',
             'status',
+            'official_document_type_id',
         ] as $item) {
             if (isset($request[$item]))
                 $query->where($item, $request[$item]);

@@ -211,7 +211,8 @@ const renderColumns = () => {
                                   "loadList",
                                   "showReviewRejectModal",
                                   "ti ti-circle-x"
-                              )
+                              ) +
+                              createDeleteBtn(`${deleteUrl}?id=${row.id}`)
                             : ""
                     }
                     ${
@@ -241,8 +242,14 @@ const renderColumns = () => {
                             : ""
                     }
                     ${
-                        createEditBtn(`${editUrl}?id=${row.id}`) +
-                        createDeleteBtn(`${deleteUrl}?id=${row.id}`)
+                        authId == row?.created_by?.id
+                            ? createEditBtn(
+                                  `${editUrl}?id=${row.id}`,
+                                  "teal",
+                                  "Tái sử dụng thông tin đề nghị",
+                                  "ti ti-restore"
+                              )
+                            : ""
                     }
                 `;
             },

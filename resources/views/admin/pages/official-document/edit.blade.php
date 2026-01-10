@@ -3,7 +3,7 @@
     <x-breadcrumb :items="[
         ['label' => 'Trang chủ', 'url' => route('dashboard')],
         ['label' => 'Đề nghị/Phát hành', 'url' => route('official-document.index')],
-        ['label' => 'Cập nhật', 'url' => null],
+        ['label' => 'Tái sử dụng', 'url' => null],
     ]">
         <x-button variant="primary" size="sm" icon="ti ti-list" tooltip="Danh sách" :href="route('official-document.index')" />
     </x-breadcrumb>

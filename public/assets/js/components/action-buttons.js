@@ -1,10 +1,15 @@
-const createEditBtn = (url) => {
+const createEditBtn = (
+    url,
+    color = "warning",
+    title = "Cập nhật",
+    icon = "ti ti-edit"
+) => {
     return createBtn(
-        "warning",
-        "Cập nhật",
+        color,
+        title,
         false,
         {},
-        "ti ti-edit",
+        icon,
         `window.location.href='${url}'`
     )?.outerHTML;
 };

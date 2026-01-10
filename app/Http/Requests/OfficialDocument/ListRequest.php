@@ -14,6 +14,7 @@ class ListRequest extends BaseListRequest
                 'release_type' => 'nullable|in:new,revision,reply',
                 'program_type' => 'nullable|in:contract,incoming,orther',
                 'status' => 'nullable|in:pending_review,reviewed,approved,rejected,released',
+                'official_document_type_id' => 'nullable|exists:official_document_types,id',
             ]
         );
     }

@@ -100,6 +100,7 @@ class OfficialDocumentService extends BaseService
         $res['incomingOfficialDocuments'] = $this->incomingOfficialDocumentService->list([
             'task_assignee_id' => $this->getUserId() != 1 ? $this->getUserId() : null
         ]);
+        $res['statuses'] = $this->repository->getStatus();
         return $res;
     }
 
