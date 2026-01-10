@@ -22,21 +22,21 @@ class OfficialDocumentController extends Controller
     public function index()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.official-document.index');
+            return view('admin.pages.official-document.index', $this->service->getBaseDataForLCEView());
         });
     }
 
     public function create()
     {
         return $this->catchWeb(function () {
-            return view('admin.pages.official-document.create', $this->service->getBaseDataForCEView());
+            return view('admin.pages.official-document.create', $this->service->getBaseDataForLCEView());
         });
     }
 
     public function edit(EditRequest $request)
     {
         return $this->catchWeb(function () use ($request) {
-            return view('admin.pages.official-document.edit', $this->service->getBaseDataForCEView($request->validated()['id']));
+            return view('admin.pages.official-document.edit', $this->service->getBaseDataForLCEView($request->validated()['id']));
         });
     }
 

@@ -270,13 +270,13 @@ class ContractService extends BaseService
     {
         $data = $this->repository->findById($id);
         return [
-            'accounting_contact' => $data['accountingContact'] ?? [],
-            'inspector_user' => $data['inspectorUser'] ?? [],
-            'executor_user' => $data['executorUser'] ?? [],
-            'instructors' => $data['instructors'] ?? [],
-            'professionals' => $data['professionals'] ?? [],
-            'disbursements' => $data['disbursements'] ?? [],
-            'intermediate_collaborators' => $data['intermediateCollaborators'] ?? [],
+            'accounting_contact' => $data['accountingContact'] ?? [], // phụ trách kế toán
+            'inspector_user' => $data['inspectorUser'] ?? [], // người kiểm tra SPTG
+            'executor_user' => $data['executorUser'] ?? [], // người thực hiện SPTG
+            'instructors' => $data['instructors'] ?? [], // người hướng dẫn
+            'professionals' => $data['professionals'] ?? [], // chuyên môn
+            'disbursements' => $data['disbursements'] ?? [], // giải ngân
+            'intermediate_collaborators' => $data['intermediateCollaborators'] ?? [], // các thành viên hỗ trợ thực hiện SPTG
         ];
     }
 

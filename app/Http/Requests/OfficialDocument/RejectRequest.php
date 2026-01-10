@@ -11,6 +11,9 @@ class RejectRequest extends BaseRejectRequest
         return array_merge(
             parent::rules(),
             app(FindByIdRequest::class)->rules(),
+            [
+                'comment_docx_file' => 'required|file|mimes:docx|max:51200',
+            ]
         );
     }
 }

@@ -138,4 +138,14 @@ class OfficialDocument extends Model
     {
         return $this->belongsTo(User::class, 'signed_by');
     }
+
+    public function contract()
+    {
+        return $this->belongsTo(Contract::class);
+    }
+
+    public function incomingOfficialDocument()
+    {
+        return $this->belongsTo(IncomingOfficialDocument::class);
+    }
 }

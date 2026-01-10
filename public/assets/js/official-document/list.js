@@ -69,6 +69,17 @@ const renderColumns = () => {
         },
         {
             data: null,
+            title: "Trạng thái",
+            render: (data, type, row) => {
+                return createBadge(
+                    row?.status?.converted,
+                    row?.status?.color,
+                    row?.status?.icon
+                );
+            },
+        },
+        {
+            data: null,
             title: "Loại văn bản",
             render: (data, type, row) => {
                 return row?.official_document_type?.name || "";
@@ -183,6 +194,52 @@ const renderColumns = () => {
             className: "text-center",
             render: (data, type, row) => {
                 return `
+                    ${
+                        row?.status?.original === "pending_review"
+                            ? createActionBtn(
+                                  "success",
+                                  "Phê duyệt kiểm tra",
+                                  `${reviewApproveUrl}?id=${row.id}`,
+                                  "loadList",
+                                  "showReviewApproveModal",
+                                  "ti ti-circle-check"
+                              ) +
+                              createActionBtn(
+                                  "danger",
+                                  "Từ chối kiểm tra",
+                                  `${reviewRejectUrl}?id=${row.id}`,
+                                  "loadList",
+                                  "showReviewRejectModal",
+                                  "ti ti-circle-x"
+                              )
+                            : ""
+                    }
+                    ${
+                        row?.status?.original == "reviewed"
+                            ? createApproveBtn(
+                                  `${approveUrl}?id=${row.id}`,
+                                  "loadList",
+                                  "showApproveModal"
+                              ) +
+                              createRejectBtn(
+                                  `${rejectUrl}?id=${row.id}`,
+                                  "loadList",
+                                  "showRejectModal"
+                              )
+                            : ""
+                    }
+                    ${
+                        row?.status?.original == "approved"
+                            ? createActionBtn(
+                                  "outline-success",
+                                  "Phát hành văn bản",
+                                  `${releaseUrl}?id=${row.id}`,
+                                  "loadList",
+                                  "showReleaseModal",
+                                  "ti ti-send"
+                              )
+                            : ""
+                    }
                     ${
                         createEditBtn(`${editUrl}?id=${row.id}`) +
                         createDeleteBtn(`${deleteUrl}?id=${row.id}`)

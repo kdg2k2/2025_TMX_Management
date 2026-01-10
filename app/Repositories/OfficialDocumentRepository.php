@@ -13,10 +13,25 @@ class OfficialDocumentRepository extends BaseRepository
             'createdBy:id,name',
             'approvedBy:id,name',
             'officialDocumentType:id,name',
-            'officialDocumentSector:id,name',
+            'officialDocumentSector' => function ($q) {
+                $q->with([
+                    'users:id'
+                ])->select(['id', 'name']);
+            },
             'users:id,name',
             'reviewedBy:id,name',
             'signedBy:id,name',
+            'contract:id,name',
+            'incomingOfficialDocument' => function ($q) {
+                $q->with([
+                    'contract:id,name',
+                ])->select([
+                    'id',
+                    'program_type',
+                    'contract_id',
+                    'other_program_name',
+                ]);
+            },
         ];
     }
 

@@ -21,25 +21,27 @@ class IncomingOfficialDocumentService extends BaseService
         $array = parent::formatRecord($array);
 
         foreach (['issuing_date', 'received_date'] as $field)
-            if (!empty($array[$field]))
+            if (isset($array[$field]))
                 $array[$field] = $this->formatDateForPreview($array[$field]);
 
         foreach (['assign_at', 'complete_at'] as $field)
-            if (!empty($array[$field]))
+            if (isset($array[$field]))
                 $array[$field] = $this->formatDateTimeForPreview($array[$field]);
 
-        if (!empty($array['task_completion_deadline'])) {
+        if (isset($array['task_completion_deadline'])) {
             if ($array['status'] == 'in_progress')
                 $array = array_merge($array, $this->checkDatelineExpired($array['task_completion_deadline']));
             $array['task_completion_deadline'] = $this->formatDateForPreview($array['task_completion_deadline']);
         }
 
-        if (!empty($array['attachment_file']))
+        if (isset($array['attachment_file']))
             $array['attachment_file'] = $this->getAssetUrl($array['attachment_file']);
 
-        $array['status'] = $this->repository->getStatus($array['status']);
+        if (isset($array['status']))
+            $array['status'] = $this->repository->getStatus($array['status']);
 
-        $array['name'] = $array['program_type'] == 'contract' ? ($array['contract']['name'] ?? null) : $array['other_program_name'];
+        if (isset($array['program_type']))
+            $array['name'] = $array['program_type'] == 'contract' ? ($array['contract']['name'] ?? null) : $array['other_program_name'];
 
         return $array;
     }
@@ -149,7 +151,7 @@ class IncomingOfficialDocumentService extends BaseService
         ], $files));
     }
 
-    private function getEmails(array $data)
+    public function getEmails(array $data)
     {
         return $this->userService->getEmails([
             $data['created_by']['id'],

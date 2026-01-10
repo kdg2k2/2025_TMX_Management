@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests\OfficialDocument;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class ReviewRejectRequest extends FormRequest
+class ReviewRejectRequest extends FindByIdRequest
 {
     public function prepareForValidation()
     {
+        parent::prepareForValidation();
         $this->merge([
             'status' => 'pending_review',
         ]);
@@ -15,9 +14,12 @@ class ReviewRejectRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'status' => 'required|in:pending_review',
-            'reviewer_id' => 'required|exists:users,id',
-        ];
+        return array_merge(
+            parent::rules(),
+            [
+                'status' => 'required|in:pending_review',
+                'reviewed_by' => 'required|exists:users,id',
+            ]
+        );
     }
 }

@@ -11,6 +11,9 @@ class ApproveRequest extends BaseApproveRequest
         return array_merge(
             parent::rules(),
             app(FindByIdRequest::class)->rules(),
+            [
+                'released_pdf_file' => 'required|file|mimes:pdf|max:51200',
+            ]
         );
     }
 }

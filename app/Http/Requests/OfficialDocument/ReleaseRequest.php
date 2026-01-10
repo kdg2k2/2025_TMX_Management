@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests\OfficialDocument;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class ReleaseRequest extends FormRequest
+class ReleaseRequest extends FindByIdRequest
 {
     public function prepareForValidation()
     {
+        parent::prepareForValidation();
         $this->merge([
             'status' => 'released',
         ]);
@@ -15,10 +14,15 @@ class ReleaseRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'status' => 'required|in:released',
-            'official_document_sector_id' => 'required|exists:official_document_sectors,id',
-            'revision_docx_file' => 'nullable|file|mimes:docx|max:51200',
-        ];
+        return array_merge(
+            parent::rules(),
+            [
+                'status' => 'required|in:released',
+                'released_date' => 'required|date_format:Y-d-m',
+                'document_number' => 'required|max:255',
+                'released_pdf_file' => 'required|file|mimes:pdf|max:51200',
+                'signed_by' => 'nullable|exists:users,id',
+            ]
+        );
     }
 }

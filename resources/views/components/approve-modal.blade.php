@@ -13,6 +13,9 @@
             <label>Nhận xét</label>
             <input type="text" class="form-control" name="{{ $noteName }}" required>
         </div>
+        @isset($extraFields)
+            {{ $extraFields }}
+        @endisset
     </x-slot:body>
     <x-slot:footer>
         <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
