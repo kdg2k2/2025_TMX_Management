@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\UserSubEmailController;
 use App\Http\Controllers\Api\WorkScheduleController;
 use App\Http\Controllers\Api\BuildSoftwareController;
 use App\Http\Controllers\Api\DossierMinuteController;
+use App\Http\Controllers\Api\KasperskyCodeController;
 use App\Http\Controllers\Api\PersonnelFileController;
 use App\Http\Controllers\Api\PersonnelUnitController;
 use App\Http\Controllers\Api\ProofContractController;
@@ -619,6 +620,15 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::get('list', 'list')->name('api.official-document.list');
             Route::post('store', 'store')->name('api.official-document.store');
             Route::patch('update', 'update')->name('api.official-document.update');
+        });
+    });
+
+    // mã kaspersky
+    Route::prefix('kaspersky')->group(function () {
+        Route::prefix('code')->controller(KasperskyCodeController::class)->group(function () {
+            Route::get('list', 'list')->name('api.kaspersky.code.list');
+            Route::post('store', 'store')->name('api.kaspersky.code.store');
+            Route::patch('update', 'update')->name('api.kaspersky.code.update');
         });
     });
 });

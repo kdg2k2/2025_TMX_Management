@@ -712,6 +712,31 @@
                         </li>
                     </ul>
                 </li>
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-shield-lock"></i>
+                        <span class="side-menu__label">Mã Kaspersky</span>
+                        <i class="ri-arrow-right-s-line side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide side-menu__label1">
+                            <a href="javascript:void(0)">Mã Kaspersky</a>
+                        </li>
+                        <li class="slide">
+                            <a href="{{ route('kaspersky.code.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-key"></i>
+                                Quản lý mã
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="javascript:void(0)" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon me-2 d-block ti ti-user-check"></i>
+                                Đăng ký/Phê duyệt
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
 
                 <!-- Hệ thống -->
                 <li class="slide__category">

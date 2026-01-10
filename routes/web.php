@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\GoogleDriveController;
 use App\Http\Controllers\Admin\IncomingOfficialDocumentController;
 use App\Http\Controllers\Admin\InternalBulletinController;
 use App\Http\Controllers\Admin\InternalMeetingMinuteController;
+use App\Http\Controllers\Admin\KasperskyCodeController;
 use App\Http\Controllers\Admin\LeaveRequestController;
 use App\Http\Controllers\Admin\OfficialDocumentController;
 use App\Http\Controllers\Admin\OfficialDocumentSectorController;
@@ -562,6 +563,16 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::post('approve', 'approve')->name('official-document.approve');
             Route::post('reject', 'reject')->name('official-document.reject');
             Route::post('release', 'release')->name('official-document.release');
+        });
+    });
+
+    // mã kaspersky
+    Route::prefix('kaspersky')->group(function () {
+        Route::prefix('code')->controller(KasperskyCodeController::class)->group(function () {
+            Route::get('index', 'index')->name('kaspersky.code.index');
+            Route::get('create', 'create')->name('kaspersky.code.create');
+            Route::get('edit', 'edit')->name('kaspersky.code.edit');
+            Route::delete('delete', 'delete')->name('kaspersky.code.delete');
         });
     });
 });
