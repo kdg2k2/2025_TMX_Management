@@ -36,6 +36,9 @@ class KasperskyCodeService extends BaseService
         ] as $item)
             if (isset($array[$item]))
                 $array[$item] = $this->formatDateForPreview($array[$item]);
+        if (isset($array['available_quantity'])) {
+            $array['available_quantity_message'] = "{$array['available_quantity']} lượt";
+        }
         return $array;
     }
 

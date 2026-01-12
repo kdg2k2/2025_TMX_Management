@@ -44,7 +44,7 @@ abstract class BaseService
     {
         return $this->tryThrow(function () use ($id, $loadRelation, $returnFormatRecord) {
             $data = $this->repository->findById($id, $loadRelation);
-            if ($returnFormatRecord)
+            if ($data && $returnFormatRecord)
                 return $this->formatRecord($data->toArray());
             return $data;
         });

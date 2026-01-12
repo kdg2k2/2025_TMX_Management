@@ -13,14 +13,14 @@ class KasperskyCode extends Model
     protected $guarded = [];
 
     protected const IS_QUANTITY_EXCEEDED = [
-        'true' => [
-            'original' => 'true',
+        '1' => [
+            'original' => 1,
             'converted' => 'Hết lượt sử dụng',
             'color' => 'danger',
             'icon' => 'ti ti-ban',
         ],
-        'false' => [
-            'original' => 'false',
+        '0' => [
+            'original' => 0,
             'converted' => 'Còn lượt sử dụng',
             'color' => 'success',
             'icon' => 'ti ti-check',
@@ -28,14 +28,14 @@ class KasperskyCode extends Model
     ];
 
     protected const IS_EXPIRED = [
-        'true' => [
-            'original' => 'true',
+        '1' => [
+            'original' => 1,
             'converted' => 'Hết hạn',
             'color' => 'danger',
             'icon' => 'ti ti-clock-x',
         ],
-        'false' => [
-            'original' => 'false',
+        '0' => [
+            'original' => 0,
             'converted' => 'Còn hạn',
             'color' => 'success',
             'icon' => 'ti ti-clock-check',

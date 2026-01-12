@@ -20,6 +20,7 @@ return new class extends Migration {
 
             $table->integer('total_quantity')->comment('tổng số lượng cho phép sử dụng');
             $table->integer('used_quantity')->default(0)->comment('số lượt đã sử dụng');
+            $table->integer('available_quantity')->default(0)->comment('số lượt sử dụng còn lại');
 
             $table->integer('valid_days')->comment('thời hạn sử dụng (tính theo ngày)');
             $table->boolean('is_quantity_exceeded')->default(false)->comment('đã đạt giới hạn số lượng');

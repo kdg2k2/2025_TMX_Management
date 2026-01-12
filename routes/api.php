@@ -74,6 +74,7 @@ use App\Http\Controllers\Api\BiddingSoftwareOwnershipController;
 use App\Http\Controllers\Api\IncomingOfficialDocumentController;
 use App\Http\Controllers\Api\ProfessionalRecordMinuteController;
 use App\Http\Controllers\Api\ShareholderMeetingMinuteController;
+use App\Http\Controllers\Api\KasperskyCodeRegistrationController;
 use App\Http\Controllers\Api\ProfessionalRecordHandoverController;
 use App\Http\Controllers\Api\BiddingContractorExperienceController;
 use App\Http\Controllers\Api\EmploymentContractPersonnelController;
@@ -629,6 +630,11 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::get('list', 'list')->name('api.kaspersky.code.list');
             Route::post('store', 'store')->name('api.kaspersky.code.store');
             Route::patch('update', 'update')->name('api.kaspersky.code.update');
+        });
+
+        Route::prefix('registration')->controller(KasperskyCodeRegistrationController::class)->group(function () {
+            Route::get('list', 'list')->name('api.kaspersky.registration.list');
+            Route::post('store', 'store')->name('api.kaspersky.registration.store');
         });
     });
 });

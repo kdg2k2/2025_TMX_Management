@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('kaspersky_code_registrations', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('created_by')->comment('người mượn')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('created_by')->comment('người đăng ký')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('reason')->comment('lý do đăng ký');
             $table->enum('type', [
                 'personal',  // máy cá nhân

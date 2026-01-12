@@ -262,6 +262,18 @@ class TaskScheduleSeeder extends Seeder
                 'manual_run' => false,
                 'user_ids' => $baseUserIds,
             ],
+            [
+                'code' => 'KASPERSKY_CODE',
+                'name' => 'Đăng ký mã kaspersky',
+                'subject' => null,
+                'content' => null,
+                'frequency' => 'daily',
+                'cron_expression' => null,
+                'description' => 'Tự chạy khi có đăng ký, duyệt...',
+                'is_active' => true,
+                'manual_run' => false,
+                'user_ids' => $baseUserIds,
+            ],
         ];
 
         $taskScheduleService = app(TaskScheduleService::class);

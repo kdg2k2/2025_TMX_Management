@@ -58,6 +58,7 @@ class DeviceLoanRepository extends BaseRepository
             ],
             'relations' => [
                 'device' => ['name'],
+                'device.deviceType' => ['name'],
                 'createdBy' => ['name'],
                 'approvedBy' => ['name'],
             ]

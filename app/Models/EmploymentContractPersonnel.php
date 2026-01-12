@@ -21,4 +21,3 @@ class EmploymentContractPersonnel extends Model
         return $this->hasMany(EmploymentContractPersonnelPivotEmploymentContractPersonnelCustomField::class);
     }
 }
-// employmentContractPersonnelPivotEmploymentContractPersonnelCustomField

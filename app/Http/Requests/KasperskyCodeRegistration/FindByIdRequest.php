@@ -2,26 +2,14 @@
 
 namespace App\Http\Requests\KasperskyCodeRegistration;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFindByIdRequest;
 
-class FindByIdRequest extends FormRequest
+class FindByIdRequest extends BaseFindByIdRequest
 {
-    public function prepareForValidation()
-    {
-        $this->merge([
-            //
-        ]);
-    }
-
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [
-            //
+            'id' => 'required|exists:kaspersky_code_registrations,id'
         ];
     }
 }

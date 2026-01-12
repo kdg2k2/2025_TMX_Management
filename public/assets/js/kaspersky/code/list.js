@@ -11,9 +11,7 @@ const renderColumns = () => {
             data: null,
             title: "Lượt sử dụng",
             render: (data, type, row) => {
-                return `${row?.used_quantity}/${
-                    row?.total_quantity
-                } ${createBadge(
+                return `${row?.available_quantity_message} </br> ${createBadge(
                     row?.is_quantity_exceeded?.converted,
                     row?.is_quantity_exceeded?.color,
                     row?.is_quantity_exceeded?.icon

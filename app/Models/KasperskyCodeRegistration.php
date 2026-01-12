@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Traits\GetValueFromArrayByKeyTraits;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class KasperskyCodeRegistration extends Model
 {
@@ -33,6 +33,32 @@ class KasperskyCodeRegistration extends Model
         ],
     ];
 
+    protected const TYPE = [
+        'personal' => [
+            'original' => 'personal',
+            'converted' => 'Máy cá nhân',
+            'color' => 'secondary',
+            'icon' => 'ti ti-user',
+        ],
+        'company' => [
+            'original' => 'company',
+            'converted' => 'Thiết bị công ty',
+            'color' => 'primary',
+            'icon' => 'ti ti-device-desktop',
+        ],
+        'both' => [
+            'original' => 'both',
+            'converted' => 'Máy cá nhân & thiết bị công ty',
+            'color' => 'info',
+            'icon' => 'ti ti-devices',
+        ],
+    ];
+
+    public function getType($key)
+    {
+        return $this->getValueFromArrayByKey(self::TYPE, $key);
+    }
+
     public function getStatus($key)
     {
         return $this->getValueFromArrayByKey(self::STATUS, $key);
@@ -51,5 +77,10 @@ class KasperskyCodeRegistration extends Model
     public function approvedBy()
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function codes()
+    {
+        return $this->belongsToMany(KasperskyCode::class, KasperskyCodeRegistrationItem::class);
     }
 }

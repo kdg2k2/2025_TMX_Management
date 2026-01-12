@@ -40,7 +40,7 @@ class TrainAndBusTicketController extends Controller
     {
         return $this->catchAPI(fn() => response()->json([
             'data' => $this->service->reject($request->validated()),
-            'message' => config('message.approve'),
+            'message' => config('message.reject'),
         ]));
     }
 }

@@ -729,7 +729,7 @@
                             </a>
                         </li>
                         <li class="slide">
-                            <a href="javascript:void(0)" class="side-menu__item">
+                            <a href="{{ route('kaspersky.registration.index') }}" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon me-2 d-block ti ti-user-check"></i>
                                 Đăng ký/Phê duyệt
                             </a>
