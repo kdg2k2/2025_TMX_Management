@@ -24,7 +24,7 @@ const loadData = async () => {
             currentExcelUrl = res?.data?.excel;
             iframeSyntheticExcel.setAttribute(
                 "src",
-                createLinkPreviewFileOnline(currentExcelUrl)
+                createLinkPreviewFileOnline(currentExcelUrl, 1)
             );
         }
     }
