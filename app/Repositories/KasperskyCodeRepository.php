@@ -53,4 +53,14 @@ class KasperskyCodeRepository extends BaseRepository
             if (isset($request[$item]))
                 $query->where($item, $request[$item]);
     }
+
+    public function getExpiredCodes()
+    {
+        return $this
+            ->model
+            ->where('is_expired', false)
+            ->whereNotNull('expired_at')
+            ->where('expired_at', '<=', now())
+            ->get();
+    }
 }

@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
-use App\Repositories\KasperskyCodeRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use App\Repositories\KasperskyCodeRepository;
 
 class KasperskyCodeService extends BaseService
 {
@@ -63,5 +64,32 @@ class KasperskyCodeService extends BaseService
     protected function afterDelete($entity)
     {
         $this->handlerUploadFileService->removeFiles($entity['path']);
+    }
+
+    public function checkExpiredKasperskyCodes()
+    {
+        return $this->tryThrow(function () {
+            $expiredCodes = $this->repository->getExpiredCodes();
+            if ($expiredCodes->isEmpty())
+                return;
+
+            $count = 0;
+            $expiredCodesList = [];
+
+            foreach ($expiredCodes as $code) {
+                $code->update(['is_expired' => true]);
+                $count++;
+                $expiredCodesList[] = [
+                    'code' => $code['code'],
+                    'expired_at' => $this->formatDateForPreview($code['expired_at']),
+                ];
+            }
+
+            Log::info('Kaspersky codes expired check completed', [
+                'total_expired' => $count,
+                'codes' => $expiredCodesList,
+                'checked_at' => now()->format('Y-m-d H:i:s'),
+            ]);
+        }, true);
     }
 }

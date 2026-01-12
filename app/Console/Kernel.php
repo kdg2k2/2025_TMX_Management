@@ -49,7 +49,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('task-schedules:run')->everyMinute();
 
-        $schedule->command('app:update-contract-g-g-drive-link')->dailyAt('00:00');
+        $schedule->command('app:update-contract-g-g-drive-link')->dailyAt('00:00')->withoutOverlapping(30);
+        $schedule->command('app:check-expired-kaspersky-codes')->dailyAt('01:00')->withoutOverlapping(30);
     }
 
     /**
