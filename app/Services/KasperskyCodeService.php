@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Repositories\KasperskyCodeRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use App\Repositories\KasperskyCodeRepository;
 
 class KasperskyCodeService extends BaseService
 {
@@ -91,5 +91,55 @@ class KasperskyCodeService extends BaseService
                 'checked_at' => now()->format('Y-m-d H:i:s'),
             ]);
         }, true);
+    }
+
+    public function statistic(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $config = [
+                'total_codes' => [
+                    'converted' => 'Tổng số mã',
+                    'color' => 'primary',
+                    'icon' => 'ti ti-database',
+                ],
+                'total_quantity' => [
+                    'converted' => 'Tổng lượt cho phép',
+                    'color' => 'info',
+                    'icon' => 'ti ti-packages',
+                ],
+                'used_quantity' => [
+                    'converted' => 'Lượt đã sử dụng',
+                    'color' => 'success',
+                    'icon' => 'ti ti-check',
+                ],
+                'available_quantity' => [
+                    'converted' => 'Lượt còn lại',
+                    'color' => 'warning',
+                    'icon' => 'ti ti-hourglass-high',
+                ],
+                'expired_codes' => [
+                    'converted' => 'Mã hết hạn',
+                    'color' => 'danger',
+                    'icon' => 'ti ti-calendar-x',
+                ],
+                'quantity_exceeded_codes' => [
+                    'converted' => 'Mã hết lượt',
+                    'color' => 'danger',
+                    'icon' => 'ti ti-ban',
+                ],
+            ];
+
+            $statistic = $this->repository->statistic($request);
+
+            return collect($config)->map(function ($item, $key) use ($statistic) {
+                return [
+                    'original' => $key,
+                    'converted' => $item['converted'],
+                    'color' => $item['color'],
+                    'icon' => $item['icon'],
+                    'value' => $statistic[$key] ?? 0,
+                ];
+            })->values()->toArray();
+        });
     }
 }

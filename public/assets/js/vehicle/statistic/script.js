@@ -178,64 +178,6 @@ const loadData = async () => {
     }
 };
 
-const renderStatsCards = (
-    counter,
-    container,
-    classSize = "col-md-6 col-xl-3"
-) => {
-    container.innerHTML = "";
-
-    counter.forEach((element) => {
-        const colDiv = document.createElement("div");
-        colDiv.className = classSize + " mb-3";
-
-        const hasDetail = element?.value > 0;
-        const cursorStyle = hasDetail ? "cursor: pointer;" : "";
-        const clickAttr = hasDetail
-            ? `data-detail-key="${element.detail_key}"
-               data-detail-filter="${element.detail_filter}"
-               data-bs-toggle="tooltip"
-               data-bs-placement="top"
-               title="Click để xem chi tiết"`
-            : "";
-
-        colDiv.innerHTML = `
-            <div class="card custom-card dashboard-main-card overflow-hidden ${
-                element?.color
-            } stat-card"
-                 style="${cursorStyle}"
-                 ${clickAttr}>
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="me-3">
-                            <div class="avatar avatar-lg bg-${
-                                element?.color
-                            } rounded">
-                                <i class="${element?.icon} fs-2"></i>
-                            </div>
-                        </div>
-                        <div class="flex-fill">
-                            <span class="d-block text-muted mb-1">${
-                                element?.converted
-                            }</span>
-                            <h3 class="fw-semibold mb-0">
-                                ${fmNumber(element?.value)}
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        if (element?.value > 0) {
-            const card = colDiv.querySelector(".stat-card");
-            card.addEventListener("click", () => openStatDetailModal(element));
-        }
-
-        container.appendChild(colDiv);
-    });
-};
-
 const openStatDetailModal = async (element) => {
     const modal = createModal(document.getElementById("modal-stat-detail"));
     const modalTitle = document.querySelector(

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\KasperskyCodeRegistration;
+use App\Services\KasperskyCodeService;
 
 class KasperskyCodeRegistrationRepository extends BaseRepository
 {
@@ -10,7 +11,16 @@ class KasperskyCodeRegistrationRepository extends BaseRepository
     {
         $this->model = new KasperskyCodeRegistration();
         $this->relations = [
-            'device' => fn($q) => $q->with(['deviceType:id,name'])->select(['id', 'name', 'code']),
+            'device' => fn($q) => $q->with([
+                'deviceType:id,name'
+            ])->select(
+                [
+                    'id',
+                    'name',
+                    'code',
+                    'device_type_id'
+                ]
+            ),
             'createdBy:id,name',
             'approvedBy:id,name',
             'codes' => fn($q) => $q->select([
@@ -69,6 +79,43 @@ class KasperskyCodeRegistrationRepository extends BaseRepository
                             ->orWhere('expired_at', '>', now());
                     });
             }])
+            ->get();
+    }
+
+    public function statistic(array $request = [])
+    {
+        $relations = $this->relations;
+        $relations['codes'] = function ($q) {
+            $q->select([
+                'kaspersky_codes.id',
+                'code',
+                'total_quantity',
+                'used_quantity',
+                'available_quantity',
+                'valid_days',
+                'is_expired',
+                'started_at',
+                'expired_at',
+            ])->selectRaw('
+                CASE
+                    WHEN expired_at IS NULL THEN NULL
+                    WHEN expired_at < CURDATE() THEN 0
+                    ELSE DATEDIFF(expired_at, CURDATE())
+                END as days_remaining
+            ');
+        };
+
+        $query = $this->model->where('status', 'approved');
+
+        if (isset($request['year']))
+            $query->whereYear('created_at', $request['year']);
+        if (isset($request['month']))
+            $query->whereMonth('created_at', $request['month']);
+
+        return $query
+            ->orderByDesc('id')
+            ->orderByDesc('approved_at')
+            ->with($relations)
             ->get();
     }
 }

@@ -10,7 +10,9 @@ class KasperskyCodeRegistrationService extends BaseService
     public function __construct(
         private UserService $userService,
         private DeviceLoanService $deviceLoanService,
-        private KasperskyCodeService $kasperskyCodeService
+        private KasperskyCodeService $kasperskyCodeService,
+        private ExcelService $excelService,
+        private HandlerUploadFileService $handlerUploadFileService
     ) {
         $this->repository = app(KasperskyCodeRegistrationRepository::class);
     }
@@ -22,6 +24,10 @@ class KasperskyCodeRegistrationService extends BaseService
             $array['type'] = $this->repository->getType($array['type']);
         if (isset($array['status']))
             $array['status'] = $this->repository->getStatus($array['status']);
+        if (isset($array['codes']))
+            $array['codes'] = $this->kasperskyCodeService->formatRecords($array['codes']);
+        if (isset($array['approved_at']))
+            $array['approved_at'] = $this->formatDateTimeForPreview($array['approved_at']);
         return $array;
     }
 
@@ -154,5 +160,84 @@ class KasperskyCodeRegistrationService extends BaseService
     public function registrationApprovedIsntExpired()
     {
         return $this->tryThrow(fn() => $this->repository->registrationApprovedIsntExpired());
+    }
+
+    public function statistic(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $dataExcel = $this->getStatisticDataExcel($request);
+            $headerExcel = $this->getStatisticHeaderExcel();
+            $baseFileName = 'kaspersky-code-statistic';
+            $folder = "uploads/render/$baseFileName";
+            $this->handlerUploadFileService->cleanupOldOverlapFiles($folder);
+            return $this->getAssetUrl($this->excelService->createExcel([
+                (object) [
+                    'name' => $baseFileName,
+                    'header' => $headerExcel,
+                    'data' => $dataExcel,
+                    'boldRows' => [1],
+                    'boldItalicRows' => [],
+                    'italicRows' => [],
+                    'centerColumns' => [],
+                    'centerRows' => [],
+                    'filterStartRow' => 1,
+                    'freezePane' => 'freezeTopRow',
+                ],
+            ], $folder, $baseFileName . '_' . date('d-m-Y-H-i-s') . '.xlsx'));
+        });
+    }
+
+    private function getStatisticHeaderExcel()
+    {
+        return [
+            [
+                ...collect([
+                    'Người đăng ký',
+                    'Lý do',
+                    'Kiểu đăng ký',
+                    'Thông tin thiết bị (công ty)',
+                    'Người duyệt',
+                    'Thời gian duyệt',
+                    'Ghi chú duyệt',
+                    'Mã',
+                    'Số ngày còn hiệu lực',
+                ])->map(fn($item) => [
+                    'name' => $item,
+                    'rowspan' => 1,
+                    'colspan' => 1,
+                ])->toArray()
+            ]
+        ];
+    }
+
+    private function getStatisticDataExcel(array $request)
+    {
+        $data = $this->formatRecords($this->repository->statistic($request)->toArray());
+        $dataExcel = [];
+
+        foreach ($data as $registration) {
+            if (empty($registration['codes']))
+                continue;
+
+            foreach ($registration['codes'] as $code) {
+                $dataExcel[] = [
+                    $registration['created_by']['name'] ?? 'N/A',
+                    $registration['reason'] ?? '',
+                    $registration['type']['converted'] ?? 'N/A',
+                    !empty($registration['device']) ? implode(' - ', array_filter([
+                        $registration['device']['device_type']['name'] ?? '',
+                        $registration['device']['name'] ?? '',
+                        $registration['device']['code'] ?? '',
+                    ])) : 'N/A',
+                    $registration['approved_by']['name'] ?? 'N/A',
+                    $registration['approved_at'] ?? '',
+                    $registration['approval_note'] ?? '',
+                    $code['code'] ?? 'N/A',
+                    $code['remaining_days'] ?? 'N/A',
+                ];
+            }
+        }
+
+        return $dataExcel;
     }
 }

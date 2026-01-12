@@ -55,15 +55,15 @@
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">&nbsp;</label>
-                    <button id="btn-filter" class="btn btn-primary d-block w-100">
-                        <i class="ti ti-filter me-1"></i> Lọc dữ liệu
-                    </button>
+                    <x-button id="btn-filter" variant="primary" class="w-100" size="md">
+                        Lọc dữ liệu
+                    </x-button>
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">&nbsp;</label>
-                    <button id="btn-reset" class="btn btn-secondary d-block w-100">
-                        <i class="ti ti-refresh me-1"></i> Đặt lại
-                    </button>
+                    <x-button id="btn-reset" variant="secondary" class="w-100" size="md">
+                        Đặt lại
+                    </x-button>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\VehicleStatistic;
+namespace App\Http\Requests\KasperskyCodeStatistic;
 
 use App\Http\Requests\BaseFilterMonthYear;
 

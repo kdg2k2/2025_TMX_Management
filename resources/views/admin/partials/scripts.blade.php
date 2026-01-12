@@ -15,6 +15,7 @@
 <script src="assets/js/components/action-buttons.js?v={{ time() }}"></script>
 <script src="assets/js/components/created-updated-at-column.js?v={{ time() }}"></script>
 <script src="assets/js/components/created-by-at-column.js?v={{ time() }}"></script>
+<script src="assets/js/components/stats-card.js?v={{ time() }}"></script>
 
 <script src="assets/js/auth/logout.js?v={{ time() }}"></script>
 

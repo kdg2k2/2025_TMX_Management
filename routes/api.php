@@ -66,6 +66,7 @@ use App\Http\Controllers\Api\PersonnelCustomFieldController;
 use App\Http\Controllers\Api\InternalMeetingMinuteController;
 use App\Http\Controllers\Api\WorkTimesheetOvertimeController;
 use App\Http\Controllers\Api\ContractAdvancePaymentController;
+use App\Http\Controllers\Api\KasperskyCodeStatisticController;
 use App\Http\Controllers\Api\OfficialDocumentSectorController;
 use App\Http\Controllers\Api\ProfessionalRecordPlanController;
 use App\Http\Controllers\Api\ProfessionalRecordTypeController;
@@ -636,5 +637,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::get('list', 'list')->name('api.kaspersky.registration.list');
             Route::post('store', 'store')->name('api.kaspersky.registration.store');
         });
+
+        Route::get('statistic/data',[KasperskyCodeStatisticController::class, 'data'])->name('api.kaspersky.statistic.data');
     });
 });

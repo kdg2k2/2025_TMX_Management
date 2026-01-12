@@ -734,6 +734,12 @@
                                 Đăng ký/Phê duyệt
                             </a>
                         </li>
+                        <li class="slide">
+                            <a href="{{ route('kaspersky.statistic.index') }}" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-table-alias"></i>
+                                Thống kê tổng hợp
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

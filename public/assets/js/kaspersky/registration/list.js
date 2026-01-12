@@ -48,7 +48,11 @@ const renderColumns = () => {
             data: null,
             title: "Người duyệt",
             render: (data, type, row) => {
-                return row?.approved_by?.name || "";
+                return (
+                    (row?.approved_by?.name || "") +
+                    "</br>" +
+                    (row?.approved_at || "")
+                );
             },
         },
         {

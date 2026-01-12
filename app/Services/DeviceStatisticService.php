@@ -4,6 +4,8 @@ namespace App\Services;
 
 class DeviceStatisticService extends BaseService
 {
+    private $monthNames = ['', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
+
     public function __construct(
         private DeviceService $deviceService,
         private DeviceLoanService $deviceLoanService,
@@ -77,13 +79,11 @@ class DeviceStatisticService extends BaseService
     {
         $data = $this->deviceLoanService->statisticByMonth($request);
 
-        $monthNames = ['', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
-
         // Nếu filter theo tháng cụ thể, chỉ trả về tháng đó
         if (isset($request['month'])) {
             $monthData = $data->firstWhere('month', $request['month']);
             return [
-                'categories' => [$monthNames[$request['month']]],
+                'categories' => [$this->monthNames[$request['month']]],
                 'series' => [
                     [
                         'name' => 'Số lượt mượn',
@@ -98,7 +98,7 @@ class DeviceStatisticService extends BaseService
         for ($month = 1; $month <= 12; $month++) {
             $monthData = $data->firstWhere('month', $month);
             $result[] = [
-                'category' => $monthNames[$month],
+                'category' => $this->monthNames[$month],
                 'total' => $monthData['total'] ?? 0,
             ];
         }
@@ -118,13 +118,11 @@ class DeviceStatisticService extends BaseService
     {
         $data = $this->deviceFixService->statisticCostByMonth($request);
 
-        $monthNames = ['', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
-
         // Nếu filter theo tháng cụ thể, chỉ trả về tháng đó
         if (isset($request['month'])) {
             $monthData = $data->firstWhere('month', $request['month']);
             return [
-                'categories' => [$monthNames[$request['month']]],
+                'categories' => [$this->monthNames[$request['month']]],
                 'series' => [
                     [
                         'name' => 'Số lượt sửa',
@@ -143,7 +141,7 @@ class DeviceStatisticService extends BaseService
         for ($month = 1; $month <= 12; $month++) {
             $monthData = $data->firstWhere('month', $month);
             $result[] = [
-                'category' => $monthNames[$month],
+                'category' => $this->monthNames[$month],
                 'total' => $monthData['total'] ?? 0,
                 'total_cost' => $monthData['total_cost'] ?? 0,
             ];

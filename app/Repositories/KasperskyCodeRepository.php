@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\KasperskyCode;
+use Illuminate\Support\Facades\DB;
 
 class KasperskyCodeRepository extends BaseRepository
 {
@@ -63,4 +64,33 @@ class KasperskyCodeRepository extends BaseRepository
             ->where('expired_at', '<=', now())
             ->get();
     }
+
+    public function statistic(array $request = [])
+    {
+        $query = $this->model->query();
+
+        if (isset($request['year']))
+            $query->whereYear('created_at', $request['year']);
+        if (isset($request['month']))
+            $query->whereMonth('created_at', $request['month']);
+
+        $result = $query->selectRaw('
+            COUNT(*) as total_codes,
+            SUM(total_quantity) as total_quantity,
+            SUM(used_quantity) as used_quantity,
+            SUM(available_quantity) as available_quantity,
+            COUNT(CASE WHEN is_expired = 1 THEN 1 END) as expired_codes,
+            COUNT(CASE WHEN is_quantity_exceeded = 1 THEN 1 END) as quantity_exceeded_codes
+        ')->first();
+
+        return [
+            'total_codes' => (int) $result->total_codes,
+            'total_quantity' => (int) ($result->total_quantity ?? 0),
+            'used_quantity' => (int) ($result->used_quantity ?? 0),
+            'available_quantity' => (int) ($result->available_quantity ?? 0),
+            'expired_codes' => (int) $result->expired_codes,
+            'quantity_exceeded_codes' => (int) $result->quantity_exceeded_codes,
+        ];
+    }
+
 }

@@ -2,15 +2,6 @@
 
 namespace App\Http\Requests\DeviceStatistic;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\BaseFilterMonthYear;
 
-class DataRequest extends BaseRequest
-{
-    public function rules(): array
-    {
-        return [
-            'year' => 'nullable|integer',
-            'month' => 'nullable|integer',
-        ];
-    }
-}
+class DataRequest extends BaseFilterMonthYear {}
