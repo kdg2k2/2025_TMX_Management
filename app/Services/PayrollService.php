@@ -595,12 +595,12 @@ class PayrollService extends BaseService
             $res[] = [
                 'stt' => $index + 1,
                 'hoten' => $item['name'],
-                'thanhtien' => $item['total_received_salary'],
+                'thanhtien' => $item['salary_level'],
                 'stk' => $item['user']['bank_code_number'] ?? '',
                 'nganhang' => $item['user']['bank_name'] ?? '',
             ];
 
-            $total += $item['total_received_salary'];
+            $total += $item['salary_level'];
         }
 
         $res[] = [
@@ -620,12 +620,13 @@ class PayrollService extends BaseService
         $total_ml = $total_pcll = $total_pcac = $total_pccv = $total_pcxx = $total_pcdl = $total_ln = $total_trutien = $total_tt = $total_tn = $total_bhxh = $total_bhyt = $total_bhtn = $total_khautru = 0;
 
         foreach ($permanentUsers as $index => $item) {
-            $res[] = [
+            $tt = $item['salary_level'] - $item['deduction_amount'];
+            $res[] = $arr = [
                 'tt' => $index + 1,
                 'hoten' => $item['name'],
                 'xeploai' => $item['council_rating'],
                 'mucluong' => $item['salary_level'],
-                'ngaycong' => $item['valid_attendance_count'] + $item['business_trip_system_count'] + $item['business_trip_manual_count'] + $item['leave_days_with_permission'],
+                'ngaycong' => min($item['proposed_work_days'], $item['proposed_work_days'] + $item['max_paid_leave_days_per_year'] - $item['leave_days_with_permission'] - $item['leave_days_without_permission']),
                 'bhxh' => $item['social_insurance_deduction'],
                 'bhyt' => $item['health_insurance_deduction'],
                 'bhtn' => $item['unemployment_insurance_deduction'],
@@ -635,26 +636,26 @@ class PayrollService extends BaseService
                 'pc_chucvu' => $item['allowance_position'],
                 'pc_xangxe' => $item['allowance_fuel'],
                 'pc_dilai' => $item['allowance_transport'],
-                'luongnhan' => $item['total_received_salary'] + $item['deduction_amount'],
+                'luongnhan' => $item['salary_level'],
                 'trutien' => $item['deduction_amount'],
-                'thanhtien' => $item['total_received_salary'],
-                'tongnhan' => $item['total_received_salary'],
+                'thanhtien' => $tt,
+                'tongnhan' => $tt,
             ];
 
-            $total_ml += $item['salary_level'];
-            $total_pcll += $item['allowance_contact'];
-            $total_pcac += $item['allowance_meal'];
-            $total_pccv += $item['allowance_position'];
-            $total_pcxx += $item['allowance_fuel'];
-            $total_pcdl += $item['allowance_transport'];
-            $total_ln += $item['total_received_salary'] + $item['deduction_amount'];
-            $total_trutien += $item['deduction_amount'];
-            $total_tt += $item['total_received_salary'];
-            $total_tn += $item['total_received_salary'];
-            $total_bhxh += $item['social_insurance_deduction'];
-            $total_bhyt += $item['health_insurance_deduction'];
-            $total_bhtn += $item['unemployment_insurance_deduction'];
-            $total_khautru += $item['total_tax_deduction'];
+            $total_ml += $arr['mucluong'];
+            $total_pcll += $arr['pc_lienlac'];
+            $total_pcac += $arr['pc_anca'];
+            $total_pccv += $arr['pc_chucvu'];
+            $total_pcxx += $arr['pc_xangxe'];
+            $total_pcdl += $arr['pc_dilai'];
+            $total_ln += $arr['luongnhan'];
+            $total_trutien += $arr['trutien'];
+            $total_tt += $arr['thanhtien'];
+            $total_tn += $arr['tongnhan'];
+            $total_bhxh += $arr['bhxh'];
+            $total_bhyt += $arr['bhyt'];
+            $total_bhtn += $arr['bhtn'];
+            $total_khautru += $arr['tongkhautru'];
         }
 
         $res[] = [

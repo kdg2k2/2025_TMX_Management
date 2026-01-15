@@ -350,7 +350,7 @@ class WorkTimesheetService extends BaseService
         // tổng số ngày đã nghỉ trong năm
         $totalLeaveDaysInYear = $this->workTimesheetDetailService->getTotalLeaveDaysWithPermission($userInfo['id'], $workTimeSheet['year']) + $leaveDaysWithPermission;
         // số ngày nghỉ phép có lương trong năm còn lại
-        $maxPaidLeaveDaysPerYear = $userInfo['position_id'] == 6 ? max(12 - $totalLeaveDaysInYear - $leaveDaysWithPermission, 0) : 0;
+        $maxPaidLeaveDaysPerYear = $userInfo['position_id'] == 6 ? max(12 - $totalLeaveDaysInYear, 0) : 0;
 
         return [
             'leaveDays' => Arr::flatten(collect($leaveDays)->map(fn($i) => $i['range'])->toArray()),
