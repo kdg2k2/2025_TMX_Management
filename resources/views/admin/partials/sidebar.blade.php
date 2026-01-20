@@ -148,10 +148,25 @@
                         </li>
                         <li class="slide">
                             <a href="{{ route('contract.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-file-invoice"></i>
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-file-text"></i>
                                 Hợp đồng
                             </a>
                         </li>
+
+                        <li class="slide">
+                            <a href="javascript:void(0)" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-clipboard-check"></i>
+                                Sản phẩm trung gian
+                            </a>
+                        </li>
+
+                        <li class="slide">
+                            <a href="javascript:void(0)" class="side-menu__item">
+                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-users"></i>
+                                Nhân sự thực hiện
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
 

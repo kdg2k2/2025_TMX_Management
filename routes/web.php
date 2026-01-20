@@ -1,83 +1,83 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Admin\UnitController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\DeviceController;
 use App\Http\Controllers\Admin\AirlineController;
 use App\Http\Controllers\Admin\AirportController;
 use App\Http\Controllers\Admin\BiddingController;
-use App\Http\Controllers\Admin\PayrollController;
-use App\Http\Controllers\Admin\VehicleController;
-use App\Http\Controllers\Admin\ContractController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\DeviceFixController;
-use App\Http\Controllers\Admin\PersonnelController;
-use App\Http\Controllers\Admin\DeviceLoanController;
-use App\Http\Controllers\Admin\DeviceTypeController;
-use App\Http\Controllers\Admin\DeviceImageController;
-use App\Http\Controllers\Admin\DossierPlanController;
-use App\Http\Controllers\Admin\DossierTypeController;
-use App\Http\Controllers\Admin\EligibilityController;
-use App\Http\Controllers\Admin\GoogleDriveController;
-use App\Http\Controllers\Admin\PlaneTicketController;
-use App\Http\Controllers\Admin\VehicleLoanController;
+use App\Http\Controllers\Admin\BoardMeetingMinuteController;
+use App\Http\Controllers\Admin\BuildSoftwareController;
+use App\Http\Controllers\Admin\ContractAdvancePaymentController;
+use App\Http\Controllers\Admin\ContractAppendixController;
 use App\Http\Controllers\Admin\ContractBillController;
+use App\Http\Controllers\Admin\ContractController;
 use App\Http\Controllers\Admin\ContractFileController;
+use App\Http\Controllers\Admin\ContractFileTypeController;
+use App\Http\Controllers\Admin\ContractFinanceController;
+use App\Http\Controllers\Admin\ContractInvestorController;
+use App\Http\Controllers\Admin\ContractPaymentController;
+use App\Http\Controllers\Admin\ContractScanFileController;
+use App\Http\Controllers\Admin\ContractScanFileTypeController;
 use App\Http\Controllers\Admin\ContractTypeController;
 use App\Http\Controllers\Admin\ContractUnitController;
-use App\Http\Controllers\Admin\LeaveRequestController;
-use App\Http\Controllers\Admin\TaskScheduleController;
-use App\Http\Controllers\Admin\UserSubEmailController;
-use App\Http\Controllers\Admin\WorkScheduleController;
-use App\Http\Controllers\Admin\BuildSoftwareController;
-use App\Http\Controllers\Admin\DossierMinuteController;
-use App\Http\Controllers\Admin\KasperskyCodeController;
-use App\Http\Controllers\Admin\PersonnelFileController;
-use App\Http\Controllers\Admin\PersonnelUnitController;
-use App\Http\Controllers\Admin\ProofContractController;
-use App\Http\Controllers\Admin\UserTimeTableController;
-use App\Http\Controllers\Admin\WorkTimesheetController;
-use App\Http\Controllers\Admin\ContractFinanceController;
-use App\Http\Controllers\Admin\ContractPaymentController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DeviceController;
+use App\Http\Controllers\Admin\DeviceFixController;
+use App\Http\Controllers\Admin\DeviceImageController;
+use App\Http\Controllers\Admin\DeviceLoanController;
 use App\Http\Controllers\Admin\DeviceStatisticController;
+use App\Http\Controllers\Admin\DeviceTypeController;
 use App\Http\Controllers\Admin\DossierHandoverController;
-use App\Http\Controllers\Admin\ContractAppendixController;
-use App\Http\Controllers\Admin\ContractFileTypeController;
-use App\Http\Controllers\Admin\ContractInvestorController;
-use App\Http\Controllers\Admin\ContractScanFileController;
+use App\Http\Controllers\Admin\DossierMinuteController;
+use App\Http\Controllers\Admin\DossierPlanController;
 use App\Http\Controllers\Admin\DossierSyntheticController;
-use App\Http\Controllers\Admin\InternalBulletinController;
-use App\Http\Controllers\Admin\OfficialDocumentController;
-use App\Http\Controllers\Admin\PlaneTicketClassController;
-use App\Http\Controllers\Admin\VehicleStatisticController;
-use App\Http\Controllers\Admin\PersonnelFileTypeController;
-use App\Http\Controllers\Admin\PlaneTicketDetailController;
-use App\Http\Controllers\Admin\SoftwareOwnershipController;
-use App\Http\Controllers\Admin\TrainAndBusTicketController;
-use App\Http\Controllers\Admin\BoardMeetingMinuteController;
-use App\Http\Controllers\Admin\ContractScanFileTypeController;
+use App\Http\Controllers\Admin\DossierTypeController;
 use App\Http\Controllers\Admin\DossierUsageRegisterController;
-use App\Http\Controllers\Admin\OfficialDocumentTypeController;
-use App\Http\Controllers\Admin\PersonnelCustomFieldController;
-use App\Http\Controllers\Admin\InternalMeetingMinuteController;
-use App\Http\Controllers\Admin\WorkTimesheetOvertimeController;
-use App\Http\Controllers\Admin\ContractAdvancePaymentController;
-use App\Http\Controllers\Admin\KasperskyCodeStatisticController;
-use App\Http\Controllers\Admin\OfficialDocumentSectorController;
-use App\Http\Controllers\Admin\ProfessionalRecordPlanController;
-use App\Http\Controllers\Admin\ProfessionalRecordTypeController;
-use App\Http\Controllers\Admin\TrainAndBusTicketDetailController;
-use App\Http\Controllers\Admin\IncomingOfficialDocumentController;
-use App\Http\Controllers\Admin\ProfessionalRecordMinuteController;
-use App\Http\Controllers\Admin\ShareholderMeetingMinuteController;
-use App\Http\Controllers\Admin\KasperskyCodeRegistrationController;
-use App\Http\Controllers\Admin\ProfessionalRecordHandoverController;
+use App\Http\Controllers\Admin\EligibilityController;
 use App\Http\Controllers\Admin\EmploymentContractPersonnelController;
-use App\Http\Controllers\Admin\ProfessionalRecordSyntheticController;
-use App\Http\Controllers\Admin\ProfessionalRecordUsageRegisterController;
 use App\Http\Controllers\Admin\EmploymentContractPersonnelCustomFieldController;
+use App\Http\Controllers\Admin\GoogleDriveController;
+use App\Http\Controllers\Admin\IncomingOfficialDocumentController;
+use App\Http\Controllers\Admin\InternalBulletinController;
+use App\Http\Controllers\Admin\InternalMeetingMinuteController;
+use App\Http\Controllers\Admin\KasperskyCodeController;
+use App\Http\Controllers\Admin\KasperskyCodeRegistrationController;
+use App\Http\Controllers\Admin\KasperskyCodeStatisticController;
+use App\Http\Controllers\Admin\LeaveRequestController;
+use App\Http\Controllers\Admin\OfficialDocumentController;
+use App\Http\Controllers\Admin\OfficialDocumentSectorController;
+use App\Http\Controllers\Admin\OfficialDocumentTypeController;
+use App\Http\Controllers\Admin\PayrollController;
+use App\Http\Controllers\Admin\PersonnelController;
+use App\Http\Controllers\Admin\PersonnelCustomFieldController;
+use App\Http\Controllers\Admin\PersonnelFileController;
+use App\Http\Controllers\Admin\PersonnelFileTypeController;
+use App\Http\Controllers\Admin\PersonnelUnitController;
+use App\Http\Controllers\Admin\PlaneTicketClassController;
+use App\Http\Controllers\Admin\PlaneTicketController;
+use App\Http\Controllers\Admin\PlaneTicketDetailController;
+use App\Http\Controllers\Admin\ProfessionalRecordHandoverController;
+use App\Http\Controllers\Admin\ProfessionalRecordMinuteController;
+use App\Http\Controllers\Admin\ProfessionalRecordPlanController;
+use App\Http\Controllers\Admin\ProfessionalRecordSyntheticController;
+use App\Http\Controllers\Admin\ProfessionalRecordTypeController;
+use App\Http\Controllers\Admin\ProfessionalRecordUsageRegisterController;
+use App\Http\Controllers\Admin\ProofContractController;
+use App\Http\Controllers\Admin\ShareholderMeetingMinuteController;
+use App\Http\Controllers\Admin\SoftwareOwnershipController;
+use App\Http\Controllers\Admin\TaskScheduleController;
+use App\Http\Controllers\Admin\TrainAndBusTicketController;
+use App\Http\Controllers\Admin\TrainAndBusTicketDetailController;
+use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\UserSubEmailController;
+use App\Http\Controllers\Admin\UserTimeTableController;
+use App\Http\Controllers\Admin\VehicleController;
+use App\Http\Controllers\Admin\VehicleLoanController;
+use App\Http\Controllers\Admin\VehicleStatisticController;
+use App\Http\Controllers\Admin\WorkScheduleController;
+use App\Http\Controllers\Admin\WorkTimesheetController;
+use App\Http\Controllers\Admin\WorkTimesheetOvertimeController;
+use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)->group(function () {
     Route::get('/', 'getLogin')->name('login');
@@ -88,7 +88,9 @@ Route::controller(AuthController::class)->group(function () {
 Route::middleware(['isLogin', 'LogAccess'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // hợp đồng
     Route::prefix('contract')->group(function () {
+        // loại hợp đồng
         Route::prefix('type')->controller(ContractTypeController::class)->group(function () {
             Route::get('index', 'index')->name('contract.type.index');
             Route::get('create', 'create')->name('contract.type.create');
@@ -96,6 +98,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::delete('delete', 'delete')->name('contract.type.delete');
         });
 
+        // nhà đầu tư
         Route::prefix('investor')->controller(ContractInvestorController::class)->group(function () {
             Route::get('index', 'index')->name('contract.investor.index');
             Route::get('create', 'create')->name('contract.investor.create');
@@ -111,6 +114,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::get('export', 'export')->name('contract.export');
         });
 
+        // tệp
         Route::prefix('file')->group(function () {
             Route::controller(ContractFileController::class)->group(function () {
                 Route::delete('delete', 'delete')->name('contract.file.delete');
@@ -124,6 +128,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             });
         });
 
+        // tệp scan
         Route::prefix('scan-file')->group(function () {
             Route::controller(ContractScanFileController::class)->group(function () {
                 Route::delete('delete', 'delete')->name('contract.scan-file.delete');
@@ -137,14 +142,17 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             });
         });
 
+        // hóa đơn
         Route::prefix('bill')->controller(ContractBillController::class)->group(function () {
             Route::delete('delete', 'delete')->name('contract.bill.delete');
         });
 
+        // phụ lục
         Route::prefix('appendix')->controller(ContractAppendixController::class)->group(function () {
             Route::delete('delete', 'delete')->name('contract.appendix.delete');
         });
 
+        // đơn vị liên danh
         Route::prefix('unit')->controller(ContractUnitController::class)->group(function () {
             Route::get('index', 'index')->name('contract.unit.index');
             Route::get('create', 'create')->name('contract.unit.create');
@@ -152,6 +160,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::delete('delete', 'delete')->name('contract.unit.delete');
         });
 
+        // tài chính
         Route::prefix('finance')->group(function () {
             Route::controller(ContractFinanceController::class)->group(function () {
                 Route::delete('delete', 'delete')->name('contract.finance.delete');
@@ -167,6 +176,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         });
     });
 
+    // tài khoản
     Route::prefix('user')->group(function () {
         Route::controller(UserController::class)->group(function () {
             Route::get('index', 'index')->name('user.index');
@@ -187,6 +197,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         });
     });
 
+    // đề xuất xây dựng phần mềm
     Route::prefix('build-software')->controller(BuildSoftwareController::class)->group(function () {
         Route::get('index', 'index')->name('build-software.index');
         Route::get('create', 'create')->name('build-software.create');
@@ -197,6 +208,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::post('update-state', 'updateState')->name('build-software.update-state');
     });
 
+    // đấu thầu
     Route::prefix('bidding')->group(function () {
         Route::controller(BiddingController::class)->group(function () {
             Route::get('index', 'index')->name('bidding.index');
@@ -207,6 +219,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         });
     });
 
+    // tư cách hợp lệ
     Route::prefix('eligibilities')->controller(EligibilityController::class)->group(function () {
         Route::get('index', 'index')->name('eligibilities.index');
         Route::get('create', 'create')->name('eligibilities.create');
@@ -214,6 +227,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::delete('delete', 'delete')->name('eligibilities.delete');
     });
 
+    // hợp đồng minh chứng
     Route::prefix('proof_contracts')->controller(ProofContractController::class)->group(function () {
         Route::get('index', 'index')->name('proof_contracts.index');
         Route::get('create', 'create')->name('proof_contracts.create');
@@ -221,6 +235,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::delete('delete', 'delete')->name('proof_contracts.delete');
     });
 
+    // sở hữu phần mềm
     Route::prefix('software_ownerships')->controller(SoftwareOwnershipController::class)->group(function () {
         Route::get('index', 'index')->name('software_ownerships.index');
         Route::get('create', 'create')->name('software_ownerships.create');
@@ -228,6 +243,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::delete('delete', 'delete')->name('software_ownerships.delete');
     });
 
+    // nhân sự
     Route::prefix('personnels')->group(function () {
         Route::controller(PersonnelController::class)->group(function () {
             Route::get('index', 'index')->name('personnels.index');
@@ -267,6 +283,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         });
     });
 
+    // auth google
     Route::prefix('google')->group(function () {
         Route::prefix('drive')->controller(GoogleDriveController::class)->group(function () {
             Route::get('auth', 'auth')->name('google.drive.auth');
@@ -274,16 +291,19 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         });
     });
 
+    // công tác
     Route::prefix('work-schedule')->controller(WorkScheduleController::class)->group(function () {
         Route::get('index', 'index')->name('work-schedule.index');
         Route::get('create', 'create')->name('work-schedule.create');
     });
 
+    // nghỉ phép
     Route::prefix('leave-request')->controller(LeaveRequestController::class)->group(function () {
         Route::get('index', 'index')->name('leave-request.index');
         Route::get('create', 'create')->name('leave-request.create');
     });
 
+    // xuất lưới
     Route::prefix('work-timesheet')->group(function () {
         Route::controller(WorkTimesheetController::class)->group(function () {
             Route::get('index', 'index')->name('work-timesheet.index');
@@ -298,11 +318,13 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         });
     });
 
+    // task tự động
     Route::prefix('task-schedule')->controller(TaskScheduleController::class)->group(function () {
         Route::get('index', 'index')->name('task-schedule.index');
         Route::get('edit', 'edit')->name('task-schedule.edit');
     });
 
+    // hồ sơ lao động/bổ nhiệm
     Route::prefix('employment-contract-personnel')->group(function () {
         Route::controller(EmploymentContractPersonnelController::class)->group(function () {
             Route::get('index', 'index')->name('employment-contract-personnel.index');
@@ -319,6 +341,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         });
     });
 
+    // giao ban
     Route::prefix('internal-meeting-minute')->controller(InternalMeetingMinuteController::class)->group(function () {
         Route::get('index', 'index')->name('internal-meeting-minute.index');
         Route::get('create', 'create')->name('internal-meeting-minute.create');
@@ -326,6 +349,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::delete('delete', 'delete')->name('internal-meeting-minute.delete');
     });
 
+    // hội đồng quản trị
     Route::prefix('board-meeting-minute')->controller(BoardMeetingMinuteController::class)->group(function () {
         Route::get('index', 'index')->name('board-meeting-minute.index');
         Route::get('create', 'create')->name('board-meeting-minute.create');
@@ -333,6 +357,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::delete('delete', 'delete')->name('board-meeting-minute.delete');
     });
 
+    // cổ đông
     Route::prefix('shareholder-meeting-minute')->controller(ShareholderMeetingMinuteController::class)->group(function () {
         Route::get('index', 'index')->name('shareholder-meeting-minute.index');
         Route::get('create', 'create')->name('shareholder-meeting-minute.create');
@@ -340,6 +365,7 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
         Route::delete('delete', 'delete')->name('shareholder-meeting-minute.delete');
     });
 
+    // bảng tin
     Route::prefix('internal-bulletin')->controller(InternalBulletinController::class)->group(function () {
         Route::get('index', 'index')->name('internal-bulletin.index');
         Route::get('create', 'create')->name('internal-bulletin.create');
@@ -584,6 +610,6 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
             Route::post('reject', 'reject')->name('kaspersky.registration.reject');
         });
 
-        Route::get('statistic/index',[KasperskyCodeStatisticController::class, 'index'])->name('kaspersky.statistic.index');
+        Route::get('statistic/index', [KasperskyCodeStatisticController::class, 'index'])->name('kaspersky.statistic.index');
     });
 });

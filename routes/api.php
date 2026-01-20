@@ -1,89 +1,89 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\UnitController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\DeviceController;
 use App\Http\Controllers\Api\AirlineController;
 use App\Http\Controllers\Api\AirportController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BiddingContractorExperienceController;
 use App\Http\Controllers\Api\BiddingController;
-use App\Http\Controllers\Api\PayrollController;
-use App\Http\Controllers\Api\VehicleController;
-use App\Http\Controllers\Api\ContractController;
-use App\Http\Controllers\Api\DeviceFixController;
-use App\Http\Controllers\Api\PersonnelController;
-use App\Http\Controllers\Api\DeviceLoanController;
-use App\Http\Controllers\Api\DeviceTypeController;
-use App\Http\Controllers\Api\DeviceImageController;
-use App\Http\Controllers\Api\DossierPlanController;
-use App\Http\Controllers\Api\DossierTypeController;
-use App\Http\Controllers\Api\EligibilityController;
-use App\Http\Controllers\Api\PlaneTicketController;
-use App\Http\Controllers\Api\UserWarningController;
-use App\Http\Controllers\Api\VehicleLoanController;
+use App\Http\Controllers\Api\BiddingEligibilityController;
+use App\Http\Controllers\Api\BiddingImplementationPersonnelController;
+use App\Http\Controllers\Api\BiddingOrtherFileController;
+use App\Http\Controllers\Api\BiddingProofContractController;
+use App\Http\Controllers\Api\BiddingSoftwareOwnershipController;
+use App\Http\Controllers\Api\BoardMeetingMinuteController;
+use App\Http\Controllers\Api\BuildSoftwareController;
+use App\Http\Controllers\Api\ContractAdvancePaymentController;
+use App\Http\Controllers\Api\ContractAppendixController;
 use App\Http\Controllers\Api\ContractBillController;
+use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\ContractFileController;
+use App\Http\Controllers\Api\ContractFileTypeController;
+use App\Http\Controllers\Api\ContractFinanceController;
+use App\Http\Controllers\Api\ContractInvestorController;
+use App\Http\Controllers\Api\ContractPaymentController;
+use App\Http\Controllers\Api\ContractScanFileController;
+use App\Http\Controllers\Api\ContractScanFileTypeController;
 use App\Http\Controllers\Api\ContractTypeController;
 use App\Http\Controllers\Api\ContractUnitController;
-use App\Http\Controllers\Api\LeaveRequestController;
-use App\Http\Controllers\Api\TaskScheduleController;
-use App\Http\Controllers\Api\UserSubEmailController;
-use App\Http\Controllers\Api\WorkScheduleController;
-use App\Http\Controllers\Api\BuildSoftwareController;
-use App\Http\Controllers\Api\DossierMinuteController;
-use App\Http\Controllers\Api\KasperskyCodeController;
-use App\Http\Controllers\Api\PersonnelFileController;
-use App\Http\Controllers\Api\PersonnelUnitController;
-use App\Http\Controllers\Api\ProofContractController;
-use App\Http\Controllers\Api\UserTimeTableController;
-use App\Http\Controllers\Api\WorkTimesheetController;
-use App\Http\Controllers\Api\ContractFinanceController;
-use App\Http\Controllers\Api\ContractPaymentController;
+use App\Http\Controllers\Api\DeviceController;
+use App\Http\Controllers\Api\DeviceFixController;
+use App\Http\Controllers\Api\DeviceImageController;
+use App\Http\Controllers\Api\DeviceLoanController;
 use App\Http\Controllers\Api\DeviceStatisticController;
+use App\Http\Controllers\Api\DeviceTypeController;
 use App\Http\Controllers\Api\DossierHandoverController;
-use App\Http\Controllers\Api\ContractAppendixController;
-use App\Http\Controllers\Api\ContractFileTypeController;
-use App\Http\Controllers\Api\ContractInvestorController;
-use App\Http\Controllers\Api\ContractScanFileController;
+use App\Http\Controllers\Api\DossierMinuteController;
+use App\Http\Controllers\Api\DossierPlanController;
 use App\Http\Controllers\Api\DossierSyntheticController;
-use App\Http\Controllers\Api\InternalBulletinController;
-use App\Http\Controllers\Api\OfficialDocumentController;
-use App\Http\Controllers\Api\PlaneTicketClassController;
-use App\Http\Controllers\Api\VehicleStatisticController;
-use App\Http\Controllers\Api\BiddingOrtherFileController;
-use App\Http\Controllers\Api\PersonnelFileTypeController;
-use App\Http\Controllers\Api\PlaneTicketDetailController;
-use App\Http\Controllers\Api\SoftwareOwnershipController;
-use App\Http\Controllers\Api\TrainAndBusTicketController;
-use App\Http\Controllers\Api\BiddingEligibilityController;
-use App\Http\Controllers\Api\BoardMeetingMinuteController;
-use App\Http\Controllers\Api\BiddingProofContractController;
-use App\Http\Controllers\Api\ContractScanFileTypeController;
+use App\Http\Controllers\Api\DossierTypeController;
 use App\Http\Controllers\Api\DossierUsageRegisterController;
-use App\Http\Controllers\Api\OfficialDocumentTypeController;
-use App\Http\Controllers\Api\PersonnelCustomFieldController;
-use App\Http\Controllers\Api\InternalMeetingMinuteController;
-use App\Http\Controllers\Api\WorkTimesheetOvertimeController;
-use App\Http\Controllers\Api\ContractAdvancePaymentController;
-use App\Http\Controllers\Api\KasperskyCodeStatisticController;
-use App\Http\Controllers\Api\OfficialDocumentSectorController;
-use App\Http\Controllers\Api\ProfessionalRecordPlanController;
-use App\Http\Controllers\Api\ProfessionalRecordTypeController;
-use App\Http\Controllers\Api\TrainAndBusTicketDetailController;
-use App\Http\Controllers\Api\BiddingSoftwareOwnershipController;
-use App\Http\Controllers\Api\IncomingOfficialDocumentController;
-use App\Http\Controllers\Api\ProfessionalRecordMinuteController;
-use App\Http\Controllers\Api\ShareholderMeetingMinuteController;
-use App\Http\Controllers\Api\KasperskyCodeRegistrationController;
-use App\Http\Controllers\Api\ProfessionalRecordHandoverController;
-use App\Http\Controllers\Api\BiddingContractorExperienceController;
+use App\Http\Controllers\Api\EligibilityController;
 use App\Http\Controllers\Api\EmploymentContractPersonnelController;
-use App\Http\Controllers\Api\ProfessionalRecordSyntheticController;
-use App\Http\Controllers\Api\WorkTimesheetOvertimeDetailController;
-use App\Http\Controllers\Api\BiddingImplementationPersonnelController;
-use App\Http\Controllers\Api\ProfessionalRecordUsageRegisterController;
 use App\Http\Controllers\Api\EmploymentContractPersonnelCustomFieldController;
+use App\Http\Controllers\Api\IncomingOfficialDocumentController;
+use App\Http\Controllers\Api\InternalBulletinController;
+use App\Http\Controllers\Api\InternalMeetingMinuteController;
+use App\Http\Controllers\Api\KasperskyCodeController;
+use App\Http\Controllers\Api\KasperskyCodeRegistrationController;
+use App\Http\Controllers\Api\KasperskyCodeStatisticController;
+use App\Http\Controllers\Api\LeaveRequestController;
+use App\Http\Controllers\Api\OfficialDocumentController;
+use App\Http\Controllers\Api\OfficialDocumentSectorController;
+use App\Http\Controllers\Api\OfficialDocumentTypeController;
+use App\Http\Controllers\Api\PayrollController;
+use App\Http\Controllers\Api\PersonnelController;
+use App\Http\Controllers\Api\PersonnelCustomFieldController;
+use App\Http\Controllers\Api\PersonnelFileController;
+use App\Http\Controllers\Api\PersonnelFileTypeController;
+use App\Http\Controllers\Api\PersonnelUnitController;
+use App\Http\Controllers\Api\PlaneTicketClassController;
+use App\Http\Controllers\Api\PlaneTicketController;
+use App\Http\Controllers\Api\PlaneTicketDetailController;
+use App\Http\Controllers\Api\ProfessionalRecordHandoverController;
+use App\Http\Controllers\Api\ProfessionalRecordMinuteController;
+use App\Http\Controllers\Api\ProfessionalRecordPlanController;
+use App\Http\Controllers\Api\ProfessionalRecordSyntheticController;
+use App\Http\Controllers\Api\ProfessionalRecordTypeController;
+use App\Http\Controllers\Api\ProfessionalRecordUsageRegisterController;
+use App\Http\Controllers\Api\ProofContractController;
+use App\Http\Controllers\Api\ShareholderMeetingMinuteController;
+use App\Http\Controllers\Api\SoftwareOwnershipController;
+use App\Http\Controllers\Api\TaskScheduleController;
+use App\Http\Controllers\Api\TrainAndBusTicketController;
+use App\Http\Controllers\Api\TrainAndBusTicketDetailController;
+use App\Http\Controllers\Api\UnitController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UserSubEmailController;
+use App\Http\Controllers\Api\UserTimeTableController;
+use App\Http\Controllers\Api\UserWarningController;
+use App\Http\Controllers\Api\VehicleController;
+use App\Http\Controllers\Api\VehicleLoanController;
+use App\Http\Controllers\Api\VehicleStatisticController;
+use App\Http\Controllers\Api\WorkScheduleController;
+use App\Http\Controllers\Api\WorkTimesheetController;
+use App\Http\Controllers\Api\WorkTimesheetOvertimeController;
+use App\Http\Controllers\Api\WorkTimesheetOvertimeDetailController;
+use Illuminate\Support\Facades\Route;
 
 // Auth routes
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
@@ -94,13 +94,16 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 });
 
 Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
+    // hợp đồng
     Route::prefix('contract')->group(function () {
+        // loại hợp đồng
         Route::prefix('type')->controller(ContractTypeController::class)->group(function () {
             Route::get('list', 'list')->name('api.contract.type.list');
             Route::post('store', 'store')->name('api.contract.type.store');
             Route::patch('update', 'update')->name('api.contract.type.update');
         });
 
+        // nhà đầu tư
         Route::prefix('investor')->controller(ContractInvestorController::class)->group(function () {
             Route::get('list', 'list')->name('api.contract.investor.list');
             Route::post('store', 'store')->name('api.contract.investor.store');
@@ -114,6 +117,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::patch('update', 'update')->name('api.contract.update');
         });
 
+        // tệp
         Route::prefix('file')->group(function () {
             Route::controller(ContractFileController::class)->group(function () {
                 Route::get('list', 'list')->name('api.contract.file.list');
@@ -129,6 +133,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             });
         });
 
+        // tệp scan
         Route::prefix('scan-file')->group(function () {
             Route::controller(ContractScanFileController::class)->group(function () {
                 Route::get('list', 'list')->name('api.contract.scan-file.list');
@@ -145,18 +150,21 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             });
         });
 
+        // hóa đơn
         Route::prefix('bill')->controller(ContractBillController::class)->group(function () {
             Route::get('list', 'list')->name('api.contract.bill.list');
             Route::post('store', 'store')->name('api.contract.bill.store');
             Route::patch('update', 'update')->name('api.contract.bill.update');
         });
 
+        // phụ lục
         Route::prefix('appendix')->controller(ContractAppendixController::class)->group(function () {
             Route::get('list', 'list')->name('api.contract.appendix.list');
             Route::post('store', 'store')->name('api.contract.appendix.store');
             Route::patch('update', 'update')->name('api.contract.appendix.update');
         });
 
+        // đơn vị liên danh
         Route::prefix('unit')->controller(ContractUnitController::class)->group(function () {
             Route::get('list', 'list')->name('api.contract.unit.list');
             Route::post('store', 'store')->name('api.contract.unit.store');
@@ -164,6 +172,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::delete('delete', 'delete')->name('api.contract.unit.delete');
         });
 
+        // tài chính
         Route::prefix('finance')->group(function () {
             Route::controller(ContractFinanceController::class)->group(function () {
                 Route::get('list', 'list')->name('api.contract.finance.list');
@@ -184,6 +193,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         });
     });
 
+    // tài khoản
     Route::prefix('user')->group(function () {
         Route::controller(UserController::class)->group(function () {
             Route::get('list', 'list')->name('api.user.list');
@@ -208,12 +218,14 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         });
     });
 
+    // đề xuất xây dựng phần mề
     Route::prefix('build-software')->controller(BuildSoftwareController::class)->group(function () {
         Route::get('list', 'list')->name('api.build-software.list');
         Route::post('store', 'store')->name('api.build-software.store');
         Route::patch('update', 'update')->name('api.build-software.update');
     });
 
+    // đấu thầu
     Route::prefix('bidding')->group(function () {
         Route::controller(BiddingController::class)->group(function () {
             Route::get('list', 'list')->name('api.bidding.list');
@@ -263,24 +275,28 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         });
     });
 
+    // tư cách hợp lệ
     Route::prefix('eligibilities')->controller(EligibilityController::class)->group(function () {
         Route::get('list', 'list')->name('api.eligibilities.list');
         Route::post('store', 'store')->name('api.eligibilities.store');
         Route::patch('update', 'update')->name('api.eligibilities.update');
     });
 
+    // hợp đồng minh chứng
     Route::prefix('proof_contracts')->controller(ProofContractController::class)->group(function () {
         Route::get('list', 'list')->name('api.proof_contracts.list');
         Route::post('store', 'store')->name('api.proof_contracts.store');
         Route::patch('update', 'update')->name('api.proof_contracts.update');
     });
 
+    // sở hữu phần mềm
     Route::prefix('software_ownerships')->controller(SoftwareOwnershipController::class)->group(function () {
         Route::get('list', 'list')->name('api.software_ownerships.list');
         Route::post('store', 'store')->name('api.software_ownerships.store');
         Route::patch('update', 'update')->name('api.software_ownerships.update');
     });
 
+    // nhân sự
     Route::prefix('personnels')->group(function () {
         Route::controller(PersonnelController::class)->group(function () {
             Route::get('list', 'list')->name('api.personnels.list');
@@ -317,6 +333,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         });
     });
 
+    // công tác
     Route::prefix('work-schedule')->controller(WorkScheduleController::class)->group(function () {
         Route::get('list', 'list')->name('api.work-schedule.list');
         Route::post('store', 'store')->name('api.work-schedule.store');
@@ -327,6 +344,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::post('return-reject', 'returnReject')->name('api.work-schedule.return-reject');
     });
 
+    // nghỉ phép
     Route::prefix('leave-request')->controller(LeaveRequestController::class)->group(function () {
         Route::get('list', 'list')->name('api.leave-request.list');
         Route::post('get-total-leave-days', 'getTotalLeaveDays')->name('api.leave-request.get-total-leave-days');
@@ -338,6 +356,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::post('adjust-reject', 'adjustReject')->name('api.leave-request.adjust-reject');
     });
 
+    // xuất lưới
     Route::prefix('work-timesheet')->group(function () {
         Route::controller(WorkTimesheetController::class)->group(function () {
             Route::get('data', 'data')->name('api.work-timesheet.data');
@@ -360,12 +379,14 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         });
     });
 
+    // task tự động
     Route::prefix('task-schedule')->controller(TaskScheduleController::class)->group(function () {
         Route::get('list', 'list')->name('api.task-schedule.list');
         Route::patch('update', 'update')->name('api.task-schedule.update');
         Route::post('run', 'run')->name('api.task-schedule.run');
     });
 
+    // hồ sơ lao động/ bổ nhiệm
     Route::prefix('employment-contract-personnel')->group(function () {
         Route::controller(EmploymentContractPersonnelController::class)->group(function () {
             Route::get('list', 'list')->name('api.employment-contract-personnel.list');
@@ -381,24 +402,28 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         });
     });
 
+    // giao ban
     Route::prefix('internal-meeting-minute')->controller(InternalMeetingMinuteController::class)->group(function () {
         Route::get('list', 'list')->name('api.internal-meeting-minute.list');
         Route::post('store', 'store')->name('api.internal-meeting-minute.store');
         Route::patch('update', 'update')->name('api.internal-meeting-minute.update');
     });
 
+    // hội đồng quản trị
     Route::prefix('board-meeting-minute')->controller(BoardMeetingMinuteController::class)->group(function () {
         Route::get('list', 'list')->name('api.board-meeting-minute.list');
         Route::post('store', 'store')->name('api.board-meeting-minute.store');
         Route::patch('update', 'update')->name('api.board-meeting-minute.update');
     });
 
+    // cổ đông
     Route::prefix('shareholder-meeting-minute')->controller(ShareholderMeetingMinuteController::class)->group(function () {
         Route::get('list', 'list')->name('api.shareholder-meeting-minute.list');
         Route::post('store', 'store')->name('api.shareholder-meeting-minute.store');
         Route::patch('update', 'update')->name('api.shareholder-meeting-minute.update');
     });
 
+    // bảng tin
     Route::prefix('internal-bulletin')->controller(InternalBulletinController::class)->group(function () {
         Route::get('list', 'list')->name('api.internal-bulletin.list');
         Route::post('store', 'store')->name('api.internal-bulletin.store');
@@ -638,6 +663,6 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::post('store', 'store')->name('api.kaspersky.registration.store');
         });
 
-        Route::get('statistic/data',[KasperskyCodeStatisticController::class, 'data'])->name('api.kaspersky.statistic.data');
+        Route::get('statistic/data', [KasperskyCodeStatisticController::class, 'data'])->name('api.kaspersky.statistic.data');
     });
 });

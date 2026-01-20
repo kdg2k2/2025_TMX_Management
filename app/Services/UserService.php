@@ -149,10 +149,7 @@ class UserService extends BaseService
             Arr::flatten(
                 array_filter(
                     array_map(function ($item) {
-                        return array_merge(
-                            [$item['email']],
-                            array_column($item['sub_emails'], 'email'),
-                        );
+                        return array_column($item['sub_emails'], 'email');
                     }, $users), function ($item) {
                         return !empty($item);
                     }
