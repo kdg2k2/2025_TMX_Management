@@ -126,7 +126,7 @@ class OfficialDocumentService extends BaseService
 
     private function storeFile(array $request, string $name)
     {
-        $request[$name] = $this->handlerUploadFileService->storeAndRemoveOld($request[$name], $this->repository->model->getTable(), $name);
+        $request[$name] = $this->handlerUploadFileService->storeAndRemoveOld($request[$name], $this->repository->getTable(), $name);
         return $request;
     }
 

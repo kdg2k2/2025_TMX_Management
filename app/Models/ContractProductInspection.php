@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class ContractProductInspection extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected const STATUS = [
+        'request' => [
+            'original' => 'request',
+            'converted' => 'Yêu cầu kiểm tra',
+            'color' => 'warning',
+            'icon' => 'ti ti-clock-hour-4',
+        ],
+        'responded' => [
+            'original' => 'responded',
+            'converted' => 'Đã phản hồi',
+            'color' => 'success',
+            'icon' => 'ti ti-circle-check',
+        ],
+    ];
+
+    public function getStatus($key = null)
+    {
+        return $this->getValueFromArrayByKey(self::STATUS, $key);
+    }
+
+    public function years()
+    {
+        return $this->hasMany(ContractProductInspectionYear::class);
+    }
+}

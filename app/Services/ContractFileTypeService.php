@@ -18,7 +18,7 @@ class ContractFileTypeService extends BaseService
         if ($id)
             $res['data'] = $this->findById($id, true, true);
 
-        $res['types'] = $this->repository->model->getTypes();
+        $res['types'] = $this->repository->getTypes();
         $res['extensions'] = $this->fileExtensionService->list();
 
         return $res;

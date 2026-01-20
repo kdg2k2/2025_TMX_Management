@@ -13,6 +13,11 @@ class ContractFileTypeRepository extends BaseRepository
         ];
     }
 
+    public function getTypes($key = null)
+    {
+        return $this->model->getTypes($key);
+    }
+
     protected function getSearchConfig(): array
     {
         return [

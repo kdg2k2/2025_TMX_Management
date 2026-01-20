@@ -83,14 +83,14 @@ class IncomingOfficialDocumentService extends BaseService
 
     public function beforeStore(array $request)
     {
-        $request['attachment_file'] = $this->handlerUploadFileService->storeAndRemoveOld($request['attachment_file'], $this->repository->model->getTable());
+        $request['attachment_file'] = $this->handlerUploadFileService->storeAndRemoveOld($request['attachment_file'], $this->repository->getTable());
         return $request;
     }
 
     public function beforeUpdate(array $request)
     {
         if (isset($request['attachment_file']))
-            $request['attachment_file'] = $this->handlerUploadFileService->storeAndRemoveOld($request['attachment_file'], $this->repository->model->getTable(), null, $this->repository->findById($request['id'], false)['attachment_file']);
+            $request['attachment_file'] = $this->handlerUploadFileService->storeAndRemoveOld($request['attachment_file'], $this->repository->getTable(), null, $this->repository->findById($request['id'], false)['attachment_file']);
         return $request;
     }
 

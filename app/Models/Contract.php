@@ -146,4 +146,19 @@ class Contract extends Model
     {
         return $this->hasMany(ContractFinance::class);
     }
+
+    public function mainProducts()
+    {
+        return $this->hasMany(ContractMainProduct::class);
+    }
+
+    public function intermediateProducts()
+    {
+        return $this->hasMany(ContractIntermediateProduct::class);
+    }
+
+    public function productMinutes()
+    {
+        return $this->hasMany(ContractProductMinute::class);
+    }
 }

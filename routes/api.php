@@ -19,8 +19,14 @@ use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\ContractFileController;
 use App\Http\Controllers\Api\ContractFileTypeController;
 use App\Http\Controllers\Api\ContractFinanceController;
+use App\Http\Controllers\Api\ContractIntermediateProductController;
 use App\Http\Controllers\Api\ContractInvestorController;
+use App\Http\Controllers\Api\ContractMainProductController;
 use App\Http\Controllers\Api\ContractPaymentController;
+use App\Http\Controllers\Api\ContractProductController;
+use App\Http\Controllers\Api\ContractProductInspectionController;
+use App\Http\Controllers\Api\ContractProductMinuteController;
+use App\Http\Controllers\Api\ContractProductMinuteSignatureController;
 use App\Http\Controllers\Api\ContractScanFileController;
 use App\Http\Controllers\Api\ContractScanFileTypeController;
 use App\Http\Controllers\Api\ContractTypeController;
@@ -189,6 +195,47 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::prefix('payment')->controller(ContractPaymentController::class)->group(function () {
                 Route::post('store', 'store')->name('api.contract.finance.payment.store');
                 Route::patch('update', 'update')->name('api.contract.finance.payment.update');
+            });
+        });
+
+        // sản phẩm
+        Route::prefix('product')->group(function () {
+            Route::controller(ContractProductController::class)->group(function () {
+                Route::get('list', 'list')->name('api.contract.product.list');
+            });
+
+            // chính
+            Route::prefix('main')->controller(ContractMainProductController::class)->group(function () {
+                Route::get('list', 'list')->name('api.contract.product.main.list');
+                Route::get('export', 'export')->name('api.contract.product.main.export');
+                Route::put('import', 'import')->name('api.contract.product.main.import');
+            });
+
+            // trung gian
+            Route::prefix('intermediate')->controller(ContractIntermediateProductController::class)->group(function () {
+                Route::get('list', 'list')->name('api.contract.product.intermediate.list');
+                Route::get('export', 'export')->name('api.contract.product.intermediate.export');
+                Route::put('import', 'import')->name('api.contract.product.intermediate.import');
+            });
+
+            // biên bản
+            Route::prefix('minute')->group(function () {
+                Route::controller(ContractProductMinuteController::class)->group(function () {
+                    Route::get('list', 'list')->name('api.contract.product.minute.list');
+                    Route::post('create', 'create')->name('api.contract.product.minute.create');
+                    Route::patch('replace', 'replace')->name('api.contract.product.minute.replace');
+                    Route::patch('signature-request', 'signatureRequest')->name('api.contract.product.minute.signature-request');
+                    Route::patch('confirm-issues', 'confirmIssues')->name('api.contract.product.minute.confirm-issues');
+                });
+                Route::prefix('sign')->controller(ContractProductMinuteSignatureController::class)->group(function () {
+                    Route::patch('/', 'sign')->name('contract.product.minute.sign');
+                });
+            });
+
+            // kiểm tra
+            Route::prefix('inspection')->controller(ContractProductInspectionController::class)->group(function () {
+                Route::post('request', 'request')->name('contract.product.inspection.request');
+                Route::post('response', 'response')->name('contract.product.inspection.response');
             });
         });
     });

@@ -39,6 +39,21 @@ class ContractService extends BaseService
         return $res;
     }
 
+    public function getContractStatus($key = null)
+    {
+        return $this->repository->getContractStatus($key);
+    }
+
+    public function getIntermediateProductStatus($key = null)
+    {
+        return $this->repository->getIntermediateProductStatus($key);
+    }
+
+    public function getFinancialStatus($key = null)
+    {
+        return $this->repository->getFinancialStatus($key);
+    }
+
     public function getCreateOrUpdateBaseData(int $id = null)
     {
         $res = [];
@@ -54,9 +69,9 @@ class ContractService extends BaseService
         ]);
         $res['types'] = $this->contractTypeService->list();
         $res['investors'] = $this->contractInvestorService->list();
-        $res['contract_status'] = $this->repository->model->getContractStatus();
-        $res['intermediate_product_status'] = $this->repository->model->getIntermediateProductStatus();
-        $res['financial_status'] = $this->repository->model->getFinancialStatus();
+        $res['contract_status'] = $this->repository->getContractStatus();
+        $res['intermediate_product_status'] = $this->repository->getIntermediateProductStatus();
+        $res['financial_status'] = $this->repository->getFinancialStatus();
 
         $res['provinces'] = $this->provinceService->list();
 
@@ -88,11 +103,11 @@ class ContractService extends BaseService
                 $array[$file] = $this->getAssetUrl($array[$file]);
 
         if (isset($array['contract_status']))
-            $array['contract_status'] = $this->repository->model->getContractStatus($array['contract_status']);
+            $array['contract_status'] = $this->repository->getContractStatus($array['contract_status']);
         if (isset($array['intermediate_product_status']))
-            $array['intermediate_product_status'] = $this->repository->model->getIntermediateProductStatus($array['intermediate_product_status']);
+            $array['intermediate_product_status'] = $this->repository->getIntermediateProductStatus($array['intermediate_product_status']);
         if (isset($array['financial_status']))
-            $array['financial_status'] = $this->repository->model->getFinancialStatus($array['financial_status']);
+            $array['financial_status'] = $this->repository->getFinancialStatus($array['financial_status']);
 
         $array['is_contract_many_year'] = (isset($array['many_years']) && count($array['many_years']) > 0) ? 1 : 0;
 
@@ -202,7 +217,7 @@ class ContractService extends BaseService
         foreach ($fields as $field) {
             if ($extracted[$field]) {
                 $oldFile = $isUpdate ? $data[$field] : null;
-                $data[$field] = $this->handlerUploadFileService->storeAndRemoveOld($extracted[$field], $this->repository->model->getTable(), $field, $oldFile);
+                $data[$field] = $this->handlerUploadFileService->storeAndRemoveOld($extracted[$field], $this->repository->getTable(), $field, $oldFile);
                 $data->save();
 
                 if (!$this->isLocal())
@@ -270,13 +285,13 @@ class ContractService extends BaseService
     {
         $data = $this->repository->findById($id);
         return [
-            'accounting_contact' => $data['accountingContact'] ?? [], // phụ trách kế toán
-            'inspector_user' => $data['inspectorUser'] ?? [], // người kiểm tra SPTG
-            'executor_user' => $data['executorUser'] ?? [], // người thực hiện SPTG
-            'instructors' => $data['instructors'] ?? [], // người hướng dẫn
-            'professionals' => $data['professionals'] ?? [], // chuyên môn
-            'disbursements' => $data['disbursements'] ?? [], // giải ngân
-            'intermediate_collaborators' => $data['intermediateCollaborators'] ?? [], // các thành viên hỗ trợ thực hiện SPTG
+            'accounting_contact' => $data['accountingContact'] ?? [],  // phụ trách kế toán
+            'inspector_user' => $data['inspectorUser'] ?? [],  // người kiểm tra SPTG
+            'executor_user' => $data['executorUser'] ?? [],  // người thực hiện SPTG
+            'instructors' => $data['instructors'] ?? [],  // người hướng dẫn
+            'professionals' => $data['professionals'] ?? [],  // chuyên môn
+            'disbursements' => $data['disbursements'] ?? [],  // giải ngân
+            'intermediate_collaborators' => $data['intermediateCollaborators'] ?? [],  // các thành viên hỗ trợ thực hiện SPTG
         ];
     }
 

@@ -35,6 +35,10 @@ abstract class BaseRepository
         return $this->model->count();
     }
 
+    public function getTable(){
+        return $this->model->getTable();
+    }
+
     public function getIds()
     {
         return $this->model->pluck('id')->toArray();

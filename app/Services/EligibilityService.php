@@ -49,7 +49,7 @@ class EligibilityService extends BaseService
     {
         if ($extracted['path']) {
             $oldFile = $isUpdate ? $data['path'] : null;
-            $data['path'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path'], $this->repository->model->getTable(), 'path', $oldFile);
+            $data['path'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path'], $this->repository->getTable(), 'path', $oldFile);
             $data->save();
         }
     }

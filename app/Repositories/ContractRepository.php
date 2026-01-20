@@ -27,6 +27,12 @@ class ContractRepository extends BaseRepository
         ];
     }
 
+    protected function applyListFilters($query, array $request)
+    {
+        if (isset($request['intermediate_product_status']))
+            $query->where('intermediate_product_status', $request['intermediate_product_status']);
+    }
+
     protected function getSearchConfig(): array
     {
         return [
@@ -60,5 +66,20 @@ class ContractRepository extends BaseRepository
     public function getYears()
     {
         return $this->model->pluck('year')->unique()->sortByDesc('year')->toArray();
+    }
+
+    public function getContractStatus($key = null)
+    {
+        return $this->model->getContractStatus($key);
+    }
+
+    public function getIntermediateProductStatus($key = null)
+    {
+        return $this->model->getIntermediateProductStatus($key);
+    }
+
+    public function getFinancialStatus($key = null)
+    {
+        return $this->model->getFinancialStatus($key);
     }
 }

@@ -46,7 +46,7 @@ class DeviceImageService extends BaseService
 
     private function handleImage($image, $oldImage = null)
     {
-        return $this->handlerUploadFileService->storeAndRemoveOld($image, $this->repository->model->getTable(), null, $oldImage);
+        return $this->handlerUploadFileService->storeAndRemoveOld($image, $this->repository->getTable(), null, $oldImage);
     }
 
     protected function afterDelete($entity)

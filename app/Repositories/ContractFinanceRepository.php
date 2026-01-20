@@ -18,6 +18,11 @@ class ContractFinanceRepository extends BaseRepository
         ];
     }
 
+    public function getRole($key = null)
+    {
+        return $this->model->getRole($key);
+    }
+
     protected function applyListFilters($query, array $request)
     {
         if (isset($request['contract_id']))

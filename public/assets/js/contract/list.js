@@ -14,7 +14,7 @@ const renderColumns = () => {
                     true,
                     {
                         "data-bs-target": `#${contractDetailModal.getAttribute(
-                            "id"
+                            "id",
                         )}`,
                         "data-bs-toggle": "modal",
                         "data-id": row.id,
@@ -22,7 +22,7 @@ const renderColumns = () => {
                     },
                     "",
                     null,
-                    row.contract_number
+                    row.contract_number,
                 )?.outerHTML;
             },
         },
@@ -49,7 +49,7 @@ const renderColumns = () => {
                     row?.investor?.name_vi || "",
                     row?.investor?.name_en || "",
                 ]
-                    .filter((v) => v != null && v !== "")
+                    .filter(Boolean)
                     .join(" - ");
             },
         },

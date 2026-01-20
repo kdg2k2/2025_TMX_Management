@@ -14,6 +14,9 @@ use App\Http\Controllers\Admin\ContractFileTypeController;
 use App\Http\Controllers\Admin\ContractFinanceController;
 use App\Http\Controllers\Admin\ContractInvestorController;
 use App\Http\Controllers\Admin\ContractPaymentController;
+use App\Http\Controllers\Admin\ContractProductController;
+use App\Http\Controllers\Admin\ContractProductMinuteController;
+use App\Http\Controllers\Admin\ContractProductMinuteSignatureController;
 use App\Http\Controllers\Admin\ContractScanFileController;
 use App\Http\Controllers\Admin\ContractScanFileTypeController;
 use App\Http\Controllers\Admin\ContractTypeController;
@@ -172,6 +175,24 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
 
             Route::prefix('payment')->controller(ContractPaymentController::class)->group(function () {
                 Route::delete('delete', 'delete')->name('contract.finance.payment.delete');
+            });
+        });
+
+        // sản phẩm
+        Route::prefix('product')->group(function () {
+            Route::controller(ContractProductController::class)->group(function () {
+                Route::get('index', 'index')->name('contract.product.index');
+            });
+
+            // biên bản
+            Route::prefix('minute')->group(function () {
+                Route::controller(ContractProductMinuteController::class)->group(function () {
+                    Route::patch('approve', 'approve')->name('contract.product.minute.approve');
+                    Route::patch('reject', 'reject')->name('contract.product.minute.reject');
+                });
+                Route::prefix('sign')->controller(ContractProductMinuteSignatureController::class)->group(function () {
+                    Route::get('index', 'index')->name('contract.product.minute.sign.index');
+                });
             });
         });
     });

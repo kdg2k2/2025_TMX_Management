@@ -50,7 +50,7 @@ class ShareholderMeetingMinuteService extends BaseService
     {
         if ($extracted['path']) {
             $oldFile = $isUpdate ? $data['path'] : null;
-            $data['path'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path'], $this->repository->model->getTable(),
+            $data['path'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path'], $this->repository->getTable(),
                 'files', $oldFile);
             $data->save();
         }

@@ -91,7 +91,7 @@ class VehicleLoanService extends BaseService
                 ...collect($this->beforeImages)->mapWithKeys(fn($i) => [
                     $i => $this->handlerUploadFileService->storeAndRemoveOld(
                         $request[$i],
-                        $this->repository->model->getTable(),
+                        $this->repository->getTable(),
                         'before'
                     )
                 ])->all()
@@ -148,7 +148,7 @@ class VehicleLoanService extends BaseService
             foreach ($this->returnImages as $item)
                 $request[$item] = $this->handlerUploadFileService->storeAndRemoveOld(
                     $request[$item],
-                    $this->repository->model->getTable(),
+                    $this->repository->getTable(),
                     'return'
                 );
             $data->update($request);

@@ -14,7 +14,7 @@ class ContractFinanceService extends BaseService
 
     public function getRole($key = null)
     {
-        return $this->repository->model->getRole($key);
+        return $this->repository->getRole($key);
     }
 
     public function formatRecord(array $array)

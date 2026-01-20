@@ -154,7 +154,7 @@
                         </li>
 
                         <li class="slide">
-                            <a href="javascript:void(0)" class="side-menu__item">
+                            <a href="{{ route('contract.product.index') }}" class="side-menu__item">
                                 <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-clipboard-check"></i>
                                 Sản phẩm trung gian
                             </a>

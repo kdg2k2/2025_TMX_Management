@@ -59,7 +59,7 @@ class ContractAppendixService extends BaseService
         foreach ($fields as $field) {
             if ($extracted[$field]) {
                 $oldFile = $isUpdate ? $data[$field] : null;
-                $data[$field] = $this->handlerUploadFileService->storeAndRemoveOld($extracted[$field], $this->repository->model->getTable(), $field, $oldFile);
+                $data[$field] = $this->handlerUploadFileService->storeAndRemoveOld($extracted[$field], $this->repository->getTable(), $field, $oldFile);
                 $data->save();
             }
         }

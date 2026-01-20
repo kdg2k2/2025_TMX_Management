@@ -1,8 +1,8 @@
 const originalContractorExperience = document.getElementById(
-    "original-contractor-experience"
+    "original-contractor-experience",
 );
 const selectedContractorExperience = document.getElementById(
-    "selected-contractor-experience"
+    "selected-contractor-experience",
 );
 
 window.loadListContract = () => {
@@ -26,7 +26,7 @@ window.loadListContract = () => {
                         row?.investor?.name_vi || "",
                         row?.investor?.name_en || "",
                     ]
-                        .filter((v) => v != null && v !== "")
+                        .filter(Boolean)
                         .join(" - ");
                 },
             },
@@ -68,19 +68,19 @@ window.loadListContract = () => {
         (res) => {
             handleOriginalTableChangePage(
                 originalContractorExperience,
-                "contractorExperience"
+                "contractorExperience",
             );
         },
         "contractorExperience",
         storeBiddingContractorExperienceUrl,
         "bidding_contractor_experiences",
         deleteByContractIdBiddingContractorExperienceUrl,
-        () => loadListBiddingContractorExperience()
+        () => loadListBiddingContractorExperience(),
     );
 };
 
 window.loadListBiddingContractorExperience = (
-    table = selectedContractorExperience
+    table = selectedContractorExperience,
 ) => {
     initSelectedTable(
         $(table),
@@ -129,7 +129,7 @@ window.loadListBiddingContractorExperience = (
                         }
                         ${createDeleteBtn(
                             `${deleteBiddingContractorExperienceUrl}?id=${row.id}`,
-                            "loadListBiddingContractorExperience"
+                            "loadListBiddingContractorExperience",
                         )}
                 `;
                 },
@@ -139,7 +139,7 @@ window.loadListBiddingContractorExperience = (
             const ids = (resultSummary["contractorExperience"] =
                 res?.data?.data?.map((item) => item?.contract_id) || []);
             findAndChecked(originalContractorExperience, ids);
-        }
+        },
     );
 };
 

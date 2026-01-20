@@ -46,14 +46,14 @@ class KasperskyCodeService extends BaseService
     protected function beforeStore(array $request)
     {
         if (isset($request['path']))
-            $request['path'] = $this->handlerUploadFileService->storeAndRemoveOld($request['path'], $this->repository->model->getTable());
+            $request['path'] = $this->handlerUploadFileService->storeAndRemoveOld($request['path'], $this->repository->getTable());
         return $request;
     }
 
     protected function beforeUpdate(array $request)
     {
         if (isset($request['path']))
-            $request['path'] = $this->handlerUploadFileService->storeAndRemoveOld($request['path'], $this->repository->model->getTable(), null, $this->repository->findById($request['id'])['path']);
+            $request['path'] = $this->handlerUploadFileService->storeAndRemoveOld($request['path'], $this->repository->getTable(), null, $this->repository->findById($request['id'])['path']);
         if (isset($request['valid_days']) && isset($request['started_at']))
             $request['expired_at'] = Carbon::parse($request['started_at'])
                 ->addDays((int) $request['valid_days'])
