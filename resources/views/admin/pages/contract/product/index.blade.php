@@ -13,7 +13,7 @@
                 Trạng thái biên bản
             </label>
             <select name="contract_product_minute_status" id="minute-status" class="form-control">
-                <x-select-options :items="$minuteStatuses" keyField="original" valueFields="converted" />
+                <x-select-options :items="$minuteStatuses" keyField="original" valueFields="converted" :optionCallback="fn($item) => isset($item['color']) ? 'class=text-' . $item['color'] : ''" />
             </select>
         </div>
     </div>

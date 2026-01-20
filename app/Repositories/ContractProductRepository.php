@@ -16,7 +16,7 @@ class ContractProductRepository extends ContractRepository
             'intermediateCollaborators.user',
             'mainProducts:id,contract_id',
             'intermediateProducts:id,contract_id',
-            'productMinutes:id,contract_id',
+            'productMinutes:id,contract_id,status',
         ];
     }
 

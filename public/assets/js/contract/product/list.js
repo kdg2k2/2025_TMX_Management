@@ -85,7 +85,6 @@ const renderColumns = () => {
                 `;
             },
         },
-        createCreatedUpdatedColumn(),
         {
             data: null,
             orderable: false,
@@ -102,7 +101,7 @@ const renderColumns = () => {
                             "",
                             "loadList",
                             null,
-                            "ti ti-package",
+                            "ti ti-package"
                         ) +
                         createActionBtn(
                             "info",
@@ -110,7 +109,7 @@ const renderColumns = () => {
                             "",
                             "loadList",
                             null,
-                            "ti ti-packages",
+                            "ti ti-packages"
                         ) +
                         createActionBtn(
                             "warning",
@@ -118,7 +117,7 @@ const renderColumns = () => {
                             "",
                             "loadList",
                             null,
-                            "ti ti-clipboard-search",
+                            "ti ti-clipboard-search"
                         ) +
                         createActionBtn(
                             "secondary",
@@ -126,7 +125,7 @@ const renderColumns = () => {
                             "",
                             "loadList",
                             null,
-                            "ti ti-clipboard-check",
+                            "ti ti-clipboard-check"
                         ) +
                         createActionBtn(
                             "primary",
@@ -134,17 +133,31 @@ const renderColumns = () => {
                             "",
                             "loadList",
                             null,
-                            "ti ti-file-text",
+                            "ti ti-file-text"
                         ) +
                         createApproveBtn(
-                            contractProductMinuteApprove + contractParam,
+                            contractProductMinuteApprove + contractParam
                         ) +
                         createRejectBtn(
-                            contractProductMinuteReject + contractParam,
+                            contractProductMinuteReject + contractParam
                         )
                     }
                 `;
             },
         },
     ];
+};
+
+const callbackAfterRenderLoadList = () => {
+    const table = ($("#datatable") || table).DataTable();
+    table.rows().every(function () {
+        const data = this.data();
+        const rowNode = this.node();
+
+        if (data?.product_minutes?.length > 0) {
+            const record = data?.product_minutes?.slice(-1)[0];
+            $(rowNode).addClass(`text-${record.status.color}`);
+            $(rowNode).attr("title", record.status.converted);
+        }
+    });
 };

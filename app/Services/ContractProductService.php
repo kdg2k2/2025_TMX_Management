@@ -18,7 +18,15 @@ class ContractProductService extends BaseService
     public function getBaseDataForLView()
     {
         return [
-            'productStatuses' => $this->contractService->getIntermediateProductStatus(),
+            'minuteStatuses' => $this->contractProductMinuteService->getStatus(),
         ];
+    }
+
+    public function formatRecord(array $array)
+    {
+        $array = parent::formatRecord($array);
+        if (isset($array['product_minutes']))
+            $array['product_minutes'] = app(ContractProductMinuteService::class)->formatRecords($array['product_minutes']);
+        return $array;
     }
 }
