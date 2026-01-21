@@ -14,14 +14,16 @@ return new class extends Migration {
         Schema::create('contract_product_inspections', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('contract_id')->constrained('contracts', 'id', 'fk_cpi_c')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('created_by')->comment('người yêu cầu kiểm tra')->constrained('users', 'id', 'fk_cpi_cb')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('supported_by')->comment('người hỗ trợ kiểm tra')->constrained('users', 'id', 'fk_cpi_sb')->cascadeOnDelete()->cascadeOnUpdate();
             $table->enum('status', [
                 'request',  // yêu cầu kiểm tra
                 'responded',  // đã phản hồi
-                'cancel', // hủy kiểm tra
+                'cancel',  // hủy kiểm tra
             ])->default('request')->comment('trạng thái kiểm tra');
             $table->string('issue_file_path')->nullable()->comment('đường dẫn file danh sách vấn đề tồn tại');
+            $table->string('support_description')->nullable()->comment('mô tả cần hỗ trợ');
             $table->string('note')->nullable()->comment('ghi chú');
         });
     }

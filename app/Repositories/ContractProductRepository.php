@@ -17,6 +17,9 @@ class ContractProductRepository extends ContractRepository
             'mainProducts:id,contract_id',
             'intermediateProducts:id,contract_id',
             'productMinutes:id,contract_id,status',
+            'productInspection' => fn($q) => $q->with(['contract'])->select([
+                'id', 'contract_id', 'status', 'created_by'
+            ]),
         ];
     }
 

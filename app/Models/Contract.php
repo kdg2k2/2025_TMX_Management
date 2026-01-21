@@ -161,4 +161,9 @@ class Contract extends Model
     {
         return $this->hasMany(ContractProductMinute::class);
     }
+
+    public function productInspection()
+    {
+        return $this->hasMany(ContractProductInspection::class);
+    }
 }

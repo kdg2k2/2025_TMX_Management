@@ -48,6 +48,43 @@
             <x-button-submit />
         </x-slot:footer>
     </x-modal>
+
+    <x-modal id="request-inspection-product-modal" method="post" size="md" nested="true">
+        <x-slot:body>
+            <div class="contract-year-filter-container my-1"></div>
+            <div class="my-1">
+                <label>
+                    Người hỗ trợ kiểm tra
+                </label>
+                <select name="supported_by" required>
+                    <x-select-options :items="$users" />
+                </select>
+            </div>
+            <div class="my-1">
+                <label>
+                    Mô tả cần hỗ trợ
+                </label>
+                <input type="text" class="form-control" name="support_description" required>
+            </div>
+            <div class="my-1">
+                <label>
+                    File danh sách vấn đề cần hỗ trợ (docx,xlsx,rar,zip)
+                </label>
+                <input type="file" class="form-control" name="issue_file_path" accept=".docx,.xlsx,.rar,.zip">
+            </div>
+            <div class="my-1">
+                <label>
+                    Ghi chú
+                </label>
+                <input type="text" class="form-control" name="note">
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
+            <x-button-submit />
+        </x-slot:footer>
+    </x-modal>
+
     <x-approve-modal id="approve-modal" title="Xác nhận duyệt đăng ký" size="md" method="post"
         noteName="approval_note"></x-approve-modal>
     <x-approve-modal id="reject-modal" title="Xác nhận từ chối đăng ký" size="md" method="post"
@@ -65,6 +102,10 @@
         const apiContractProductIntermediateList = @json(route('api.contract.product.intermediate.list'));
         const apiContractProductIntermediateExport = @json(route('api.contract.product.intermediate.export'));
         const apiContractProductIntermediateImport = @json(route('api.contract.product.intermediate.import'));
+
+        const apiContractProductInspectionRequest = @json(route('api.contract.product.inspection.request'));
+        const apiContractProductInspectionCancel = @json(route('api.contract.product.inspection.cancel'));
+        const apiContractProductInspectionResponse = @json(route('api.contract.product.inspection.response'));
 
         const contractProductMinuteApprove = @json(route('contract.product.minute.approve'));
         const contractProductMinuteReject = @json(route('contract.product.minute.reject'));

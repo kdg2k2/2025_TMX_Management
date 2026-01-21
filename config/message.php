@@ -8,4 +8,5 @@ return [
     'reject' => 'Từ chối thành công',
     'render_file' => 'Tạo file thành công',
     'default' => 'Thao tác thành công',
+    'request' => 'Gửi yêu cầu thành công',
 ];

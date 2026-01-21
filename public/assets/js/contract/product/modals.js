@@ -4,6 +4,12 @@ const productTable = $(productModal.querySelector("table"));
 const importProductModal = document.getElementById("import-product-modal");
 const importProductModalForm = importProductModal.querySelector("form");
 
+const requestInspectionProductModal = document.getElementById(
+    "request-inspection-product-modal",
+);
+const requestInspectionProductModalForm =
+    requestInspectionProductModal.querySelector("form");
+
 const renderFilterYear = (id = null, setRequired = false) => {
     return `
         <label>Năm hợp đồng</label>
@@ -199,5 +205,18 @@ importProductModalForm.addEventListener("submit", async (e) => {
         productModal
             .querySelector(".contract-year-filter-container select")
             ?.dispatchEvent(new Event("change"));
+    });
+});
+
+const showRequestInspectionProductModal = (btn) => {
+    openModalBase(btn, {
+        modal: requestInspectionProductModal,
+        form: requestInspectionProductModalForm,
+    });
+};
+requestInspectionProductModalForm.addEventListener("submit", async (e) => {
+    await handleSubmitForm(e, () => {
+        hideModal(requestInspectionProductModal);
+        loadList();
     });
 });

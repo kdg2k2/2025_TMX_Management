@@ -41,4 +41,9 @@ class ContractProductInspection extends Model
     {
         return $this->hasMany(ContractProductInspectionYear::class);
     }
+
+    public function contract()
+    {
+        return $this->belongsTo(Contract::class);
+    }
 }

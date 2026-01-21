@@ -118,31 +118,52 @@ const renderColumns = () => {
                                 "data-type": "intermediate",
                                 "data-contract_id": row.id,
                             },
-                        ) +
-                        createActionBtn(
-                            "warning",
-                            "Yêu cầu kiểm tra",
-                            "",
-                            "loadList",
-                            null,
-                            "ti ti-clipboard-search",
-                        ) +
-                        createActionBtn(
-                            "secondary",
-                            "Phản hồi kiểm tra",
-                            "",
-                            "loadList",
-                            null,
-                            "ti ti-clipboard-check",
-                        ) +
-                        createActionBtn(
-                            "primary",
-                            "Biên bản",
-                            "",
-                            "loadList",
-                            null,
-                            "ti ti-file-text",
-                        ) +
+                        )
+                    }
+                    ${
+                        row.is_inspection_requested == false
+                            ? createActionBtn(
+                                  "warning",
+                                  "Yêu cầu kiểm tra",
+                                  apiContractProductInspectionRequest +
+                                      contractParam,
+                                  "loadList",
+                                  "showRequestInspectionProductModal",
+                                  "ti ti-clipboard-search",
+                              )
+                            : row.is_auth_inspector
+                              ? createActionBtn(
+                                    "danger",
+                                    "Hủy yêu cầu kiểm tra",
+                                    "",
+                                    "loadList",
+                                    null,
+                                    "ti ti-ban",
+                                ) +
+                                createActionBtn(
+                                    "secondary",
+                                    "Phản hồi kiểm tra",
+                                    "",
+                                    "loadList",
+                                    null,
+                                    "ti ti-clipboard-check",
+                                )
+                              : ""
+                    }
+                    ${
+                        row.is_inspection_requested &&
+                        row.is_inspection_created_by_auth
+                            ? createActionBtn(
+                                  "primary",
+                                  "Biên bản",
+                                  "",
+                                  "loadList",
+                                  null,
+                                  "ti ti-file-text",
+                              )
+                            : ""
+                    }
+                    ${
                         createApproveBtn(
                             contractProductMinuteApprove + contractParam,
                         ) +
