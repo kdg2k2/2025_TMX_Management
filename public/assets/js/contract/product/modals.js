@@ -10,6 +10,9 @@ const requestInspectionProductModal = document.getElementById(
 const requestInspectionProductModalForm =
     requestInspectionProductModal.querySelector("form");
 
+const filterContainerClass = "contract-year-filter-container";
+var currentBtnProductData = null;
+
 const renderFilterYear = (id = null, setRequired = false) => {
     return `
         <label>Năm hợp đồng</label>
@@ -101,7 +104,6 @@ const loadProduct = (btn, params = {}) => {
         (res) => {
             const modalBody = $(productModal.querySelector(".modal-body"));
             const filterId = `contract-year-${btn?.dataset?.type}`;
-            const filterContainerClass = "contract-year-filter-container";
 
             if (modalBody.find(`.${filterContainerClass}`))
                 modalBody.find(`.${filterContainerClass}`).parent().remove();
@@ -183,6 +185,7 @@ const showProductModal = (btn) => {
     openModalBase(btn, {
         modal: productModal,
         afterShow: () => {
+            currentBtnProductData = btn;
             loadProduct(btn);
         },
     });
@@ -202,9 +205,7 @@ const showImportProductModal = (btn) => {
 importProductModalForm.addEventListener("submit", async (e) => {
     await handleSubmitForm(e, () => {
         hideModal(importProductModal);
-        productModal
-            .querySelector(".contract-year-filter-container select")
-            ?.dispatchEvent(new Event("change"));
+        loadProduct(currentBtnProductData);
     });
 });
 

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\ContractProductInspectionReporitory;
+use Exception;
 
 class ContractProductInspectionService extends BaseService
 {
@@ -24,9 +25,17 @@ class ContractProductInspectionService extends BaseService
 
     protected function beforeStore(array $request)
     {
+        $this->isHasProduct($request['contract_id']);
         if (isset($request['issue_file_path']))
             $request['issue_file_path'] = $this->handlerUploadFileService->storeAndRemoveOld($request['issue_file_path'], $this->repository->getTable());
         return $request;
+    }
+
+    private function isHasProduct(int $contractId)
+    {
+        $contract = app(ContractProductService::class)->findById($contractId)->toArray();
+        if (count($contract['main_products']) + count($contract['intermediate_products']) == 0)
+            throw new Exception('Hợp đồng chưa có sản phẩm nào, không thể yêu cầu kiểm tra');
     }
 
     public function cancel(array $request)
