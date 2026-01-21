@@ -2,26 +2,15 @@
 
 namespace App\Http\Requests\ContractMainProduct;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseListRequest;
 
-class ListRequest extends FormRequest
+class ListRequest extends BaseListRequest
 {
-    public function prepareForValidation()
-    {
-        $this->merge([
-            //
-        ]);
-    }
-
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
-        return [
-            //
-        ];
+        return array_merge(
+            parent::rules(),
+            app(ExportRequest::class)->rules()
+        );
     }
 }

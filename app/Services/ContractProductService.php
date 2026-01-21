@@ -29,4 +29,10 @@ class ContractProductService extends BaseService
             $array['product_minutes'] = app(ContractProductMinuteService::class)->formatRecords($array['product_minutes']);
         return $array;
     }
+
+    public function getContractYears(int $contractId, bool $returnAll = false)
+    {
+        $contract = $this->contractService->findById($contractId, true)->load('manyYears');
+        return $returnAll ? $contract : ($contract['manyYears'] ?? []);
+    }
 }

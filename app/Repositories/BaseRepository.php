@@ -114,13 +114,13 @@ abstract class BaseRepository
     {
         $query = $this->model->query();
 
-        if (isset($request['columns']))
-            $query->select($request['columns']);
-
         if (isset($request['ids']))
             $query->whereIn('id', $request['ids']);
 
         $this->applyListFilters($query, $request);
+
+        if (isset($request['columns']))
+            $query->select($request['columns']);
 
         if (isset($request['search']))
             $this->applySearch($query, $request['search']);

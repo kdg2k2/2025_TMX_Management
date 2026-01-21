@@ -2,26 +2,14 @@
 
 namespace App\Http\Requests\ContractMainProduct;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class ExportRequest extends FormRequest
+class ExportRequest extends BaseRequest
 {
-    public function prepareForValidation()
-    {
-        $this->merge([
-            //
-        ]);
-    }
-
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [
-            //
+            'contract_id' => 'required|exists:contracts,id'
         ];
     }
 }

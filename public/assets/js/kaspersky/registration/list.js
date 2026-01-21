@@ -74,14 +74,10 @@ const renderColumns = () => {
                     ${
                         row.status.original == "pending"
                             ? createApproveBtn(
-                                  `${kasperskyRegistrationApproveUrl}?id=${row.id}`,
-                                  "loadList",
-                                  "showApproveModal"
+                                  `${kasperskyRegistrationApproveUrl}?id=${row.id}`
                               ) +
                               createRejectBtn(
-                                  `${kasperskyRegistrationRejectUrl}?id=${row.id}`,
-                                  "loadList",
-                                  "showRejectModal"
+                                  `${kasperskyRegistrationRejectUrl}?id=${row.id}`
                               )
                             : ""
                     }

@@ -218,14 +218,10 @@ const renderColumns = () => {
                     ${
                         row?.status?.original == "reviewed"
                             ? createApproveBtn(
-                                  `${approveUrl}?id=${row.id}`,
-                                  "loadList",
-                                  "showApproveModal"
+                                  `${approveUrl}?id=${row.id}`
                               ) +
                               createRejectBtn(
-                                  `${rejectUrl}?id=${row.id}`,
-                                  "loadList",
-                                  "showRejectModal"
+                                  `${rejectUrl}?id=${row.id}`
                               )
                             : ""
                     }

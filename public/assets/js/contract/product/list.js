@@ -16,7 +16,7 @@ const renderColumns = () => {
         },
         {
             data: null,
-            title: "Tên",
+            title: "Tên hợp đồng",
             render: (data, type, row) => {
                 return row?.name || "";
             },
@@ -98,18 +98,26 @@ const renderColumns = () => {
                         createActionBtn(
                             "success",
                             "Sản phẩm chính",
-                            "",
-                            "loadList",
+                            apiContractProductMainList,
                             null,
-                            "ti ti-package"
+                            "showProductModal",
+                            "ti ti-package",
+                            {
+                                "data-type": "main",
+                                "data-contract_id": row.id,
+                            },
                         ) +
                         createActionBtn(
                             "info",
                             "Sản phẩm trung gian",
-                            "",
-                            "loadList",
+                            apiContractProductIntermediateList,
                             null,
-                            "ti ti-packages"
+                            "showProductModal",
+                            "ti ti-packages",
+                            {
+                                "data-type": "intermediate",
+                                "data-contract_id": row.id,
+                            },
                         ) +
                         createActionBtn(
                             "warning",
@@ -117,7 +125,7 @@ const renderColumns = () => {
                             "",
                             "loadList",
                             null,
-                            "ti ti-clipboard-search"
+                            "ti ti-clipboard-search",
                         ) +
                         createActionBtn(
                             "secondary",
@@ -125,7 +133,7 @@ const renderColumns = () => {
                             "",
                             "loadList",
                             null,
-                            "ti ti-clipboard-check"
+                            "ti ti-clipboard-check",
                         ) +
                         createActionBtn(
                             "primary",
@@ -133,13 +141,13 @@ const renderColumns = () => {
                             "",
                             "loadList",
                             null,
-                            "ti ti-file-text"
+                            "ti ti-file-text",
                         ) +
                         createApproveBtn(
-                            contractProductMinuteApprove + contractParam
+                            contractProductMinuteApprove + contractParam,
                         ) +
                         createRejectBtn(
-                            contractProductMinuteReject + contractParam
+                            contractProductMinuteReject + contractParam,
                         )
                     }
                 `;

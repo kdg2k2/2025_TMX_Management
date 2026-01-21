@@ -117,14 +117,10 @@ const renderColumns = () => {
                     ${
                         row.status.original == "pending_approval"
                             ? createApproveBtn(
-                                  `${planeTicketApproveUrl}?id=${row.id}`,
-                                  "loadList",
-                                  "showApproveModal"
+                                  `${planeTicketApproveUrl}?id=${row.id}`
                               ) +
                               createRejectBtn(
-                                  `${planeTicketRejectUrl}?id=${row.id}`,
-                                  "loadList",
-                                  "showRejectModal"
+                                  `${planeTicketRejectUrl}?id=${row.id}`
                               )
                             : ""
                     }

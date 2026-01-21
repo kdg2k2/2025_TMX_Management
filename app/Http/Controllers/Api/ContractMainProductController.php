@@ -17,15 +17,13 @@ class ContractMainProductController extends Controller
 
     public function list(ListRequest $request)
     {
-        return $this->catchAPI(fn() => response()->json([
-            'data' => $this->service->list($request->validated()),
-        ]));
+        return $this->catchAPI(fn() => response()->json($this->service->list($request->validated())));
     }
 
     public function import(ImportRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            // 'data' => $this->service->import($request->validated()),
+            'data' => $this->service->import($request->validated()),
             'message' => config('message.default')
         ]));
     }
@@ -33,8 +31,7 @@ class ContractMainProductController extends Controller
     public function export(ExportRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            // 'data' => $this->service->export($request->validated()),
-            'message' => config('message.default')
+            'data' => $this->service->export($request->validated()),
         ]));
     }
 }

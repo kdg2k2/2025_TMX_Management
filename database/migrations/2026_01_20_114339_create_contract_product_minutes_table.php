@@ -18,12 +18,16 @@ return new class extends Migration {
             $table->enum('status', [
                 'draft',  // nháp
                 'request_sign',  // yêu cầu ký
-                'request_approve', // yêu cầu duyệt
-                'approved', // đã duyệt
-                'rejected', // từ chối
+                'request_approve',  // yêu cầu duyệt
+                'approved',  // đã duyệt
+                'rejected',  // từ chối
             ])->default('draft')->comment('trạng thái biên bản');
             $table->string('file_path')->comment('đường dẫn file biên bản');
             $table->string('issue_note')->nullable()->comment('ghi chú tồn tại (nếu có)');
+            $table->timestamp('approved_at')->nullable()->comment('thời gian duyệt');
+            $table->foreignId('approved_by')->nullable()->comment('người phê duyệt')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->text('approval_note')->nullable()->comment('Ghi chú phê duyệt');
+            $table->text('rejection_note')->nullable()->comment('Ghi chú từ chối phê duyệt');
         });
     }
 

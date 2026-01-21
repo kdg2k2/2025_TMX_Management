@@ -2,7 +2,7 @@ const createEditBtn = (
     url,
     color = "warning",
     title = "Cập nhật",
-    icon = "ti ti-edit"
+    icon = "ti ti-edit",
 ) => {
     return createBtn(
         color,
@@ -10,7 +10,7 @@ const createEditBtn = (
         false,
         {},
         icon,
-        `window.location.href='${url}'`
+        `window.location.href='${url}'`,
     )?.outerHTML;
 };
 
@@ -21,7 +21,7 @@ const createViewBtn = (url) => {
         false,
         {},
         "ti ti-eye-search",
-        `viewFileHandler('${url}')`
+        `viewFileHandler('${url}')`,
     )?.outerHTML;
 };
 
@@ -32,7 +32,7 @@ const createDownloadBtn = (url) => {
         false,
         {},
         "ti ti-download",
-        `downloadFileHandler('${url}')`
+        `downloadFileHandler('${url}')`,
     )?.outerHTML;
 };
 
@@ -48,7 +48,7 @@ const createImageGalleryBtn = (func = null) => {
         false,
         {},
         "ti ti-library-photo",
-        func
+        func,
     )?.outerHTML;
 };
 
@@ -58,7 +58,8 @@ const createActionBtn = (
     url = "#",
     onsuccess = "loadList",
     func = null,
-    icon = ""
+    icon = "",
+    attr = {},
 ) => {
     // Nếu có func (string tên hàm) → tạo onclick string
     const onclickHandler = func ? `${func}(this)` : "";
@@ -70,9 +71,10 @@ const createActionBtn = (
         {
             "data-href": url,
             "data-onsuccess": onsuccess,
+            ...attr,
         },
         icon,
-        onclickHandler
+        onclickHandler,
     )?.outerHTML;
 };
 
@@ -83,21 +85,28 @@ const createDeleteBtn = (url, onsuccess = "loadList") =>
         url,
         onsuccess,
         "openDeleteModal",
-        "ti ti-trash"
+        "ti ti-trash",
     );
 
-const createApproveBtn = (url, onsuccess = "loadList", func = null) =>
+const createApproveBtn = (
+    url,
+    onsuccess = "loadList",
+    func = "showApproveModal",
+) =>
     createActionBtn(
         "primary",
         "Phê duyệt",
         url,
         onsuccess,
         func,
-        "ti ti-check"
+        "ti ti-check",
     );
 
-const createRejectBtn = (url, onsuccess = "loadList", func = null) =>
-    createActionBtn("danger", "Từ chối", url, onsuccess, func, "ti ti-x");
+const createRejectBtn = (
+    url,
+    onsuccess = "loadList",
+    func = "showRejectModal",
+) => createActionBtn("danger", "Từ chối", url, onsuccess, func, "ti ti-x");
 
 const createEditModalBtn = (url, onsuccess = "loadList", func = null) =>
     createActionBtn("warning", "Cập nhật", url, onsuccess, func, "ti ti-edit");

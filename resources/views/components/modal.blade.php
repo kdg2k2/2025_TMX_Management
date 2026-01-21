@@ -3,7 +3,7 @@
     'title' => 'Xác nhận',
     'size' => 'md',
     'action' => null,
-    'method' => 'POST',
+    'method' => null,
     'backdrop' => 'static',
     'keyboard' => 'true',
     'centered' => true,

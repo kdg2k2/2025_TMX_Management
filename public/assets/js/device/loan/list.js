@@ -99,14 +99,10 @@ const renderColumns = () => {
                     ${
                         row.status.original == "pending"
                             ? createApproveBtn(
-                                  `${deviceLoanApproveUrl}?id=${row.id}`,
-                                  "loadList",
-                                  "showApproveModal"
+                                  `${deviceLoanApproveUrl}?id=${row.id}`
                               ) +
                               createRejectBtn(
-                                  `${deviceLoanRejectUrl}?id=${row.id}`,
-                                  "loadList",
-                                  "showRejectModal"
+                                  `${deviceLoanRejectUrl}?id=${row.id}`
                               )
                             : ""
                     }

@@ -31,6 +31,7 @@ const fillSelectId = (
         defaultOption,
         addDefaultOption,
         selectedValue,
+        refresh,
         dataAttributes
     );
     return true;
