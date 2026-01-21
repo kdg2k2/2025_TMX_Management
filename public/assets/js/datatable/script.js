@@ -145,6 +145,10 @@ const initializeBaseDataTable = (element, additionalConfig = {}) => {
 // Hàm hủy DataTable
 const destroyDataTable = (element) => {
     if ($.fn.DataTable.isDataTable(element)) {
+        element.find([$tooltips, $customTooltips].join(", ")).each(function () {
+            destroyTooltipForElement(this);
+        });
+
         element.DataTable().destroy();
     }
 };
@@ -203,7 +207,7 @@ const createDataTableServerSide = (
     extraParams = {},
     callbackAfterRender = () => {},
     enableCheckbox = false,
-    onCheckboxChange = null
+    onCheckboxChange = null,
 ) => {
     var serverResponse = null;
 
@@ -244,7 +248,7 @@ const createDataTableServerSide = (
                     search: search,
                 },
                 null,
-                true
+                true,
             ).then((res) => {
                 serverResponse = res;
                 const items = res?.data?.data ?? [];

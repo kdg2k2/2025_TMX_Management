@@ -98,6 +98,7 @@ const createTooltipForElement = (el) => {
             trigger: "hover",
             container: container,
             placement: "bottom",
+            animation: false,
         });
     } catch (error) {
         console.error("Failed to create tooltip:", error);
@@ -105,9 +106,15 @@ const createTooltipForElement = (el) => {
 };
 
 const destroyTooltipForElement = (el) => {
-    const existingTooltip = bootstrap.Tooltip.getInstance(el);
-    if (existingTooltip) {
-        existingTooltip.dispose();
+    try {
+        const existingTooltip = bootstrap.Tooltip.getInstance(el);
+        if (existingTooltip) {
+            // Hide ngay lập tức (không animation) trước khi dispose
+            existingTooltip.hide();
+            existingTooltip.dispose();
+        }
+    } catch (error) {
+        // Bỏ qua lỗi nếu element đã bị remove
     }
 };
 

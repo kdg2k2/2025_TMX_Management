@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->enum('status', [
                 'request',  // yêu cầu kiểm tra
                 'responded',  // đã phản hồi
+                'cancel', // hủy kiểm tra
             ])->default('request')->comment('trạng thái kiểm tra');
             $table->string('issue_file_path')->nullable()->comment('đường dẫn file danh sách vấn đề tồn tại');
             $table->string('note')->nullable()->comment('ghi chú');

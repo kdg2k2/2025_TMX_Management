@@ -24,6 +24,12 @@ class ContractProductInspection extends Model
             'color' => 'success',
             'icon' => 'ti ti-circle-check',
         ],
+        'cancel' => [
+            'original' => 'cancel',
+            'converted' => 'Hủy kiểm tra',
+            'color' => 'danger',
+            'icon' => 'ti ti-ban',
+        ],
     ];
 
     public function getStatus($key = null)
