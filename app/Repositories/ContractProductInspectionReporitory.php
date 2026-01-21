@@ -11,7 +11,16 @@ class ContractProductInspectionReporitory extends BaseRepository
         $this->model = new ContractProductInspection();
         $this->relations = [
             'years',
-            'inspectorUser:id,name'
+            'createdBy:id,name',
+            'supportedBy:id,name',
+            'inspectorUser:id,name',
+            'contract' => fn($q) => $q->with([
+                'investor',
+                'inspectorUser:id,name',
+                'executorUser:id,name',
+                'professionals.user:id,name',
+                'intermediateCollaborators.user:id,name',
+            ])
         ];
     }
 

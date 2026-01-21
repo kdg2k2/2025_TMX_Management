@@ -8,12 +8,11 @@ class ContractProductRepository extends ContractRepository
     {
         parent::__construct();
         $this->relations = [
-            'type',
             'investor',
-            'inspectorUser',
-            'executorUser',
-            'professionals.user',
-            'intermediateCollaborators.user',
+            'inspectorUser:id,name',
+            'executorUser:id,name',
+            'professionals.user:id,name',
+            'intermediateCollaborators.user:id,name',
             'mainProducts:id,contract_id,year',
             'intermediateProducts:id,contract_id,year',
             'productMinutes:id,contract_id,status',

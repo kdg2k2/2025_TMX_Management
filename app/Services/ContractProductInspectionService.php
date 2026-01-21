@@ -30,6 +30,7 @@ class ContractProductInspectionService extends BaseService
         $this->isHasProduct($contract);
         $this->checkProductYear($contract, $request['years'] ?? []);
 
+        $request['inspector_user_id'] = $contract['inspector_user_id'];
         if (isset($request['issue_file_path']))
             $request['issue_file_path'] = $this->handlerUploadFileService->storeAndRemoveOld($request['issue_file_path'], $this->repository->getTable(), 'issue_file');
         return $request;
@@ -69,11 +70,17 @@ class ContractProductInspectionService extends BaseService
         }
     }
 
+    protected function afterStore($data, array $request)
+    {
+        $this->sendMail($data['id'], 'Yêu cầu', [$data['issue_file_path']]);
+    }
+
     public function cancel(array $request)
     {
         return $this->tryThrow(function () use ($request) {
             $data = $this->repository->findById($request['id']);
             $data->update($request);
+            $this->sendMail($data['id'], 'Hủy yêu cầu', [$data['issue_file_path']]);
             return $data;
         });
     }
@@ -85,6 +92,7 @@ class ContractProductInspectionService extends BaseService
             if (isset($request['inspector_comment_file_path']))
                 $request['inspector_comment_file_path'] = $this->handlerUploadFileService->storeAndRemoveOld($request['inspector_comment_file_path'], $this->repository->getTable(), 'inspector_comment_file');
             $data->update($request);
+            $this->sendMail($data['id'], 'Phản hổi', [$data['inspector_comment_file_path']]);
             return $data;
         });
     }
@@ -95,13 +103,13 @@ class ContractProductInspectionService extends BaseService
         $emails = $this->getEmails($data);
         dispatch(new \App\Jobs\SendMailJob('emails.contract-product-inspection', $subject . ' kiểm tra sản phẩm', $emails, [
             'data' => $data,
-        ], $files));
+        ], collect($files)->filter()->map(fn($i) => $this->handlerUploadFileService->getAbsolutePublicPath($i))->toArray()));
     }
 
     private function getEmails($data)
     {
         return $this->userService->getEmails([
-            collect([$data['created_by']['id'], $data['supported_by']['id'] ?? null, $data['inspector_user']['id'] ?? null])->unique()->filter()->toArray(),
+            collect([$data['created_by'], $data['supported_by'] ?? null, $data['inspector_user_id'] ?? null])->unique()->filter()->toArray(),
             app(TaskScheduleService::class)->getUserIdByScheduleKey('CONTRACT_PRODUCT_INSPECTION')
         ]);
     }

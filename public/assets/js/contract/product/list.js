@@ -60,19 +60,19 @@ const renderColumns = () => {
                     <ul>
                         <li>
                             <b>
-                                Người hoàn thiện
+                                Người hoàn thiện:
                             </b>
                             ${row?.executor_user?.name || ""}
                         </li>
                         <li>
                             <b>
-                                Người hoàn thiện
+                                Người hoàn thiện:
                             </b>
                             ${row?.inspector_user?.name || ""}
                         </li>
                         <li>
                             <b>
-                                Người hoàn thiện
+                                Người phối hợp làm SPTG:
                             </b>
                             ${
                                 row?.intermediate_collaborators

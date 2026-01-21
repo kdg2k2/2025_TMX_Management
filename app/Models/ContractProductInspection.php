@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\GetValueFromArrayByKeyTraits;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ContractProductInspection extends Model
 {
-    use HasFactory;
+    use HasFactory, GetValueFromArrayByKeyTraits;
 
     protected $guarded = [];
 
@@ -50,5 +51,15 @@ class ContractProductInspection extends Model
     public function inspectorUser()
     {
         return $this->belongsTo(User::class, 'inspector_user_id');
+    }
+
+    public function supportedBy()
+    {
+        return $this->belongsTo(User::class, 'supported_by');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }
