@@ -22,6 +22,8 @@ class InspectionRequest extends BaseRequest
             'issue_file_path' => 'nullable|file|mimes:docx,xlsx,rar,zip|max:10240',
             'support_description' => 'nullable|max:255',
             'note' => 'nullable|max:255',
+            'years' => 'nullable|array|min:1',
+            'years.*' => 'integer',
         ];
     }
 }

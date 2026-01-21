@@ -202,6 +202,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
         Route::prefix('product')->group(function () {
             Route::controller(ContractProductController::class)->group(function () {
                 Route::get('list', 'list')->name('api.contract.product.list');
+                Route::get('contract-years', 'getContractYears')->name('api.contract.product.contract-years');
             });
 
             // chính

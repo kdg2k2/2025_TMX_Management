@@ -41,15 +41,17 @@ class ContractProductService extends BaseService
 
     private function isProductInspection(array $data)
     {
-        $last = collect($data)->sortByDesc('created_at')->first() ?? [];
+        $last = collect($data)->sortByDesc('id')->first() ?? [];
         if (isset($last['status']) && $last['status'] == 'request')
             return [
-                'is_inspection_requested' => true,
+                'inspection_id' => $last['id'],
+                'inspection_status' => $last['status'],
                 'is_inspection_created_by_auth' => auth()->id() == 1 ? true : $last['created_by'] == auth()->id(),
                 'is_auth_inspector' => auth()->id() == 1 ? true : $last['contract']['inspector_user_id'] == auth()->id(),
             ];
         return [
-            'is_inspection_requested' => false,
+            'inspection_id' => null,
+            'inspection_status' => null,
             'is_inspection_created_by_auth' => false,
             'is_auth_inspector' => false,
         ];

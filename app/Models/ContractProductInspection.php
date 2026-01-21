@@ -46,4 +46,9 @@ class ContractProductInspection extends Model
     {
         return $this->belongsTo(Contract::class);
     }
+
+    public function inspectorUser()
+    {
+        return $this->belongsTo(User::class, 'inspector_user_id');
+    }
 }

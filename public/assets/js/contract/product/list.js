@@ -121,7 +121,8 @@ const renderColumns = () => {
                         )
                     }
                     ${
-                        row.is_inspection_requested == false
+                        !row.inspection_status ||
+                        row.inspection_status != "request"
                             ? createActionBtn(
                                   "warning",
                                   "Yêu cầu kiểm tra",
@@ -130,28 +131,31 @@ const renderColumns = () => {
                                   "loadList",
                                   "showRequestInspectionProductModal",
                                   "ti ti-clipboard-search",
+                                  {
+                                      "data-contract_id": row.id,
+                                  },
                               )
                             : row.is_auth_inspector
                               ? createActionBtn(
                                     "danger",
                                     "Hủy yêu cầu kiểm tra",
-                                    "",
+                                    `${apiContractProductInspectionCancel}?id=${row.inspection_id}`,
                                     "loadList",
-                                    null,
+                                    "showCancelInspectionProductModal",
                                     "ti ti-ban",
                                 ) +
                                 createActionBtn(
                                     "secondary",
                                     "Phản hồi kiểm tra",
-                                    "",
+                                    `${apiContractProductInspectionResponse}?id=${row.inspection_id}`,
                                     "loadList",
-                                    null,
+                                    "showResponseInspectionProductModal",
                                     "ti ti-clipboard-check",
                                 )
                               : ""
                     }
                     ${
-                        row.is_inspection_requested &&
+                        row.inspection_status == "responded" &&
                         row.is_inspection_created_by_auth
                             ? createActionBtn(
                                   "primary",

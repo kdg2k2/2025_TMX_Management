@@ -25,6 +25,9 @@ return new class extends Migration {
             $table->string('issue_file_path')->nullable()->comment('đường dẫn file danh sách vấn đề tồn tại');
             $table->string('support_description')->nullable()->comment('mô tả cần hỗ trợ');
             $table->string('note')->nullable()->comment('ghi chú');
+            $table->foreignId('inspector_user_id')->nullable()->comment('người kiểm tra')->constrained('users', 'id', 'fk_cpi_iu')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('inspector_comment')->nullable()->comment('nhận xét người kiểm tra');
+            $table->string('inspector_comment_file_path')->nullable()->comment('đường dẫn file nhận xét kiểm tra');
         });
     }
 

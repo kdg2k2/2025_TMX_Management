@@ -10,7 +10,8 @@ class ContractProductInspectionReporitory extends BaseRepository
     {
         $this->model = new ContractProductInspection();
         $this->relations = [
-            'years'
+            'years',
+            'inspectorUser:id,name'
         ];
     }
 

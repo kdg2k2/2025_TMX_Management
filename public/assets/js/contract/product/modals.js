@@ -10,13 +10,24 @@ const requestInspectionProductModal = document.getElementById(
 const requestInspectionProductModalForm =
     requestInspectionProductModal.querySelector("form");
 
+const cancelInspectionProductModal = document.getElementById(
+    "cancel-inspection-product-modal",
+);
+const cancelInspectionProductModalForm =
+    cancelInspectionProductModal.querySelector("form");
+
+const responseInspectionProductModal = document.getElementById(
+    "response-inspection-product-modal",
+);
+const responseInspectionProductModalForm = responseInspectionProductModal.querySelector("form");
+
 const filterContainerClass = "contract-year-filter-container";
 var currentBtnProductData = null;
 
-const renderFilterYear = (id = null, setRequired = false) => {
+const renderFilterYear = (id = null, setRequired = false, multiple = false) => {
     return `
         <label>Năm hợp đồng</label>
-        <select id="${id || ""}" name="year" ${setRequired ? "required" : ""}></select>
+        <select id="${id || ""}" name="${multiple ? "years[]" : "year"}" ${setRequired ? "required" : ""} ${multiple ? "multiple" : ""}></select>
     `;
 };
 
@@ -202,22 +213,61 @@ const showImportProductModal = (btn) => {
         form: importProductModalForm,
     });
 };
-importProductModalForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, () => {
-        hideModal(importProductModal);
-        loadProduct(currentBtnProductData);
-    });
-});
 
-const showRequestInspectionProductModal = (btn) => {
+const showRequestInspectionProductModal = async (btn) => {
+    const years = await http.get(apiContractProductContractYears, {
+        contract_id: btn.dataset.contract_id,
+    });
+
+    requestInspectionProductModalForm.querySelector(
+        `.${filterContainerClass}`,
+    ).innerHTML =
+        years?.data?.length > 0 ? renderFilterYear(null, true, true) : "";
+    if (years?.data?.length > 0)
+        fillSelectElement(
+            requestInspectionProductModalForm.querySelector(
+                `.${filterContainerClass} select`,
+            ),
+            years.data,
+            "year",
+            "year",
+            null,
+            false,
+        );
+
+    resetFormAfterSubmit(requestInspectionProductModalForm);
     openModalBase(btn, {
         modal: requestInspectionProductModal,
         form: requestInspectionProductModalForm,
     });
 };
-requestInspectionProductModalForm.addEventListener("submit", async (e) => {
-    await handleSubmitForm(e, () => {
-        hideModal(requestInspectionProductModal);
-        loadList();
+
+const showCancelInspectionProductModal = (btn) => {
+    resetFormAfterSubmit(cancelInspectionProductModalForm);
+    openModalBase(btn, {
+        modal: cancelInspectionProductModal,
+        form: cancelInspectionProductModalForm,
+    });
+};
+
+const showResponseInspectionProductModal = (btn) => {
+    resetFormAfterSubmit(responseInspectionProductModalForm);
+    openModalBase(btn, {
+        modal: responseInspectionProductModal,
+        form: responseInspectionProductModalForm,
+    });
+};
+
+[
+    importProductModalForm,
+    requestInspectionProductModalForm,
+    cancelInspectionProductModalForm,
+    responseInspectionProductModalForm,
+].forEach((form) => {
+    form.addEventListener("submit", async (e) => {
+        await handleSubmitForm(e, () => {
+            hideModal(form.closest(".modal"));
+            loadList();
+        });
     });
 });

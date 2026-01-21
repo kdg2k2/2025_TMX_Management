@@ -2,26 +2,26 @@
 
 namespace App\Http\Requests\ContractProductInspection;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class CancelRequest extends FormRequest
+class CancelRequest extends BaseRequest
 {
     public function prepareForValidation()
     {
         $this->merge([
-            //
+            'created_by' => $this->user()->id,
+            'status' => 'cancel',
         ]);
-    }
-
-    public function authorize(): bool
-    {
-        return true;
     }
 
     public function rules(): array
     {
-        return [
-            //
-        ];
+        return array_merge(
+            app(FindByIdRequest::class)->rules(),
+            [
+                'created_by' => 'required|exists:users,id',
+                'status' => 'required|in:cancel',
+            ]
+        );
     }
 }

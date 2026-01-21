@@ -84,6 +84,35 @@
             <x-button-submit />
         </x-slot:footer>
     </x-modal>
+    <x-modal id="cancel-inspection-product-modal" method="patch" size="sm" nested="true">
+        <x-slot:body>
+            Chắc chắn hủy kiểm tra?
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
+            <x-button-submit />
+        </x-slot:footer>
+    </x-modal>
+    <x-modal id="response-inspection-product-modal" method="patch" size="md" nested="true">
+        <x-slot:body>
+            <div class="my-1">
+                <label>
+                    Nhận xét của người kiểm tra
+                </label>
+                <input type="text" class="form-control" name="inspector_comment" required>
+            </div>
+            <div class="my-1">
+                <label>
+                    File nhận xét (docx,xlsx,rar,zip)
+                </label>
+                <input type="file" class="form-control" name="inspector_comment_file_path" accept=".docx,.xlsx,.rar,.zip">
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
+            <x-button-submit />
+        </x-slot:footer>
+    </x-modal>
 
     <x-approve-modal id="approve-modal" title="Xác nhận duyệt đăng ký" size="md" method="post"
         noteName="approval_note"></x-approve-modal>
@@ -94,6 +123,7 @@
     <script>
         const table = $('#datatable');
         const listUrl = @json(route('api.contract.product.list'));
+        const apiContractProductContractYears = @json(route('api.contract.product.contract-years'));
 
         const apiContractProductMainList = @json(route('api.contract.product.main.list'));
         const apiContractProductMainExport = @json(route('api.contract.product.main.export'));

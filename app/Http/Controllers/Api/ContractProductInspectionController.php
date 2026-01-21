@@ -26,7 +26,7 @@ class ContractProductInspectionController extends Controller
     public function cancel(CancelRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            // 'data'=>$this->service->cancel($request->validated()),
+            'data'=>$this->service->cancel($request->validated()),
             'message' => config('message.default'),
         ]));
     }
@@ -34,7 +34,7 @@ class ContractProductInspectionController extends Controller
     public function response(ResponseRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            // 'data'=>$this->service->response($request->validated()),
+            'data'=>$this->service->response($request->validated()),
             'message' => config('message.default'),
         ]));
     }

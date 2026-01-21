@@ -274,6 +274,18 @@ class TaskScheduleSeeder extends Seeder
                 'manual_run' => false,
                 'user_ids' => $baseUserIds,
             ],
+            [
+                'code' => 'CONTRACT_PRODUCT_INSPECTION',
+                'name' => 'Kiểm tra sản phẩm trung gian',
+                'subject' => null,
+                'content' => null,
+                'frequency' => 'daily',
+                'cron_expression' => null,
+                'description' => 'Tự chạy khi có yêu cầu, phản hồi, hủy kiểm tra',
+                'is_active' => true,
+                'manual_run' => false,
+                'user_ids' => $baseUserIds,
+            ],
         ];
 
         $taskScheduleService = app(TaskScheduleService::class);

@@ -14,10 +14,10 @@ class ContractProductRepository extends ContractRepository
             'executorUser',
             'professionals.user',
             'intermediateCollaborators.user',
-            'mainProducts:id,contract_id',
-            'intermediateProducts:id,contract_id',
+            'mainProducts:id,contract_id,year',
+            'intermediateProducts:id,contract_id,year',
             'productMinutes:id,contract_id,status',
-            'productInspection' => fn($q) => $q->with(['contract'])->select([
+            'productInspection' => fn($q) => $q->with(['contract:id,inspector_user_id'])->select([
                 'id', 'contract_id', 'status', 'created_by'
             ]),
         ];
