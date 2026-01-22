@@ -2,14 +2,16 @@
     'id',
     'title' => 'Xác nhận',
     'size' => 'md',
+    'fullscreen' => false,
     'action' => null,
     'method' => null,
     'backdrop' => 'static',
     'keyboard' => 'true',
     'centered' => true,
     'scrollable' => false,
-    'nested' => false, // Prop để đánh dấu modal lồng nhau
+    'nested' => false,
 ])
+
 
 @php
     $dialogClass = 'modal-dialog';
@@ -20,17 +22,17 @@
         $dialogClass .= ' modal-dialog-scrollable';
     }
 
-    $sizeClass = match ($size) {
-        'sm' => ' modal-sm',
-        'lg' => ' modal-lg',
-        'xl' => ' modal-xl',
-        'fullscreen' => ' modal-fullscreen',
-        default => '',
-    };
+    if ($fullscreen) {
+        $dialogClass .= ' modal-fullscreen';
+    } else {
+        $dialogClass .= match ($size) {
+            'sm' => ' modal-sm',
+            'lg' => ' modal-lg',
+            'xl' => ' modal-xl',
+            default => '',
+        };
+    }
 
-    $dialogClass .= $sizeClass;
-
-    // Nếu là nested modal, thêm class để tự tạo backdrop
     $modalClass = 'modal fade';
     if ($nested) {
         $modalClass .= ' bg-dark bg-opacity-50';

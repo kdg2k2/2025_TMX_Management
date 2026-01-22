@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ContractProductInspection\CancelRequest;
 use App\Http\Requests\ContractProductInspection\InspectionRequest;
+use App\Http\Requests\ContractProductInspection\ListRequest;
 use App\Http\Requests\ContractProductInspection\ResponseRequest;
 use App\Services\ContractProductInspectionService;
 
@@ -13,6 +14,13 @@ class ContractProductInspectionController extends Controller
     public function __construct()
     {
         $this->service = app(ContractProductInspectionService::class);
+    }
+
+    public function list(ListRequest $request)
+    {
+        return $this->catchAPI(fn() => response()->json([
+            'data' => $this->service->list($request->validated()),
+        ]));
     }
 
     public function request(InspectionRequest $request)
@@ -26,7 +34,7 @@ class ContractProductInspectionController extends Controller
     public function cancel(CancelRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            'data'=>$this->service->cancel($request->validated()),
+            'data' => $this->service->cancel($request->validated()),
             'message' => config('message.default'),
         ]));
     }
@@ -34,7 +42,7 @@ class ContractProductInspectionController extends Controller
     public function response(ResponseRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            'data'=>$this->service->response($request->validated()),
+            'data' => $this->service->response($request->validated()),
             'message' => config('message.default'),
         ]));
     }

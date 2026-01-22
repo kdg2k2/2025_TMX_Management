@@ -35,26 +35,7 @@ class ContractProductService extends BaseService
         $array = parent::formatRecord($array);
         if (isset($array['product_minutes']))
             $array['product_minutes'] = app(ContractProductMinuteService::class)->formatRecords($array['product_minutes']);
-        $array = array_merge($array, $this->isProductInspection($array['product_inspection'] ?? []));
         return $array;
-    }
-
-    private function isProductInspection(array $data)
-    {
-        $last = collect($data)->sortByDesc('id')->first() ?? [];
-        if (isset($last['status']) && $last['status'] == 'request')
-            return [
-                'inspection_id' => $last['id'],
-                'inspection_status' => $last['status'],
-                'is_inspection_created_by_auth' => auth()->id() == 1 ? true : $last['created_by'] == auth()->id(),
-                'is_auth_inspector' => auth()->id() == 1 ? true : $last['contract']['inspector_user_id'] == auth()->id(),
-            ];
-        return [
-            'inspection_id' => null,
-            'inspection_status' => null,
-            'is_inspection_created_by_auth' => false,
-            'is_auth_inspector' => false,
-        ];
     }
 
     public function getContractYears(int $contractId, bool $returnAll = false)

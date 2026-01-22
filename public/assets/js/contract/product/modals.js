@@ -4,6 +4,11 @@ const productTable = $(productModal.querySelector("table"));
 const importProductModal = document.getElementById("import-product-modal");
 const importProductModalForm = importProductModal.querySelector("form");
 
+const inspectionProductModal = document.getElementById(
+    "inspection-product-modal",
+);
+const inspectionProductTable = $(inspectionProductModal.querySelector("table"));
+
 const requestInspectionProductModal = document.getElementById(
     "request-inspection-product-modal",
 );
@@ -19,7 +24,8 @@ const cancelInspectionProductModalForm =
 const responseInspectionProductModal = document.getElementById(
     "response-inspection-product-modal",
 );
-const responseInspectionProductModalForm = responseInspectionProductModal.querySelector("form");
+const responseInspectionProductModalForm =
+    responseInspectionProductModal.querySelector("form");
 
 const filterContainerClass = "contract-year-filter-container";
 var currentBtnProductData = null;
@@ -214,6 +220,179 @@ const showImportProductModal = (btn) => {
     });
 };
 
+const showInspectionProductModal = (btn) => {
+    openModalBase(btn, {
+        modal: inspectionProductModal,
+        afterShow: () => {
+            currentBtnProductData = btn;
+            loadInspectionProduct(btn);
+        },
+    });
+};
+
+window.loadInspectionProduct = (btn = null) => {
+    if (!btn) btn = currentBtnProductData;
+    destroyDataTable(inspectionProductTable);
+    inspectionProductTable.html("");
+
+    createDataTableServerSide(
+        inspectionProductTable,
+        btn?.dataset?.href,
+        [
+            {
+                data: null,
+                title: "Yêu cầu kiểm tra",
+                render: (data, type, row) => `
+                    <div class="d-flex align-items-start mb-1">
+                        <i class="ti ti-user-question text-primary me-1 mt-1"></i>
+                        <div>
+                            <span class="text-muted">Người yêu cầu/hủy:</span>
+                            <span class="fw-medium">${row?.created_by?.name || "-"}</span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start mb-1">
+                        <i class="ti ti-calendar text-warning me-1 mt-1"></i>
+                        <div>
+                            <span class="text-muted">Năm:</span>
+                            <span class="fw-medium">${
+                                row?.years
+                                    ?.map((i) => i?.year)
+                                    ?.filter(Boolean)
+                                    ?.join(", ") || "-"
+                            }</span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start mb-1">
+                        <i class="ti ti-user-cog text-info me-1 mt-1"></i>
+                        <div>
+                            <span class="text-muted">Hỗ trợ:</span>
+                            ${row?.supported_by?.name || "-"}
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start small text-muted mt-1">
+                        <i class="ti ti-message-dots me-1 mt-1"></i>
+                        <div>
+                            <span class="fw-medium">Mô tả:</span>
+                            ${row?.support_description || "-"}
+                        </div>
+                    </div>
+
+                    ${
+                        row?.issue_file_path
+                            ? `<div class="d-flex align-items-center small text-muted mt-1">
+                                <i class="ti ti-file-search me-1"></i>
+                                <span class="fw-medium me-1">File tồn tại:</span>
+                                ${createViewBtn(row.issue_file_path)}
+                            </div>`
+                            : ""
+                    }
+                `,
+            },
+            {
+                data: null,
+                title: "Trạng thái",
+                render: (data, type, row) =>
+                    createBadge(
+                        row?.status?.converted,
+                        row?.status?.color,
+                        row?.status?.icon,
+                    ),
+            },
+            {
+                data: null,
+                title: "Kết quả kiểm tra",
+                render: (data, type, row) => `
+                    <div class="d-flex align-items-start mb-1">
+                        <i class="ti ti-user-check text-success me-1 mt-1"></i>
+                        <div>
+                            <span class="text-muted">Người kiểm tra:</span>
+                            <span class="fw-medium">${row?.inspector_user?.name || "-"}</span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start small text-muted mt-1">
+                        <i class="ti ti-note text-secondary me-1 mt-1"></i>
+                        <div>
+                            <span class="text-muted">Nhận xét:</span>
+                            <span class="fw-medium">${row.inspector_comment || "-"}</span>
+                        </div>
+                    </div>
+
+                    ${
+                        row?.inspector_comment_file_path
+                            ? `<div class="d-flex align-items-center small text-muted mt-1">
+                                <i class="ti ti-file-check me-1"></i>
+                                <span class="fw-medium me-1">File nhận xét:</span>
+                                ${createViewBtn(row.inspector_comment_file_path)}
+                            </div>`
+                            : ""
+                    }
+                `,
+            },
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                title: "Hành động",
+                className: "text-center",
+                render: (data, type, row) => {
+                    return `
+                        ${
+                            row.is_inspection_created_by_auth
+                                ? createActionBtn(
+                                    "danger",
+                                    "Hủy yêu cầu kiểm tra",
+                                    `${apiContractProductInspectionCancel}?id=${row.id}`,
+                                    "loadInspectionProduct",
+                                    "showCancelInspectionProductModal",
+                                    "ti ti-ban",
+                                )
+                                : ""
+                        }
+                        ${
+                            row.is_auth_inspector
+                                ? createActionBtn(
+                                    "secondary",
+                                    "Phản hồi kiểm tra",
+                                    `${apiContractProductInspectionResponse}?id=${row.id}`,
+                                    "loadInspectionProduct",
+                                    "showResponseInspectionProductModal",
+                                    "ti ti-clipboard-check",
+                                )
+                                : ""
+                        }
+                    `;
+                },
+            },
+        ],
+        (item) => item,
+        {
+            paginate: 1,
+            contract_id: btn?.dataset?.contract_id,
+        },
+        () => {
+            $(
+                inspectionProductModal.querySelector(".dataTables_filter"),
+            ).prepend(
+                createActionBtn(
+                    "warning",
+                    "Yêu cầu kiểm tra",
+                    `${apiContractProductInspectionRequest}?contract_id=${btn?.dataset?.contract_id}`,
+                    "loadInspectionProduct",
+                    "showRequestInspectionProductModal",
+                    "ti ti-clipboard-search",
+                    {
+                        "data-contract_id": btn?.dataset?.contract_id,
+                    },
+                ),
+            );
+        },
+    );
+};
+
 const showRequestInspectionProductModal = async (btn) => {
     const years = await http.get(apiContractProductContractYears, {
         contract_id: btn.dataset.contract_id,
@@ -268,6 +447,11 @@ const showResponseInspectionProductModal = (btn) => {
         await handleSubmitForm(e, () => {
             hideModal(form.closest(".modal"));
             loadList();
+
+            if (form == importProductModalForm)
+                loadProduct(currentBtnProductData);
+            if (form == requestInspectionProductModalForm)
+                loadInspectionProduct(currentBtnProductData);
         });
     });
 });

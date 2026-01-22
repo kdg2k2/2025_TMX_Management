@@ -2,54 +2,51 @@ const renderColumns = () => {
     return [
         {
             data: null,
-            title: "Năm",
+            width: "600px",
+            title: "Hợp đồng",
             render: (data, type, row) => {
-                return row?.year || "";
-            },
-        },
-        {
-            data: null,
-            title: "Số hợp đồng",
-            render: (data, type, row) => {
-                return row?.contract_number || "";
-            },
-        },
-        {
-            data: null,
-            title: "Tên hợp đồng",
-            render: (data, type, row) => {
-                return row?.name || "";
-            },
-        },
-        {
-            data: null,
-            title: "Chủ đầu tư",
-            render: (data, type, row) => {
-                return [
-                    row?.investor?.name_vi || "",
-                    row?.investor?.name_en || "",
+                const year = row?.year;
+                const contractNumber = row?.contract_number;
+                const contractName = row?.name;
+                const investor = [
+                    row?.investor?.name_vi,
+                    row?.investor?.name_en,
                 ]
                     .filter(Boolean)
                     .join(" - ");
-            },
-        },
-        {
-            data: null,
-            title: "PT chuyên môn",
-            render: (data, type, row) => {
-                return (
-                    row?.professionals
-                        ?.map((item) => item?.user?.name)
+
+                if (type === "sort" || type === "filter") {
+                    return [year, contractNumber, contractName, investor]
                         .filter(Boolean)
-                        .join(", ") || ""
-                );
+                        .join(" ");
+                }
+
+                return `
+                    <div class="text-primary fw-semibold">
+                        <i class="ti ti-calendar me-1"></i>${year ?? ""}
+                    </div>
+
+                    <div class="fw-semibold">
+                        <i class="ti ti-file-text me-1"></i>${contractNumber ?? ""}
+                    </div>
+
+                    <div>
+                        <i class="ti ti-writing me-1"></i>${contractName ?? ""}
+                    </div>
+
+                    <div class="text-muted small">
+                        <i class="ti ti-building me-1"></i>${investor}
+                    </div>
+                `;
             },
         },
         {
             data: null,
             title: "Link GG Drive",
             render: (data, type, row) => {
-                return row?.ggdrive_link ? createViewBtn(row.ggdrive_link) : "";
+                return row?.ggdrive_link
+                    ? `<div class="text-center">${createViewBtn(row?.ggdrive_link)}</div>`
+                    : "";
             },
         },
         {
@@ -58,6 +55,17 @@ const renderColumns = () => {
             render: (data, type, row) => {
                 return `
                     <ul>
+                        <li>
+                            <b>
+                                PT chuyên môn:
+                            </b>
+                            ${
+                                row?.professionals
+                                    ?.map((item) => item?.user?.name)
+                                    .filter(Boolean)
+                                    .join(", ") || ""
+                            }
+                        </li>
                         <li>
                             <b>
                                 Người hoàn thiện:
@@ -72,7 +80,7 @@ const renderColumns = () => {
                         </li>
                         <li>
                             <b>
-                                Người phối hợp làm SPTG:
+                                Phối hợp làm SPTG:
                             </b>
                             ${
                                 row?.intermediate_collaborators
@@ -121,51 +129,25 @@ const renderColumns = () => {
                         )
                     }
                     ${
-                        !row.inspection_status ||
-                        row.inspection_status != "request"
-                            ? createActionBtn(
-                                  "warning",
-                                  "Yêu cầu kiểm tra",
-                                  apiContractProductInspectionRequest +
-                                      contractParam,
-                                  "loadList",
-                                  "showRequestInspectionProductModal",
-                                  "ti ti-clipboard-search",
-                                  {
-                                      "data-contract_id": row.id,
-                                  },
-                              )
-                            : row.is_auth_inspector
-                              ? createActionBtn(
-                                    "danger",
-                                    "Hủy yêu cầu kiểm tra",
-                                    `${apiContractProductInspectionCancel}?id=${row.inspection_id}`,
-                                    "loadList",
-                                    "showCancelInspectionProductModal",
-                                    "ti ti-ban",
-                                ) +
-                                createActionBtn(
-                                    "secondary",
-                                    "Phản hồi kiểm tra",
-                                    `${apiContractProductInspectionResponse}?id=${row.inspection_id}`,
-                                    "loadList",
-                                    "showResponseInspectionProductModal",
-                                    "ti ti-clipboard-check",
-                                )
-                              : ""
-                    }
-                    ${
-                        row.inspection_status == "responded" &&
-                        row.is_inspection_created_by_auth
-                            ? createActionBtn(
-                                  "primary",
-                                  "Biên bản",
-                                  "",
-                                  "loadList",
-                                  null,
-                                  "ti ti-file-text",
-                              )
-                            : ""
+                        createActionBtn(
+                            "warning",
+                            "Kiểm tra sản phẩm",
+                            apiContractProductInspectionList,
+                            "loadList",
+                            "showInspectionProductModal",
+                            "ti ti-clipboard-search",
+                            {
+                                "data-contract_id": row.id,
+                            },
+                        ) +
+                        createActionBtn(
+                            "primary",
+                            "Biên bản",
+                            "",
+                            "loadList",
+                            null,
+                            "ti ti-file-text",
+                        )
                     }
                     ${
                         createApproveBtn(

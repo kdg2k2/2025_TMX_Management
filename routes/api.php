@@ -235,6 +235,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
 
             // kiểm tra
             Route::prefix('inspection')->controller(ContractProductInspectionController::class)->group(function () {
+                Route::get('list', 'list')->name('api.contract.product.inspection.list');
                 Route::post('request', 'request')->name('api.contract.product.inspection.request');
                 Route::patch('cancel', 'cancel')->name('api.contract.product.inspection.cancel');
                 Route::patch('response', 'response')->name('api.contract.product.inspection.response');

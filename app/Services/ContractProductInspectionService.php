@@ -17,6 +17,7 @@ class ContractProductInspectionService extends BaseService
     public function formatRecord(array $array)
     {
         $array = parent::formatRecord($array);
+        $array = array_merge($array, $this->isProductInspection($array));
         if (isset($array['status']))
             $array['status'] = $this->repository->getStatus($array['status']);
         if (isset($array['issue_file_path']))
@@ -24,8 +25,27 @@ class ContractProductInspectionService extends BaseService
         return $array;
     }
 
+    private function isProductInspection(array $data)
+    {
+        if (($data['status'] ?? null) != 'request')
+            return [
+                'is_inspection_created_by_auth' => false,
+                'is_auth_inspector' => false,
+            ];
+
+        $authId = auth()->id();
+
+        return [
+            'is_inspection_created_by_auth' =>
+                $authId === 1 || ($data['created_by'] ?? null) === $authId,
+            'is_auth_inspector' =>
+                $authId === 1 || ($data['inspector_user_id'] ?? null) === $authId,
+        ];
+    }
+
     protected function beforeStore(array $request)
     {
+        $this->isRequested();
         $contract = app(ContractProductService::class)->findById($request['contract_id'])->toArray();
         $this->isHasProduct($contract);
         $this->checkProductYear($contract, $request['years'] ?? []);
@@ -49,6 +69,13 @@ class ContractProductInspectionService extends BaseService
     protected function handleExtractAfter(array $extract, $data)
     {
         $this->syncRelationship($data, 'contract_product_inspection_id', 'years', array_map(fn($i) => ['year' => $i], $extract['years']));
+    }
+
+    private function isRequested()
+    {
+        $maxId = $this->repository->maxId();
+        if (!empty($maxId) && $this->repository->findById($maxId)->status == 'request')
+            throw new Exception('Hợp đồng đang được yêu cầu kiểm tra rồi!');
     }
 
     private function isHasProduct(array $contract)

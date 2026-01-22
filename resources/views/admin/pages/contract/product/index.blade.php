@@ -27,7 +27,7 @@
 @section('modals')
     <x-modal id="product-modal" size="lg" nested="true">
         <x-slot:body>
-            <table></table>
+            <table class="display w-100"></table>
         </x-slot:body>
         <x-slot:footer>
             <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
@@ -49,6 +49,14 @@
         </x-slot:footer>
     </x-modal>
 
+    <x-modal id="inspection-product-modal" size="xl" nested="true">
+        <x-slot:body>
+            <table class="display w-100"></table>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
+        </x-slot:footer>
+    </x-modal>
     <x-modal id="request-inspection-product-modal" method="post" size="md" nested="true">
         <x-slot:body>
             <div class="contract-year-filter-container my-1"></div>
@@ -105,11 +113,13 @@
                 <label>
                     File nhận xét (docx,xlsx,rar,zip)
                 </label>
-                <input type="file" class="form-control" name="inspector_comment_file_path" accept=".docx,.xlsx,.rar,.zip">
+                <input type="file" class="form-control" name="inspector_comment_file_path"
+                    accept=".docx,.xlsx,.rar,.zip">
             </div>
         </x-slot:body>
         <x-slot:footer>
-            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng" data-bs-dismiss="modal" />
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng"
+                data-bs-dismiss="modal" />
             <x-button-submit />
         </x-slot:footer>
     </x-modal>
@@ -133,6 +143,7 @@
         const apiContractProductIntermediateExport = @json(route('api.contract.product.intermediate.export'));
         const apiContractProductIntermediateImport = @json(route('api.contract.product.intermediate.import'));
 
+        const apiContractProductInspectionList = @json(route('api.contract.product.inspection.list'));
         const apiContractProductInspectionRequest = @json(route('api.contract.product.inspection.request'));
         const apiContractProductInspectionCancel = @json(route('api.contract.product.inspection.cancel'));
         const apiContractProductInspectionResponse = @json(route('api.contract.product.inspection.response'));
