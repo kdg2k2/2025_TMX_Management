@@ -198,6 +198,22 @@
         </x-slot:footer>
     </x-modal>
 
+    <x-modal id="replace-minute-file-modal" method="patch" nested="true" size="sm">
+        <x-slot:body>
+            <div class="my-1">
+                <label>
+                    File Word (.docx)
+                </label>
+                <input type="file" class="form-control" name="file_docx" accept=".docx" required>
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng"
+                data-bs-dismiss="modal" />
+            <x-button-submit text="Ghi đè" />
+        </x-slot:footer>
+    </x-modal>
+
     <x-approve-modal id="approve-modal" title="Xác nhận duyệt đăng ký" size="md" method="post"
         noteName="approval_note"></x-approve-modal>
     <x-approve-modal id="reject-modal" title="Xác nhận từ chối đăng ký" size="md" method="post"

@@ -2,26 +2,15 @@
 
 namespace App\Http\Requests\ContractProductMinute;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFindByIdRequest;
 
-class ReplaceMinuteRequest extends FormRequest
+class ReplaceMinuteRequest extends BaseFindByIdRequest
 {
-    public function prepareForValidation()
-    {
-        $this->merge([
-            //
-        ]);
-    }
-
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [
-            //
+            'id' => 'required|exists:contract_product_minutes,id',
+            'file_docx' => 'required|file|mimes:docx',
         ];
     }
 }

@@ -35,7 +35,7 @@ class ContractProductMinuteController extends Controller
     public function replace(ReplaceMinuteRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            // 'data'=>$this->service->replace($request->validated()),
+            'data' => $this->service->replaceFile($request->validated()),
             'message' => config('message.default'),
         ]));
     }

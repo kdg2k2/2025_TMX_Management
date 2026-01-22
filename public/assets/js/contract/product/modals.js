@@ -36,6 +36,12 @@ const createMinuteProductModal = document.getElementById(
 const createMinuteProductModalForm =
     createMinuteProductModal.querySelector("form");
 
+const replaceMinuteFileModal = document.getElementById(
+    "replace-minute-file-modal",
+);
+const replaceMinuteFileModalForm =
+    replaceMinuteFileModal.querySelector("form");
+
 const filterContainerClass = "contract-year-filter-container";
 var currentBtnProductData = null;
 
@@ -473,10 +479,21 @@ const showIframeMinute = (url = "") => {
         .setAttribute("src", url ? createLinkPreviewFileOnline(url) : "");
 };
 
+const showReplaceMinuteFileModal = (btn) => {
+    resetFormAfterSubmit(replaceMinuteFileModalForm);
+    openModalBase(btn, {
+        modal: replaceMinuteFileModal,
+        form: replaceMinuteFileModalForm,
+    });
+};
+
+var minuteProductBtnAdded = false;
+
 window.loadMinuteProduct = (btn = null) => {
     if (!btn) btn = currentBtnProductData;
     destroyDataTable(minuteProductTable);
     minuteProductTable.html("");
+    minuteProductBtnAdded = false;
 
     createDataTableServerSide(
         minuteProductTable,
@@ -511,6 +528,8 @@ window.loadMinuteProduct = (btn = null) => {
                     ${renderField("file-text", "Căn cứ", row?.legal_basis)}
                     ${renderField("clipboard-list", "Bàn giao", row?.handover_content)}
                     ${renderField("alert-circle", "Tồn tại", row?.issue_note)}
+                    ${renderField("user-star", "Chuyên môn", row?.contract_professional?.user?.name, { color: "primary" })}
+                    ${renderField("user-dollar", "Giải ngân", row?.contract_disbursement?.user?.name, { color: "success" })}
                 `;
                 },
             },
@@ -538,6 +557,10 @@ window.loadMinuteProduct = (btn = null) => {
                 title: "Hành động",
                 className: "text-center",
                 render: (data, type, row) => {
+                    const canReplaceFile = ["draft", "request_sign"].includes(
+                        row?.status?.original,
+                    );
+
                     return `
                         ${
                             row?.file_docx_path
@@ -564,7 +587,19 @@ window.loadMinuteProduct = (btn = null) => {
                                 : ""
                         }
                         ${
-                            row?.status?.origin == "request_approve"
+                            canReplaceFile
+                                ? createActionBtn(
+                                      "warning",
+                                      "Ghi đè file Word",
+                                      `${apiContractProductMinuteReplace}?id=${row.id}`,
+                                      "loadMinuteProduct",
+                                      "showReplaceMinuteFileModal",
+                                      "ti ti-file-upload",
+                                  )
+                                : ""
+                        }
+                        ${
+                            row?.status?.original == "request_approve"
                                 ? createApproveBtn(
                                       contractProductMinuteApprove +
                                           contractParam,
@@ -585,6 +620,9 @@ window.loadMinuteProduct = (btn = null) => {
             contract_id: btn?.dataset?.contract_id,
         },
         () => {
+            if (minuteProductBtnAdded) return;
+            minuteProductBtnAdded = true;
+
             $(minuteProductModal.querySelector(".dataTables_filter")).prepend(
                 createActionBtn(
                     "primary",
@@ -611,6 +649,7 @@ window.loadMinuteProduct = (btn = null) => {
     cancelInspectionProductModalForm,
     responseInspectionProductModalForm,
     createMinuteProductModalForm,
+    replaceMinuteFileModalForm,
 ].forEach((form) => {
     form.addEventListener("submit", async (e) => {
         await handleSubmitForm(e, (res) => {
@@ -625,6 +664,12 @@ window.loadMinuteProduct = (btn = null) => {
                 showIframeMinute(
                     res?.data?.file_pdf_path || res?.data?.file_docx_path || "",
                 );
+            if (form == replaceMinuteFileModalForm) {
+                loadMinuteProduct();
+                showIframeMinute(
+                    res?.data?.file_pdf_path || res?.data?.file_docx_path || "",
+                );
+            }
         });
     });
 });

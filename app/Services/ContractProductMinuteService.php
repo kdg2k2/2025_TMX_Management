@@ -3,13 +3,14 @@
 namespace App\Services;
 
 use Exception;
-use App\Models\User;
 use App\Models\ContractProductMinute;
 use PhpOffice\PhpWord\TemplateProcessor;
 use App\Repositories\ContractProductMinuteRepository;
 
 class ContractProductMinuteService extends BaseService
 {
+    private const PENDING_STATUSES = ['request_sign', 'request_approve'];
+
     public function __construct(
         private ContractMainProductService $contractMainProductService,
         private ContractIntermediateProductService $contractIntermediateProductService,
@@ -19,7 +20,6 @@ class ContractProductMinuteService extends BaseService
         private UserService $userService,
         private SystemConfigService $systemConfigService,
         private DocumentConversionService $documentConversionService,
-        private StringHandlerService $stringHandlerService
     ) {
         $this->repository = app(ContractProductMinuteRepository::class);
     }
@@ -41,26 +41,98 @@ class ContractProductMinuteService extends BaseService
         return $this->repository->getStatus($key);
     }
 
+    public function replaceFile(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $minute = $this->repository->findById($request['id']);
+
+            if (!in_array($minute->status, ['draft', 'request_sign'], true)) {
+                throw new Exception('Chỉ có thể ghi đè file khi biên bản đang ở trạng thái Nháp hoặc Yêu cầu ký!');
+            }
+
+            $filePath = $this->handlerUploadFileService->storeAndRemoveOld(
+                $request['file_docx'],
+                'uploads/render/' . $this->repository->getTable(),
+                null,
+                $minute->file_docx_path
+            );
+
+            $minute->file_docx_path = $filePath;
+            $minute->file_pdf_path = null;
+            $minute->save();
+
+            return $this->formatRecord($minute->toArray());
+        }, true);
+    }
+
     public function store(array $request)
     {
         return $this->tryThrow(function () use ($request) {
-            $data = parent::store($request);
+            // Kiểm tra trạng thái biên bản mới nhất
+            $existingMinute = $this->checkLatestMinuteStatus($request['contract_id']);
+
+            if ($existingMinute) {
+                // Ghi đè biên bản nháp
+                $request['id'] = $existingMinute->id;
+                $data = $this->repository->update($request);
+            } else {
+                // Tạo mới
+                $data = parent::store($request);
+            }
+
             return $this->formatRecord($data->toArray());
         }, true);
     }
 
     protected function afterStore($data, array $request)
     {
+        $this->rebuildMinuteFile($data);
+    }
+
+    protected function afterUpdate($data, array $request)
+    {
+        $this->rebuildMinuteFile($data);
+    }
+
+    private function rebuildMinuteFile(ContractProductMinute $data)
+    {
         $data->file_docx_path = $this->buildMinute($data);
         $data->save();
     }
 
+    /**
+     * Kiểm tra trạng thái biên bản mới nhất của hợp đồng
+     * - Nếu đang yêu cầu ký hoặc yêu cầu duyệt -> throw exception
+     * - Nếu đang là nháp -> trả về biên bản để ghi đè
+     * - Nếu không có hoặc đã duyệt/từ chối -> trả về null (tạo mới)
+     */
+    private function checkLatestMinuteStatus(int $contractId): ?ContractProductMinute
+    {
+        $latestMinute = $this->repository->findByKey($contractId, 'contract_id', false, false);
+
+        if (!$latestMinute) {
+            return null;
+        }
+
+        $status = $latestMinute->status;
+
+        if (\in_array($status, self::PENDING_STATUSES, true)) {
+            $statusLabel = $this->repository->getStatus($status)['converted'];
+            throw new Exception("Hợp đồng đang có biên bản {$statusLabel}, không thể tạo biên bản mới!");
+        }
+
+        return $status === 'draft' ? $latestMinute : null;
+    }
+
     private function buildMinute(ContractProductMinute $data, bool $addSign = false, bool $convertToPdf = false)
     {
+        $contractId = $data->contract_id;
+
         $inspections = $this->contractProductInspectionService->list([
-            'contract_id' => $data['contract_id'],
+            'contract_id' => $contractId,
             'status' => 'responded',
         ]);
+
         if (empty($inspections))
             throw new Exception("Hợp đồng này chưa có yêu cầu kiểm tra nào đã phản hồi!");
 
@@ -69,26 +141,16 @@ class ContractProductMinuteService extends BaseService
             ? ['years' => collect($inspection['years'])->pluck('year')->toArray()]
             : ['year' => $inspection['contract']['year']];
 
-        $mainProduct = $this->contractMainProductService->list([
-            'contract_id' => $data['contract_id'],
-            ...$yearFilter,
-        ])['data'];
-        $intermediateProduct = $this->contractIntermediateProductService->list([
-            'contract_id' => $data['contract_id'],
-            ...$yearFilter
-        ])['data'];
+        $productFilter = ['contract_id' => $contractId, ...$yearFilter];
+        $mainProduct = $this->contractMainProductService->list($productFilter)['data'];
+        $intermediateProduct = $this->contractIntermediateProductService->list($productFilter)['data'];
 
-        $data->load([
-            'contractProfessional.user:id,name',
-            'contractDisbursement.user:id,name',
-            ...$this->repository->relations
-        ]);
+        $data->load($this->repository->relations);
 
-        $pathTemplate =
-            $this->handlerUploadFileService->getAbsolutePublicPath(
-                $this->getTemplateMinute(count($mainProduct), count($intermediateProduct))
-            )
-        ;
+        $pathTemplate = $this->handlerUploadFileService->getAbsolutePublicPath(
+            $this->getTemplateMinute(count($mainProduct), count($intermediateProduct))
+        );
+
         if (!file_exists($pathTemplate))
             throw new Exception("File '$pathTemplate' không tồn tại");
 
@@ -102,95 +164,125 @@ class ContractProductMinuteService extends BaseService
         );
 
         if ($convertToPdf)
-            $filePath = $this->documentConversionService->wordToPdf($this->handlerUploadFileService->getAbsolutePublicPath($filePath));
+            $filePath = $this->documentConversionService->wordToPdf(
+                $this->handlerUploadFileService->getAbsolutePublicPath($filePath)
+            );
 
         return $this->handlerUploadFileService->removePublicPath($filePath);
     }
 
-    private function getTemplateMinute(int $mainCount, int $intermediateCount)
+    private function getTemplateMinute(int $mainCount, int $intermediateCount): string
     {
-        if ($mainCount + $intermediateCount == 0)
-            return 'templates/contract_product_minute_empty.docx';
-        if ($mainCount > 0 && $intermediateCount > 0)
-            return 'templates/contract_product_minute_both.docx';
-        if ($mainCount > 0)
-            return 'templates/contract_product_minute_main.docx';
-        if ($intermediateCount > 0)
-            return 'templates/contract_product_minute_intermediate.docx';
-        throw new Exception("Không tìm được template");
+        $hasMain = $mainCount > 0;
+        $hasIntermediate = $intermediateCount > 0;
+
+        return match (true) {
+            $hasMain && $hasIntermediate => 'templates/contract_product_minute_both.docx',
+            $hasMain => 'templates/contract_product_minute_main.docx',
+            $hasIntermediate => 'templates/contract_product_minute_intermediate.docx',
+            default => 'templates/contract_product_minute_empty.docx',
+        };
     }
 
-    private function fillTemplate(TemplateProcessor $templateProcessor, ContractProductMinute $data, array $inspection, array $mainProduct, array $intermediateProduct, bool $addSign = false)
-    {
-        $recipientUser = $this->userService->findById($this->systemConfigService->findByKey('CONTRACT_PRODUCT_RECIPIENT_ID', 'key', false)['value'], false);
+    private function fillTemplate(
+        TemplateProcessor $tp,
+        ContractProductMinute $data,
+        array $inspection,
+        array $mainProduct,
+        array $intermediateProduct,
+        bool $addSign = false
+    ): string {
+        $recipientId = $this->systemConfigService->findByKey('CONTRACT_PRODUCT_RECIPIENT_ID', 'key', false)['value'];
+        $recipientUser = $this->userService->findById($recipientId, false);
 
-        $templateProcessor->setValue('cancu', htmlspecialchars($data['legal_basis']) ?? "");
-        $templateProcessor->setValue('tenhd', htmlspecialchars($data['contract']['name']) ?? "");
-        $templateProcessor->setValue('ngay', htmlspecialchars(date('d', strtotime($data['handover_date']))) ?? "");
-        $templateProcessor->setValue('thang', htmlspecialchars(date('m', strtotime($data['handover_date']))) ?? "");
-        $templateProcessor->setValue('year', htmlspecialchars(date('Y', strtotime($data['handover_date']))) ?? "");
-        $templateProcessor->setValue('tenCty', htmlspecialchars(config('custom.DEFAULT_TITLE') ?? ""));
-        $templateProcessor->setValue('ten_chuyenmon', htmlspecialchars($data['contractProfessional']['user']['name']) ?? "");
-        $templateProcessor->setValue('ten_giaingan', htmlspecialchars($data['contractDisbursement']['user']['name']) ?? "");
-        $templateProcessor->setValue('ten_hoanthien', htmlspecialchars($inspection['contract']['executor_user']['name']) ?? "");
-        $templateProcessor->setValue('ten_kiemtra', htmlspecialchars($inspection['inspector_user']['name']) ?? "");
-        $templateProcessor->setValue('ten_nhantailieu', htmlspecialchars($recipientUser['name']) ?? "");
-        $templateProcessor->setValue('ndbg', htmlspecialchars($data['handover_content']) ?? "");
+        $handoverDate = strtotime($data->handover_date);
+        $e = fn($v) => htmlspecialchars($v ?? '');
 
-        $variables = $templateProcessor->getVariables();
+        // Set basic values
+        $tp->setValues([
+            'cancu' => $e($data->legal_basis),
+            'tenhd' => $e($data->contract->name ?? ''),
+            'ngay' => date('d', $handoverDate),
+            'thang' => date('m', $handoverDate),
+            'year' => date('Y', $handoverDate),
+            'tenCty' => $e(config('custom.DEFAULT_TITLE')),
+            'ten_chuyenmon' => $e($data->contractProfessional->user->name ?? ''),
+            'ten_giaingan' => $e($data->contractDisbursement->user->name ?? ''),
+            'ten_hoanthien' => $e($inspection['contract']['executor_user']['name'] ?? ''),
+            'ten_kiemtra' => $e($inspection['inspector_user']['name'] ?? ''),
+            'ten_nhantailieu' => $e($recipientUser['name'] ?? ''),
+            'ndbg' => $e($data->handover_content),
+        ]);
 
-        if (count($mainProduct) > 0 && in_array('tensp', $variables)) {
-            $templateProcessor->cloneRow('tensp', count($mainProduct));
-            foreach ($mainProduct as $index => $value) {
-                $templateProcessor->setValue('tt#' . $index + 1, $index + 1);
-                $templateProcessor->setValue('nam#' . $index + 1, $value['year'] ?? "");
-                $templateProcessor->setValue('tensp#' . $index + 1, htmlspecialchars($value['name']) ?? "");
-                $templateProcessor->setValue('soluong#' . $index + 1, (string) $value['quantity'] ?? "");
-                $templateProcessor->setValue('ghichu#' . $index + 1, htmlspecialchars($value['note']) ?? "");
+        $variables = $tp->getVariables();
+
+        // Fill main products
+        if (\count($mainProduct) > 0 && \in_array('tensp', $variables, true)) {
+            $tp->cloneRow('tensp', \count($mainProduct));
+            foreach ($mainProduct as $i => $item) {
+                $row = $i + 1;
+                $tp->setValue("tt#{$row}", $row);
+                $tp->setValue("nam#{$row}", $item['year'] ?? '');
+                $tp->setValue("tensp#{$row}", $e($item['name']));
+                $tp->setValue("soluong#{$row}", (string) ($item['quantity'] ?? ''));
+                $tp->setValue("ghichu#{$row}", $e($item['note']));
             }
         }
 
-        if (count($intermediateProduct) > 0 && in_array('tensp_tg', $variables)) {
-            $templateProcessor->cloneRow('tensp_tg', count($intermediateProduct));
-            foreach ($intermediateProduct as $index => $value) {
-                $templateProcessor->setValue('tt_tg#' . $index + 1, $index + 1);
-                $templateProcessor->setValue('hd_tg#' . $index + 1, htmlspecialchars($value['contract_number']) ?? "");
-                $templateProcessor->setValue('nguoithuchien#' . $index + 1, $value['executor_user_name'] ?? "");
-                $templateProcessor->setValue('tensp_tg#' . $index + 1, htmlspecialchars($value['name']) ?? "");
-                $templateProcessor->setValue('gc#' . $index + 1, htmlspecialchars($value['note']) ?? "");
+        // Fill intermediate products
+        if (\count($intermediateProduct) > 0 && \in_array('tensp_tg', $variables, true)) {
+            $tp->cloneRow('tensp_tg', \count($intermediateProduct));
+            foreach ($intermediateProduct as $i => $item) {
+                $row = $i + 1;
+                $tp->setValue("tt_tg#{$row}", $row);
+                $tp->setValue("hd_tg#{$row}", $e($item['contract_number']));
+                $tp->setValue("nguoithuchien#{$row}", $item['executor_user_name'] ?? '');
+                $tp->setValue("tensp_tg#{$row}", $e($item['name']));
+                $tp->setValue("gc#{$row}", $e($item['note']));
             }
         }
 
         if ($addSign)
-            $this->addSign($templateProcessor, $data, $inspection, $recipientUser);
+            $this->addSign($tp, $data, $inspection, $recipientUser);
 
-        $folder = $this->handlerUploadFileService->getAbsolutePublicPath('uploads/render/' . $this->repository->getTable());
+        $folder = $this->handlerUploadFileService->getAbsolutePublicPath(
+            'uploads/render/' . $this->repository->getTable()
+        );
         $fileName = time() . '.docx';
-        $templateProcessor->saveAs($folder . '/' . $fileName);
-        return $folder . '/' . $fileName;
+        $tp->saveAs("{$folder}/{$fileName}");
+
+        return "{$folder}/{$fileName}";
     }
 
     private function addSign(
         TemplateProcessor $tp,
         ContractProductMinute $data,
         array $inspection,
-        User $recipientUser
-    ) {
-        $set = fn($k, $p) =>
-            $p && file_exists($this->handlerUploadFileService->getAbsolutePublicPath($p))
-            ? $tp->setImageValue($k, ['path' => $this->handlerUploadFileService->getAbsolutePublicPath($p), 'width' => 55, 'height' => 55])
-            : $tp->setValue($k, '');
+        $recipientUser
+    ): void {
+        $signs = collect($data->signatures)->keyBy('user_id');
+        $imageConfig = ['width' => 55, 'height' => 55];
 
-        $signs = collect($data['signatures'])->keyBy('user_id');
-
-        foreach ([
-            'ck_chuyenmon' => $data['contract_professional_id'],
-            'ck_giaingan' => $data['contract_disbursement_id'],
+        $signatureMap = [
+            'ck_chuyenmon' => $data->contract_professional_id,
+            'ck_giaingan' => $data->contract_disbursement_id,
             'ck_hoanthien' => $inspection['contract']['executor_user_id'],
             'ck_kiemtra' => $inspection['inspector_user_id'],
-            'ck_nhantailieu' => $recipientUser->id,
-        ] as $key => $uid) {
-            $set($key, $signs[$uid]['signature_path'] ?? null);
+            'ck_nhantailieu' => $recipientUser['id'] ?? $recipientUser->id ?? null,
+        ];
+
+        foreach ($signatureMap as $key => $userId) {
+            $signaturePath = $signs[$userId]['signature_path'] ?? null;
+
+            if ($signaturePath) {
+                $absolutePath = $this->handlerUploadFileService->getAbsolutePublicPath($signaturePath);
+                if (file_exists($absolutePath)) {
+                    $tp->setImageValue($key, ['path' => $absolutePath, ...$imageConfig]);
+                    continue;
+                }
+            }
+
+            $tp->setValue($key, '');
         }
     }
 
