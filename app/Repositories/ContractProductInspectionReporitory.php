@@ -20,6 +20,12 @@ class ContractProductInspectionReporitory extends BaseRepository
                 'executorUser:id,name',
                 'professionals.user:id,name',
                 'intermediateCollaborators.user:id,name',
+            ])->select([
+                'id',
+                'name',
+                'investor_id',
+                'inspector_user_id',
+                'executor_user_id',
             ])
         ];
     }
@@ -27,5 +33,15 @@ class ContractProductInspectionReporitory extends BaseRepository
     public function getStatus($key = null)
     {
         return $this->model->getStatus($key);
+    }
+
+    protected function applyListFilters($query, array $request)
+    {
+        foreach ([
+            'status',
+            'contract_id',
+        ] as $item)
+            if (isset($request[$item]))
+                $query->where($item, $request[$item]);
     }
 }

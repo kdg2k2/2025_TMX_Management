@@ -18,9 +18,12 @@ class ContractMainProductRepository extends BaseRepository
             $query->where('contract_id', $request['contract_id']);
         if (isset($request['year']))
             $query->where('year', $request['year']);
+        if (isset($request['years']))
+            $query->whereIn('year', $request['years']);
     }
 
-    public function deleteByContractIdAndYear(int $contractId, int $year){
+    public function deleteByContractIdAndYear(int $contractId, int $year)
+    {
         $this->model->where('contract_id', $contractId)->where('year', $year)->delete();
     }
 }

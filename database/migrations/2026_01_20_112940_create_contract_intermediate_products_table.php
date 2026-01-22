@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->foreignId('contract_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->year('year')->comment('năm');
+            $table->string('contract_number')->comment('số hợp đồng');
             $table->string('name')->comment('tên sản phẩm');
             $table->string('executor_user_name')->comment('tên người thực hiện');
             $table->string('note')->nullable()->comment('ghi chú');

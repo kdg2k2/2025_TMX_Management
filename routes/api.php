@@ -1,95 +1,98 @@
 <?php
 
-use App\Http\Controllers\Api\AirlineController;
-use App\Http\Controllers\Api\AirportController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\BiddingContractorExperienceController;
-use App\Http\Controllers\Api\BiddingController;
-use App\Http\Controllers\Api\BiddingEligibilityController;
-use App\Http\Controllers\Api\BiddingImplementationPersonnelController;
-use App\Http\Controllers\Api\BiddingOrtherFileController;
-use App\Http\Controllers\Api\BiddingProofContractController;
-use App\Http\Controllers\Api\BiddingSoftwareOwnershipController;
-use App\Http\Controllers\Api\BoardMeetingMinuteController;
-use App\Http\Controllers\Api\BuildSoftwareController;
-use App\Http\Controllers\Api\ContractAdvancePaymentController;
-use App\Http\Controllers\Api\ContractAppendixController;
-use App\Http\Controllers\Api\ContractBillController;
-use App\Http\Controllers\Api\ContractController;
-use App\Http\Controllers\Api\ContractFileController;
-use App\Http\Controllers\Api\ContractFileTypeController;
-use App\Http\Controllers\Api\ContractFinanceController;
-use App\Http\Controllers\Api\ContractIntermediateProductController;
-use App\Http\Controllers\Api\ContractInvestorController;
-use App\Http\Controllers\Api\ContractMainProductController;
-use App\Http\Controllers\Api\ContractPaymentController;
-use App\Http\Controllers\Api\ContractProductController;
-use App\Http\Controllers\Api\ContractProductInspectionController;
-use App\Http\Controllers\Api\ContractProductMinuteController;
-use App\Http\Controllers\Api\ContractProductMinuteSignatureController;
-use App\Http\Controllers\Api\ContractScanFileController;
-use App\Http\Controllers\Api\ContractScanFileTypeController;
-use App\Http\Controllers\Api\ContractTypeController;
-use App\Http\Controllers\Api\ContractUnitController;
-use App\Http\Controllers\Api\DeviceController;
-use App\Http\Controllers\Api\DeviceFixController;
-use App\Http\Controllers\Api\DeviceImageController;
-use App\Http\Controllers\Api\DeviceLoanController;
-use App\Http\Controllers\Api\DeviceStatisticController;
-use App\Http\Controllers\Api\DeviceTypeController;
-use App\Http\Controllers\Api\DossierHandoverController;
-use App\Http\Controllers\Api\DossierMinuteController;
-use App\Http\Controllers\Api\DossierPlanController;
-use App\Http\Controllers\Api\DossierSyntheticController;
-use App\Http\Controllers\Api\DossierTypeController;
-use App\Http\Controllers\Api\DossierUsageRegisterController;
-use App\Http\Controllers\Api\EligibilityController;
-use App\Http\Controllers\Api\EmploymentContractPersonnelController;
-use App\Http\Controllers\Api\EmploymentContractPersonnelCustomFieldController;
-use App\Http\Controllers\Api\IncomingOfficialDocumentController;
-use App\Http\Controllers\Api\InternalBulletinController;
-use App\Http\Controllers\Api\InternalMeetingMinuteController;
-use App\Http\Controllers\Api\KasperskyCodeController;
-use App\Http\Controllers\Api\KasperskyCodeRegistrationController;
-use App\Http\Controllers\Api\KasperskyCodeStatisticController;
-use App\Http\Controllers\Api\LeaveRequestController;
-use App\Http\Controllers\Api\OfficialDocumentController;
-use App\Http\Controllers\Api\OfficialDocumentSectorController;
-use App\Http\Controllers\Api\OfficialDocumentTypeController;
-use App\Http\Controllers\Api\PayrollController;
-use App\Http\Controllers\Api\PersonnelController;
-use App\Http\Controllers\Api\PersonnelCustomFieldController;
-use App\Http\Controllers\Api\PersonnelFileController;
-use App\Http\Controllers\Api\PersonnelFileTypeController;
-use App\Http\Controllers\Api\PersonnelUnitController;
-use App\Http\Controllers\Api\PlaneTicketClassController;
-use App\Http\Controllers\Api\PlaneTicketController;
-use App\Http\Controllers\Api\PlaneTicketDetailController;
-use App\Http\Controllers\Api\ProfessionalRecordHandoverController;
-use App\Http\Controllers\Api\ProfessionalRecordMinuteController;
-use App\Http\Controllers\Api\ProfessionalRecordPlanController;
-use App\Http\Controllers\Api\ProfessionalRecordSyntheticController;
-use App\Http\Controllers\Api\ProfessionalRecordTypeController;
-use App\Http\Controllers\Api\ProfessionalRecordUsageRegisterController;
-use App\Http\Controllers\Api\ProofContractController;
-use App\Http\Controllers\Api\ShareholderMeetingMinuteController;
-use App\Http\Controllers\Api\SoftwareOwnershipController;
-use App\Http\Controllers\Api\TaskScheduleController;
-use App\Http\Controllers\Api\TrainAndBusTicketController;
-use App\Http\Controllers\Api\TrainAndBusTicketDetailController;
 use App\Http\Controllers\Api\UnitController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\UserSubEmailController;
-use App\Http\Controllers\Api\UserTimeTableController;
-use App\Http\Controllers\Api\UserWarningController;
+use App\Http\Controllers\Api\DeviceController;
+use App\Http\Controllers\Api\AirlineController;
+use App\Http\Controllers\Api\AirportController;
+use App\Http\Controllers\Api\BiddingController;
+use App\Http\Controllers\Api\PayrollController;
 use App\Http\Controllers\Api\VehicleController;
+use App\Http\Controllers\Api\ContractController;
+use App\Http\Controllers\Api\DeviceFixController;
+use App\Http\Controllers\Api\PersonnelController;
+use App\Http\Controllers\Api\DeviceLoanController;
+use App\Http\Controllers\Api\DeviceTypeController;
+use App\Http\Controllers\Api\DeviceImageController;
+use App\Http\Controllers\Api\DossierPlanController;
+use App\Http\Controllers\Api\DossierTypeController;
+use App\Http\Controllers\Api\EligibilityController;
+use App\Http\Controllers\Api\PlaneTicketController;
+use App\Http\Controllers\Api\UserWarningController;
 use App\Http\Controllers\Api\VehicleLoanController;
-use App\Http\Controllers\Api\VehicleStatisticController;
+use App\Http\Controllers\Api\ContractBillController;
+use App\Http\Controllers\Api\ContractFileController;
+use App\Http\Controllers\Api\ContractTypeController;
+use App\Http\Controllers\Api\ContractUnitController;
+use App\Http\Controllers\Api\LeaveRequestController;
+use App\Http\Controllers\Api\TaskScheduleController;
+use App\Http\Controllers\Api\UserSubEmailController;
 use App\Http\Controllers\Api\WorkScheduleController;
+use App\Http\Controllers\Api\BuildSoftwareController;
+use App\Http\Controllers\Api\DossierMinuteController;
+use App\Http\Controllers\Api\KasperskyCodeController;
+use App\Http\Controllers\Api\PersonnelFileController;
+use App\Http\Controllers\Api\PersonnelUnitController;
+use App\Http\Controllers\Api\ProofContractController;
+use App\Http\Controllers\Api\UserTimeTableController;
 use App\Http\Controllers\Api\WorkTimesheetController;
+use App\Http\Controllers\Api\ContractFinanceController;
+use App\Http\Controllers\Api\ContractPaymentController;
+use App\Http\Controllers\Api\ContractProductController;
+use App\Http\Controllers\Api\DeviceStatisticController;
+use App\Http\Controllers\Api\DossierHandoverController;
+use App\Http\Controllers\Api\ContractAppendixController;
+use App\Http\Controllers\Api\ContractFileTypeController;
+use App\Http\Controllers\Api\ContractInvestorController;
+use App\Http\Controllers\Api\ContractManyYearController;
+use App\Http\Controllers\Api\ContractScanFileController;
+use App\Http\Controllers\Api\DossierSyntheticController;
+use App\Http\Controllers\Api\InternalBulletinController;
+use App\Http\Controllers\Api\OfficialDocumentController;
+use App\Http\Controllers\Api\PlaneTicketClassController;
+use App\Http\Controllers\Api\VehicleStatisticController;
+use App\Http\Controllers\Api\BiddingOrtherFileController;
+use App\Http\Controllers\Api\PersonnelFileTypeController;
+use App\Http\Controllers\Api\PlaneTicketDetailController;
+use App\Http\Controllers\Api\SoftwareOwnershipController;
+use App\Http\Controllers\Api\TrainAndBusTicketController;
+use App\Http\Controllers\Api\BiddingEligibilityController;
+use App\Http\Controllers\Api\BoardMeetingMinuteController;
+use App\Http\Controllers\Api\ContractMainProductController;
+use App\Http\Controllers\Api\BiddingProofContractController;
+use App\Http\Controllers\Api\ContractDisbursementController;
+use App\Http\Controllers\Api\ContractProfessionalController;
+use App\Http\Controllers\Api\ContractScanFileTypeController;
+use App\Http\Controllers\Api\DossierUsageRegisterController;
+use App\Http\Controllers\Api\OfficialDocumentTypeController;
+use App\Http\Controllers\Api\PersonnelCustomFieldController;
+use App\Http\Controllers\Api\ContractProductMinuteController;
+use App\Http\Controllers\Api\InternalMeetingMinuteController;
 use App\Http\Controllers\Api\WorkTimesheetOvertimeController;
+use App\Http\Controllers\Api\ContractAdvancePaymentController;
+use App\Http\Controllers\Api\KasperskyCodeStatisticController;
+use App\Http\Controllers\Api\OfficialDocumentSectorController;
+use App\Http\Controllers\Api\ProfessionalRecordPlanController;
+use App\Http\Controllers\Api\ProfessionalRecordTypeController;
+use App\Http\Controllers\Api\TrainAndBusTicketDetailController;
+use App\Http\Controllers\Api\BiddingSoftwareOwnershipController;
+use App\Http\Controllers\Api\IncomingOfficialDocumentController;
+use App\Http\Controllers\Api\ProfessionalRecordMinuteController;
+use App\Http\Controllers\Api\ShareholderMeetingMinuteController;
+use App\Http\Controllers\Api\ContractProductInspectionController;
+use App\Http\Controllers\Api\KasperskyCodeRegistrationController;
+use App\Http\Controllers\Api\ProfessionalRecordHandoverController;
+use App\Http\Controllers\Api\BiddingContractorExperienceController;
+use App\Http\Controllers\Api\ContractIntermediateProductController;
+use App\Http\Controllers\Api\EmploymentContractPersonnelController;
+use App\Http\Controllers\Api\ProfessionalRecordSyntheticController;
 use App\Http\Controllers\Api\WorkTimesheetOvertimeDetailController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\BiddingImplementationPersonnelController;
+use App\Http\Controllers\Api\ContractProductMinuteSignatureController;
+use App\Http\Controllers\Api\ProfessionalRecordUsageRegisterController;
+use App\Http\Controllers\Api\EmploymentContractPersonnelCustomFieldController;
 
 // Auth routes
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
@@ -198,11 +201,25 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             });
         });
 
+        // nhiều năm
+        Route::prefix('many-year')->controller(ContractManyYearController::class)->group(function () {
+            Route::get('list', 'list')->name('api.contract.many-year.list');
+        });
+
+        // phụ trách chuyên môn
+        Route::prefix('professional')->controller(ContractProfessionalController::class)->group(function () {
+            Route::get('list', 'list')->name('api.contract.professional.list');
+        });
+
+        // phụ trách giải ngân
+        Route::prefix('disbursement')->controller(ContractDisbursementController::class)->group(function () {
+            Route::get('list', 'list')->name('api.contract.disbursement.list');
+        });
+
         // sản phẩm
         Route::prefix('product')->group(function () {
             Route::controller(ContractProductController::class)->group(function () {
                 Route::get('list', 'list')->name('api.contract.product.list');
-                Route::get('contract-years', 'getContractYears')->name('api.contract.product.contract-years');
             });
 
             // chính

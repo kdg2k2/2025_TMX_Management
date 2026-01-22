@@ -59,4 +59,24 @@ class ContractProductMinute extends Model
     {
         return $this->hasMany(ContractProductMinuteSignature::class);
     }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function approvedBy()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function contractProfessional()
+    {
+        return $this->belongsTo(ContractProfessionals::class);
+    }
+    
+    public function contractDisbursement()
+    {
+        return $this->belongsTo(ContractDisbursement::class);
+    }
 }

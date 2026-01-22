@@ -433,7 +433,7 @@ class DossierHandoverService extends BaseService
                     'dossier_plan_id' => $handoverOut['dossier_plan_id'],
                     'user_id' => $this->getUserId(),
                     'handover_by' => $this->getUserId(),
-                    'received_by' => app(SystemConfigService::class)->getDossierHandoverReceivedById()['value'],
+                    'received_by' => app(SystemConfigService::class)->findByKey('DOSSIER_HANDOVER_RECEIVED_BY', 'key', false)['value'],
                     'times' => $this->repository->getMaxTimeHandoverInByContractId($contractId) + 1,
                 ]);
 

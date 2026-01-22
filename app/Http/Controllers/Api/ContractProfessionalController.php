@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ContractProduct\GetContractYearsRequest;
-use App\Http\Requests\ContractProduct\ListRequest;
-use App\Services\ContractProductService;
+use App\Http\Requests\ContractProfessional\ListRequest;
+use App\Services\ContractProfessionalService;
 
-class ContractProductController extends Controller
+class ContractProfessionalController extends Controller
 {
     public function __construct()
     {
-        $this->service = app(ContractProductService::class);
+        $this->service = app(ContractProfessionalService::class);
     }
 
     public function list(ListRequest $request)

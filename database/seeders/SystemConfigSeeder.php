@@ -17,7 +17,7 @@ class SystemConfigSeeder extends Seeder
         $userOanhId = User::where('name', 'like', '%Vũ Thị Kim Oanh%')->first()->id;
         $arr = [
             [
-                ['key' => 'dossier_plan_handover_id'],
+                ['key' => 'DOSSIER_PLAN_HANDOVER_ID'],
                 [
                     'value' => $userHuanId,
                     'unit' => 'int',
@@ -27,7 +27,7 @@ class SystemConfigSeeder extends Seeder
                 ]
             ],
             [
-                ['key' => 'dossier_handover_received_by'],
+                ['key' => 'DOSSIER_HANDOVER_RECEIVED_BY'],
                 [
                     'value' => $userHuanId,
                     'unit' => 'int',
@@ -37,21 +37,21 @@ class SystemConfigSeeder extends Seeder
                 ]
             ],
             [
-                ['key' => 'professional_record_plan_handover_id'],
+                ['key' => 'PROFESSIONAL_RECORD_HANDOVER_RECEIVED_BY'],
                 [
                     'value' => $userOanhId,
                     'unit' => 'int',
-                    'description' => 'ID user bên giao của biên bản kế hoạch hồ sơ chuyên môn - Vũ Thị Kim Oanh',
+                    'description' => 'ID user bên nhận của biên bản bàn giao hồ sơ chuyên môn - Vũ Thị Kim Oanh',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]
             ],
             [
-                ['key' => 'professional_record_handover_received_by'],
+                ['key' => 'CONTRACT_PRODUCT_RECIPIENT_ID'],
                 [
                     'value' => $userOanhId,
                     'unit' => 'int',
-                    'description' => 'ID user bên nhận của biên bản bàn giao hồ sơ chuyên môn - Vũ Thị Kim Oanh',
+                    'description' => 'ID user bên nhận của biên bản bàn giao SPTG - Vũ Thị Kim Oanh',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]

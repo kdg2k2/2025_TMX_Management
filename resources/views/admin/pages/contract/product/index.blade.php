@@ -124,6 +124,76 @@
         </x-slot:footer>
     </x-modal>
 
+    <x-modal id="minute-product-modal" nested="true" :fullscreen="true">
+        <x-slot:body>
+            <div class="h-100 d-flex flex-column">
+                <div class="row g-3 flex-fill">
+
+                    <div class="col-6">
+                        <div class="card m-0">
+                            <div class="card-header">
+                                <b>Danh sách biên bản</b>
+                            </div>
+                            <div class="card-body">
+                                <table class="display w-100"></table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6 d-flex">
+                        <div class="card m-0 flex-fill d-flex flex-column">
+                            <div class="card-header">
+                                <b>Xem biên bản</b>
+                            </div>
+                            <div class="card-body p-0 flex-fill">
+                                <iframe src="" class="w-100 h-100 bg-light" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </x-slot:body>
+    </x-modal>
+    <x-modal id="create-minute-product-modal" method="post" nested="true" size="md">
+        <x-slot:body>
+            <div class="my-1">
+                <label>
+                    Phụ trách chuyên môn
+                </label>
+                <select name="contract_professional_id" id="contract-professional-id" required></select>
+            </div>
+            <div class="my-1">
+                <label>
+                    Phụ trách giải ngân
+                </label>
+                <select name="contract_disbursement_id" id="contract-disbursement-id" required></select>
+            </div>
+            <div class="my-1">
+                <label>
+                    Ngày giao
+                </label>
+                <input type="date" class="form-control" name="handover_date">
+            </div>
+            <div class="my-1">
+                <label>
+                    Căn cứ
+                </label>
+                <textarea name="legal_basis" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="my-1">
+                <label>
+                    Nội dung bàn giao
+                </label>
+                <textarea name="handover_content" class="form-control" rows="3"></textarea>
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng"
+                data-bs-dismiss="modal" />
+            <x-button-submit />
+        </x-slot:footer>
+    </x-modal>
+
     <x-approve-modal id="approve-modal" title="Xác nhận duyệt đăng ký" size="md" method="post"
         noteName="approval_note"></x-approve-modal>
     <x-approve-modal id="reject-modal" title="Xác nhận từ chối đăng ký" size="md" method="post"
@@ -133,7 +203,9 @@
     <script>
         const table = $('#datatable');
         const listUrl = @json(route('api.contract.product.list'));
-        const apiContractProductContractYears = @json(route('api.contract.product.contract-years'));
+        const apiContractManyYearList = @json(route('api.contract.many-year.list'));
+        const apiContractProfessionalList = @json(route('api.contract.professional.list'));
+        const apiContractDisbursementList = @json(route('api.contract.disbursement.list'));
 
         const apiContractProductMainList = @json(route('api.contract.product.main.list'));
         const apiContractProductMainExport = @json(route('api.contract.product.main.export'));

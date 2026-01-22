@@ -27,7 +27,7 @@ class ContractProductMinuteController extends Controller
     public function create(CreateMinuteRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            // 'data'=>$this->service->create($request->validated()),
+            'data' => $this->service->store($request->validated()),
             'message' => config('message.default'),
         ]));
     }

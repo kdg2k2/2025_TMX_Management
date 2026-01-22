@@ -5,49 +5,47 @@ use Log;
 
 class DocumentConversionService
 {
-    public function wordToPdf($docxPath, $pdfOutput = null)
+    public function wordToPdf(string $docxPath, ?string $pdfOutput = null): ?string
     {
         ini_set('memory_limit', '-1');
         set_time_limit(0);
 
         try {
             $sofficeExe = $this->findLibreOfficeExecutable();
-
-            if (!$sofficeExe) {
-                Log::error('LibreOffice executable not found');
+            if (!$sofficeExe || !file_exists($docxPath)) {
+                Log::error('LibreOffice not found or docx missing');
                 return null;
             }
+
+            $outDir = $pdfOutput
+                ? rtrim($pdfOutput, '/\\')
+                : dirname(realpath($docxPath));
 
             $cmd = sprintf(
                 '%s -env:UserInstallation=file:///C:/temp/libreoffice --headless --convert-to pdf --outdir %s %s',
                 escapeshellarg($sofficeExe),
-                escapeshellarg($pdfOutput),
+                escapeshellarg($outDir),
                 escapeshellarg($docxPath)
             );
 
             exec($cmd, $output, $return);
 
-            if ($return == 0) {
-                return [
-                    'status' => 'Success',
-                    'message' => 'Convert Success.'
-                ];
-            } else {
-                Log::error('LibreOffice conversion failed', [
-                    'command' => $cmd,
-                    'output' => $output,
-                    'return_code' => $return
-                ]);
+            if ($return !== 0) {
+                Log::error('LibreOffice conversion failed', compact('cmd', 'output', 'return'));
                 return null;
             }
-        } catch (\Exception $e) {
-            Log::error('Conversion error:', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
+
+            $pdfPath = $outDir . DIRECTORY_SEPARATOR
+                . pathinfo($docxPath, PATHINFO_FILENAME) . '.pdf';
+
+            return file_exists($pdfPath) ? $pdfPath : null;
+
+        } catch (\Throwable $e) {
+            Log::error('Conversion error', ['message' => $e->getMessage()]);
             return null;
         }
     }
+
 
     private function findLibreOfficeExecutable()
     {

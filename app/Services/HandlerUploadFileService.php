@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
-use App\Services\BaseService;
-use Exception;
 use Log;
+use Exception;
+use Illuminate\Support\Str;
+use App\Services\BaseService;
 
 class HandlerUploadFileService extends BaseService
 {
@@ -41,9 +42,7 @@ class HandlerUploadFileService extends BaseService
     {
         // Kiểm tra nếu đã là đường dẫn tuyệt đối (Windows hoặc Linux)
         if (
-            \Illuminate\Support\Str::startsWith($filePath, public_path()) ||
-            preg_match('/^[A-Z]:\\\\/i', $filePath) ||  // Windows: C:\, D:\
-            \Illuminate\Support\Str::startsWith($filePath, '/')  // Linux: /home/...
+            preg_match('/^[A-Z]:\\\\/i', $filePath)
         ) {
             $destinationPath = $filePath;
         } else {
@@ -58,6 +57,24 @@ class HandlerUploadFileService extends BaseService
         }
 
         return $destinationPath;
+    }
+
+    public function removePublicPath(string $path): string
+    {
+        $publicPath = rtrim(public_path(), DIRECTORY_SEPARATOR);
+
+        // Chuẩn hoá separator cho Windows
+        $normalizedPath = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+        $normalizedPublic = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $publicPath);
+
+        if (Str::startsWith($normalizedPath, $normalizedPublic)) {
+            return ltrim(
+                substr($normalizedPath, strlen($normalizedPublic)),
+                DIRECTORY_SEPARATOR
+            );
+        }
+
+        return $path;
     }
 
     public function removeFiles(array|string $paths = null)

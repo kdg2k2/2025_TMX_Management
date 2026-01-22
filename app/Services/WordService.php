@@ -1,10 +1,12 @@
 <?php
 namespace App\Services;
 
+use PhpOffice\PhpWord\TemplateProcessor;
+
 class WordService extends BaseService
 {
     public function createFromTemplate(string $fullPath)
     {
-        return new \PhpOffice\PhpWord\TemplateProcessor($fullPath);
+        return new TemplateProcessor($fullPath);
     }
 }

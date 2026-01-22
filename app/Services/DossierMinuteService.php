@@ -9,16 +9,13 @@ use \App\Repositories\DossierMinuteRepository;
 
 class DossierMinuteService extends BaseService
 {
-    private $userService;
-    private $systemConfigService;
-    private $wordService;
-
-    public function __construct()
-    {
+    public function __construct(
+        private UserService $userService,
+        private SystemConfigService $systemConfigService,
+        private WordService $wordService,
+        private HandlerUploadFileService $handlerUploadFileService
+    ) {
         $this->repository = app(DossierMinuteRepository::class);
-        $this->userService = app(UserService::class);
-        $this->systemConfigService = app(SystemConfigService::class);
-        $this->wordService = app(WordService::class);
     }
 
     public function listExceptDraftSortByStatus(array $request)
@@ -51,7 +48,7 @@ class DossierMinuteService extends BaseService
 
             $plan = $dossierPlanService->findById($plan['id']);
             $plan->update([
-                'handover_by' => $this->systemConfigService->getDossierPlanHandoverId()->value,
+                'handover_by' => $this->systemConfigService->findByKey('DOSSIER_PLAN_HANDOVER_ID', 'key', false)->value,
                 'received_by' => $request['received_by'],
                 'handover_date' => $request['handover_date'],
                 'user_id' => $this->getUserId(),
@@ -62,7 +59,7 @@ class DossierMinuteService extends BaseService
             // xóa các biên bản draft của gói thầu này trước
             $this->repository->deleteDraftByType($plan['id'], 'plan');
 
-            $templatePath = public_path('templates/plan_minute.docx');
+            $templatePath = $this->handlerUploadFileService->getAbsolutePublicPath('templates/plan_minute.docx');
             if (!file_exists($templatePath))
                 throw new Exception('Template file not found: ' . $templatePath);
 
@@ -94,7 +91,7 @@ class DossierMinuteService extends BaseService
         // xóa các biên bản draft của gói thầu này trước
         $this->repository->deleteDraftByType($handover['id'], 'handover');
 
-        $templatePath = public_path('templates/handover_minute.docx');
+        $templatePath = $this->handlerUploadFileService->getAbsolutePublicPath('templates/handover_minute.docx');
         if (!file_exists($templatePath))
             throw new Exception('Template file not found: ' . $templatePath);
 
@@ -124,9 +121,7 @@ class DossierMinuteService extends BaseService
 
         $fileName = $file->getClientOriginalName();
         $folder = 'uploads/dossier/minute/usage_register';
-        $publicFolder = public_path($folder);
-        if (!is_dir($publicFolder))
-            mkdir($publicFolder, 0777, true);
+        $publicFolder = $this->handlerUploadFileService->getAbsolutePublicPath($folder);
         $file->move($folder, $fileName);
 
         $minute = $this->repository->store([
@@ -215,16 +210,14 @@ class DossierMinuteService extends BaseService
         }
 
         $folder = "uploads/dossier/minute/$type";
-        $des_pdf_file = public_path($folder);
-        if (!is_dir($des_pdf_file))
-            mkdir($des_pdf_file, 0777, true);
-
-        $output = $folder . '/' . "dossier_minute_{$type}_" . date('d-m-Y_H-i-s') . '.xlsx';;
+        $des_pdf_file = $this->handlerUploadFileService->getAbsolutePublicPath($folder);
+        $output = $folder . '/' . "dossier_minute_{$type}_" . date('d-m-Y_H-i-s') . '.xlsx';
+        ;
         $docx = $output . '.docx';
         $pdf = $output . '.pdf';
-        $templateProcessor->saveAs(public_path($docx));
+        $templateProcessor->saveAs($this->handlerUploadFileService->getAbsolutePublicPath($docx));
 
-        $convert = app(DocumentConversionService::class)->wordToPdf(public_path($docx), $des_pdf_file);
+        $convert = app(DocumentConversionService::class)->wordToPdf($this->handlerUploadFileService->getAbsolutePublicPath($docx), $des_pdf_file);
         if (empty($convert))
             throw new Exception('Lỗi chuyển đổi file biên bản từ word sang pdf!');
 
@@ -371,7 +364,7 @@ class DossierMinuteService extends BaseService
         $emails = $this->getEmails($minute, $getContractMembers);
 
         $view = 'emails.dossier';
-        $files = [public_path($minute['path'])];
+        $files = [$this->handlerUploadFileService->getAbsolutePublicPath($minute['path'])];
 
         if ($useJobQueue) {
             SendMailJob::dispatch(

@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Requests\ContractProductMinute;
+namespace App\Http\Requests\ContractProfessional;
 
 use App\Http\Requests\BaseListRequest;
-use App\Http\Requests\ContractMainProduct\ExportRequest;
 
 class ListRequest extends BaseListRequest
 {
@@ -11,7 +10,9 @@ class ListRequest extends BaseListRequest
     {
         return array_merge(
             parent::rules(),
-            app(ExportRequest::class)->rules(),
+            [
+                'contract_id' => 'nullable|exists:contracts,id'
+            ]
         );
     }
 }

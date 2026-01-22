@@ -150,7 +150,8 @@ class UserService extends BaseService
                 array_filter(
                     array_map(function ($item) {
                         return array_column($item['sub_emails'], 'email');
-                    }, $users), function ($item) {
+                    }, $users),
+                    function ($item) {
                         return !empty($item);
                     }
                 )

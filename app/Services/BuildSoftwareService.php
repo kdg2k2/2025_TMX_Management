@@ -184,21 +184,24 @@ class BuildSoftwareService extends BaseService
             ]);
 
         $recordMemberEmails = $this->userService->getEmails(array_merge(
-            $this->userService->getUserDepartmentManagerEmail($data['createdBy']['id'] ?? null), [
+            $this->userService->getUserDepartmentManagerEmail($data['createdBy']['id'] ?? null),
+            [
                 $data['verifyBy']['id'] ?? null,
                 $data['createdBy']['id'] ?? null,
             ]
         ));
 
-        return Arr::flatten(array_merge($contractEmails,
-            $recordMemberEmails));
+        return Arr::flatten(array_merge(
+            $contractEmails,
+            $recordMemberEmails
+        ));
     }
 
     private function sendMail(int $id, string $subject, array $params = [])
     {
         $record = $this->repository->findById($id);
         $emails = $this->getEmails($record);
-        $files = $record['attachment'] ? [public_path($record['attachment'])] : [];
+        $files = $record['attachment'] ? [$this->handlerUploadFileService->getAbsolutePublicPath($record['attachment'])] : [];
         $data = array_merge([
             'data' => $this->formatRecord($record->toArray()),
         ], $params);

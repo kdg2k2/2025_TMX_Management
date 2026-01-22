@@ -9,7 +9,11 @@ class ContractProductMinuteRepository extends BaseRepository
     public function __construct()
     {
         $this->model = new ContractProductMinute();
-        $this->relations = [];
+        $this->relations = [
+            'signatures.user:id,name',
+            'createdBy:id,name',
+            'approvedBy:id,name',
+        ];
     }
 
     public function getStatus($key = null)
@@ -31,13 +35,23 @@ class ContractProductMinuteRepository extends BaseRepository
     {
         return [
             'text' => [
-                'issue_note'
+                'issue_note',
+                'approval_note',
+                'rejection_note',
             ],
             'date' => [],
-            'datetime' => [],
-            'relations' => [
-                'contract' => ['name']
-            ]
+            'datetime' => [
+                'approved_at'
+            ],
+            'relations' => array_map(
+                fn($i) => [
+                    $i => ['name']
+                ], [
+                    'signatures.user',
+                    'createdBy',
+                    'approvedBy',
+                ]
+            )
         ];
     }
 }

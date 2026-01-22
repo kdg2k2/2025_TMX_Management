@@ -2,14 +2,15 @@
 
 namespace App\Services;
 
-use Exception;
 use App\Repositories\ContractIntermediateProductRepository;
+use Exception;
 
 class ContractIntermediateProductService extends BaseService
 {
     public function __construct(
         private ExcelService $excelService,
-        private HandlerUploadFileService $handlerUploadFileService
+        private HandlerUploadFileService $handlerUploadFileService,
+        private ContractManyYearService $contractManyYearService
     ) {
         $this->repository = app(ContractIntermediateProductRepository::class);
     }
@@ -21,7 +22,9 @@ class ContractIntermediateProductService extends BaseService
 
             return [
                 'data' => $data,
-                'years' => app(ContractProductService::class)->getContractYears($request['contract_id'])
+                'years' => $this->contractManyYearService->list([
+                    'contract_id' => $request['contract_id'],
+                ])
             ];
         });
     }
@@ -58,6 +61,7 @@ class ContractIntermediateProductService extends BaseService
             'contract_id' => $request['contract_id'],
             'columns' => [
                 'year',
+                'contract_number',
                 'name',
                 'executor_user_name',
                 'note',
@@ -76,6 +80,7 @@ class ContractIntermediateProductService extends BaseService
                     'col_span' => 1,
                 ], [
                     'Năm',
+                    'Số hợp đồng',
                     'Tên sản phẩm',
                     'Tên người thực hiện',
                     'Ghi chú',
@@ -93,16 +98,17 @@ class ContractIntermediateProductService extends BaseService
                 throw new Exception("Không tìm thấy dữ liệu trong sheet 'data'!");
             unset($rawData[0]);
 
-            $contract = app(ContractProductService::class)->getContractYears($request['contract_id'], true);
+            $contract = app(ContractProductService::class)->findById($request['contract_id']);
             if (!isset($request['year']))
                 $request['year'] = $contract['year'];
 
             $insertData = array_values(array_map(fn($i) => [
                 'contract_id' => $request['contract_id'],
                 'year' => $request['year'],
-                'name' => $i[1],
-                'executor_user_name' => $i[2],
-                'note' => $i[3],
+                'contract_number' => $i[1],
+                'name' => $i[2],
+                'executor_user_name' => $i[3],
+                'note' => $i[4],
             ], $rawData));
 
             $this->repository->deleteByContractIdAndYear($request['contract_id'], $request['year']);

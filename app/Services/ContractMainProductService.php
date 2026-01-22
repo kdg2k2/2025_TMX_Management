@@ -9,7 +9,8 @@ class ContractMainProductService extends BaseService
 {
     public function __construct(
         private ExcelService $excelService,
-        private HandlerUploadFileService $handlerUploadFileService
+        private HandlerUploadFileService $handlerUploadFileService,
+        private ContractManyYearService $contractManyYearService
     ) {
         $this->repository = app(ContractMainProductRepository::class);
     }
@@ -21,7 +22,9 @@ class ContractMainProductService extends BaseService
 
             return [
                 'data' => $data,
-                'years' => app(ContractProductService::class)->getContractYears($request['contract_id'])
+                'years' => $this->contractManyYearService->list([
+                    'contract_id' => $request['contract_id'],
+                ])
             ];
         });
     }
@@ -95,7 +98,7 @@ class ContractMainProductService extends BaseService
                 throw new Exception("Không tìm thấy dữ liệu trong sheet 'data'!");
             unset($rawData[0]);
 
-            $contract = app(ContractProductService::class)->getContractYears($request['contract_id'], true);
+            $contract = app(ContractProductService::class)->findById($request['contract_id']);
             if (!isset($request['year']))
                 $request['year'] = $contract['year'];
 

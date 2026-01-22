@@ -14,7 +14,8 @@ class ExcelService
 {
     public function __construct(
         private HandlerUploadFileService $handlerUploadFileService
-    ) {}
+    ) {
+    }
 
     /*
      * tạo sheet như sau để sử dụng
@@ -337,7 +338,7 @@ class ExcelService
             // Thử resolve đường dẫn
             if (!file_exists($file)) {
                 $possiblePaths = [
-                    public_path($file),
+                    $this->handlerUploadFileService->getAbsolutePublicPath($file),
                     storage_path('app/' . $file),
                     storage_path('app/public/' . $file)
                 ];

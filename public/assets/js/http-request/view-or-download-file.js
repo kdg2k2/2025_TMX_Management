@@ -37,14 +37,25 @@ const validateUrl = (url) => {
     }
 };
 
-const createLinkPreviewFileOnline = (url, type) => {
+const createLinkPreviewFileOnline = (url, type = null) => {
     if (!url) return null;
 
+    const validUrl = validateUrl(url);
+    const ext = validUrl.pathname.split(".").pop().toLowerCase();
+
+    // Auto detect type nếu không truyền
+    if (type === null) {
+        if (officeFormats.includes(ext)) type = 1;
+        else if (ext === "pdf") type = 2;
+        else return null;
+    }
+
     const encodedUrl = encodeURIComponent(url) + `?v=${Date.now()}`;
+
     switch (type) {
-        case 1:
+        case 1: // Office
             return `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}&embedded=true`;
-        case 2:
+        case 2: // PDF
             return `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodedUrl}`;
         default:
             return null;

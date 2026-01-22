@@ -9,16 +9,13 @@ use \App\Repositories\ProfessionalRecordMinuteRepository;
 
 class ProfessionalRecordMinuteService extends BaseService
 {
-    private $userService;
-    private $systemConfigService;
-    private $wordService;
-
-    public function __construct()
-    {
+    public function __construct(
+        private UserService $userService,
+        private SystemConfigService $systemConfigService,
+        private WordService $wordService,
+        private HandlerUploadFileService $handlerUploadFileService
+    ) {
         $this->repository = app(ProfessionalRecordMinuteRepository::class);
-        $this->userService = app(UserService::class);
-        $this->systemConfigService = app(SystemConfigService::class);
-        $this->wordService = app(WordService::class);
     }
 
     public function listExceptDraftSortByStatus(array $request)
@@ -46,9 +43,7 @@ class ProfessionalRecordMinuteService extends BaseService
 
             $fileName = $file->getClientOriginalName();
             $folder = 'professional-record/minute/plan';
-            $publicFolder = public_path($folder);
-            if (!is_dir($publicFolder))
-                mkdir($publicFolder, 0777, true);
+            $this->handlerUploadFileService->getAbsolutePublicPath($folder);
             $file->move($folder, $fileName);
 
             $minute = $this->repository->store([
@@ -78,7 +73,7 @@ class ProfessionalRecordMinuteService extends BaseService
         // xóa các biên bản draft của gói thầu này trước
         $this->repository->deleteDraftByType($handover['id'], 'handover');
 
-        $templatePath = public_path('templates/handover_minute.docx');
+        $templatePath = $this->handlerUploadFileService->getAbsolutePublicPath('templates/handover_minute.docx');
         if (!file_exists($templatePath))
             throw new Exception('Template file not found: ' . $templatePath);
 
@@ -108,9 +103,7 @@ class ProfessionalRecordMinuteService extends BaseService
 
         $fileName = $file->getClientOriginalName();
         $folder = 'uploads/professional-record/minute/usage_register';
-        $publicFolder = public_path($folder);
-        if (!is_dir($publicFolder))
-            mkdir($publicFolder, 0777, true);
+        $this->handlerUploadFileService->getAbsolutePublicPath($folder);
         $file->move($folder, $fileName);
 
         $minute = $this->repository->store([
@@ -199,16 +192,14 @@ class ProfessionalRecordMinuteService extends BaseService
         }
 
         $folder = "uploads/professional-record/minute/$type";
-        $des_pdf_file = public_path($folder);
-        if (!is_dir($des_pdf_file))
-            mkdir($des_pdf_file, 0777, true);
+        $des_pdf_file = $this->handlerUploadFileService->getAbsolutePublicPath($folder);
+        $output = $folder . '/' . "professional_record_minute_{$type}_" . date('d-m-Y_H-i-s') . '.xlsx';
 
-        $output = $folder . '/' . "professional_record_minute_{$type}_" . date('d-m-Y_H-i-s') . '.xlsx';;
         $docx = $output . '.docx';
         $pdf = $output . '.pdf';
-        $templateProcessor->saveAs(public_path($docx));
+        $templateProcessor->saveAs($this->handlerUploadFileService->getAbsolutePublicPath($docx));
 
-        $convert = app(DocumentConversionService::class)->wordToPdf(public_path($docx), $des_pdf_file);
+        $convert = app(DocumentConversionService::class)->wordToPdf($this->handlerUploadFileService->getAbsolutePublicPath($docx), $des_pdf_file);
         if (empty($convert))
             throw new Exception('Lỗi chuyển đổi file biên bản từ word sang pdf!');
 
@@ -355,7 +346,7 @@ class ProfessionalRecordMinuteService extends BaseService
         $emails = $this->getEmails($minute, $getContractMembers);
 
         $view = 'emails.professional-record';
-        $files = [public_path($minute['path'])];
+        $files = [$this->handlerUploadFileService->getAbsolutePublicPath($minute['path'])];
 
         if ($useJobQueue) {
             SendMailJob::dispatch(

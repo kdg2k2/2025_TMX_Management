@@ -143,18 +143,15 @@ const renderColumns = () => {
                         createActionBtn(
                             "primary",
                             "Biên bản",
-                            "",
+                            apiContractProductMinuteList,
                             "loadList",
-                            null,
+                            "showMinuteProductModal",
                             "ti ti-file-text",
-                        )
-                    }
-                    ${
-                        createApproveBtn(
-                            contractProductMinuteApprove + contractParam,
-                        ) +
-                        createRejectBtn(
-                            contractProductMinuteReject + contractParam,
+                            {
+                                "data-contract_id": row.id,
+                                "data-contract_number": row.contract_number,
+                                "data-contract_signed_date": row.signed_date,
+                            },
                         )
                     }
                 `;

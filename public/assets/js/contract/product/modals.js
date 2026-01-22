@@ -27,6 +27,15 @@ const responseInspectionProductModal = document.getElementById(
 const responseInspectionProductModalForm =
     responseInspectionProductModal.querySelector("form");
 
+const minuteProductModal = document.getElementById("minute-product-modal");
+const minuteProductTable = $(minuteProductModal.querySelector("table"));
+
+const createMinuteProductModal = document.getElementById(
+    "create-minute-product-modal",
+);
+const createMinuteProductModalForm =
+    createMinuteProductModal.querySelector("form");
+
 const filterContainerClass = "contract-year-filter-container";
 var currentBtnProductData = null;
 
@@ -88,6 +97,13 @@ const loadProduct = (btn, params = {}) => {
                       title: "Năm",
                       render: (data, type, row) => {
                           return row?.year || "";
+                      },
+                  },
+                  {
+                      data: null,
+                      title: "Số hợp đồng",
+                      render: (data, type, row) => {
+                          return row?.contract_number || "";
                       },
                   },
                   {
@@ -343,25 +359,25 @@ window.loadInspectionProduct = (btn = null) => {
                         ${
                             row.is_inspection_created_by_auth
                                 ? createActionBtn(
-                                    "danger",
-                                    "Hủy yêu cầu kiểm tra",
-                                    `${apiContractProductInspectionCancel}?id=${row.id}`,
-                                    "loadInspectionProduct",
-                                    "showCancelInspectionProductModal",
-                                    "ti ti-ban",
-                                )
+                                      "danger",
+                                      "Hủy yêu cầu kiểm tra",
+                                      `${apiContractProductInspectionCancel}?id=${row.id}`,
+                                      "loadInspectionProduct",
+                                      "showCancelInspectionProductModal",
+                                      "ti ti-ban",
+                                  )
                                 : ""
                         }
                         ${
                             row.is_auth_inspector
                                 ? createActionBtn(
-                                    "secondary",
-                                    "Phản hồi kiểm tra",
-                                    `${apiContractProductInspectionResponse}?id=${row.id}`,
-                                    "loadInspectionProduct",
-                                    "showResponseInspectionProductModal",
-                                    "ti ti-clipboard-check",
-                                )
+                                      "secondary",
+                                      "Phản hồi kiểm tra",
+                                      `${apiContractProductInspectionResponse}?id=${row.id}`,
+                                      "loadInspectionProduct",
+                                      "showResponseInspectionProductModal",
+                                      "ti ti-clipboard-check",
+                                  )
                                 : ""
                         }
                     `;
@@ -394,7 +410,7 @@ window.loadInspectionProduct = (btn = null) => {
 };
 
 const showRequestInspectionProductModal = async (btn) => {
-    const years = await http.get(apiContractProductContractYears, {
+    const years = await http.get(apiContractManyYearList, {
         contract_id: btn.dataset.contract_id,
     });
 
@@ -437,14 +453,173 @@ const showResponseInspectionProductModal = (btn) => {
     });
 };
 
+const showMinuteProductModal = (btn) => {
+    openModalBase(btn, {
+        modal: minuteProductModal,
+        afterShow: () => {
+            currentBtnProductData = btn;
+            loadMinuteProduct(btn);
+        },
+    });
+};
+
+const showCreateMinuteProductModal = async (btn) => {
+    const professionals = await http.get(apiContractProfessionalList, {
+        contract_id: btn.dataset.contract_id,
+    });
+    const disbursements = await http.get(apiContractDisbursementList, {
+        contract_id: btn.dataset.contract_id,
+    });
+    fillSelectId(
+        "contract-professional-id",
+        professionals.data,
+        "id",
+        "user.name",
+        null,
+        false,
+    );
+    fillSelectId(
+        "contract-disbursement-id",
+        disbursements.data,
+        "id",
+        "user.name",
+        null,
+        false,
+    );
+
+    resetFormAfterSubmit(createMinuteProductModalForm);
+
+    const signDate = new Date(btn.dataset.contract_signed_date);
+    createMinuteProductModal.querySelector(
+        'textarea[name="legal_basis"]',
+    ).value =
+        `Căn cứ hợp đồng số ${btn.dataset.contract_number} ngày ${signDate.getDate()} tháng ${signDate.getMonth() + 1} năm ${signDate.getFullYear()} hợp đồng`;
+
+    openModalBase(btn, {
+        modal: createMinuteProductModal,
+        form: createMinuteProductModalForm,
+    });
+};
+
+const showIframeMinute = (url = "") => {
+    minuteProductModal
+        .querySelector("iframe")
+        .setAttribute("src", url ? createLinkPreviewFileOnline(url) : "");
+};
+
+window.loadMinuteProduct = (btn = null) => {
+    if (!btn) btn = currentBtnProductData;
+    destroyDataTable(minuteProductTable);
+    minuteProductTable.html("");
+
+    createDataTableServerSide(
+        minuteProductTable,
+        btn?.dataset?.href,
+        [
+            {
+                data: null,
+                title: "Người tạo biên bản",
+                render: (data, type, row) => {
+                    return row?.created_by?.name || "";
+                },
+            },
+            {
+                data: null,
+                title: "Trạng thái",
+                render: (data, type, row) =>
+                    createBadge(
+                        row?.status?.converted,
+                        row?.status?.color,
+                        row?.status?.icon,
+                    ),
+            },
+            {
+                data: null,
+                title: "Ghi chú tồn tại",
+                render: (data, type, row) => {
+                    return row?.issue_note || "";
+                },
+            },
+            {
+                data: null,
+                title: "Người duyệt",
+                render: (data, type, row) => {
+                    return row?.approved_by?.name || "";
+                },
+            },
+            {
+                data: null,
+                title: "Thời gian duyệt",
+                render: (data, type, row) => {
+                    return row?.approved_at || "";
+                },
+            },
+            {
+                data: null,
+                title: "Ghi chú duyệt",
+                render: (data, type, row) => {
+                    return row?.approval_note || row?.rejection_note || "";
+                },
+            },
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                title: "Hành động",
+                className: "text-center",
+                render: (data, type, row) => {
+                    return `
+                        ${
+                            row?.status?.origin == "request_approve"
+                                ? createApproveBtn(
+                                      contractProductMinuteApprove +
+                                          contractParam,
+                                  ) +
+                                  createRejectBtn(
+                                      contractProductMinuteReject +
+                                          contractParam,
+                                  )
+                                : ""
+                        }
+                    `;
+                },
+            },
+        ],
+        (item) => item,
+        {
+            paginate: 1,
+            contract_id: btn?.dataset?.contract_id,
+        },
+        () => {
+            $(minuteProductModal.querySelector(".dataTables_filter")).prepend(
+                createActionBtn(
+                    "primary",
+                    "Tạo biên bản",
+                    `${apiContractProductMinuteCreate}?contract_id=${btn?.dataset?.contract_id}`,
+                    "loadMinuteProduct",
+                    "showCreateMinuteProductModal",
+                    "ti ti-file-plus",
+                    {
+                        "data-contract_id": btn?.dataset?.contract_id,
+                        "data-contract_number": btn?.dataset?.contract_number,
+                        "data-contract_signed_date":
+                            btn?.dataset?.contract_signed_date,
+                    },
+                ),
+            );
+        },
+    );
+};
+
 [
     importProductModalForm,
     requestInspectionProductModalForm,
     cancelInspectionProductModalForm,
     responseInspectionProductModalForm,
+    createMinuteProductModalForm,
 ].forEach((form) => {
     form.addEventListener("submit", async (e) => {
-        await handleSubmitForm(e, () => {
+        await handleSubmitForm(e, (res) => {
             hideModal(form.closest(".modal"));
             loadList();
 
@@ -452,6 +627,10 @@ const showResponseInspectionProductModal = (btn) => {
                 loadProduct(currentBtnProductData);
             if (form == requestInspectionProductModalForm)
                 loadInspectionProduct(currentBtnProductData);
+            if (form == createMinuteProductModalForm)
+                showIframeMinute(
+                    res?.data?.file_docx_path || res?.data?.file_pdf_path || "",
+                );
         });
     });
 });
