@@ -152,22 +152,19 @@
                                 Hợp đồng
                             </a>
                         </li>
-
-                        <li class="slide">
-                            <a href="{{ route('contract.product.index') }}" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-clipboard-check"></i>
-                                Sản phẩm trung gian
-                            </a>
-                        </li>
-
-                        <li class="slide">
-                            <a href="javascript:void(0)" class="side-menu__item">
-                                <i class="side-menu-doublemenu__icon me-2 d-block fs-6 ti ti-users"></i>
-                                Nhân sự thực hiện
-                            </a>
-                        </li>
-
                     </ul>
+                </li>
+                <li class="slide">
+                    <a href="{{ route('contract.product.index') }}" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-clipboard-check"></i>
+                        Sản phẩm hợp đồng
+                    </a>
+                </li>
+                <li class="slide">
+                    <a href="javascript:void(0)" class="side-menu__item">
+                        <i class="side-menu__icon ti ti-users"></i>
+                        Nhân sự thực hiện
+                    </a>
                 </li>
 
                 <!-- Công tác & Nghỉ phép -->

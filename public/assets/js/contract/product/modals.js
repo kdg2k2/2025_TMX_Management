@@ -258,54 +258,31 @@ window.loadInspectionProduct = (btn = null) => {
             {
                 data: null,
                 title: "Yêu cầu kiểm tra",
-                render: (data, type, row) => `
-                    <div class="d-flex align-items-start mb-1">
-                        <i class="ti ti-user-question text-primary me-1 mt-1"></i>
-                        <div>
-                            <span class="text-muted">Người yêu cầu/hủy:</span>
-                            <span class="fw-medium">${row?.created_by?.name || "-"}</span>
-                        </div>
-                    </div>
+                render: (data, type, row) => {
+                    const years =
+                        row?.years
+                            ?.map((i) => i?.year)
+                            ?.filter(Boolean)
+                            ?.join(", ") || "-";
 
-                    <div class="d-flex align-items-start mb-1">
-                        <i class="ti ti-calendar text-warning me-1 mt-1"></i>
-                        <div>
-                            <span class="text-muted">Năm:</span>
-                            <span class="fw-medium">${
-                                row?.years
-                                    ?.map((i) => i?.year)
-                                    ?.filter(Boolean)
-                                    ?.join(", ") || "-"
-                            }</span>
-                        </div>
-                    </div>
+                    return `
+                        ${renderField("user-question", "Người yêu cầu", row?.created_by?.name, { color: "primary" })}
+                        ${renderField("calendar", "Năm", years, { color: "warning" })}
+                        ${renderField("user-cog", "Hỗ trợ", row?.supported_by?.name, { color: "info" })}
+                        ${renderField("message-dots", "Mô tả", row?.support_description)}
 
-                    <div class="d-flex align-items-start mb-1">
-                        <i class="ti ti-user-cog text-info me-1 mt-1"></i>
-                        <div>
-                            <span class="text-muted">Hỗ trợ:</span>
-                            ${row?.supported_by?.name || "-"}
-                        </div>
-                    </div>
-
-                    <div class="d-flex align-items-start small text-muted mt-1">
-                        <i class="ti ti-message-dots me-1 mt-1"></i>
-                        <div>
-                            <span class="fw-medium">Mô tả:</span>
-                            ${row?.support_description || "-"}
-                        </div>
-                    </div>
-
-                    ${
-                        row?.issue_file_path
-                            ? `<div class="d-flex align-items-center small text-muted mt-1">
-                                <i class="ti ti-file-search me-1"></i>
-                                <span class="fw-medium me-1">File tồn tại:</span>
-                                ${createViewBtn(row.issue_file_path)}
-                            </div>`
-                            : ""
-                    }
-                `,
+                        ${
+                            row?.issue_file_path
+                                ? renderField(
+                                      "file-search",
+                                      "File tồn tại",
+                                      createViewBtn(row.issue_file_path),
+                                      { valueClass: "" },
+                                  )
+                                : ""
+                        }
+                    `;
+                },
             },
             {
                 data: null,
@@ -320,33 +297,22 @@ window.loadInspectionProduct = (btn = null) => {
             {
                 data: null,
                 title: "Kết quả kiểm tra",
-                render: (data, type, row) => `
-                    <div class="d-flex align-items-start mb-1">
-                        <i class="ti ti-user-check text-success me-1 mt-1"></i>
-                        <div>
-                            <span class="text-muted">Người kiểm tra:</span>
-                            <span class="fw-medium">${row?.inspector_user?.name || "-"}</span>
-                        </div>
-                    </div>
+                render: (data, type, row) => {
+                    return `
+                        ${renderField("user-check", "Người kiểm tra", row?.inspector_user?.name, { color: "success" })}
+                        ${renderField("note", "Nhận xét", row?.inspector_comment)}
 
-                    <div class="d-flex align-items-start small text-muted mt-1">
-                        <i class="ti ti-note text-secondary me-1 mt-1"></i>
-                        <div>
-                            <span class="text-muted">Nhận xét:</span>
-                            <span class="fw-medium">${row.inspector_comment || "-"}</span>
-                        </div>
-                    </div>
-
-                    ${
-                        row?.inspector_comment_file_path
-                            ? `<div class="d-flex align-items-center small text-muted mt-1">
-                                <i class="ti ti-file-check me-1"></i>
-                                <span class="fw-medium me-1">File nhận xét:</span>
-                                ${createViewBtn(row.inspector_comment_file_path)}
-                            </div>`
-                            : ""
-                    }
-                `,
+                        ${
+                            row?.inspector_comment_file_path
+                                ? renderField(
+                                    "file-check",
+                                    "File nhận xét",
+                                    createViewBtn(row.inspector_comment_file_path),
+                                )
+                                : ""
+                        }
+                    `;
+                },
             },
             {
                 data: null,
@@ -518,49 +484,53 @@ window.loadMinuteProduct = (btn = null) => {
         [
             {
                 data: null,
-                title: "Người tạo biên bản",
+                title: "Thông tin",
                 render: (data, type, row) => {
-                    return row?.created_by?.name || "";
+                    return `
+                    ${renderField("user", "Người tạo", row?.created_by?.name)}
+                    ${renderField("calendar", "Ngày giao", row?.handover_date)}
+                    <div class="d-flex align-items-center gap-1 mt-1">
+                        <i class="ti ti-flag text-muted"></i>
+                        <small class="text-muted">Trạng thái:</small>
+                        ${createBadge(
+                            row?.status?.converted,
+                            row?.status?.color,
+                            row?.status?.icon,
+                        )}
+                    </div>
+                `;
                 },
             },
+
             {
                 data: null,
-                title: "Trạng thái",
-                render: (data, type, row) =>
-                    createBadge(
-                        row?.status?.converted,
-                        row?.status?.color,
-                        row?.status?.icon,
-                    ),
-            },
-            {
-                data: null,
-                title: "Ghi chú tồn tại",
+                title: "Nội dung",
+                width: "350px",
                 render: (data, type, row) => {
-                    return row?.issue_note || "";
+                    return `
+                    ${renderField("file-text", "Căn cứ", row?.legal_basis)}
+                    ${renderField("clipboard-list", "Bàn giao", row?.handover_content)}
+                    ${renderField("alert-circle", "Tồn tại", row?.issue_note)}
+                `;
                 },
             },
+
             {
                 data: null,
-                title: "Người duyệt",
+                title: "Phê duyệt",
                 render: (data, type, row) => {
-                    return row?.approved_by?.name || "";
+                    return `
+                    ${renderField("user-check", "Người duyệt", row?.approved_by?.name)}
+                    ${renderField("clock", "Thời gian", row?.approved_at)}
+                    ${renderField(
+                        "message",
+                        "Ghi chú",
+                        row?.approval_note || row?.rejection_note,
+                    )}
+                `;
                 },
             },
-            {
-                data: null,
-                title: "Thời gian duyệt",
-                render: (data, type, row) => {
-                    return row?.approved_at || "";
-                },
-            },
-            {
-                data: null,
-                title: "Ghi chú duyệt",
-                render: (data, type, row) => {
-                    return row?.approval_note || row?.rejection_note || "";
-                },
-            },
+
             {
                 data: null,
                 orderable: false,
@@ -569,6 +539,30 @@ window.loadMinuteProduct = (btn = null) => {
                 className: "text-center",
                 render: (data, type, row) => {
                     return `
+                        ${
+                            row?.file_docx_path
+                                ? createBtn(
+                                      "info",
+                                      "Xem file Word",
+                                      false,
+                                      {},
+                                      "ti ti-file-word",
+                                      `showIframeMinute('${row?.file_docx_path}')`,
+                                  )?.outerHTML
+                                : ""
+                        }
+                        ${
+                            row?.file_pdf_path
+                                ? createBtn(
+                                      "danger",
+                                      "Xem file PDF",
+                                      false,
+                                      {},
+                                      "ti ti-file-type-pdf",
+                                      `showIframeMinute('${row?.file_pdf_path}')`,
+                                  )?.outerHTML
+                                : ""
+                        }
                         ${
                             row?.status?.origin == "request_approve"
                                 ? createApproveBtn(
@@ -629,7 +623,7 @@ window.loadMinuteProduct = (btn = null) => {
                 loadInspectionProduct(currentBtnProductData);
             if (form == createMinuteProductModalForm)
                 showIframeMinute(
-                    res?.data?.file_docx_path || res?.data?.file_pdf_path || "",
+                    res?.data?.file_pdf_path || res?.data?.file_docx_path || "",
                 );
         });
     });

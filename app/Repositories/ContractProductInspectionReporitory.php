@@ -22,6 +22,7 @@ class ContractProductInspectionReporitory extends BaseRepository
                 'intermediateCollaborators.user:id,name',
             ])->select([
                 'id',
+                'year',
                 'name',
                 'investor_id',
                 'inspector_user_id',

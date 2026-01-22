@@ -23,7 +23,7 @@
     }
 
     if ($fullscreen) {
-        $dialogClass .= ' modal-fullscreen';
+        $dialogClass .= ' modal-fullscreen pe-3';
     } else {
         $dialogClass .= match ($size) {
             'sm' => ' modal-sm',

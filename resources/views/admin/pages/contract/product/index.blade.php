@@ -153,6 +153,10 @@
                 </div>
             </div>
         </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng"
+                data-bs-dismiss="modal" />
+        </x-slot:footer>
     </x-modal>
     <x-modal id="create-minute-product-modal" method="post" nested="true" size="md">
         <x-slot:body>
