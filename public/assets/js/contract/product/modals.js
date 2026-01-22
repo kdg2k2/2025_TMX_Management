@@ -42,6 +42,12 @@ const replaceMinuteFileModal = document.getElementById(
 const replaceMinuteFileModalForm =
     replaceMinuteFileModal.querySelector("form");
 
+const requestSignMinuteModal = document.getElementById(
+    "request-sign-minute-modal",
+);
+const requestSignMinuteModalForm =
+    requestSignMinuteModal.querySelector("form");
+
 const filterContainerClass = "contract-year-filter-container";
 var currentBtnProductData = null;
 

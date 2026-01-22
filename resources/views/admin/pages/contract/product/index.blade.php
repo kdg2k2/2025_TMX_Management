@@ -214,6 +214,22 @@
         </x-slot:footer>
     </x-modal>
 
+    <x-modal id="request-sign-minute-modal" method="patch" nested="true" size="sm">
+        <x-slot:body>
+            <div class="my-1">
+                <label>
+                    Ghi chú tồn tại (nếu có)
+                </label>
+                <textarea name="issue_note" class="form-control" rows="3"></textarea>
+            </div>
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng"
+                data-bs-dismiss="modal" />
+            <x-button-submit text="Yêu cầu ký" />
+        </x-slot:footer>
+    </x-modal>
+
     <x-approve-modal id="approve-modal" title="Xác nhận duyệt đăng ký" size="md" method="post"
         noteName="approval_note"></x-approve-modal>
     <x-approve-modal id="reject-modal" title="Xác nhận từ chối đăng ký" size="md" method="post"
