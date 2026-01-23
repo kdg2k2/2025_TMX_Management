@@ -16,7 +16,7 @@ class ContractProductMinute extends Model
         'draft' => [
             'original' => 'draft',
             'converted' => 'Nháp',
-            'color' => 'secondary',
+            'color' => '',
             'icon' => 'ti ti-file-text',
         ],
         'request_sign' => [
@@ -28,7 +28,7 @@ class ContractProductMinute extends Model
         'request_approve' => [
             'original' => 'request_approve',
             'converted' => 'Yêu cầu duyệt',
-            'color' => 'info',
+            'color' => 'danger',
             'icon' => 'ti ti-user-check',
         ],
         'approved' => [
@@ -40,7 +40,7 @@ class ContractProductMinute extends Model
         'rejected' => [
             'original' => 'rejected',
             'converted' => 'Từ chối',
-            'color' => 'danger',
+            'color' => 'secondary',
             'icon' => 'ti ti-circle-x',
         ],
     ];

@@ -20,7 +20,8 @@ class ContractProductMinuteRepository extends BaseRepository
                 'year',
                 'name',
                 'contract_number',
-                'investor_id'
+                'investor_id',
+                'intermediate_product_status',
             ])
         ];
     }

@@ -198,7 +198,7 @@
         </x-slot:footer>
     </x-modal>
 
-    <x-modal id="replace-minute-file-modal" method="patch" nested="true" size="sm">
+    <x-modal id="replace-minute-file-modal" method="patch" nested="true" size="md">
         <x-slot:body>
             <div class="my-1">
                 <label>
@@ -214,7 +214,7 @@
         </x-slot:footer>
     </x-modal>
 
-    <x-modal id="request-sign-minute-modal" method="patch" nested="true" size="sm">
+    <x-modal id="request-sign-minute-modal" method="patch" nested="true" size="md">
         <x-slot:body>
             <div class="my-1">
                 <label>
@@ -227,6 +227,17 @@
             <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng"
                 data-bs-dismiss="modal" />
             <x-button-submit text="Yêu cầu ký" />
+        </x-slot:footer>
+    </x-modal>
+
+    <x-modal id="confirm-issues-minute-modal" method="patch" nested="true" size="md">
+        <x-slot:body>
+            Xác nhận tồn tại được viết trong ghi chú tồn tại để chuyển sang phê duyệt?
+        </x-slot:body>
+        <x-slot:footer>
+            <x-button variant="light" outline="true" size="sm" icon="ti ti-x" text="Đóng"
+                data-bs-dismiss="modal" />
+            <x-button-submit text="Xác nhận" variant="warning" icon="ti ti-check" />
         </x-slot:footer>
     </x-modal>
 

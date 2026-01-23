@@ -55,3 +55,10 @@
         </b>
     </li>
 </ul>
+@if (isset($minute['issue_note']))
+    <hr>
+    <p>
+        Ghi chú tồn tại:
+        <b style="color:red">{{ $minute['issue_note'] }}</b>
+    </p>
+@endif

@@ -46,6 +46,12 @@ const requestSignMinuteModal = document.getElementById(
 );
 const requestSignMinuteModalForm = requestSignMinuteModal.querySelector("form");
 
+const confirmIssuesMinuteModal = document.getElementById(
+    "confirm-issues-minute-modal",
+);
+const confirmIssuesMinuteModalForm =
+    confirmIssuesMinuteModal.querySelector("form");
+
 const filterContainerClass = "contract-year-filter-container";
 var currentBtnProductData = null;
 
@@ -502,6 +508,14 @@ const showRequestSignMinuteModal = (btn) => {
     });
 };
 
+const showConfirmIssuesMinuteModal = (btn) => {
+    resetFormAfterSubmit(confirmIssuesMinuteModalForm);
+    openModalBase(btn, {
+        modal: confirmIssuesMinuteModal,
+        form: confirmIssuesMinuteModalForm,
+    });
+};
+
 var minuteProductBtnAdded = false;
 
 // Helper function để render action buttons cho minute product
@@ -603,12 +617,29 @@ const renderMinuteProductActions = (row) => {
         );
     }
 
-    // Button duyệt/từ chối
+    // Button duyệt/từ chối hoặc xác nhận tồn tại
     if (status === "request_approve") {
-        buttons.push(
-            createApproveBtn(`${contractProductMinuteApprove}?contract_id=${row.contract_id}`),
-            createRejectBtn(`${contractProductMinuteReject}?contract_id=${row.contract_id}`),
-        );
+        const contractStatus = row?.contract?.intermediate_product_status;
+
+        // Nếu contract có trạng thái has_issues → hiển thị nút xác nhận tồn tại
+        if (contractStatus === "has_issues") {
+            buttons.push(
+                createActionBtn(
+                    ["btn-orange-light", "border"],
+                    "Xác nhận tồn tại",
+                    `${apiContractProductMinuteConfirmIssues}?id=${row.id}`,
+                    "loadMinuteProduct",
+                    "showConfirmIssuesMinuteModal",
+                    "ti ti-alert-circle",
+                ),
+            );
+        } else {
+            // Nếu không → hiển thị nút duyệt/từ chối
+            buttons.push(
+                createApproveBtn(`${contractProductMinuteApprove}?contract_id=${row.contract_id}`),
+                createRejectBtn(`${contractProductMinuteReject}?contract_id=${row.contract_id}`),
+            );
+        }
     }
 
     return buttons.join("");
@@ -784,6 +815,11 @@ registerFormHandler(replaceMinuteFileModalForm, (res) => {
 
 // Request signature form
 registerFormHandler(requestSignMinuteModalForm, () => {
+    loadMinuteProduct();
+});
+
+// Confirm issues form
+registerFormHandler(confirmIssuesMinuteModalForm, () => {
     loadMinuteProduct();
 });
 

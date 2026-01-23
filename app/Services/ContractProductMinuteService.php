@@ -542,12 +542,53 @@ class ContractProductMinuteService extends BaseService
     }
 
     /**
+     * Xác nhận tồn tại - ghi nhận các vấn đề của biên bản
+     */
+    public function confirmIssues(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $minute = $this->repository->findById($request['id']);
+
+            // Kiểm tra trạng thái biên bản
+            if ($minute->status !== 'request_approve') {
+                throw new Exception('Chỉ có thể xác nhận tồn tại khi biên bản đang chờ duyệt!');
+            }
+
+            // Kiểm tra trạng thái hợp đồng
+            $contract = $minute->contract;
+            if ($contract->intermediate_product_status !== 'has_issues') {
+                throw new Exception('Chỉ có thể xác nhận tồn tại khi hợp đồng có trạng thái "Còn tồn tại"!');
+            }
+
+            // Cập nhật trạng thái hợp đồng sang "Ghi nhận tồn tại"
+            $contract->update([
+                'intermediate_product_status' => 'issues_recorded',
+            ]);
+
+            // Gửi email thông báo ghi nhận tồn tại
+            $this->sendMinuteEmail($minute->id, 'Ghi nhận vấn đề của biên bản sản phẩm hợp đồng');
+
+            // Refresh và return
+            $minute->refresh();
+            return $this->formatRecord($minute->toArray());
+        }, true);
+    }
+
+    /**
      * Gửi email yêu cầu duyệt biên bản
      * - Gửi cho tất cả người đã ký
      * - Gửi cho toàn bộ thành viên của hợp đồng
      * - Đính kèm file PDF
      */
     public function sendApprovalRequestEmail(int $minuteId): void
+    {
+        $this->sendMinuteEmail($minuteId, 'Yêu cầu duyệt biên bản sản phẩm hợp đồng');
+    }
+
+    /**
+     * Helper method để gửi email biên bản
+     */
+    private function sendMinuteEmail(int $minuteId, string $subject): void
     {
         $baseEmailData = $this->getBaseEmailData($minuteId);
 
@@ -585,7 +626,7 @@ class ContractProductMinuteService extends BaseService
         // Gửi email với file PDF đính kèm
         dispatch(new \App\Jobs\SendMailJob(
             'emails.contract-product-minute-base-content',
-            'Yêu cầu duyệt biên bản sản phẩm hợp đồng',
+            $subject,
             $allEmails,
             $baseEmailData,
             $pdfPath && file_exists($pdfPath) ? [$pdfPath] : []

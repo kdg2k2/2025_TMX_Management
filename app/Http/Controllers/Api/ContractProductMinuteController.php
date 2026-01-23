@@ -59,8 +59,8 @@ class ContractProductMinuteController extends Controller
     public function confirmIssues(ConfirmIssuesRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            // 'data'=>$this->service->confirmIssues($request->validated()),
-            'message' => config('message.default'),
+            'data' => $this->service->confirmIssues($request->validated()),
+            'message' => 'Xác nhận tồn tại biên bản thành công!',
         ]));
     }
 }
