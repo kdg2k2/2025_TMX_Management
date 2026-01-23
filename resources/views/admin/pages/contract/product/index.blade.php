@@ -129,7 +129,7 @@
             <div class="h-100 d-flex flex-column">
                 <div class="row g-3 flex-fill">
 
-                    <div class="col-6">
+                    <div class="col-7">
                         <div class="card m-0">
                             <div class="card-header">
                                 <b>Danh sách biên bản</b>
@@ -140,7 +140,7 @@
                         </div>
                     </div>
 
-                    <div class="col-6 d-flex">
+                    <div class="col-5 d-flex">
                         <div class="card m-0 flex-fill d-flex flex-column">
                             <div class="card-header">
                                 <b>Xem biên bản</b>

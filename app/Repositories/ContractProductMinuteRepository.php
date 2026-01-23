@@ -15,11 +15,12 @@ class ContractProductMinuteRepository extends BaseRepository
             'approvedBy:id,name',
             'professionalUser:id,name',
             'disbursementUser:id,name',
-            'contract' => fn($q) => $q->select([
+            'contract' => fn($q) => $q->with('investor')->select([
                 'id',
                 'year',
                 'name',
                 'contract_number',
+                'investor_id'
             ])
         ];
     }
