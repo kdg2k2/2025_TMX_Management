@@ -70,13 +70,13 @@ class ContractProductMinute extends Model
         return $this->belongsTo(User::class, 'approved_by');
     }
 
-    public function contractProfessional()
+    public function professionalUser()
     {
-        return $this->belongsTo(ContractProfessionals::class);
+        return $this->belongsTo(User::class, 'professional_user_id');
     }
-    
-    public function contractDisbursement()
+
+    public function disbursementUser()
     {
-        return $this->belongsTo(ContractDisbursement::class);
+        return $this->belongsTo(User::class, 'disbursement_user_id');
     }
 }

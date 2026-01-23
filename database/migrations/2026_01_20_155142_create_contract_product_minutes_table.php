@@ -26,8 +26,8 @@ return new class extends Migration {
             $table->date('handover_date')->nullable()->comment('Ngày giao');
             $table->text('legal_basis')->nullable()->comment('Căn cứ (vào điều A,B...)');
             $table->text('handover_content')->nullable()->comment('nội dung bàn giao');
-            $table->foreignId('contract_professional_id')->comment('phụ trách chuyên môn')->constrained('contract_professionals', 'id', 'fk_cpm_cp')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('contract_disbursement_id')->comment('phụ trách giải ngân')->constrained('contract_disbursements', 'id', 'fk_cpm_cd')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('professional_user_id')->comment('phụ trách chuyên môn')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('disbursement_user_id')->comment('phụ trách giải ngân')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('file_docx_path')->nullable()->comment('đường dẫn raw file biên bản');
             $table->string('file_pdf_path')->nullable()->comment('đường dẫn scan file biên bản đã full chữ ký');
             $table->string('issue_note')->nullable()->comment('ghi chú tồn tại (nếu có)');

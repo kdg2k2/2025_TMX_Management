@@ -33,13 +33,13 @@
     <li>
         Phụ trách chuyên môn:
         <b>
-            {{ $minute['contract_professional']['user']['name'] ?? '' }}
+            {{ $minute['professional_user']['name'] ?? '' }}
         </b>
     </li>
     <li>
         Phụ trách giải ngân:
         <b>
-            {{ $minute['contract_disbursement']['user']['name'] ?? '' }}
+            {{ $minute['disbursement_user']['name'] ?? '' }}
         </b>
     </li>
     <li>

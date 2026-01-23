@@ -7,7 +7,7 @@ const fillSelectId = (
     addDefaultOption = true,
     selectedValue = null,
     refresh = true,
-    dataAttributes = null // Thêm parameter mới
+    dataAttributes = null, // Thêm parameter mới
 ) => {
     // Tìm element theo id hoặc name
     let select = document.getElementById(id);
@@ -32,7 +32,7 @@ const fillSelectId = (
         addDefaultOption,
         selectedValue,
         refresh,
-        dataAttributes
+        dataAttributes,
     );
     return true;
 };
@@ -46,7 +46,7 @@ const fillSelectElement = (
     addDefaultOption = true,
     selectedValue = null,
     refresh = true,
-    dataAttributes = null // Thêm parameter mới
+    dataAttributes = null, // Thêm parameter mới
 ) => {
     if (!select) {
         throw new Error("Không tìm thấy select");
@@ -88,7 +88,9 @@ const fillSelectElement = (
     }
 
     arr.forEach((item) => {
-        const optValue = key ? item[key] : item[value];
+        const optValue = key
+            ? getNestedValue(item, key)
+            : getNestedValue(item, value);
 
         let optText;
         if (Array.isArray(value)) {
@@ -157,7 +159,7 @@ const fillSelecIdtWithRetry = async (
     selectedValue = null,
     maxRetries = 10,
     delay = 200,
-    dataAttributes = null // Thêm parameter
+    dataAttributes = null, // Thêm parameter
 ) => {
     for (let i = 0; i < maxRetries; i++) {
         const success = fillSelectId(
@@ -169,7 +171,7 @@ const fillSelecIdtWithRetry = async (
             addDefaultOption,
             selectedValue,
             true,
-            dataAttributes // Truyền vào fillSelectId
+            dataAttributes, // Truyền vào fillSelectId
         );
         if (success) {
             return true;

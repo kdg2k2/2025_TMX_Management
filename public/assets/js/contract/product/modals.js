@@ -449,17 +449,17 @@ const showCreateMinuteProductModal = async (btn) => {
         contract_id: btn.dataset.contract_id,
     });
     fillSelectId(
-        "contract-professional-id",
+        "professional-user-id",
         professionals.data,
-        "id",
+        "user.id",
         "user.name",
         null,
         false,
     );
     fillSelectId(
-        "contract-disbursement-id",
+        "disbursement-user-id",
         disbursements.data,
-        "id",
+        "user.id",
         "user.name",
         null,
         false,
@@ -642,8 +642,8 @@ window.loadMinuteProduct = (btn = null) => {
                     ${renderField("file-text", "Căn cứ", row?.legal_basis)}
                     ${renderField("clipboard-list", "Bàn giao", row?.handover_content)}
                     ${renderField("alert-circle", "Tồn tại", row?.issue_note)}
-                    ${renderField("user-star", "Chuyên môn", row?.contract_professional?.user?.name, { color: "primary" })}
-                    ${renderField("user-dollar", "Giải ngân", row?.contract_disbursement?.user?.name, { color: "success" })}
+                    ${renderField("user-star", "Chuyên môn", row?.professional_user?.name, { color: "primary" })}
+                    ${renderField("user-dollar", "Giải ngân", row?.disbursement_user?.name, { color: "success" })}
                 `;
                 },
             },

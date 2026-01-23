@@ -164,13 +164,13 @@
                 <label>
                     Phụ trách chuyên môn
                 </label>
-                <select name="contract_professional_id" id="contract-professional-id" required></select>
+                <select name="professional_user_id" id="professional-user-id" required></select>
             </div>
             <div class="my-1">
                 <label>
                     Phụ trách giải ngân
                 </label>
-                <select name="contract_disbursement_id" id="contract-disbursement-id" required></select>
+                <select name="disbursement_user_id" id="disbursement-user-id" required></select>
             </div>
             <div class="my-1">
                 <label>

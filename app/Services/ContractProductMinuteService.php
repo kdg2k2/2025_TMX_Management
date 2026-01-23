@@ -224,8 +224,8 @@ class ContractProductMinuteService extends BaseService
             'thang' => date('m', $handoverDate),
             'year' => date('Y', $handoverDate),
             'tenCty' => $e(config('custom.DEFAULT_TITLE')),
-            'ten_chuyenmon' => $e($data->contractProfessional->user->name ?? ''),
-            'ten_giaingan' => $e($data->contractDisbursement->user->name ?? ''),
+            'ten_chuyenmon' => $e($data->professionalUser->name ?? ''),
+            'ten_giaingan' => $e($data->disbursementUser->name ?? ''),
             'ten_hoanthien' => $e($inspection['contract']['executor_user']['name'] ?? ''),
             'ten_kiemtra' => $e($inspection['inspector_user']['name'] ?? ''),
             'ten_nhantailieu' => $e($recipientUser['name'] ?? ''),
@@ -277,8 +277,8 @@ class ContractProductMinuteService extends BaseService
         $imageConfig = ['width' => 55, 'height' => 55];
 
         $signatureMap = [
-            'ck_chuyenmon' => $data->contract_professional_id,
-            'ck_giaingan' => $data->contract_disbursement_id,
+            'ck_chuyenmon' => $data->professional_user_id,
+            'ck_giaingan' => $data->disbursement_user_id,
             'ck_hoanthien' => $inspection['contract']['executor_user_id'],
             'ck_kiemtra' => $inspection['inspector_user_id'],
             'ck_nhantailieu' => $recipientUser['id'] ?? $recipientUser->id ?? null,
@@ -321,7 +321,7 @@ class ContractProductMinuteService extends BaseService
                 throw new Exception('Không tìm thấy thông tin kiểm tra để xác định người ký!');
             }
 
-            $this->syncRelationship($minute, 'user_id', 'signatures', $this->getSignatureUserIds($minute, $inspection));
+            $this->syncRelationship($minute, 'contract_product_minute_id', 'signatures', collect($this->getSignatureUserIds($minute, $inspection))->map(fn($i) => ['user_id' => $i])->toArray());
 
             // Cập nhật biên bản
             $minute->status = 'request_sign';
@@ -378,8 +378,8 @@ class ContractProductMinuteService extends BaseService
         $recipientId = $this->systemConfigService->findByKey('CONTRACT_PRODUCT_RECIPIENT_ID', 'key', false)['value'];
 
         return array_unique(array_filter([
-            $minute->contract_professional_id,  // Phụ trách chuyên môn
-            $minute->contract_disbursement_id,  // Phụ trách giải ngân
+            $minute->professional_user_id,  // Phụ trách chuyên môn
+            $minute->disbursement_user_id,  // Phụ trách giải ngân
             $inspection['contract']['executor_user_id'],  // Người hoàn thiện
             $inspection['inspector_user_id'],  // Người kiểm tra
             $recipientId,  // Người nhận tài liệu

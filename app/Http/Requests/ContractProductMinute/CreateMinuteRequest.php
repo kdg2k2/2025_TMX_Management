@@ -21,8 +21,8 @@ class CreateMinuteRequest extends BaseRequest
             'handover_date' => 'nullable|date_format:Y-m-d',
             'legal_basis' => 'nullable|max:500',
             'handover_content' => 'nullable|max:500',
-            'contract_professional_id' => 'required|exists:contract_professionals,id',
-            'contract_disbursement_id' => 'required|exists:contract_disbursements,id',
+            'professional_user_id' => 'required|exists:users,id',
+            'disbursement_user_id' => 'required|exists:users,id',
         ];
     }
 }
