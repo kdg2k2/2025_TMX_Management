@@ -7,6 +7,8 @@ use Exception;
 
 class ContractProductMinuteSignatureService extends BaseService
 {
+    private const UPLOAD_FOLDER = 'uploads/signatures/contract-product-minute';
+
     public function __construct(
         private HandlerUploadFileService $handlerUploadFileService,
         private UserService $userService,
@@ -75,8 +77,6 @@ class ContractProductMinuteSignatureService extends BaseService
      */
     private function handleSignature(string $type, array $request, int $userId): string
     {
-        $folder = 'uploads/signatures/contract-product-minute';
-
         switch ($type) {
             case 'profile':
                 // Lấy chữ ký từ profile user
@@ -86,6 +86,9 @@ class ContractProductMinuteSignatureService extends BaseService
                 return $user['path_signature'];
 
             case 'draw':
+                // Cleanup các file rác trước khi tạo file mới
+                $this->cleanupOrphanedSignatureFiles();
+
                 // Lưu canvas data thành file
                 $base64 = $request['signature_data'];
                 // Loại bỏ header data:image/png;base64,
@@ -93,20 +96,23 @@ class ContractProductMinuteSignatureService extends BaseService
                 $imageData = base64_decode($base64);
 
                 $fileName = 'signature_' . $userId . '_' . time() . '.png';
-                $fullPath = $this->handlerUploadFileService->getAbsolutePublicPath($folder) . '/' . $fileName;
+                $fullPath = $this->handlerUploadFileService->getAbsolutePublicPath(self::UPLOAD_FOLDER) . '/' . $fileName;
 
                 if (!is_dir(dirname($fullPath))) {
                     mkdir(dirname($fullPath), 0755, true);
                 }
 
                 file_put_contents($fullPath, $imageData);
-                return $folder . '/' . $fileName;
+                return self::UPLOAD_FOLDER . '/' . $fileName;
 
             case 'upload':
+                // Cleanup các file rác trước khi upload file mới
+                $this->cleanupOrphanedSignatureFiles();
+
                 // Upload file
                 return $this->handlerUploadFileService->storeAndRemoveOld(
                     $request['signature_file'],
-                    $folder,
+                    self::UPLOAD_FOLDER,
                 );
 
             default:
@@ -122,5 +128,72 @@ class ContractProductMinuteSignatureService extends BaseService
         $allSigned = $this->repository->isMinuteSigned($minuteId);
         if ($allSigned)
             $this->contractProductMinuteService->fillSignatureAndCreatePdf($minuteId);
+    }
+
+    /**
+     * Xóa các file chữ ký rác trong folder signature không được reference trong DB
+     * - File draw/upload cũ khi user ký lại
+     * - File không được lưu vào DB (lỗi trong quá trình ký)
+     * - Chỉ xóa file cũ hơn 1 giờ để tránh xóa nhầm file đang được tạo
+     */
+    private function cleanupOrphanedSignatureFiles(): void
+    {
+        try {
+            $folder = $this->handlerUploadFileService->getAbsolutePublicPath(self::UPLOAD_FOLDER);
+
+            if (!is_dir($folder)) {
+                return;
+            }
+
+            // Lấy tất cả file trong folder
+            $allFiles = array_diff(scandir($folder), ['.', '..']);
+
+            // Lấy tất cả path đang được sử dụng trong DB
+            $usedPaths = $this->repository->getUsedPaths()
+                ->pluck('signature_path')
+                ->filter()
+                ->map(fn($path) => basename($path))
+                ->unique()
+                ->toArray();
+
+            $oneHourAgo = time() - 3600;
+            $deletedCount = 0;
+            $deletedSize = 0;
+
+            foreach ($allFiles as $file) {
+                $filePath = $folder . DIRECTORY_SEPARATOR . $file;
+
+                // Chỉ xử lý files
+                if (!is_file($filePath)) {
+                    continue;
+                }
+
+                // Kiểm tra file có được reference trong DB không
+                if (in_array($file, $usedPaths, true)) {
+                    continue;
+                }
+
+                // Chỉ xóa file cũ hơn 1 giờ (tránh xóa nhầm file đang được tạo)
+                $fileModifiedTime = filemtime($filePath);
+                if ($fileModifiedTime > $oneHourAgo) {
+                    continue;
+                }
+
+                // Xóa file rác
+                $fileSize = filesize($filePath);
+                if ($this->handlerUploadFileService->safeDeleteFile($filePath)) {
+                    $deletedCount++;
+                    $deletedSize += $fileSize;
+                    \Log::info("Deleted orphaned signature file: $file (Size: " . round($fileSize / 1024, 2) . ' KB)');
+                }
+            }
+
+            if ($deletedCount > 0) {
+                \Log::info("Cleanup signature files completed: Deleted $deletedCount orphaned files, freed " . round($deletedSize / 1024 / 1024, 2) . ' MB');
+            }
+        } catch (Exception $e) {
+            // Log error nhưng không throw exception để không ảnh hưởng main process
+            \Log::warning('Error cleaning up orphaned signature files: ' . $e->getMessage());
+        }
     }
 }

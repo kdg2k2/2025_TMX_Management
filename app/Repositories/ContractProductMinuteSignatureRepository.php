@@ -56,4 +56,9 @@ class ContractProductMinuteSignatureRepository extends BaseRepository
     {
         return !$this->model->where('contract_product_minute_id', $minuteId)->where('status', '!=', 'signed')->exists();
     }
+
+    public function getUsedPaths()
+    {
+        return $this->model->select('signature_path')->get();
+    }
 }
