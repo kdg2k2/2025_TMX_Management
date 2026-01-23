@@ -264,6 +264,7 @@
         const apiContractProductMinuteReplace = @json(route('api.contract.product.minute.replace'));
         const apiContractProductMinuteSignatureRequest = @json(route('api.contract.product.minute.signature-request'));
         const apiContractProductMinuteConfirmIssues = @json(route('api.contract.product.minute.confirm-issues'));
+        const contractProductMinuteSignPage = @json(route('contract.product.minute.sign.index'));
     </script>
     <script src="assets/js/http-request/base-list.js?v={{ time() }}"></script>
     <script src="assets/js/contract/product/list.js?v={{ time() }}"></script>

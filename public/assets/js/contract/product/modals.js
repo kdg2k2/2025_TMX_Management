@@ -432,6 +432,7 @@ const showResponseInspectionProductModal = (btn) => {
 };
 
 const showMinuteProductModal = (btn) => {
+    showIframeMinute();
     openModalBase(btn, {
         modal: minuteProductModal,
         afterShow: () => {
@@ -506,10 +507,6 @@ var minuteProductBtnAdded = false;
 // Helper function để render action buttons cho minute product
 const renderMinuteProductActions = (row) => {
     const status = row?.status?.original;
-    const canReplaceFile = ["draft", "request_sign"].includes(status);
-    const canRequestSign = status === "draft";
-    const canApproveReject = status === "request_approve";
-
     const buttons = [];
 
     // Button xem file Word
@@ -542,7 +539,7 @@ const renderMinuteProductActions = (row) => {
     if (row?.file_pdf_path) {
         buttons.push(
             createDropdownBtn(
-                "info",
+                "warning",
                 "File PDF",
                 [
                     {
@@ -565,7 +562,7 @@ const renderMinuteProductActions = (row) => {
     }
 
     // Button ghi đè file Word
-    if (canReplaceFile) {
+    if (["draft", "request_sign"].includes(status)) {
         buttons.push(
             createActionBtn(
                 "warning",
@@ -579,7 +576,7 @@ const renderMinuteProductActions = (row) => {
     }
 
     // Button yêu cầu ký
-    if (canRequestSign) {
+    if (status === "draft") {
         buttons.push(
             createActionBtn(
                 "primary",
@@ -592,11 +589,25 @@ const renderMinuteProductActions = (row) => {
         );
     }
 
-    // Button duyệt/từ chối
-    if (canApproveReject) {
+    // Button mở trang ký (khi đang yêu cầu ký)
+    if (status === "request_sign") {
         buttons.push(
-            createApproveBtn(contractProductMinuteApprove + contractParam),
-            createRejectBtn(contractProductMinuteReject + contractParam),
+            createActionBtn(
+                "success",
+                "Mở trang ký",
+                null,
+                null,
+                `window.open('${contractProductMinuteSignPage}?minute_id=${row.id}', '_blank')`,
+                "ti ti-external-link",
+            ),
+        );
+    }
+
+    // Button duyệt/từ chối
+    if (status === "request_approve") {
+        buttons.push(
+            createApproveBtn(`${contractProductMinuteApprove}?contract_id=${row.contract_id}`),
+            createRejectBtn(`${contractProductMinuteReject}?contract_id=${row.contract_id}`),
         );
     }
 
@@ -645,6 +656,35 @@ window.loadMinuteProduct = (btn = null) => {
                     ${renderField("user-star", "Chuyên môn", row?.professional_user?.name, { color: "primary" })}
                     ${renderField("user-dollar", "Giải ngân", row?.disbursement_user?.name, { color: "success" })}
                 `;
+                },
+            },
+
+            {
+                data: null,
+                title: "Người ký",
+                width: "200px",
+                render: (data, type, row) => {
+                    const signatures = row?.signatures || [];
+                    if (signatures.length === 0) {
+                        return '<small class="text-muted">Chưa có người ký</small>';
+                    }
+
+                    return signatures
+                        .map((sig) => {
+                            const statusOriginal =
+                                sig?.status?.original || sig.status;
+                            const isSigned = statusOriginal === "signed";
+                            const icon = isSigned
+                                ? '<i class="ti ti-circle-check text-success" title="Đã ký"></i>'
+                                : '<i class="ti ti-clock-hour-4 text-warning" title="Chờ ký"></i>';
+                            return `
+                            <div class="d-flex align-items-center gap-1 mb-1">
+                                ${icon}
+                                <small>${sig?.user?.name || "N/A"}</small>
+                            </div>
+                        `;
+                        })
+                        .join("");
                 },
             },
 

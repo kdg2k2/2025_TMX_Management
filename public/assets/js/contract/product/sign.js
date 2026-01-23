@@ -19,7 +19,7 @@ const loadMinuteInfo = async () => {
             return;
         }
 
-        if (userSignature.status === "signed") {
+        if (userSignature.status.original === "signed") {
             alertSuccess("Bạn đã ký biên bản này rồi!");
             $("#signature-form").addClass("d-none");
         } else {

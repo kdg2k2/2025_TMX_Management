@@ -36,6 +36,13 @@ class ContractProductMinuteService extends BaseService
             $array['file_docx_path'] = $this->getAssetUrl($array['file_docx_path']);
         if (isset($array['file_pdf_path']))
             $array['file_pdf_path'] = $this->getAssetUrl($array['file_pdf_path']);
+
+        // Format nested signatures using ContractProductMinuteSignatureService
+        if (isset($array['signatures']) && is_array($array['signatures'])) {
+            $signatureService = app(ContractProductMinuteSignatureService::class);
+            $array['signatures'] = $signatureService->formatRecords($array['signatures']);
+        }
+
         return $array;
     }
 
@@ -323,27 +330,26 @@ class ContractProductMinuteService extends BaseService
 
             $this->syncRelationship($minute, 'contract_product_minute_id', 'signatures', collect($this->getSignatureUserIds($minute, $inspection))->map(fn($i) => ['user_id' => $i])->toArray());
 
-            // Cập nhật biên bản
+            // Normalize và cập nhật biên bản
+            $issueNote = trim($request['issue_note'] ?? '');
+            $issueNote = ($issueNote === '') ? null : $issueNote;
+
             $minute->status = 'request_sign';
-            $minute->issue_note = $request['issue_note'] ?? null;
+            $minute->issue_note = $issueNote;
             $minute->save();
 
-            // Cập nhật trạng thái hợp đồng
+            // Cập nhật trạng thái hợp đồng dựa trên giá trị đã normalize
             // Nếu có ghi chú tồn tại → set status là has_issues, ngược lại là in_progress
-            $intermediateProductStatus = !empty($request['issue_note'])
+            $intermediateProductStatus = ($issueNote !== null)
                 ? 'has_issues'
                 : 'in_progress';
 
             $minute->contract()->update([
                 'intermediate_product_status' => $intermediateProductStatus,
             ]);
-
-            // Load relationships để trả về
-            $minute->load($this->repository->relations);
-
             // Gửi email cho từng người ký
             $this->sendSignatureRequestEmail($minute->id);
-
+            
             return $this->formatRecord($minute->toArray());
         }, true);
     }

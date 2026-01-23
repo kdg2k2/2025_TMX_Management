@@ -104,8 +104,6 @@ const createDropdownBtn = (
                 link.textContent = item.text;
             }
 
-            console.log(item.onClick);
-
             if (typeof item.onClick === "string") {
                 link.setAttribute("onclick", item.onClick);
             }
