@@ -50,13 +50,6 @@ abstract class BaseService
         });
     }
 
-    public function findByMultipleKey(array $filters)
-    {
-        return $this->tryThrow(function () use ($filters) {
-            return $this->repository->findByMultipleKey($filters);
-        });
-    }
-
     public function findByKey(string $key, string $column, bool $useBinarySearch = true, bool $loadRelation = true, array $customRelations = [])
     {
         return $this->tryThrow(function () use ($key, $column, $useBinarySearch, $loadRelation, $customRelations) {

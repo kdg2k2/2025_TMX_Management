@@ -119,6 +119,14 @@ class ContractProductInspectionService extends BaseService
             if (isset($request['inspector_comment_file_path']))
                 $request['inspector_comment_file_path'] = $this->handlerUploadFileService->storeAndRemoveOld($request['inspector_comment_file_path'], $this->repository->getTable(), 'inspector_comment_file');
             $data->update($request);
+
+            // Cập nhật trạng thái hợp đồng sang pending_review khi inspector phản hồi
+            if ($data->status === 'responded') {
+                $data->contract()->update([
+                    'intermediate_product_status' => 'pending_review',
+                ]);
+            }
+
             $this->sendMail($data['id'], 'Phản hổi', [$data['inspector_comment_file_path']]);
             return $data;
         });

@@ -15,6 +15,12 @@ class ContractProductMinuteRepository extends BaseRepository
             'approvedBy:id,name',
             'contractProfessional.user:id,name',
             'contractDisbursement.user:id,name',
+            'contract' => fn($q) => $q->select([
+                'id',
+                'year',
+                'name',
+                'contract_number',
+            ])
         ];
     }
 
@@ -48,12 +54,18 @@ class ContractProductMinuteRepository extends BaseRepository
             'relations' => array_map(
                 fn($i) => [
                     $i => ['name']
-                ], [
+                ],
+                [
                     'signatures.user',
                     'createdBy',
                     'approvedBy',
                 ]
             )
         ];
+    }
+
+    public function getUsedPaths()
+    {
+        return $this->model->select('file_docx_path', 'file_pdf_path')->get();
     }
 }

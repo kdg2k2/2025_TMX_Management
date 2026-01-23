@@ -16,8 +16,8 @@ class ContractProductMinuteSignatureController extends Controller
     public function sign(SignRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            // 'data'=>$this->service->sign($request->validated()),
-            'message' => config('message.default'),
+            'data' => $this->service->sign($request->validated()),
+            'message' => 'Ký biên bản thành công!',
         ]));
     }
 }

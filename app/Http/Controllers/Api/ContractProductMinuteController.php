@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ContractProductMinute\ConfirmIssuesRequest;
 use App\Http\Requests\ContractProductMinute\CreateMinuteRequest;
+use App\Http\Requests\ContractProductMinute\FindByIdRequest;
 use App\Http\Requests\ContractProductMinute\ListRequest;
 use App\Http\Requests\ContractProductMinute\ReplaceMinuteRequest;
 use App\Http\Requests\ContractProductMinute\SignatureRequest;
@@ -21,6 +22,13 @@ class ContractProductMinuteController extends Controller
     {
         return $this->catchAPI(fn() => response()->json([
             'data' => $this->service->list($request->validated()),
+        ]));
+    }
+
+    public function show(FindByIdRequest $request)
+    {
+        return $this->catchAPI(fn() => response()->json([
+            'data' => $this->service->findById($request->validated()['id'], true, true),
         ]));
     }
 
@@ -43,8 +51,8 @@ class ContractProductMinuteController extends Controller
     public function signatureRequest(SignatureRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            // 'data'=>$this->service->signatureRequest($request->validated()),
-            'message' => config('message.default'),
+            'data' => $this->service->signatureRequest($request->validated()),
+            'message' => 'Yêu cầu ký biên bản thành công!',
         ]));
     }
 

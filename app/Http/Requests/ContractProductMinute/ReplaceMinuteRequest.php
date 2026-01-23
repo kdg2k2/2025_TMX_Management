@@ -2,15 +2,15 @@
 
 namespace App\Http\Requests\ContractProductMinute;
 
-use App\Http\Requests\BaseFindByIdRequest;
-
-class ReplaceMinuteRequest extends BaseFindByIdRequest
+class ReplaceMinuteRequest extends FindByIdRequest
 {
     public function rules(): array
     {
-        return [
-            'id' => 'required|exists:contract_product_minutes,id',
-            'file_docx' => 'required|file|mimes:docx',
-        ];
+        return array_merge(
+            parent::rules(),
+            [
+                'file_docx' => 'required|file|mimes:docx',
+            ]
+        );
     }
 }

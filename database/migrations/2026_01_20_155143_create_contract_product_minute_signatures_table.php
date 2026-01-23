@@ -19,14 +19,14 @@ return new class extends Migration {
                 'text',  // nhập text
                 'upload',  // chọn ảnh
                 'profile',  // dùng chữ ký cá nhân
-            ])->comment('kiểu ký');  // dựa vào kiểu ký BE xử lý logic để lấy path ảnh
+            ])->nullable()->comment('kiểu ký');  // dựa vào kiểu ký BE xử lý logic để lấy path ảnh
             $table->enum('status', [
                 'pending',
                 'signed',
             ])->default('pending')->comment('trạng thái ký');
             $table->foreignId('contract_product_minute_id')->constrained('contract_product_minutes', 'id', 'fk_cpms_cpm')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('user_id')->constrained('users', 'id', 'fk_cpms_u')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('signature_path')->comment('đường dẫn chữ ký');
+            $table->string('signature_path')->nullable()->comment('đường dẫn chữ ký');
             $table->timestamp('signed_at')->nullable()->comment('thời điểm ký');
         });
     }

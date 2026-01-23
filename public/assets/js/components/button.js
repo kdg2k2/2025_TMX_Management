@@ -5,7 +5,7 @@ const createBtn = (
     attrs = {},
     iconClass = "",
     onClick = null,
-    btnText = ""
+    btnText = "",
 ) => {
     const btn = document.createElement("button");
 
@@ -50,20 +50,28 @@ const createDropdownBtn = (
     title,
     items = [],
     iconClass = "",
-    btnText = "Dropdown",
-    attrs = {}
+    btnText = "",
+    attrs = {},
 ) => {
     // Tạo wrapper div
     const btnGroup = document.createElement("div");
-    btnGroup.className = "btn-group mb-1 me-1";
+    btnGroup.className = "btn-group btn-group-sm";
     btnGroup.setAttribute("role", "group");
 
     // Tạo button dropdown từ createBtn gốc
-    const btn = createBtn(color, title, false, {
-        ...attrs,
-        "data-bs-toggle": "dropdown",
-        "aria-expanded": "false"
-    }, iconClass, null, btnText);
+    const btn = createBtn(
+        color,
+        title,
+        false,
+        {
+            ...attrs,
+            "data-bs-toggle": "dropdown",
+            "aria-expanded": "false",
+        },
+        iconClass,
+        null,
+        btnText,
+    );
 
     // Thêm class dropdown-toggle
     btn.classList.add("dropdown-toggle");
@@ -78,7 +86,7 @@ const createDropdownBtn = (
     dropdownMenu.setAttribute("aria-labelledby", dropdownId);
 
     // Thêm items vào dropdown
-    items.forEach(item => {
+    items.forEach((item) => {
         const li = document.createElement("li");
 
         if (item.divider) {
@@ -96,11 +104,10 @@ const createDropdownBtn = (
                 link.textContent = item.text;
             }
 
-            if (item.onClick) {
-                link.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    item.onClick(e);
-                });
+            console.log(item.onClick);
+
+            if (typeof item.onClick === "string") {
+                link.setAttribute("onclick", item.onClick);
             }
 
             if (item.disabled) {

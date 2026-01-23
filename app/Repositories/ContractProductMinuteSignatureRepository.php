@@ -46,4 +46,14 @@ class ContractProductMinuteSignatureRepository extends BaseRepository
             ]
         ];
     }
+
+    public function getMinuteSignByUserId(int $userId, int $minuteId)
+    {
+        return $this->model->where('user_id', $userId)->where('contract_product_minute_id', $minuteId)->first();
+    }
+
+    public function isMinuteSigned(int $minuteId)
+    {
+        return !$this->model->where('contract_product_minute_id', $minuteId)->where('status', '!=', 'signed')->exists();
+    }
 }

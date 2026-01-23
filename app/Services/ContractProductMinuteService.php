@@ -2,14 +2,15 @@
 
 namespace App\Services;
 
-use Exception;
 use App\Models\ContractProductMinute;
-use PhpOffice\PhpWord\TemplateProcessor;
 use App\Repositories\ContractProductMinuteRepository;
+use PhpOffice\PhpWord\TemplateProcessor;
+use Exception;
 
 class ContractProductMinuteService extends BaseService
 {
     private const PENDING_STATUSES = ['request_sign', 'request_approve'];
+    private const UPLOAD_FOLDER = 'uploads/render/contract_product_minutes';
 
     public function __construct(
         private ContractMainProductService $contractMainProductService,
@@ -29,6 +30,8 @@ class ContractProductMinuteService extends BaseService
         $array = parent::formatRecord($array);
         if (isset($array['status']))
             $array['status'] = $this->repository->getStatus($array['status']);
+        if (isset($array['handover_date']))
+            $array['handover_date'] = $this->formatDateForPreview($array['handover_date']);
         if (isset($array['file_docx_path']))
             $array['file_docx_path'] = $this->getAssetUrl($array['file_docx_path']);
         if (isset($array['file_pdf_path']))
@@ -52,7 +55,7 @@ class ContractProductMinuteService extends BaseService
 
             $filePath = $this->handlerUploadFileService->storeAndRemoveOld(
                 $request['file_docx'],
-                'uploads/render/' . $this->repository->getTable(),
+                self::UPLOAD_FOLDER,
                 null,
                 $minute->file_docx_path
             );
@@ -124,19 +127,44 @@ class ContractProductMinuteService extends BaseService
         return $status === 'draft' ? $latestMinute : null;
     }
 
-    private function buildMinute(ContractProductMinute $data, bool $addSign = false, bool $convertToPdf = false)
+    private function buildMinute(ContractProductMinute $data, bool $loadFromExisting = false)
     {
+        // Cleanup các file rác trước khi tạo file mới
+        $this->cleanupOrphanedMinuteFiles();
+
         $contractId = $data->contract_id;
 
-        $inspections = $this->contractProductInspectionService->list([
-            'contract_id' => $contractId,
-            'status' => 'responded',
-        ]);
+        // Chuẩn bị dữ liệu inspection và recipientUser (dùng chung cho cả 2 trường hợp)
+        [$inspection, $recipientUser] = $this->prepareSignatureData($contractId);
+        $data->load($this->repository->relations);
 
-        if (empty($inspections))
-            throw new Exception("Hợp đồng này chưa có yêu cầu kiểm tra nào đã phản hồi!");
+        // Load từ file docx hiện có, fill chữ ký và tự động tạo PDF
+        if ($loadFromExisting) {
+            if (empty($data->file_docx_path)) {
+                throw new Exception('Không tìm thấy file docx của biên bản!');
+            }
 
-        $inspection = $inspections[0];
+            $existingFilePath = $this->handlerUploadFileService->getAbsolutePublicPath($data->file_docx_path);
+            if (!file_exists($existingFilePath)) {
+                throw new Exception('File docx không tồn tại!');
+            }
+
+            // Load file hiện có và fill chữ ký
+            $tp = $this->wordService->createFromTemplate($existingFilePath);
+            $this->addSign($tp, $data, $inspection, $recipientUser);
+
+            // Lưu file docx tạm
+            $folder = $this->handlerUploadFileService->getAbsolutePublicPath(self::UPLOAD_FOLDER);
+            $fileName = time() . '.docx';
+            $savePath = "{$folder}/{$fileName}";
+            $tp->saveAs($savePath);
+
+            // Tự động tạo PDF
+            $pdfPath = $this->documentConversionService->wordToPdf($savePath);
+            return $this->handlerUploadFileService->removePublicPath($pdfPath);
+        }
+
+        // Logic tạo mới từ template (không fill chữ ký, chỉ tạo DOCX)
         $yearFilter = !empty($inspection['years'])
             ? ['years' => collect($inspection['years'])->pluck('year')->toArray()]
             : ['year' => $inspection['contract']['year']];
@@ -144,8 +172,6 @@ class ContractProductMinuteService extends BaseService
         $productFilter = ['contract_id' => $contractId, ...$yearFilter];
         $mainProduct = $this->contractMainProductService->list($productFilter)['data'];
         $intermediateProduct = $this->contractIntermediateProductService->list($productFilter)['data'];
-
-        $data->load($this->repository->relations);
 
         $pathTemplate = $this->handlerUploadFileService->getAbsolutePublicPath(
             $this->getTemplateMinute(count($mainProduct), count($intermediateProduct))
@@ -160,13 +186,8 @@ class ContractProductMinuteService extends BaseService
             $inspection,
             $mainProduct,
             $intermediateProduct,
-            $addSign
+            $recipientUser
         );
-
-        if ($convertToPdf)
-            $filePath = $this->documentConversionService->wordToPdf(
-                $this->handlerUploadFileService->getAbsolutePublicPath($filePath)
-            );
 
         return $this->handlerUploadFileService->removePublicPath($filePath);
     }
@@ -190,11 +211,8 @@ class ContractProductMinuteService extends BaseService
         array $inspection,
         array $mainProduct,
         array $intermediateProduct,
-        bool $addSign = false
+        array $recipientUser
     ): string {
-        $recipientId = $this->systemConfigService->findByKey('CONTRACT_PRODUCT_RECIPIENT_ID', 'key', false)['value'];
-        $recipientUser = $this->userService->findById($recipientId, false);
-
         $handoverDate = strtotime($data->handover_date);
         $e = fn($v) => htmlspecialchars($v ?? '');
 
@@ -242,12 +260,7 @@ class ContractProductMinuteService extends BaseService
             }
         }
 
-        if ($addSign)
-            $this->addSign($tp, $data, $inspection, $recipientUser);
-
-        $folder = $this->handlerUploadFileService->getAbsolutePublicPath(
-            'uploads/render/' . $this->repository->getTable()
-        );
+        $folder = $this->handlerUploadFileService->getAbsolutePublicPath(self::UPLOAD_FOLDER);
         $fileName = time() . '.docx';
         $tp->saveAs("{$folder}/{$fileName}");
 
@@ -286,4 +299,290 @@ class ContractProductMinuteService extends BaseService
         }
     }
 
+    /**
+     * Yêu cầu ký biên bản
+     * - Kiểm tra biên bản phải ở trạng thái draft
+     * - Tạo các bản ghi signature cho các user cần ký
+     * - Cập nhật trạng thái biên bản thành request_sign
+     */
+    public function signatureRequest(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $minute = $this->repository->findById($request['id']);
+
+            // Kiểm tra trạng thái
+            if ($minute->status !== 'draft') {
+                throw new Exception('Chỉ có thể yêu cầu ký khi biên bản ở trạng thái Nháp!');
+            }
+
+            // Lấy thông tin inspection để xác định các user cần ký
+            $inspection = $this->getLatestInspection($minute->contract_id);
+            if (!$inspection) {
+                throw new Exception('Không tìm thấy thông tin kiểm tra để xác định người ký!');
+            }
+
+            $this->syncRelationship($minute, 'user_id', 'signatures', $this->getSignatureUserIds($minute, $inspection));
+
+            // Cập nhật biên bản
+            $minute->status = 'request_sign';
+            $minute->issue_note = $request['issue_note'] ?? null;
+            $minute->save();
+
+            // Cập nhật trạng thái hợp đồng
+            // Nếu có ghi chú tồn tại → set status là has_issues, ngược lại là in_progress
+            $intermediateProductStatus = !empty($request['issue_note'])
+                ? 'has_issues'
+                : 'in_progress';
+
+            $minute->contract()->update([
+                'intermediate_product_status' => $intermediateProductStatus,
+            ]);
+
+            // Load relationships để trả về
+            $minute->load($this->repository->relations);
+
+            // Gửi email cho từng người ký
+            $this->sendSignatureRequestEmail($minute->id);
+
+            return $this->formatRecord($minute->toArray());
+        }, true);
+    }
+
+    /**
+     * Lấy inspection mới nhất đã được phản hồi của hợp đồng
+     */
+    private function getLatestInspection(int $contractId): ?array
+    {
+        $inspections = $this->contractProductInspectionService->list([
+            'contract_id' => $contractId,
+            'status' => 'responded',
+        ]);
+
+        return !empty($inspections) ? $inspections[0] : null;
+    }
+
+    /**
+     * Lấy recipient user từ system config
+     */
+    private function getRecipientUser()
+    {
+        $recipientId = $this->systemConfigService->findByKey('CONTRACT_PRODUCT_RECIPIENT_ID', 'key', false)['value'];
+        return $this->userService->findById($recipientId, false, true);
+    }
+
+    /**
+     * Lấy danh sách user IDs cần ký biên bản
+     */
+    private function getSignatureUserIds(ContractProductMinute $minute, array $inspection)
+    {
+        $recipientId = $this->systemConfigService->findByKey('CONTRACT_PRODUCT_RECIPIENT_ID', 'key', false)['value'];
+
+        return array_unique(array_filter([
+            $minute->contract_professional_id,  // Phụ trách chuyên môn
+            $minute->contract_disbursement_id,  // Phụ trách giải ngân
+            $inspection['contract']['executor_user_id'],  // Người hoàn thiện
+            $inspection['inspector_user_id'],  // Người kiểm tra
+            $recipientId,  // Người nhận tài liệu
+        ]));
+    }
+
+    /**
+     * Chuẩn bị dữ liệu cho việc fill chữ ký
+     * Trả về [inspection, recipientUser] hoặc throw exception
+     */
+    private function prepareSignatureData(int $contractId)
+    {
+        $inspection = $this->getLatestInspection($contractId);
+        if (!$inspection) {
+            throw new Exception('Không tìm thấy thông tin kiểm tra để xác định người ký!');
+        }
+
+        $recipientUser = $this->getRecipientUser();
+
+        return [$inspection, $recipientUser];
+    }
+
+    /**
+     * Xóa các file rác trong folder minute không được reference trong DB
+     * - File docx tạm khi convert sang PDF
+     * - File cũ khi rebuild minute
+     * - Chỉ xóa file cũ hơn 1 giờ để tránh xóa nhầm file đang được tạo
+     */
+    private function cleanupOrphanedMinuteFiles(): void
+    {
+        try {
+            $folder = $this->handlerUploadFileService->getAbsolutePublicPath(self::UPLOAD_FOLDER);
+
+            if (!is_dir($folder)) {
+                return;
+            }
+
+            // Lấy tất cả file trong folder
+            $allFiles = array_diff(scandir($folder), ['.', '..']);
+
+            // Lấy tất cả path đang được sử dụng trong DB
+            $usedPaths = $this
+                ->repository
+                ->getUsedPaths()
+                ->flatMap(fn($m) => [$m->file_docx_path, $m->file_pdf_path])
+                ->filter()
+                ->map(fn($path) => basename($path))
+                ->unique()
+                ->toArray();
+
+            $oneHourAgo = time() - 3600;
+            $deletedCount = 0;
+            $deletedSize = 0;
+
+            foreach ($allFiles as $file) {
+                $filePath = $folder . DIRECTORY_SEPARATOR . $file;
+
+                // Chỉ xử lý files
+                if (!is_file($filePath)) {
+                    continue;
+                }
+
+                // Kiểm tra file có được reference trong DB không
+                if (in_array($file, $usedPaths, true)) {
+                    continue;
+                }
+
+                // Chỉ xóa file cũ hơn 1 giờ (tránh xóa nhầm file đang được tạo)
+                $fileModifiedTime = filemtime($filePath);
+                if ($fileModifiedTime > $oneHourAgo) {
+                    continue;
+                }
+
+                // Xóa file rác
+                $fileSize = filesize($filePath);
+                if ($this->handlerUploadFileService->safeDeleteFile($filePath)) {
+                    $deletedCount++;
+                    $deletedSize += $fileSize;
+                    \Log::info("Deleted orphaned minute file: $file (Size: " . round($fileSize / 1024, 2) . ' KB)');
+                }
+            }
+
+            if ($deletedCount > 0) {
+                \Log::info("Cleanup minute files completed: Deleted $deletedCount orphaned files, freed " . round($deletedSize / 1024 / 1024, 2) . ' MB');
+            }
+        } catch (Exception $e) {
+            // Log error nhưng không throw exception để không ảnh hưởng main process
+            \Log::warning('Error cleaning up orphaned minute files: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Gửi email yêu cầu ký cho các user
+     */
+    private function sendSignatureRequestEmail(int $minuteId): void
+    {
+        $baseEmailData = $this->getBaseEmailData($minuteId);
+
+        // Lấy danh sách email của các user cần ký
+        $userIds = collect($baseEmailData['minute']['signatures'])->pluck('user_id')->unique()->filter()->toArray();
+        $emails = $this->userService->getEmails([$userIds]);
+
+        if (empty($emails)) {
+            return;
+        }
+
+        $docPath = $baseEmailData['minute']['file_docx_path']
+            ? $this->handlerUploadFileService->getAbsolutePublicPath($this->removeAssetUrl($baseEmailData['minute']['file_docx_path']))
+            : null;
+
+        // Gửi email
+        dispatch(new \App\Jobs\SendMailJob(
+            'emails.contract-product-minute-signature',
+            'Yêu cầu ký biên bản sản phẩm hợp đồng',
+            $emails,
+            array_merge(
+                $baseEmailData,
+                [
+                    'signUrl' => route('contract.product.minute.sign.index', ['minute_id' => $minuteId]),
+                ]
+            ),
+            $docPath && file_exists($docPath) ? [$docPath] : []
+        ));
+    }
+
+    /**
+     * Fill chữ ký vào file docx, tạo PDF và gửi email yêu cầu duyệt
+     * Được gọi khi tất cả người ký đã hoàn tất ký
+     */
+    public function fillSignatureAndCreatePdf(int $minuteId): void
+    {
+        $minute = $this->repository->findById($minuteId);
+
+        // 1. Fill chữ ký vào file docx và tạo PDF (loadFromExisting=true tự động fill chữ ký và tạo PDF)
+        $pdfPath = $this->buildMinute($minute, true);
+
+        // 2. Lưu path PDF và cập nhật status
+        $minute->file_pdf_path = $pdfPath;
+        $minute->status = 'request_approve';
+        $minute->save();
+
+        // 3. Gửi email yêu cầu duyệt
+        $this->sendApprovalRequestEmail($minuteId);
+    }
+
+    private function getBaseEmailData(int $minuteId)
+    {
+        $minute = $this->findById($minuteId, true, true);
+        $inspection = $this->getLatestInspection($minute['contract_id']);
+        return [
+            'minute' => $minute,
+            'inspection' => $inspection,
+        ];
+    }
+
+    /**
+     * Gửi email yêu cầu duyệt biên bản
+     * - Gửi cho tất cả người đã ký
+     * - Gửi cho toàn bộ thành viên của hợp đồng
+     * - Đính kèm file PDF
+     */
+    public function sendApprovalRequestEmail(int $minuteId): void
+    {
+        $baseEmailData = $this->getBaseEmailData($minuteId);
+
+        // Lấy email của các người đã ký
+        $signerUserIds = collect($baseEmailData['minute']['signatures'])->pluck('user_id')->unique()->filter()->toArray();
+
+        // Lấy email của toàn bộ thành viên hợp đồng
+        $contractId = $baseEmailData['minute']['contract']['id'] ?? $baseEmailData['minute']['contract_id'];
+        $contractService = app(ContractService::class);
+        $memberEmails = $contractService->getMemberEmails($contractId, [
+            'accounting_contact',
+            'inspector_user',
+            'executor_user',
+            'instructors',
+            'professionals',
+            'disbursements',
+            'intermediate_collaborators',
+        ]);
+
+        // Lấy email của người ký
+        $signerEmails = $this->userService->getEmails([$signerUserIds]);
+
+        // Gộp tất cả email và loại bỏ duplicate
+        $allEmails = array_unique(array_merge($signerEmails, $memberEmails));
+
+        if (empty($allEmails)) {
+            return;
+        }
+
+        // Lấy path file PDF để đính kèm
+        $pdfPath = $baseEmailData['minute']['file_pdf_path']
+            ? $this->handlerUploadFileService->getAbsolutePublicPath($this->removeAssetUrl($baseEmailData['minute']['file_pdf_path']))
+            : null;
+
+        // Gửi email với file PDF đính kèm
+        dispatch(new \App\Jobs\SendMailJob(
+            'emails.contract-product-minute-base-content',
+            'Yêu cầu duyệt biên bản sản phẩm hợp đồng',
+            $allEmails,
+            $baseEmailData,
+            $pdfPath && file_exists($pdfPath) ? [$pdfPath] : []
+        ));
+    }
 }

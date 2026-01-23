@@ -240,6 +240,7 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
             Route::prefix('minute')->group(function () {
                 Route::controller(ContractProductMinuteController::class)->group(function () {
                     Route::get('list', 'list')->name('api.contract.product.minute.list');
+                    Route::get('show', 'show')->name('api.contract.product.minute.show');
                     Route::post('create', 'create')->name('api.contract.product.minute.create');
                     Route::patch('replace', 'replace')->name('api.contract.product.minute.replace');
                     Route::patch('signature-request', 'signatureRequest')->name('api.contract.product.minute.signature-request');

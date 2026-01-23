@@ -39,14 +39,12 @@ const createMinuteProductModalForm =
 const replaceMinuteFileModal = document.getElementById(
     "replace-minute-file-modal",
 );
-const replaceMinuteFileModalForm =
-    replaceMinuteFileModal.querySelector("form");
+const replaceMinuteFileModalForm = replaceMinuteFileModal.querySelector("form");
 
 const requestSignMinuteModal = document.getElementById(
     "request-sign-minute-modal",
 );
-const requestSignMinuteModalForm =
-    requestSignMinuteModal.querySelector("form");
+const requestSignMinuteModalForm = requestSignMinuteModal.querySelector("form");
 
 const filterContainerClass = "contract-year-filter-container";
 var currentBtnProductData = null;
@@ -317,10 +315,12 @@ window.loadInspectionProduct = (btn = null) => {
                         ${
                             row?.inspector_comment_file_path
                                 ? renderField(
-                                    "file-check",
-                                    "File nhận xét",
-                                    createViewBtn(row.inspector_comment_file_path),
-                                )
+                                      "file-check",
+                                      "File nhận xét",
+                                      createViewBtn(
+                                          row.inspector_comment_file_path,
+                                      ),
+                                  )
                                 : ""
                         }
                     `;
@@ -493,7 +493,115 @@ const showReplaceMinuteFileModal = (btn) => {
     });
 };
 
+const showRequestSignMinuteModal = (btn) => {
+    resetFormAfterSubmit(requestSignMinuteModalForm);
+    openModalBase(btn, {
+        modal: requestSignMinuteModal,
+        form: requestSignMinuteModalForm,
+    });
+};
+
 var minuteProductBtnAdded = false;
+
+// Helper function để render action buttons cho minute product
+const renderMinuteProductActions = (row) => {
+    const status = row?.status?.original;
+    const canReplaceFile = ["draft", "request_sign"].includes(status);
+    const canRequestSign = status === "draft";
+    const canApproveReject = status === "request_approve";
+
+    const buttons = [];
+
+    // Button xem file Word
+    if (row?.file_docx_path) {
+        buttons.push(
+            createDropdownBtn(
+                "info",
+                "File Word",
+                [
+                    {
+                        text: "Xem",
+                        icon: "ti ti-eye",
+                        onClick: `showIframeMinute(${JSON.stringify(row.file_docx_path)})`,
+                    },
+                    {
+                        divider: true,
+                    },
+                    {
+                        text: "Tải",
+                        icon: "ti ti-download",
+                        onClick: `downloadFileHandler(${JSON.stringify(row.file_docx_path)})`,
+                    },
+                ],
+                "ti ti-file-word",
+            )?.outerHTML || "",
+        );
+    }
+
+    // Button xem file PDF
+    if (row?.file_pdf_path) {
+        buttons.push(
+            createDropdownBtn(
+                "info",
+                "File PDF",
+                [
+                    {
+                        text: "Xem",
+                        icon: "ti ti-eye",
+                        onClick: `showIframeMinute(${JSON.stringify(row.file_pdf_path)})`,
+                    },
+                    {
+                        divider: true,
+                    },
+                    {
+                        text: "Tải",
+                        icon: "ti ti-download",
+                        onClick: `downloadFileHandler(${JSON.stringify(row.file_pdf_path)})`,
+                    },
+                ],
+                "ti ti-file-type-pdf",
+            )?.outerHTML || "",
+        );
+    }
+
+    // Button ghi đè file Word
+    if (canReplaceFile) {
+        buttons.push(
+            createActionBtn(
+                "warning",
+                "Ghi đè file Word",
+                `${apiContractProductMinuteReplace}?id=${row.id}`,
+                "loadMinuteProduct",
+                "showReplaceMinuteFileModal",
+                "ti ti-file-upload",
+            ),
+        );
+    }
+
+    // Button yêu cầu ký
+    if (canRequestSign) {
+        buttons.push(
+            createActionBtn(
+                "primary",
+                "Yêu cầu ký",
+                `${apiContractProductMinuteSignatureRequest}?id=${row.id}`,
+                "loadMinuteProduct",
+                "showRequestSignMinuteModal",
+                "ti ti-signature",
+            ),
+        );
+    }
+
+    // Button duyệt/từ chối
+    if (canApproveReject) {
+        buttons.push(
+            createApproveBtn(contractProductMinuteApprove + contractParam),
+            createRejectBtn(contractProductMinuteReject + contractParam),
+        );
+    }
+
+    return buttons.join("");
+};
 
 window.loadMinuteProduct = (btn = null) => {
     if (!btn) btn = currentBtnProductData;
@@ -562,62 +670,7 @@ window.loadMinuteProduct = (btn = null) => {
                 searchable: false,
                 title: "Hành động",
                 className: "text-center",
-                render: (data, type, row) => {
-                    const canReplaceFile = ["draft", "request_sign"].includes(
-                        row?.status?.original,
-                    );
-
-                    return `
-                        ${
-                            row?.file_docx_path
-                                ? createBtn(
-                                      "info",
-                                      "Xem file Word",
-                                      false,
-                                      {},
-                                      "ti ti-file-word",
-                                      `showIframeMinute('${row?.file_docx_path}')`,
-                                  )?.outerHTML
-                                : ""
-                        }
-                        ${
-                            row?.file_pdf_path
-                                ? createBtn(
-                                      "danger",
-                                      "Xem file PDF",
-                                      false,
-                                      {},
-                                      "ti ti-file-type-pdf",
-                                      `showIframeMinute('${row?.file_pdf_path}')`,
-                                  )?.outerHTML
-                                : ""
-                        }
-                        ${
-                            canReplaceFile
-                                ? createActionBtn(
-                                      "warning",
-                                      "Ghi đè file Word",
-                                      `${apiContractProductMinuteReplace}?id=${row.id}`,
-                                      "loadMinuteProduct",
-                                      "showReplaceMinuteFileModal",
-                                      "ti ti-file-upload",
-                                  )
-                                : ""
-                        }
-                        ${
-                            row?.status?.original == "request_approve"
-                                ? createApproveBtn(
-                                      contractProductMinuteApprove +
-                                          contractParam,
-                                  ) +
-                                  createRejectBtn(
-                                      contractProductMinuteReject +
-                                          contractParam,
-                                  )
-                                : ""
-                        }
-                    `;
-                },
+                render: (data, type, row) => renderMinuteProductActions(row),
             },
         ],
         (item) => item,
@@ -649,33 +702,53 @@ window.loadMinuteProduct = (btn = null) => {
     );
 };
 
-[
-    importProductModalForm,
-    requestInspectionProductModalForm,
-    cancelInspectionProductModalForm,
-    responseInspectionProductModalForm,
-    createMinuteProductModalForm,
-    replaceMinuteFileModalForm,
-].forEach((form) => {
+// Form submit handlers - đăng ký event listeners cho từng form
+const registerFormHandler = (form, handler) => {
     form.addEventListener("submit", async (e) => {
         await handleSubmitForm(e, (res) => {
             hideModal(form.closest(".modal"));
             loadList();
 
-            if (form == importProductModalForm)
-                loadProduct(currentBtnProductData);
-            if (form == requestInspectionProductModalForm)
-                loadInspectionProduct(currentBtnProductData);
-            if (form == createMinuteProductModalForm)
-                showIframeMinute(
-                    res?.data?.file_pdf_path || res?.data?.file_docx_path || "",
-                );
-            if (form == replaceMinuteFileModalForm) {
-                loadMinuteProduct();
-                showIframeMinute(
-                    res?.data?.file_pdf_path || res?.data?.file_docx_path || "",
-                );
+            // Gọi handler tương ứng nếu có
+            if (typeof handler === "function") {
+                handler(res);
             }
         });
     });
+};
+
+// Import product form
+registerFormHandler(importProductModalForm, () => {
+    loadProduct(currentBtnProductData);
 });
+
+// Request inspection form
+registerFormHandler(requestInspectionProductModalForm, () => {
+    loadInspectionProduct(currentBtnProductData);
+});
+
+// Create minute form
+registerFormHandler(createMinuteProductModalForm, (res) => {
+    showIframeMinute(
+        res?.data?.file_pdf_path || res?.data?.file_docx_path || "",
+    );
+});
+
+// Replace minute file form
+registerFormHandler(replaceMinuteFileModalForm, (res) => {
+    loadMinuteProduct();
+    showIframeMinute(
+        res?.data?.file_pdf_path || res?.data?.file_docx_path || "",
+    );
+});
+
+// Request signature form
+registerFormHandler(requestSignMinuteModalForm, () => {
+    loadMinuteProduct();
+});
+
+// Cancel inspection form
+registerFormHandler(cancelInspectionProductModalForm, () => {});
+
+// Response inspection form
+registerFormHandler(responseInspectionProductModalForm, () => {});

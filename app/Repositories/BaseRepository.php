@@ -35,7 +35,8 @@ abstract class BaseRepository
         return $this->model->count();
     }
 
-    public function getTable(){
+    public function getTable()
+    {
         return $this->model->getTable();
     }
 
@@ -53,20 +54,19 @@ abstract class BaseRepository
         return $data;
     }
 
-    public function findByMultipleKey(array $filters)
+    public function findByMultipleKeys(array $filters, bool $useOrwhere = false)
     {
         $query = $this->model->query();
+        $method = $useOrwhere ? 'orWhere' : 'where';
+
         foreach ($filters as $field => $value) {
             if (is_array($value)) {
-                $query->where(function ($subQuery) use ($field, $value) {
-                    foreach ($value as $val) {
-                        $subQuery->orWhere($field, $val);
-                    }
-                });
+                $query->$method(fn($q) => $q->whereIn($field, $value));
             } else {
-                $query->orWhere($field, $value);
+                $query->$method($field, $value);
             }
         }
+
         return $query->first();
     }
 
@@ -97,7 +97,9 @@ abstract class BaseRepository
         return $query->first();
     }
 
-    protected function customSort($query, array $request) {}
+    protected function customSort($query, array $request)
+    {
+    }
 
     protected function applySort($query, array $request)
     {
@@ -164,7 +166,9 @@ abstract class BaseRepository
         ];
     }
 
-    protected function applyListFilters($query, array $request) {}
+    protected function applyListFilters($query, array $request)
+    {
+    }
 
     public function maxId()
     {
