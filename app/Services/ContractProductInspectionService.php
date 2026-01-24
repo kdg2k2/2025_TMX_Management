@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Repositories\ContractProductInspectionReporitory;
+use App\Traits\ContractPermissionTraits;
 use Exception;
 
 class ContractProductInspectionService extends BaseService
 {
+    use ContractPermissionTraits;
     public function __construct(
         private HandlerUploadFileService $handlerUploadFileService,
         private UserService $userService,
@@ -45,6 +47,9 @@ class ContractProductInspectionService extends BaseService
 
     protected function beforeStore(array $request)
     {
+        // Kiểm tra quyền: chỉ chuyên môn hoặc giải ngân mới được yêu cầu kiểm tra
+        $this->checkIsProfessionalOrDisbursement($request['contract_id']);
+
         $this->isRequested();
         $contract = app(ContractProductService::class)->findById($request['contract_id'])->toArray();
         $this->isHasProduct($contract);
@@ -106,6 +111,10 @@ class ContractProductInspectionService extends BaseService
     {
         return $this->tryThrow(function () use ($request) {
             $data = $this->repository->findById($request['id']);
+
+            // Kiểm tra quyền: chỉ chuyên môn hoặc giải ngân mới được hủy kiểm tra
+            $this->checkIsProfessionalOrDisbursement($data->contract_id);
+
             $data->update($request);
             $this->sendMail($data['id'], 'Hủy yêu cầu', [$data['issue_file_path']]);
             return $data;
@@ -116,6 +125,10 @@ class ContractProductInspectionService extends BaseService
     {
         return $this->tryThrow(function () use ($request) {
             $data = $this->repository->findById($request['id']);
+
+            // Kiểm tra quyền: chỉ người kiểm tra mới được phản hồi yêu cầu kiểm tra
+            $this->checkIsInspector($data->contract_id);
+
             if (isset($request['inspector_comment_file_path']))
                 $request['inspector_comment_file_path'] = $this->handlerUploadFileService->storeAndRemoveOld($request['inspector_comment_file_path'], $this->repository->getTable(), 'inspector_comment_file');
             $data->update($request);

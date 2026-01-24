@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Repositories\ContractMainProductRepository;
+use App\Traits\ContractPermissionTraits;
 use Exception;
 
 class ContractMainProductService extends BaseService
 {
+    use ContractPermissionTraits;
     public function __construct(
         private ExcelService $excelService,
         private HandlerUploadFileService $handlerUploadFileService,
@@ -92,6 +94,9 @@ class ContractMainProductService extends BaseService
     public function import(array $request)
     {
         return $this->tryThrow(function () use ($request) {
+            // Kiểm tra quyền: chỉ chuyên môn hoặc giải ngân mới được tạo sản phẩm
+            $this->checkIsProfessionalOrDisbursement($request['contract_id']);
+
             $excelData = $this->excelService->readExcel($request['file']);
             $rawData = $excelData['data'] ?? [];
             if (count($rawData) <= 1)

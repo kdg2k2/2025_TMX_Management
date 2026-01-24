@@ -4,11 +4,13 @@ namespace App\Services;
 
 use App\Models\ContractProductMinute;
 use App\Repositories\ContractProductMinuteRepository;
+use App\Traits\ContractPermissionTraits;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Exception;
 
 class ContractProductMinuteService extends BaseService
 {
+    use ContractPermissionTraits;
     private const PENDING_STATUSES = ['request_sign', 'request_approve'];
     private const UPLOAD_FOLDER = 'uploads/render/contract_product_minutes';
 
@@ -76,6 +78,9 @@ class ContractProductMinuteService extends BaseService
     public function store(array $request)
     {
         return $this->tryThrow(function () use ($request) {
+            // Kiểm tra quyền: chỉ người kiểm tra mới được tạo biên bản
+            $this->checkIsInspector($request['contract_id']);
+
             // Kiểm tra trạng thái biên bản mới nhất
             $existingMinute = $this->checkLatestMinuteStatus($request['contract_id']);
 
@@ -315,6 +320,9 @@ class ContractProductMinuteService extends BaseService
         return $this->tryThrow(function () use ($request) {
             $minute = $this->repository->findById($request['id']);
 
+            // Kiểm tra quyền: chỉ người kiểm tra mới được yêu cầu ký
+            $this->checkIsInspector($minute->contract_id);
+
             // Kiểm tra trạng thái
             if ($minute->status !== 'draft') {
                 throw new Exception('Chỉ có thể yêu cầu ký khi biên bản ở trạng thái Nháp!');
@@ -546,6 +554,9 @@ class ContractProductMinuteService extends BaseService
     {
         return $this->tryThrow(function () use ($request) {
             $minute = $this->repository->findById($request['id']);
+
+            // Kiểm tra quyền: người hướng dẫn, trưởng bộ phận của PT chuyên môn hoặc PT chuyên môn (nếu là trưởng BP và không có người hướng dẫn)
+            $this->checkCanConfirmIssues($request['id']);
 
             // Kiểm tra trạng thái biên bản
             if ($minute->status !== 'request_approve') {
