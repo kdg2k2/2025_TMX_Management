@@ -618,7 +618,7 @@ class ContractProductMinuteService extends BaseService
         ]);
 
         // Lấy email của người ký
-        $signerEmails = $this->userService->getEmails([$signerUserIds]);
+        $signerEmails = $this->userService->getEmails([$signerUserIds, app(TaskScheduleService::class)->getUserIdByScheduleKey('CONTRACT_PRODUCT_MINUTE')]);
 
         // Gộp tất cả email và loại bỏ duplicate
         $allEmails = array_unique(array_merge($signerEmails, $memberEmails));
