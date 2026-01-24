@@ -138,7 +138,7 @@
         </x-slot:footer>
     </x-modal>
 
-    <x-modal id="contract-bill-modal" title="Hóa đơn" size="md" nested="true">
+    <x-modal id="contract-bill-modal" title="Hóa đơn" size="md" nested="true" method="post">
         <x-slot:body>
             <div class="form-group my-1">
                 <label>
@@ -184,7 +184,7 @@
         </x-slot:footer>
     </x-modal>
 
-    <x-modal id="contract-appendix-modal" title="Phụ lục hợp đồng" size="md" nested="true">
+    <x-modal id="contract-appendix-modal" title="Phụ lục hợp đồng" size="md" nested="true" method="post">
         <x-slot:body>
             <div class="form-group my-1">
                 <label>
@@ -247,7 +247,7 @@
         </x-slot:footer>
     </x-modal>
 
-    <x-modal id="contract-finance-modal" title="Tài chính" size="md" nested="true">
+    <x-modal id="contract-finance-modal" title="Tài chính" size="md" nested="true" method="post">
         <x-slot:body>
             <div class="form-group my-1">
                 <label>
@@ -296,7 +296,7 @@
         </x-slot:footer>
     </x-modal>
 
-    <x-modal id="contract-advance-payment-modal" title="Tạm ứng" size="sm" nested="true">
+    <x-modal id="contract-advance-payment-modal" title="Tạm ứng" size="sm" nested="true" method="post">
         <x-slot:body>
             <div class="form-group my-1">
                 <label>
@@ -316,7 +316,7 @@
         </x-slot:footer>
     </x-modal>
 
-    <x-modal id="contract-payment-modal" title="Thanh toán" size="sm" nested="true">
+    <x-modal id="contract-payment-modal" title="Thanh toán" size="sm" nested="true" method="post">
         <x-slot:body>
             <div class="form-group my-1">
                 <label>
