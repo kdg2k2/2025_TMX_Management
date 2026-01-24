@@ -36,8 +36,6 @@ class ContractProductMinuteService extends BaseService
             $array['file_docx_path'] = $this->getAssetUrl($array['file_docx_path']);
         if (isset($array['file_pdf_path']))
             $array['file_pdf_path'] = $this->getAssetUrl($array['file_pdf_path']);
-
-        // Format nested signatures using ContractProductMinuteSignatureService
         if (isset($array['signatures']) && is_array($array['signatures'])) {
             $signatureService = app(ContractProductMinuteSignatureService::class);
             $array['signatures'] = $signatureService->formatRecords($array['signatures']);
@@ -349,7 +347,7 @@ class ContractProductMinuteService extends BaseService
             ]);
             // Gửi email cho từng người ký
             $this->sendSignatureRequestEmail($minute->id);
-            
+
             return $this->formatRecord($minute->toArray());
         }, true);
     }
@@ -631,5 +629,21 @@ class ContractProductMinuteService extends BaseService
             $baseEmailData,
             $pdfPath && file_exists($pdfPath) ? [$pdfPath] : []
         ));
+    }
+
+    public function approve(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $data = $this->repository->update($request);
+            $this->sendMinuteEmail($data['id'], 'Phê duyệt biên bản sản phẩm hợp đồng');
+        }, true);
+    }
+
+    public function reject(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $data = $this->repository->update($request);
+            $this->sendMinuteEmail($data['id'], 'Từ chối biên bản sản phẩm hợp đồng');
+        }, true);
     }
 }

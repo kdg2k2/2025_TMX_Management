@@ -62,3 +62,25 @@
         <b style="color:red">{{ $minute['issue_note'] }}</b>
     </p>
 @endif
+
+@if ($minute['approved_at'])
+    <hr>
+    <p>
+        Thời gian phê duyệt:
+        <span style="color: red">
+            {{ $minute['approved_at'] ?? '' }}
+        </span>
+    </p>
+    <p>
+        Người phê duyệt:
+        <span style="color: red">
+            {{ $minute['approved_by']['name'] ?? '' }}
+        </span>
+    </p>
+    <p>
+        Nhận xét phê duyệt:
+        <span style="color: red">
+            {{ $minute['approval_note'] ?? ($minute['rejection_note'] ?? '') }}
+        </span>
+    </p>
+@endif

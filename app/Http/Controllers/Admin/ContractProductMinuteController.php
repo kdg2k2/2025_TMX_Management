@@ -17,7 +17,7 @@ class ContractProductMinuteController extends Controller
     public function approve(ApproveRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            // 'data' => $this->service->approve($request->validated()),
+            'data' => $this->service->approve($request->validated()),
             'message' => config('message.approve'),
         ]));
     }
@@ -25,7 +25,7 @@ class ContractProductMinuteController extends Controller
     public function reject(RejectRequest $request)
     {
         return $this->catchAPI(fn() => response()->json([
-            // 'data' => $this->service->reject($request->validated()),
+            'data' => $this->service->reject($request->validated()),
             'message' => config('message.reject'),
         ]));
     }

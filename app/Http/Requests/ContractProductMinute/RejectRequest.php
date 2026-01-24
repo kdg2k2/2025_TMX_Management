@@ -2,26 +2,16 @@
 
 namespace App\Http\Requests\ContractProductMinute;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRejectRequest;
 
-class RejectRequest extends FormRequest
+class RejectRequest extends BaseRejectRequest
 {
-    public function prepareForValidation()
-    {
-        $this->merge([
-            //
-        ]);
-    }
-
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
-        return [
-            //
-        ];
+        return array_merge(
+            parent::rules(),
+            app(FindByIdRequest::class)->rules(),
+        );
     }
 }
+

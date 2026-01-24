@@ -241,9 +241,9 @@
         </x-slot:footer>
     </x-modal>
 
-    <x-approve-modal id="approve-modal" title="Xác nhận duyệt đăng ký" size="md" method="post"
+    <x-approve-modal id="approve-modal" title="Xác nhận duyệt đăng ký" size="md" method="patch"
         noteName="approval_note"></x-approve-modal>
-    <x-approve-modal id="reject-modal" title="Xác nhận từ chối đăng ký" size="md" method="post"
+    <x-approve-modal id="reject-modal" title="Xác nhận từ chối đăng ký" size="md" method="patch"
         noteName="rejection_note" buttonVariant="danger"></x-approve-modal>
 @endsection
 @section('scripts')

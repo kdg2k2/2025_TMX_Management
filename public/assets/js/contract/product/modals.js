@@ -636,8 +636,14 @@ const renderMinuteProductActions = (row) => {
         } else {
             // Nếu không → hiển thị nút duyệt/từ chối
             buttons.push(
-                createApproveBtn(`${contractProductMinuteApprove}?contract_id=${row.contract_id}`),
-                createRejectBtn(`${contractProductMinuteReject}?contract_id=${row.contract_id}`),
+                createApproveBtn(
+                    `${contractProductMinuteApprove}?id=${row.id}`,
+                    "loadMinuteProduct",
+                ),
+                createRejectBtn(
+                    `${contractProductMinuteReject}?id=${row.id}`,
+                    "loadMinuteProduct",
+                ),
             );
         }
     }
