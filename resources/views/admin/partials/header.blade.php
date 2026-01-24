@@ -188,7 +188,7 @@
                         <li>
                             <ul class="list-unstyled mb-0 sub-list">
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="javascript::void(0);">
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.index') }}">
                                         <i class="ti ti-user-circle me-2 fs-18"></i>
                                         Cá nhân
                                     </a>

@@ -19,11 +19,13 @@ class UserService extends BaseService
         $this->repository = app(UserRepository::class);
     }
 
-    public function baseDataForLCEView(int $id = null)
+    public function baseDataForLCEView(int $id = null, bool $getDataOnly = true)
     {
         $res = [];
         if ($id)
             $res['data'] = $this->repository->findById($id);
+        if ($getDataOnly)
+            return $res;
 
         $res['roles'] = $this->roleService->list([
             'load_relations' => false,
@@ -81,6 +83,38 @@ class UserService extends BaseService
             $extracted = $this->extractFields($request);
             $data = $this->repository->update($request);
             $this->handleFile($data, $extracted, true);
+        }, true);
+    }
+
+    /**
+     * Cập nhật thông tin cá nhân (profile)
+     * User chỉ được cập nhật các thông tin cơ bản của chính mình
+     */
+    public function updateProfile(array $request)
+    {
+        return $this->tryThrow(function () use ($request) {
+            $userId = auth()->id();
+
+            // Thêm ID của user hiện tại vào request
+            $request['id'] = $userId;
+
+            // Hash password nếu có
+            if (!empty($request['password'])) {
+                $request['password'] = bcrypt($request['password']);
+            } else {
+                unset($request['password']);
+            }
+
+            // Extract file fields
+            $extracted = $this->extractFields($request);
+
+            // Update user
+            $data = $this->repository->update($request);
+
+            // Handle file upload
+            $this->handleFile($data, $extracted, true);
+
+            return $data;
         }, true);
     }
 

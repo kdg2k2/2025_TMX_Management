@@ -19,7 +19,7 @@ const handleSubmitForm = async (
 
         const res = await http[method](action, formData);
 
-        if (resetForm && method != "get") resetFormAfterSubmit(form);
+        if (resetForm && ["get","post"].includes(method)) resetFormAfterSubmit(form);
 
         if (typeof window[onSuccess] == "function") window[onSuccess]();
 

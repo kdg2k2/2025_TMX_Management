@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\AirlineController;
 use App\Http\Controllers\Api\AirportController;
 use App\Http\Controllers\Api\BiddingController;
 use App\Http\Controllers\Api\PayrollController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\DeviceFixController;
@@ -259,6 +260,11 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
                 Route::patch('response', 'response')->name('api.contract.product.inspection.response');
             });
         });
+    });
+
+    // Thông tin cá nhân
+    Route::prefix('profile')->controller(ProfileController::class)->group(function () {
+        Route::patch('update', 'update')->name('api.profile.update');
     });
 
     // tài khoản
