@@ -189,14 +189,14 @@
                             <ul class="list-unstyled mb-0 sub-list">
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.index') }}">
-                                        <i class="ti ti-user-circle me-2 fs-18"></i>
+                                        <i class="ti ti-user-circle me-2"></i>
                                         Cá nhân
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="javascript::void(0);">
-                                        <i class="ti ti-settings-cog me-2 fs-18"></i>
-                                        Đổi mật khẩu
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.sub-email.index') }}">
+                                        <i class="ti ti-mail-cog me-2"></i>
+                                        Email thông báo
                                     </a>
                                 </li>
                             </ul>
@@ -204,7 +204,7 @@
                         <li>
                             <a class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
                                 data-bs-target="#modal-logout">
-                                <i class="ti ti-logout me-2 fs-18"></i>
+                                <i class="ti ti-logout me-2"></i>
                                 Đăng xuất
                             </a>
                         </li>

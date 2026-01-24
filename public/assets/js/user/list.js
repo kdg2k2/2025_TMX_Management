@@ -9,7 +9,7 @@ window.loadList = () => {
         listUrl,
         renderColumns(),
         (item) => item,
-        getFilterParams()
+        getFilterParams(),
     );
 };
 
@@ -128,11 +128,11 @@ const renderColumns = () => {
                     ${
                         createBtn(
                             "success",
-                            "Email phụ",
+                            "Email nhận thông báo",
                             false,
                             {},
                             "ti ti-mail-code",
-                            `window.location.href='${listSubEmailUrl}?user_id=${row.id}'`
+                            `window.location.href='${listSubEmailUrl}?user_id=${row.id}'`,
                         )?.outerHTML +
                         createEditBtn(`${editUrl}?id=${row.id}`) +
                         createDeleteBtn(`${deleteUrl}?id=${row.id}`)
@@ -148,7 +148,7 @@ const renderColumns = () => {
         value.addEventListener("change", () => {
             loadList();
         });
-    }
+    },
 );
 
 document.addEventListener("DOMContentLoaded", () => {

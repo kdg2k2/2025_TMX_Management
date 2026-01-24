@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\AirportController;
 use App\Http\Controllers\Api\BiddingController;
 use App\Http\Controllers\Api\PayrollController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\ProfileSubEmailController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\DeviceFixController;
@@ -263,8 +264,17 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
     });
 
     // Thông tin cá nhân
-    Route::prefix('profile')->controller(ProfileController::class)->group(function () {
-        Route::patch('update', 'update')->name('api.profile.update');
+    Route::prefix('profile')->group(function () {
+        Route::controller(ProfileController::class)->group(function () {
+            Route::patch('update', 'update')->name('api.profile.update');
+        });
+
+        Route::prefix('sub-email')->controller(ProfileSubEmailController::class)->group(function () {
+            Route::get('list', 'list')->name('api.profile.sub-email.list');
+            Route::post('store', 'store')->name('api.profile.sub-email.store');
+            Route::patch('update', 'update')->name('api.profile.sub-email.update');
+            Route::delete('delete', 'delete')->name('api.profile.sub-email.delete');
+        });
     });
 
     // tài khoản

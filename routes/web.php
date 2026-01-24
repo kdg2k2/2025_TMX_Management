@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AirportController;
 use App\Http\Controllers\Admin\BiddingController;
 use App\Http\Controllers\Admin\PayrollController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\ProfileSubEmailController;
 use App\Http\Controllers\Admin\VehicleController;
 use App\Http\Controllers\Admin\ContractController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -199,8 +200,16 @@ Route::middleware(['isLogin', 'LogAccess'])->group(function () {
     });
 
     // Thông tin cá nhân
-    Route::prefix('profile')->controller(ProfileController::class)->group(function () {
-        Route::get('index', 'index')->name('profile.index');
+    Route::prefix('profile')->group(function () {
+        Route::controller(ProfileController::class)->group(function () {
+            Route::get('index', 'index')->name('profile.index');
+        });
+
+        Route::prefix('sub-email')->controller(ProfileSubEmailController::class)->group(function () {
+            Route::get('index', 'index')->name('profile.sub-email.index');
+            Route::get('create', 'create')->name('profile.sub-email.create');
+            Route::get('edit', 'edit')->name('profile.sub-email.edit');
+        });
     });
 
     // tài khoản

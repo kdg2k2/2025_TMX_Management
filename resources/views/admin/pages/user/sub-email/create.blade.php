@@ -3,7 +3,7 @@
     <x-breadcrumb :items="[
         ['label' => 'Trang chủ', 'url' => route('dashboard')],
         ['label' => 'Tài khoản', 'url' => route('user.index')],
-        ['label' => 'Email phụ', 'url' => null],
+        ['label' => 'Email nhận thông báo', 'url' => null],
         ['label' => 'Thêm mới', 'url' => null],
     ]">
         <x-button variant="primary" size="sm" icon="ti ti-list" tooltip="Danh sách" :href="route('user.sub-email.index', [
