@@ -11,6 +11,7 @@ use Exception;
 class ContractProductMinuteService extends BaseService
 {
     use ContractPermissionTraits;
+
     private const PENDING_STATUSES = ['request_sign', 'request_approve'];
     private const UPLOAD_FOLDER = 'uploads/render/contract_product_minutes';
 
@@ -646,6 +647,10 @@ class ContractProductMinuteService extends BaseService
     {
         return $this->tryThrow(function () use ($request) {
             $data = $this->repository->update($request);
+            if (empty($data['issue_note']))
+                $data->contract()->update([
+                    'intermediate_product_status' => 'completed',
+                ]);
             $this->sendMinuteEmail($data['id'], 'Phê duyệt biên bản sản phẩm hợp đồng');
         }, true);
     }
