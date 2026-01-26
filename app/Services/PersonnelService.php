@@ -11,7 +11,8 @@ class PersonnelService extends BaseService
     public function __construct(
         private PersonnelUnitService $personnelUnitService,
         private PersonnelCustomFieldService $personnelCustomFieldService,
-        private ExcelService $excelService
+        private ExcelService $excelService,
+        private HandlerUploadFileService $handlerUploadFileService
     ) {
         $this->repository = app(PersonnelRepository::class);
     }
@@ -115,7 +116,9 @@ class PersonnelService extends BaseService
                 ],
             ];
 
-            return $this->getAssetUrl($this->excelService->createExcel($sheets, 'uploads/render', 'PersonnelSyncthetic_' . date('d-m-Y-H-i-s') . '.xlsx'));
+            $folder = 'uploads/render/personnels';
+            $this->handlerUploadFileService->cleanupOldOverlapFiles($folder);
+            return $this->getAssetUrl($this->excelService->createExcel($sheets, $folder, 'PersonnelSyncthetic_' . date('d-m-Y-H-i-s') . '.xlsx'));
         });
     }
 
