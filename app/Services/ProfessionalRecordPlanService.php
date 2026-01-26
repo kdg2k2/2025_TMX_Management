@@ -8,26 +8,17 @@ use Exception;
 
 class ProfessionalRecordPlanService extends BaseService
 {
-    private $provinceService;
-    private $communeService;
-    private $unitService;
-    private $professionalRecordTypeService;
-    private $excelService;
-    private $professionalRecordMinuteService;
-    private $userService;
-    private $planDetailService;
-
-    public function __construct()
-    {
+    public function __construct(
+        private ProvinceService $provinceService,
+        private CommuneService $communeService,
+        private UnitService $unitService,
+        private ProfessionalRecordTypeService $professionalRecordTypeService,
+        private ExcelService $excelService,
+        private ProfessionalRecordMinuteService $professionalRecordMinuteService,
+        private UserService $userService,
+        private ProfessionalRecordPlanDetailService $planDetailService,
+    ) {
         $this->repository = app(ProfessionalRecordPlanRepository::class);
-        $this->provinceService = app(ProvinceService::class);
-        $this->communeService = app(CommuneService::class);
-        $this->unitService = app(UnitService::class);
-        $this->professionalRecordTypeService = app(ProfessionalRecordTypeService::class);
-        $this->excelService = app(ExcelService::class);
-        $this->professionalRecordMinuteService = app(ProfessionalRecordMinuteService::class);
-        $this->userService = app(UserService::class);
-        $this->planDetailService = app(ProfessionalRecordPlanDetailService::class);
     }
 
     public function baseIndexData()

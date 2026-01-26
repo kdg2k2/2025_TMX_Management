@@ -4,7 +4,8 @@ namespace App\Services;
 class DossierService extends BaseService
 {
     public function __construct(
-        private ContractService $contractService
+        private ContractService $contractService,
+        private HandlerUploadFileService $handlerUploadFileService
     ) {}
 
     public function baseIndexData()
@@ -165,6 +166,7 @@ class DossierService extends BaseService
 
     public function createExcel(string $folder, string $fileName, array $sheet)
     {
+        $this->handlerUploadFileService->cleanupOldOverlapFiles($folder);
         return app(ExcelService::class)->createExcel(
             $sheet,
             $folder,

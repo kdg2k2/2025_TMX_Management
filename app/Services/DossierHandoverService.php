@@ -7,16 +7,13 @@ use Exception;
 
 class DossierHandoverService extends BaseService
 {
-    private $provinceService;
-    private $dossierTypeService;
-    private $dossierMinuteService;
-
-    public function __construct()
-    {
+    public function __construct(
+        private ProvinceService $provinceService,
+        private DossierTypeService $dossierTypeService,
+        private DossierMinuteService $dossierMinuteService,
+        private HandlerUploadFileService $handlerUploadFileService
+    ) {
         $this->repository = app(DossierHandoverRepository::class);
-        $this->provinceService = app(ProvinceService::class);
-        $this->dossierTypeService = app(DossierTypeService::class);
-        $this->dossierMinuteService = app(DossierMinuteService::class);
     }
 
     public function baseIndexData()
@@ -278,8 +275,6 @@ class DossierHandoverService extends BaseService
      */
     public function createTempExcel(array $request)
     {
-        $handoverOut = $this->getAndValidateHandoverOut($request['contract_id']);
-
         // Lấy dữ liệu hiện trạng (chỉ kế hoạch + đã duyệt, loại trừ đang chờ duyệt)
         $sheetData = $this->getCurrentStatusExcelData($request['contract_id']);
 

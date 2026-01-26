@@ -10,7 +10,8 @@ class EmploymentContractPersonnelService extends BaseService
 {
     public function __construct(
         private EmploymentContractPersonnelCustomFieldService $personnelCustomFieldService,
-        private ExcelService $excelService
+        private ExcelService $excelService,
+        private HandlerUploadFileService $handlerUploadFileService
     ) {
         $this->repository = app(EmploymentContractPersonnelRepository::class);
     }
@@ -100,7 +101,7 @@ class EmploymentContractPersonnelService extends BaseService
 
             $sheets = [
                 (object) [
-                    'name' => 'personnels',
+                    'name' => 'employment_contract_personnel',
                     'header' => $header,
                     'data' => $data,
                     'boldRows' => [1],
@@ -113,7 +114,9 @@ class EmploymentContractPersonnelService extends BaseService
                 ],
             ];
 
-            return $this->getAssetUrl($this->excelService->createExcel($sheets, 'uploads/render', 'EmploymentContractPersonnelSyncthetic_' . date('d-m-Y-H-i-s') . '.xlsx'));
+            $folder='uploads/render/employment_contract_personnel';
+            $this->handlerUploadFileService->cleanupOldOverlapFiles($folder);
+            return $this->getAssetUrl($this->excelService->createExcel($sheets, $folder, 'syncthetic_' . date('d-m-Y-H-i-s') . '.xlsx'));
         });
     }
 

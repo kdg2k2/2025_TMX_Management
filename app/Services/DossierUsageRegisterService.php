@@ -10,16 +10,12 @@ use Exception;
 
 class DossierUsageRegisterService extends BaseService
 {
-    private $dossierHandoverService;
-    private $dossierMinuteService;
-    private $dossierPlanService;
-
-    public function __construct()
-    {
+    public function __construct(
+        private DossierHandoverService $dossierHandoverService,
+        private DossierMinuteService $dossierMinuteService,
+        private DossierPlanService $dossierPlanService,
+    ) {
         $this->repository = app(DossierUsageRegisterRepository::class);
-        $this->dossierHandoverService = app(DossierHandoverService::class);
-        $this->dossierMinuteService = app(DossierMinuteService::class);
-        $this->dossierPlanService = app(DossierPlanService::class);
     }
 
     public function baseIndexData()

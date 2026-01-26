@@ -3,14 +3,10 @@ namespace App\Services;
 
 class DossierSyntheticService extends BaseService
 {
-    protected $DossierUsageRegisterService;
-    protected $ContractService;
-
-    public function __construct()
-    {
-        $this->DossierUsageRegisterService = app(DossierUsageRegisterService::class);
-        $this->ContractService = app(ContractService::class);
-    }
+    public function __construct(
+        private DossierUsageRegisterService $DossierUsageRegisterService,
+        private ContractService $ContractService,
+    ) {}
 
     public function baseIndexData()
     {

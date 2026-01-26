@@ -7,16 +7,12 @@ use Exception;
 
 class ProfessionalRecordHandoverService extends BaseService
 {
-    private $provinceService;
-    private $professionalRecordTypeService;
-    private $professionalRecordMinuteService;
-
-    public function __construct()
-    {
+    public function __construct(
+        private ProvinceService $provinceService,
+        private ProfessionalRecordTypeService $professionalRecordTypeService,
+        private ProfessionalRecordMinuteService $professionalRecordMinuteService,
+    ) {
         $this->repository = app(ProfessionalRecordHandoverRepository::class);
-        $this->provinceService = app(ProvinceService::class);
-        $this->professionalRecordTypeService = app(ProfessionalRecordTypeService::class);
-        $this->professionalRecordMinuteService = app(ProfessionalRecordMinuteService::class);
     }
 
     public function baseIndexData()
