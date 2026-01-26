@@ -62,6 +62,14 @@ const createLinkPreviewFileOnline = (url, type = null) => {
     }
 };
 
+// Danh sách định dạng file có thể download
+const downloadableFormats = [
+    "zip", "rar", "7z", "tar", "gz",
+    "exe", "msi", "dmg",
+    "mp3", "mp4", "avi", "mkv", "mov",
+    "txt", "csv", "json", "xml",
+];
+
 const viewFileHandler = (url) => {
     try {
         const validUrl = validateUrl(url);
@@ -74,8 +82,11 @@ const viewFileHandler = (url) => {
             window.open(createLinkPreviewFileOnline(url, 1), "_blank");
         } else if (extension === "pdf") {
             window.open(createLinkPreviewFileOnline(url, 2), "_blank");
-        } else {
+        } else if (downloadableFormats.includes(extension)) {
             downloadFileHandler(url);
+        } else {
+            // Web link hoặc định dạng không xác định -> mở tab mới
+            window.open(url, "_blank");
         }
     } catch (error) {
         console.error("Lỗi xử lý file:", error);
