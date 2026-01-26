@@ -12,6 +12,8 @@ class ListRequest extends BaseListRequest
             parent::rules(),
             [
                 'intermediate_product_status' => 'nullable|in:completed,in_progress,pending_review,multi_year,technical_done,has_issues,issues_recorded',
+                'investor_id' => 'nullable|exists:contract_investors,id',
+                'year' => 'nullable|integer',
             ]
         );
     }

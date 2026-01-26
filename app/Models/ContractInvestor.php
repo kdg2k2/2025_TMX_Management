@@ -10,5 +10,7 @@ class ContractInvestor extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'contract_investors';
+
     protected $guarded = [];
 }

@@ -2,7 +2,7 @@ const handleSubmitForm = async (
     e,
     callbackAfterFormSubmit = () => {},
     resetForm = true,
-    formData = null
+    formData = null,
 ) => {
     e.preventDefault();
     const form = e.target;
@@ -19,7 +19,8 @@ const handleSubmitForm = async (
 
         const res = await http[method](action, formData);
 
-        if (resetForm && ["get","post"].includes(method)) resetFormAfterSubmit(form);
+        if (resetForm && ["get", "post"].includes(method))
+            resetFormAfterSubmit(form);
 
         if (typeof window[onSuccess] == "function") window[onSuccess]();
 

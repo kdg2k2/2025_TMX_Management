@@ -10,7 +10,6 @@ use App\Http\Controllers\Api\AirportController;
 use App\Http\Controllers\Api\BiddingController;
 use App\Http\Controllers\Api\PayrollController;
 use App\Http\Controllers\Api\ProfileController;
-use App\Http\Controllers\Api\ProfileSubEmailController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\DeviceFixController;
@@ -45,6 +44,7 @@ use App\Http\Controllers\Api\ContractPaymentController;
 use App\Http\Controllers\Api\ContractProductController;
 use App\Http\Controllers\Api\DeviceStatisticController;
 use App\Http\Controllers\Api\DossierHandoverController;
+use App\Http\Controllers\Api\ProfileSubEmailController;
 use App\Http\Controllers\Api\ContractAppendixController;
 use App\Http\Controllers\Api\ContractFileTypeController;
 use App\Http\Controllers\Api\ContractInvestorController;
@@ -56,6 +56,7 @@ use App\Http\Controllers\Api\OfficialDocumentController;
 use App\Http\Controllers\Api\PlaneTicketClassController;
 use App\Http\Controllers\Api\VehicleStatisticController;
 use App\Http\Controllers\Api\BiddingOrtherFileController;
+use App\Http\Controllers\Api\ContractPersonnelController;
 use App\Http\Controllers\Api\PersonnelFileTypeController;
 use App\Http\Controllers\Api\PlaneTicketDetailController;
 use App\Http\Controllers\Api\SoftwareOwnershipController;
@@ -260,6 +261,12 @@ Route::middleware(['web', 'auth.any', 'LogAccess'])->group(function () {
                 Route::patch('cancel', 'cancel')->name('api.contract.product.inspection.cancel');
                 Route::patch('response', 'response')->name('api.contract.product.inspection.response');
             });
+        });
+
+        // nhân sự thực hiện
+        Route::prefix('personnel')->controller(ContractPersonnelController::class)->group(function () {
+            Route::get('list', 'list')->name('api.contract.personnel.list');
+            Route::get('synthetic', 'synthetic')->name('api.contract.personnel.synthetic');
         });
     });
 

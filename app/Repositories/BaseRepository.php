@@ -97,9 +97,7 @@ abstract class BaseRepository
         return $query->first();
     }
 
-    protected function customSort($query, array $request)
-    {
-    }
+    protected function customSort($query, array $request) {}
 
     protected function applySort($query, array $request)
     {
@@ -166,9 +164,7 @@ abstract class BaseRepository
         ];
     }
 
-    protected function applyListFilters($query, array $request)
-    {
-    }
+    protected function applyListFilters($query, array $request) {}
 
     public function maxId()
     {
@@ -199,9 +195,21 @@ abstract class BaseRepository
         return $model;
     }
 
-    public function updateOrCreate(array $attr, array $values)
+    public function updateOrCreate(array $uniqueBy, array $values)
     {
-        return $this->model->updateOrCreate($attr, $values);
+        return $this->model->updateOrCreate($uniqueBy, $values);
+    }
+
+    public function upsert(
+        array $values,
+        array $uniqueBy,
+        array $update = null
+    ) {
+        return $this->model->upsert(
+            $values,
+            $uniqueBy,
+            $update
+        );
     }
 
     public function delete(int $id)

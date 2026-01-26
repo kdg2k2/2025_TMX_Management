@@ -29,8 +29,13 @@ class ContractRepository extends BaseRepository
 
     protected function applyListFilters($query, array $request)
     {
-        if (isset($request['intermediate_product_status']))
-            $query->where('intermediate_product_status', $request['intermediate_product_status']);
+        foreach ([
+            'intermediate_product_status',
+            'year',
+            'investor_id',
+        ] as $item)
+            if (isset($request[$item]))
+                $query->where($item, $request[$item]);
     }
 
     protected function getSearchConfig(): array
