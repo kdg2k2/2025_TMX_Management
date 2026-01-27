@@ -16,7 +16,7 @@ class ContractProductMinute extends Model
         'draft' => [
             'original' => 'draft',
             'converted' => 'Nháp',
-            'color' => '',
+            'color' => 'dark',
             'icon' => 'ti ti-file-text',
         ],
         'request_sign' => [

@@ -191,19 +191,14 @@ class ProfessionalRecordMinuteService extends BaseService
             }
         }
 
-        $folder = "uploads/professional-record/minute/$type";
-        $des_pdf_file = $this->handlerUploadFileService->getAbsolutePublicPath($folder);
-        $output = $folder . '/' . "professional_record_minute_{$type}_" . date('d-m-Y_H-i-s') . '.xlsx';
-
-        $docx = $output . '.docx';
-        $pdf = $output . '.pdf';
+        $docx = "uploads/render/professional-record/minute/$type/professional_record_minute_{$type}_" . date('d-m-Y_H-i-s') . '.docx';
         $templateProcessor->saveAs($this->handlerUploadFileService->getAbsolutePublicPath($docx));
 
-        $convert = app(DocumentConversionService::class)->wordToPdf($this->handlerUploadFileService->getAbsolutePublicPath($docx), $des_pdf_file);
-        if (empty($convert))
+        $convert = app(DocumentConversionService::class)->convertWithSemaphore($this->handlerUploadFileService->getAbsolutePublicPath($docx));
+        if (!isset($convert['status']) || $convert['status'] == 'failed')
             throw new Exception('Lỗi chuyển đổi file biên bản từ word sang pdf!');
 
-        return $pdf;
+        return $this->handlerUploadFileService->removePublicPath($convert['pdf']);
     }
 
     private function prepareDataToRenderMinuteFile(array $plantDetails, int $handoverById, int $receivedById, int $createrId = null, bool $signed = false)
