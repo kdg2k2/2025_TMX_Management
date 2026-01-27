@@ -103,7 +103,7 @@ class ContractProductMinuteSignatureService extends BaseService
                 }
 
                 file_put_contents($fullPath, $imageData);
-                return self::UPLOAD_FOLDER . '/' . $fileName;
+                return 'uploads/' . self::UPLOAD_FOLDER . '/' . $fileName;
 
             case 'upload':
                 // Cleanup các file rác trước khi upload file mới
@@ -149,7 +149,9 @@ class ContractProductMinuteSignatureService extends BaseService
             $allFiles = array_diff(scandir($folder), ['.', '..']);
 
             // Lấy tất cả path đang được sử dụng trong DB
-            $usedPaths = $this->repository->getUsedPaths()
+            $usedPaths = $this
+                ->repository
+                ->getUsedPaths()
                 ->pluck('signature_path')
                 ->filter()
                 ->map(fn($path) => basename($path))
