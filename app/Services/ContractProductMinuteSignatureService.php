@@ -7,7 +7,7 @@ use Exception;
 
 class ContractProductMinuteSignatureService extends BaseService
 {
-    private const UPLOAD_FOLDER = 'uploads/signatures/contract-product-minute';
+    private const UPLOAD_FOLDER = 'signatures/contract-product-minute';
 
     public function __construct(
         private HandlerUploadFileService $handlerUploadFileService,

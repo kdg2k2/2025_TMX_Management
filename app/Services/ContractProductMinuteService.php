@@ -171,8 +171,10 @@ class ContractProductMinuteService extends BaseService
             $tp->saveAs($savePath);
 
             // Tự động tạo PDF
-            $pdfPath = $this->documentConversionService->wordToPdf($savePath);
-            return $this->handlerUploadFileService->removePublicPath($pdfPath);
+            $pdfPath = $this->documentConversionService->convertWithSemaphore($savePath);
+            if (!isset($pdfPath['status']) || $pdfPath['status'] == 'failed')
+                throw new Exception('Lỗi chuyển đổi file biên bản từ word sang pdf!');
+            return $this->handlerUploadFileService->removePublicPath($pdfPath['pdf']);
         }
 
         // Logic tạo mới từ template (không fill chữ ký, chỉ tạo DOCX)
