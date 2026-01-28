@@ -56,19 +56,22 @@ class ContractFileService extends BaseService
     {
         $data->load($this->repository->relations);
 
-        if ($extracted['path'] && $data['type']['type'] != 'url') {
+        if ($extracted['path']) {
             $oldFile = $isUpdate ? $data['path'] : null;
-            $data['path'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path'], 'contracts/files', $this->stringHandlerService->createPascalSlug($data['type']['name']), $oldFile);
-            $data->save();
+            $this->handlerUploadFileService->removeFiles($oldFile);
+            $data->update([
+                'path' => $data['type']['type'] == 'url' ? $extracted['path'] : $this->handlerUploadFileService->storeAndRemoveOld($extracted['path'], 'contracts/files', $this->stringHandlerService->createPascalSlug($data['type']['name']))
+            ]);
 
-            \App\Jobs\UploadFileToDriveJob::dispatch(
-                $this->handlerUploadFileService->getAbsolutePublicPath($data['path']),
-                $this->getFolderOnGoogleDrive($data),
-                null,
-                false,
-                false,
-                $oldFile ? $this->getFolderOnGoogleDrive($data) . '/' . basename($oldFile) : null
-            );
+            if ($data['type']['type'] != 'url')
+                \App\Jobs\UploadFileToDriveJob::dispatch(
+                    $this->handlerUploadFileService->getAbsolutePublicPath($data['path']),
+                    $this->getFolderOnGoogleDrive($data),
+                    null,
+                    false,
+                    false,
+                    $oldFile ? $this->getFolderOnGoogleDrive($data) . '/' . basename($oldFile) : null
+                );
         }
     }
 
