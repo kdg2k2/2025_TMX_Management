@@ -56,7 +56,7 @@ class ContractFileService extends BaseService
     {
         $data->load($this->repository->relations);
 
-        if ($extracted['path']) {
+        if ($extracted['path'] && $data['type']['type'] != 'url') {
             $oldFile = $isUpdate ? $data['path'] : null;
             $data['path'] = $this->handlerUploadFileService->storeAndRemoveOld($extracted['path'], 'contracts/files', $this->stringHandlerService->createPascalSlug($data['type']['name']), $oldFile);
             $data->save();

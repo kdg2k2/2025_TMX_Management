@@ -13,7 +13,7 @@ const contractScanFileLabel = document.getElementById(
 const contractScanFileInput = document.getElementById(
     "contract-scan-file-input"
 );
-const scanDocumentTypeFilter = document.getElementById("document-type-filter");
+const scanDocumentTypeFilter = document.getElementById("scan-document-type-filter");
 
 window.renderScanDocumentsInfo = () => {
     createDataTableServerSide(
